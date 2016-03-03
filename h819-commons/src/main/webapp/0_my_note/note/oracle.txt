@@ -1,0 +1,4 @@
+﻿update 操作
+update st_standard set replace_standard='GB/T 210.2-2004' where standard_code='GB 210-1992'
+
+如果满足条件的记录不存在，不发生异常，直接跳过。

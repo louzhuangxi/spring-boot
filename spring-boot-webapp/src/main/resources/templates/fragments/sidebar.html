@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/bootstrap.min.css}"/>
+    <title>Thymeleaf Standard Layout System</title>
+</head>
+<body>
+<!-- /*  Multiple fragments may be defined in one file */-->
+<div th:fragment="sidebar">
+    &copy; 2013 Footer
+</div>
+<div th:fragment="sidebar-admin">
+    &copy; 2013 Admin Footer
+</div>
+</body>
+</html>

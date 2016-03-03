@@ -1,0 +1,25 @@
+@charset "utf-8";
+form p > span, fieldset > fieldset {
+	display: block;
+	float: left;
+	clear:left;
+}
+form p > input {
+	float: left;
+}
+
+
+form p > label {
+	display: block;
+	width: 150px;
+	float: left;
+	clear:left;
+}
+form p > textarea {
+	float: left;
+}
+span.inline {
+	display:inline;
+	clear:none;
+}
+        

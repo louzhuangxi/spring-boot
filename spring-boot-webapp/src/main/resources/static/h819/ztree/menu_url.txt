@@ -1,0 +1,11 @@
+<ul class="list-unstyled spaced2">
+    <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 本功能只适用于 ace admin 模版。 </li>
+    <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 菜单的 URL 都设置在叶节点，父节点点击后会展开叶节点，即父节点没有跳转的 URL。 </li>
+	<li> <i class="ace-icon fa fa-check bigger-110 green"></i> ace 模版 URL 例子：<code>data-url="page/ztree" href="#page/ztree?type=Menu"</code> ，只需要填写 <code>#page/ztree?type=Menu"</code> 部分即可，其他的部分程序自动判断。</li>
+</ul>
+<div class="form-group">
+    <label>URL</label>
+    <input autofocus type="text" id="input-url" placeholder="URL" class="form-control">
+</div>
+<p id="url-error1" class="text-danger" style="display:none">只能给叶节点添加 URL。</p>
+<p id="url-error2" class="text-danger" style="display:none">URL 没有填写。</p>

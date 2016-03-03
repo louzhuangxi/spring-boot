@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body,td {
+ font-size: 12px; /*这一行是定义页面中的字体大小*/
+}
+/* BLue
+ * .talbe_blue开头的样式类为Blue蓝色表格的样式
+ */
+.table_blue {
+border-collapse:collapse; /*collapse这个单词原义是“塌陷”，这里是指表格的边框合为一条细线，这样，表格就不会有难看的立体边框了*/
+border:solid 1px #7BA0CD; /*这一句是指定表格最外面方框的边框样式*/
+}
+.table_blue td { /*这里的.table_blue td用到了上下文选择器，意思是.table_blue下的所有td就应用该样式*/
+border:solid 1px #7BA0CD; /*这里指定了单元格的边框。由于前面表格的边框已经合为一条细线，这样，相邻两个单元格的边框宽度就不会叠加，而看上去只是一条细线*/
+}
+.table_blue .first_line {
+background-color:#A7BFDE; /*这里定义了表格的第一行的样式，就是给表头加个简单的背景色，这个样式应该应用在表格第一行的tr元素上*/
+}
+/*Pink*/
+.table_pink {
+border-collapse:collapse;
+border:solid 1px #CF7B79;
+}
+.table_pink td {
+border:solid 1px #CF7B79;
+}
+.table_pink .first_line {
+background-color:#DFA7A6;
+}
+/*Green*/
+.table_green {
+border-collapse:collapse;
+border:solid 1px #B3CC82;
+}
+.table_green td {
+border:solid 1px #B3CC82;
+}
+.table_green .first_line {
+background-color:#CDDDAC;
+}
+/*Purple*/
+.table_purple {
+border-collapse:collapse;
+border:solid 1px #9F8AB9;
+}
+.table_purple td {
+border:solid 1px #9F8AB9;
+}
+.table_purple .first_line {
+background-color:#BFB1D0;
+}
+/*Indigo*/
+.table_indigo {
+border-collapse:collapse;
+border:solid 1px #78C0D4;
+}
+.table_indigo td {
+border:solid 1px #78C0D4;
+}
+.table_indigo .first_line {
+background-color:#A5D5E2;
+}
+/*Brown*/
+.table_brown {
+border-collapse:collapse;
+border:solid 1px #F9B074;
+}
+.table_brown td {
+border:solid 1px #F9B074;
+}
+.table_brown .first_line {
+background-color:#FBCAA2;
+}
+-->
+</style></head>
+<body>
+<p>Blue</p>
+<table width="600" cellpadding="3" class="table_blue">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<p>Pink</p>
+<table width="600" cellpadding="3" class="table_pink">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<p>Green</p>
+<table width="600" cellpadding="3" class="table_green">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<p>Purple</p>
+<table width="600" cellpadding="3" class="table_purple">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<p>Indigo</p>
+<table width="600" cellpadding="3" class="table_indigo">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<p>Brown</p>
+<table width="600" cellpadding="3" class="table_brown">
+    <tr class="first_line">
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+        <td>表头</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+</body>
+</html>

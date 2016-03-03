@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       "
+       default-lazy-init="true">
+
+    <description>Spring 模版配置，其他项目在此基础上修改，参考 Spring side4，做了修改，不要照搬</description>
+
+
+    <!-- 仍保留 JDBC 方式操作，在 JPA 不满足要求时，可以随时使用
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceMySQL">
+        </property>
+    </bean>
+    -->
+
+    <!-- 配置Jdbc模板,oracle 数据源
+    <bean id="jdbcTemplateOracle" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSourceOracle">
+        </property>
+    </bean>
+    -->
+
+    <!--   定义数据源开始  -->
+    <!-- 标准配置，idea 会自动把 application.properties 中的变量值写到 dataSource 中 -->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="locations">
+            <list>
+                <value>classpath*:/application.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- spring 自带的连接池，也比较好用。如果选用的连接池，出现连接问题，改用这个
+        不需要引入第三方包，可以直接使用。-->
+    <!--
+    <bean id="dataSourceOracle" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+        <property name="driverClass" value="${oracle.jdbc.driver}"/>
+        <property name="url" value="${oracle.jdbc.url}"/>
+        <property name="username" value="${oracle.jdbc.username}"/>
+        <property name="password" value="${oracle.jdbc.password}"/>
+    </bean>
+    -->
+
+    <!-- tomcat 连接池，长连接查询，会自动断开，不要用-->
+
+    <!--阿里巴巴连接池：https://github.com/alibaba/druid/wiki/配置_DruidDataSource参考配置 -->
+    <!--
+     通常来说，只需要修改initialSize、minIdle、maxActive。
+     如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。分库分表较多的数据库，建议配置为false。
+    -->
+    <bean id="dataSourceMySQL" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${mysql.jdbc.url.main}"/>
+        <property name="username" value="${mysql.jdbc.username.main}"/>
+        <property name="password" value="${mysql.jdbc.password.main}"/>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxActive" value="20"/>
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+
+        <property name="validationQuery" value="SELECT 1"/>
+        <property name="testWhileIdle" value="true"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20"/>
+
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+    </bean>
+
+</beans>

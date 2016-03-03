@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jQuery validation plug-in - main demo</title>
+<link rel="stylesheet" type="text/css" media="screen" href="css/screen.css" />
+<script src="../lib/jquery.js" type="text/javascript"></script>
+<script src="../jquery.validate.js" type="text/javascript"></script>
+<script type="text/javascript">
+$().ready(function() {
+	// validate signup form on keyup and submit
+
+//默认的验证方法：规则和提示信息
+//待验证的变量名可以用 "" 括起来。如 "unit": "selectNone",
+	$("#signupForm").validate({
+		rules: {
+			firstname: "required",
+			lastname: "required",
+			username: {
+				required: true,
+				minlength: 2
+			},
+			age: {
+				required: true,
+				number: true
+				//integer 正整数
+			},
+			password: {
+				required: true,
+				minlength: 5
+			},
+			confirm_password: {
+				required: true,
+				minlength: 5,
+				equalTo: "#password"
+			},
+			email: {
+				required: true,
+				email: true
+			},
+			topic: {
+				required: "#newsletter:checked",
+				minlength: 2
+			},
+			agree: "required",
+			jungle: "selectNone"
+			//age:"integer"
+		},
+		messages: {
+			firstname: "Please enter your firstname",
+			lastname: "Please enter your lastname",
+			username: {
+				required: "Please enter a username",
+				minlength: "Your username must consist of at least 2 characters"
+			},
+			age: {
+				required: "Please enter a username",
+				number: "Age must be number"
+			},
+			password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 5 characters long"
+			},
+			confirm_password: {
+				required: "Please provide a password",
+				minlength: "Your password must be at least 5 characters long",
+				equalTo: "Please enter the same password as above"
+			},
+			email: "Please enter a valid email address",
+			agree: "Please accept our policy",
+			
+		}
+	});
+
+
+// 自定义验证规则：规则和提示信息写在一起。
+//定义之后，可以按照上面的方式调用。
+
+ // 字符最小长度验证（一个中文字符长度为2）
+   jQuery.validator.addMethod("stringMinLength", function(value, element, param) {
+    var length = value.length;
+    for ( var i = 0; i < value.length; i++) {
+     if (value.charCodeAt(i) > 127) {
+      length++;
+     }
+    }
+    return this.optional(element) || (length >= param);
+   }, $.validator.format("长度不能小于{0}!"));
+  
+   // 字符最大长度验证（一个中文字符长度为2）
+   jQuery.validator.addMethod("stringMaxLength", function(value, element, param) {
+    var length = value.length;
+    for ( var i = 0; i < value.length; i++) {
+     if (value.charCodeAt(i) > 127) {
+      length++;
+     }
+    }
+    return this.optional(element) || (length <= param);
+   }, $.validator.format("长度不能大于{0}!"));
+
+   // 字符验证
+   jQuery.validator.addMethod("string", function(value, element) {
+    return this.optional(element) || /^[\u0391-\uFFE5\w]+$/.test(value);
+   }, "不允许包含特殊符号!");
+
+   // 手机号码验证
+   jQuery.validator.addMethod("mobile", function(value, element) {
+    var length = value.length;
+    return this.optional(element) || (length == 11 && /^(((13[0-9]{1})|(15[0-9]{1}))+\d{8})$/.test(value));
+   }, "手机号码格式错误!");
+
+   // 电话号码验证
+   jQuery.validator.addMethod("phone", function(value, element) {
+    var tel = /^(\d{3,4}-?)?\d{7,9}$/g;
+    return this.optional(element) || (tel.test(value));
+   }, "电话号码格式错误!");
+
+   // 邮政编码验证
+   jQuery.validator.addMethod("zipCode", function(value, element) {
+    var tel = /^[0-9]{6}$/;
+    return this.optional(element) || (tel.test(value));
+   }, "邮政编码格式错误!");
+  
+   // 必须以特定字符串开头验证
+   jQuery.validator.addMethod("begin", function(value, element, param) {
+    var begin = new RegExp("^" + param);
+    return this.optional(element) || (begin.test(value));
+   }, $.validator.format("必须以 {0} 开头!"));
+  
+   // 验证两次输入值是否不相同
+   jQuery.validator.addMethod("notEqualTo", function(value, element, param) {
+    return value != $(param).val();
+   }, $.validator.format("两次输入不能相同!"));
+  
+   // 验证值不允许与特定值等于
+   jQuery.validator.addMethod("notEqual", function(value, element, param) {
+    return value != param;
+   }, $.validator.format("输入值不允许为{0}!"));
+  
+   // 验证值必须大于特定值(不能等于)
+   jQuery.validator.addMethod("gt", function(value, element, param) {
+    return value > param;
+   }, $.validator.format("输入值必须大于{0}!"));
+  
+   // 验证值小数位数不能超过两位
+   jQuery.validator.addMethod("decimal", function(value, element) {
+    var decimal = /^-?\d+(\.\d{1,2})?$/;
+    return this.optional(element) || (decimal.test(value));
+   }, $.validator.format("小数位数不能超过两位!"));
+
+	// 验证正整数
+   jQuery.validator.addMethod("integer", function(value, element) {
+    var integer = /^\d+$/;
+    return this.optional(element) || (integer.test(value));
+   }, $.validator.format("需为正整数!"));
+
+	//单选下拉框必须选定值(不能为 none )
+   jQuery.validator.addMethod("selectNone",function(value, element, params) {
+	  // 如果表单值 maxvalue 不为空，则判断
+	  // if ($("#maxvalue").attr("value")!=''&&element.value == "none")
+		if (element.value == "none")
+			{
+			  return false;
+			}
+		else return true;
+			},
+			"Please select an option."
+		);
+	
+
+// 自定义验证规则，陆续补充中...
+
+	// propose username by combining first- and lastname
+	$("#username").focus(function() {
+		var firstname = $("#firstname").val();
+		var lastname = $("#lastname").val();
+		if(firstname && lastname && !this.value) {
+			this.value = firstname + "." + lastname;
+		}
+	});
+	
+	// code to hide topic selection, disable for demo
+	var newsletter = $("#newsletter");
+	// newsletter topics are optional, hide at first
+	var inital = newsletter.is(":checked");
+	var topics = $("#newsletter_topics")[inital ? "removeClass" : "addClass"]("gray");
+	var topicInputs = topics.find("input").attr("disabled", !inital);
+	// show when newsletter is checked
+	newsletter.click(function() {
+		topics[this.checked ? "removeClass" : "addClass"]("gray");
+		topicInputs.attr("disabled", !this.checked);
+	});
+});
+</script>
+<style type="text/css">
+#commentForm {
+	width: 500px;
+}
+#commentForm label {
+	width: 250px;
+}
+#commentForm label.error, #commentForm input.submit {
+	margin-left: 253px;
+}
+#signupForm {
+	width: 670px;
+}
+#signupForm label.error {
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+}
+#newsletter_topics label.error {
+	display: none;
+	margin-left: 103px;
+}
+.red {
+	color: #F00;
+}
+</style>
+</head>
+<body>
+<h1 id="banner"> <a
+				href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">jQuery
+  Validation Plugin</a> Demo </h1>
+<div id="main">
+  <p class="red"> Jh 备注：</p>
+  <p>此例为修改后的例子</p>
+  <p>验证规则写在文件中的验证方式，可以自由控制验证过程( 修改自 demo/index.html ) </p>
+  <p> 如果本示例中没有需要的验证规则，继续查找 demo 文件夹中的示例 </p>
+  <form class="cmxform" id="signupForm" method="get" action="">
+    <fieldset>
+      <legend> Validating a complete form </legend>
+      <p>
+        <label for="firstname"> Firstname </label>
+        <input id="firstname" name="firstname" />
+      </p>
+      <p>
+        <label for="lastname"> Lastname </label>
+        <input id="lastname" name="lastname" />
+      </p>
+      <p>
+        <label for="username"> Username </label>
+        <input id="username" name="username" />
+      </p>
+      <p>
+        <label for="age"> Age </label>
+        <input id="age" name="age" />
+      </p>
+      <p>
+        <label for="password"> Password </label>
+        <input id="password" name="password" type="password" />
+      </p>
+      <p>
+        <label for="confirm_password"> Confirm password </label>
+        <input id="confirm_password" name="confirm_password"
+							type="password" />
+      </p>
+      <p>
+        <label for="email"> Email </label>
+        <input id="email" name="email" />
+      </p>
+      <p>
+        <label for="agree"> Please agree to our policy </label>
+        <input type="checkbox" class="checkbox" id="agree" name="agree" />
+      </p>
+      <p>
+        <label for="newsletter"> I'd like to receive the newsletter </label>
+        <input type="checkbox" class="checkbox" id="newsletter"
+							name="newsletter" />
+      </p>
+      <fieldset id="newsletter_topics">
+        <legend> Topics (select at least two) - note: would be hidden when
+        newsletter isn't selected, but is visible here for the demo </legend>
+        <label for="topic_marketflash">
+          <input type="checkbox" id="topic_marketflash" value="marketflash"
+								name="topic" />
+          Marketflash </label>
+        <label for="topic_fuzz">
+          <input type="checkbox" id="topic_fuzz" value="fuzz" name="topic" />
+          Latest fuzz </label>
+        <label for="topic_digester">
+          <input type="checkbox" id="topic_digester" value="digester"
+								name="topic" />
+          Mailing list digester </label>
+        <label for="topic" class="error"> Please select at least two topics you'd like to receive. </label>
+      </fieldset>
+    </fieldset>
+    <h3> Some tests with selects </h3>
+    <p> 单选框必须选择 <br />
+      <select id="jungle" name="jungle">
+        <option value="none"> select a option </option>
+        <option value="1"> Buga </option>
+        <option value="2"> Baga </option>
+        <option value="3"> Oi </option>
+      </select>
+    </p>
+    <p> Please select at least two fruits <br />
+      <select id="fruit" name="fruit" multiple="multiple">
+        <option value="b"> Banana </option>
+        <option value="a"> Apple </option>
+        <option value="p"> Peach </option>
+        <option value="t"> Turtle </option>
+      </select>
+    </p>
+    <p> Please select no more than two vergetables <br />
+      <select id="vegetables" name="vegetables" multiple="multiple">
+        <option value="p"> Potato </option>
+        <option value="t"> Tomato </option>
+        <option value="s"> Salad </option>
+      </select>
+    </p>
+    <p> Please select at least two cars, but no more than three <br />
+      <select id="cars" name="cars" multiple="multiple">
+        <option value="m_sl"> Mercedes SL </option>
+        <option value="o_c"> Opel Corsa </option>
+        <option value="vw_p"> VW Polo </option>
+        <option value="t_s"> Titanic Skoda </option>
+      </select>
+    </p>
+    <p>
+      <input class="submit" type="submit" value="Submit" />
+    </p>
+  </form>
+</div>
+</body>
+</html>

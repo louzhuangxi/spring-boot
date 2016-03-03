@@ -1,0 +1,67 @@
+/* demos.css
+ * ---------
+ */
+body {
+    background:#fff;
+    color:#333;
+    font:62.5%/140% Arial, Sans-serif;
+}
+#container {
+    margin:0 auto;
+    width:960px;
+}
+h1 {
+    font-size:20px;
+    margin:20px 0;
+}
+#content {
+    font-size:12px;
+    margin:10px 0;
+    position:relative;
+}
+#content-sidebar {
+    position:absolute;
+    right:0;
+    top:0;
+    width:190px;
+}
+#content-sidebar > p:first-child {
+    margin-top:0;
+}
+#content-main {
+    margin:0 210px 0 0;
+}
+#content p {
+    line-height:1.5;
+    margin:10px 0;
+}
+/* =Forms
+-----------------------------------------------*/
+fieldset {
+	background:#fcfcfc;
+	border:1px solid #ccc;
+	margin:10px 0;
+	padding:10px;
+}
+fieldset div {
+	margin:10px 0;
+}
+fieldset label {
+	float:left;
+	width:150px;
+}
+fieldset div.checkbox label {
+	float:none;
+}
+fieldset.save {
+	border:0;
+	margin-left:160px;
+	padding:0;
+}
+input[type="text"] {
+	border:1px solid #ccc;
+	width:20em;
+}
+input[type="text"]:focus {
+	background:#FFFBCC;
+}

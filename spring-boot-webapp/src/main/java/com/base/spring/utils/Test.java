@@ -1,0 +1,94 @@
+package com.base.spring.utils;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
+
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Description : TODO()
+ * User: h819
+ * Date: 2016/2/12
+ * Time: 18:49
+ * To change this template use File | Settings | File Templates.
+ */
+public class Test {
+
+
+    public static void copyBeanProperties(final Object source, final Object target, final Iterable<String> properties) {
+
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        final BeanWrapper trg = new BeanWrapperImpl(target);
+
+        for (final String propertyName : properties) {
+            trg.setPropertyValue(propertyName, src.getPropertyValue(propertyName));
+        }
+
+    }
+
+    public static Object copyBeanProperties(final Object source, final Collection<String> includes) {
+
+        final Collection<String> excludes = new ArrayList<String>();
+        final PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(source.getClass());
+
+        Object entityBeanVO = BeanUtils.instantiate(source.getClass());
+
+        for (final PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+
+            String propName = propertyDescriptor.getName();
+            if (!includes.contains(propName)) {
+                excludes.add(propName);
+            }
+
+
+        }
+
+        BeanUtils.copyProperties(source, entityBeanVO, excludes.toArray(new String[excludes.size()]));
+
+        return entityBeanVO;
+    }
+
+    public static void copyProperties(Object fromObj, Object toObj) {
+        Class<? extends Object> fromClass = fromObj.getClass();
+        Class<? extends Object> toClass = toObj.getClass();
+
+        try {
+            BeanInfo fromBean = Introspector.getBeanInfo(fromClass);
+            BeanInfo toBean = Introspector.getBeanInfo(toClass);
+
+            PropertyDescriptor[] toPd = toBean.getPropertyDescriptors();
+            List<PropertyDescriptor> fromPd = Arrays.asList(fromBean.getPropertyDescriptors());
+
+            for (PropertyDescriptor propertyDescriptor : toPd) {
+
+                propertyDescriptor.getDisplayName();
+                PropertyDescriptor pd = fromPd.get(fromPd.indexOf(propertyDescriptor));
+
+                if (pd.getDisplayName().equals(propertyDescriptor.getDisplayName()) && !pd.getDisplayName().equals("class")) {
+
+                    if (propertyDescriptor.getWriteMethod() != null)
+                        propertyDescriptor.getWriteMethod().invoke(toObj, pd.getReadMethod().invoke(fromObj, null));
+
+                }
+
+            }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}
