@@ -1,4 +1,0 @@
-﻿org.apache.commons.lang.text.StrTokenizer
-
-可以根据分隔符拆分一个字符串
-This class can split a String into many smaller strings.

@@ -1,8 +1,0 @@
-@charset "utf-8";
-/* CSS Document */
-
-/*footer*/
-.myfooter{ width:963px; height:110px; background:url(sbw_footBg.jpg) repeat-x; margin:10px auto 0;}
-.myfootNav{ width:390px; height:30px; line-height:30px; margin:0 auto; padding-top:30px; text-align:center;}
-.myfootNav a{ margin:0 13px;}
-.mycopyRight{ width:430px; color:#757576; line-height:20px; margin:0 auto; text-align:center; padding-top:5px;}

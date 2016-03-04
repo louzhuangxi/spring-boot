@@ -1,2 +1,0 @@
-email 模板，可以参考 ace admin
-利用 velocity 模板发送邮件时，把扩展名改为 .vm
