@@ -2,20 +2,12 @@ package org.h819.web.spring.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +24,7 @@ public class StoredProcedureExample {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /*
     public List<String> getSubscribeMobileList(Map<String, Object> map) {
         final List<String> mobileList = (List<String>) map.get("mobiles");
         final JdbcTemplate jdbcTemplateMehtod = this.jdbcTemplate;
@@ -77,7 +70,8 @@ public class StoredProcedureExample {
         );
 
         return resultList;
-    }
+
+    } */
 
     /**
      * 演示 Mysql 的存储过程创建，及调用. oracle 可能不同过程不同，未测试

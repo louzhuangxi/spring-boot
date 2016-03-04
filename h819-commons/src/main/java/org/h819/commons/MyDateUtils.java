@@ -20,7 +20,7 @@ import java.util.Date;
  * @date 2014-8-9
  */
 
-
+ //http://blog.progs.be/542/date-to-java-time
 
 //日期格式化 http://www.ocpsoft.org/prettytime/
 public class MyDateUtils extends DateUtils {
@@ -99,6 +99,8 @@ public class MyDateUtils extends DateUtils {
             return null;
         }
     }
+
+
 
 
 
@@ -226,7 +228,6 @@ public class MyDateUtils extends DateUtils {
      * 演示各种 api 方法 ，在这里寻找是否有相应的方法
      */
     private static void examples() {
-
 
     }
 
