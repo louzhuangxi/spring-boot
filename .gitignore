@@ -1,6 +1,8 @@
 # h819 commons
-h819-commons/src/main/webapp/
-h819-commons/src/main/resources/
+#/doc/*
+#!/doc/SQL/
+/h819-commons/src/main/webapp/*
+/h819-commons/src/main/resources/*
 
 ## Java.gitignore
 *.class
