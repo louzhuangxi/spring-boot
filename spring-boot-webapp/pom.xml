@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.h819</groupId>
     <artifactId>boot-webapp</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <packaging>war</packaging>
     <name>spring boot webapp</name>
     <description>Demo project for Spring Boot</description>
@@ -18,16 +18,15 @@
 
     <dependencies>
 
-        <!-- h819 main -->
+        <!-- h819 commons -->
         <dependency>
-            <groupId>org.h819.main</groupId>
-            <artifactId>main</artifactId>
+            <groupId>org.h819</groupId>
+            <artifactId>h819-commons</artifactId>
             <version>publish-1.0.11</version>
         </dependency>
 
         <!-- 发布为 war 步骤
-         1.  spring-boot-starter-web ，打包的时候排除 tomcat
-         2. 引入 spring-boot-starter-jetty 或 tomcat，为项目运行服务器。
+         见 SpringBootWebappApplication.java
          -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

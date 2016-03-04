@@ -18,7 +18,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <!--  父类 POM 文件，定义公共版本信息  -->
+    <!--  父类 POM 文件，仅定义公共版本信息  -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
