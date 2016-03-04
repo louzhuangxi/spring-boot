@@ -1,10 +1,10 @@
 # spring-boot
 
-## last verson
-
-- h819-commons : ==1.0.10==
-- spring-boot-web : ==0.1.0==
-- 逐步发布  ...
+## 更新
+> 便于查看是否有重要更新
+- h819-commons : 1.0.10
+- spring-boot-web : 0.1.0
+- 逐步发布其他项目  ...
 
 ## 概述
 做这个项目的想法来自于 [springside](https://github.com/springside/springside4/) ,           当时自己在不停的尝试各种框架和实现技术，为了选某一种实现而比来比去大费脑筋，
@@ -25,8 +25,8 @@ h819 是我的 id。
 ## 项目简介
 
 
-### ==spring-boo-web==
-> spring-boo-web
+### spring-boot-web
+> spring-boot-web
 
 基于 Spring Boot 的 J2EE 开发实践，不发明什么，只是探索一种快速开发体验，开箱即用。
 
@@ -44,7 +44,6 @@ h819 是我的 id。
 - Bootstrap
 - JQuery
 - Ace Admin
--
 
 #### security
 - spring security
@@ -67,11 +66,10 @@ h819 是我的 id。
 - Apache Commons
 - Guava
 - fastjson
--
 
 ---
 
-### ==h819-commons==
+### h819-commons
 > h819-commons
 
 这是一个基础工具包，能总结出来的都放在这里，可以生成 jar 文件引用到其他项目中，模拟 [apache commons](https://commons.apache.org/) 做法，做成一个符合自己需要的工具包。
