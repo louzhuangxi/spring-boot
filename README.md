@@ -2,8 +2,9 @@
 
 ## 更新
 > 便于查看是否有重要更新
-- h819-commons : 1.0.10
 - spring-boot-web : 0.1.0
+- h819-commons : 1.0.10
+- spring-security-oauth
 - 逐步发布其他项目  ...
 
 ## 概述
@@ -14,9 +15,11 @@ Spring 现在基本上也一统江湖了，只要你想要的解决方案，Spri
 
 我的习惯是，一边学习一边敲代码，读书笔记就用注释写在代码示例里，我只记住我做过什么就可以了，当需要相关功能的时候，到示例里去找，扫一眼代码写法，读一下注释，基本上也就知道怎么编写了。
 
+> 初学者多读读注释，也算是学习的一个过程。有经验的同学，也帮我指点一下理解的偏差，给我推荐点资料也好提高一下。
+
 随着对相关原理理解的加深，代码在不停的 Refactor，就算是自己的编程经验总结吧。
 
-项目取名为 **spring-boot** ，意在显示的指出用的是 **++Spring Boot++**。
+项目取名为 **spring-boot** ，意在显示的指出用的是 **Spring Boot**。
 
 h819 是我的 id。
 
@@ -74,7 +77,9 @@ h819 是我的 id。
 - [spring boot examples](https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples)
 - [oschina ](http://www.oschina.net/)
 
-<hr>
+
+---
+
 
 ### h819-commons
 > h819-commons
@@ -106,8 +111,11 @@ Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java uti
 flexpaper  | [flexpaper](http://flexpaper.devaldi.com/annotate-pdf-documents-online.jsp) 在线文档展示的一种解决方案 | /web
 Others  | 逐步添加 ... | /web
 
+### spring-security-oauth
+> spring security oauth2 , annotation 。需要注意的大坑是，oauth2-server 和 oauth2-resource 不能配置在一起，否则不能出现登录界面。貌似 xml 方式没问题。
+配置了很久，没有解决。
 
-
-
-
+- spring-security-oauth2-server
+- spring-security-oauth2-resource
+- spring-security-oauth2-client
 

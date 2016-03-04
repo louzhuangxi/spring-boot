@@ -1,0 +1,230 @@
+package com.example.oauth2.client.controller;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthAuthzResponse;
+import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Simple example that shows how to get OAuth 2.0 access token from Facebook
+ * using Amber OAuth 2.0 library
+ */
+@Controller
+@RequestMapping("/oltu")
+public class OltuOauth2ClientController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OltuOauth2ClientController.class);
+    @Value("unity-client")
+    private static String client_id = "clientId";
+    @Value("unity")
+    private static String client_secret = "unity";
+    @Value("http://localhost:8080/spring-oauth-server/unity/user_info")
+    private static String source_url = "http://localhost:8081/oauth-resource/foos/1";
+    @Value("http://localhost:8080/spring-oauth-server/oauth/token")
+    private static String access_token_uri = "http://localhost:8080/oauth-server/oauth/token";
+    @Value("http://localhost:8080/spring-oauth-server/oauth/authorize")
+    private static String user_authorization_uri = "http://localhost:8080/oauth-server/oauth/authorize";
+    @Value("unity")
+    private static String username = "unity";
+    @Value("unity")
+    private static String password = "unity";
+    private static String[] scopes = new String[]{"read"};
+    public boolean authorize = true;
+
+    @RequestMapping("/authorization_code")
+    @ResponseBody
+    public JsonNode authorizationCode(HttpServletRequest req, HttpServletResponse resp) {
+        logger.info("grant_type=authorization_code  ... ");
+
+        if (authorize) {
+            try {
+                // Create the End User Authorization Request by
+                OAuthClientRequest request = OAuthClientRequest
+                        // providing the Strava authorization endpoint,
+                        .authorizationLocation("https://www.strava.com/oauth/authorize")
+                                // setting the Client ID of your registered application,
+                        .setClientId("3491")
+                                // setting response type to code,
+                        .setResponseType("code")
+                                // setting scope to view_private (optional),
+                        .setScope("view_private")
+                                // setting the redirect URI back to the servlet.
+                        .setRedirectURI("http://localhost:8080/strava-app")
+                        .buildQueryMessage();
+                authorize = false;
+                /* If scope is not public the user is redirected to Strava asking for permission.
+                   After the user is redirected to the servlet with filled 'code' request parameter. */
+                resp.sendRedirect(request.getLocationUri());
+            } catch (OAuthSystemException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                // Get the code parameter.
+                OAuthAuthzResponse oar = OAuthAuthzResponse.oauthCodeAuthzResponse(req);
+                String code = oar.getCode();
+
+                // Create the Application Authorization Request by
+                OAuthClientRequest request = OAuthClientRequest
+                        // providing the Strava token endpoint,
+                        .tokenLocation("https://www.strava.com/oauth/token")
+                                // setting grant type to authorization code,
+                        .setGrantType(GrantType.AUTHORIZATION_CODE)
+                                // setting the Client ID of your registered application,
+                        .setClientId("3491")
+                                // setting the Client secret of your registered application,
+                        .setClientSecret("foobar")
+                                // setting the redirect URI back to the servlet,
+                        .setRedirectURI("http://localhost:8080/strava-app")
+                                // setting the previously requested oauth code.
+                        .setCode(code)
+                        .buildQueryMessage();
+
+                // Receive your access token.
+                OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+                OAuthJSONAccessTokenResponse oAuthResponse = oAuthClient.accessToken(request, OAuthJSONAccessTokenResponse.class);
+                String accessToken = oAuthResponse.getAccessToken();
+
+                // Use the access token to query Strava API.
+                OAuthClientRequest bearerClientRequest = new OAuthBearerClientRequest("https://www.strava.com/api/v3/athlete/clubs")
+                        .setAccessToken(accessToken).buildQueryMessage();
+
+                // Get the response and print the body.
+                OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerClientRequest, OAuth.HttpMethod.GET, OAuthResourceResponse.class);
+                PrintWriter out = resp.getWriter();
+                out.println(resourceResponse.getBody());
+
+                authorize = true;
+            } catch (OAuthSystemException e) {
+                e.printStackTrace();
+            } catch (OAuthProblemException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+
+    @RequestMapping("/implicit")
+    public OAuthJSONAccessTokenResponse implicit(HttpServletResponse servletResponse) {
+
+        OAuthJSONAccessTokenResponse oAuthResponse = null;
+
+        try {
+
+            OAuthClientRequest request = OAuthClientRequest.tokenLocation(user_authorization_uri)
+                    .setGrantType(GrantType.IMPLICIT)
+                    .setClientId(client_id)
+                    .setGrantType(GrantType.IMPLICIT)
+                    .setRedirectURI("http://localhost:8082/oltu/redirect")
+                    .setCode("read")
+                    .buildQueryMessage();
+
+            //create OAuth client that uses custom http client under the hood
+            //          OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+//            oAuthResponse = oAuthClient.accessToken(request);
+
+
+            //    logger.info("Access Token: " + oAuthResponse.getAccessToken() + ", Expires in: " + oAuthResponse.getExpiresIn());
+            //in web application you make redirection to uri:
+            logger.info("Visit: " + request.getLocationUri() + "\nand grant permission");
+
+            servletResponse.sendRedirect(request.getLocationUri());
+
+
+        } catch (OAuthSystemException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return oAuthResponse;
+
+    }
+
+
+    @RequestMapping("/redirect")
+    @ResponseBody//@RequestParam("_search") Boolean search,
+    public void redirect() {
+
+        logger.info("in redirect");
+
+//        try {
+//
+//            OAuthClientRequest bearerClientRequest = new OAuthBearerClientRequest(source_url).setAccessToken(oAuthResponse.getAccessToken()).buildQueryMessage();
+//
+//            OAuthResourceResponse resourceResponse = oAuthClient.resource(bearerClientRequest, OAuth.HttpMethod.POST, OAuthResourceResponse.class);
+//
+//            System.out.println("ResponseCode: " + resourceResponse.getResponseCode());
+//            System.out.println("ContentType: " + resourceResponse.getContentType());
+//            System.out.println("Body: " + resourceResponse.getBody());
+//
+//        } catch (OAuthProblemException e) {
+//            System.out.println("OAuth error: " + e.getError());
+//            System.out.println("OAuth error description: " + e.getDescription());
+//        } catch (OAuthSystemException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    @RequestMapping("/client_credentials")
+    public OAuthJSONAccessTokenResponse clientCredentials(HttpServletResponse servletResponse) {
+
+    /*    try {
+            OAuthClient client = new OAuthClient(new URLConnectionClient());
+
+            OAuthClientRequest request =
+                    OAuthClientRequest.tokenLocation("")
+                            .setGrantType(GrantType.CLIENT_CREDENTIALS)
+                            .setClientId("")
+                            .setClientSecret("")
+                                    // .setScope() here if you want to set the token scope
+                            .buildQueryMessage();
+
+            String token =
+                    client.accessToken(request, OAuthJSONAccessTokenResponse.class)
+                            .getAccessToken();
+
+            String resourceUrl = RESOURCE_URL_TPL.replace(":account-id", ACCOUNT_ID);
+            HttpURLConnection resource_cxn =
+                    (HttpURLConnection) (new URL(resourceUrl).openConnection());
+            resource_cxn.addRequestProperty("Authorization", "Bearer " + token);
+
+            InputStream resource = resource_cxn.getInputStream();
+
+            // Do whatever you want to do with the contents of resource at this point.
+            BufferedReader r = new BufferedReader(new InputStreamReader(resource, "UTF-8"));
+            String line = null;
+            while ((line = r.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (Exception exn) {
+            exn.printStackTrace();
+        }
+        */
+        return null;
+    }
+}
