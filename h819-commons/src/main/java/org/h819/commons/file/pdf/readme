@@ -1,0 +1,40 @@
+=== itext =================================================================
+
+http://itextpdf.com/examples/
+
+http://itextpdf.com/examples/index.php?page=chapters
+
+里面有很多代码例子，包括加密解密，证书等。
+
+写代码的时候，需要参考
+
+
+==== 依赖包: 
+bcprov.jar
+bcmail.jar
+
+itext 官方网站有说明
+
+=== pdfbox ===============================================================
+
+可以到源码中查询相关的用法
+这个项目开始更新了，在逐渐解决 中文问题，随时关注
+
+== PDF to image ==
+
+key words :java Convert PDF to image
+
+http:www.qoppa.com/pdfimages/jpiindex.html
+http:big.faceless.org/products/pdf/
+
+===Open source libraries: 
+1.jPedal 
+2.PDFRenderer 
+3.PDFOne (has a corresponding commercial product). 
+
+===Commercial libraries: 
+jPDFImages. 
+Crionics jPDF
+
+== PDF to text ==
+itext 没有 api ，用 pdfbox

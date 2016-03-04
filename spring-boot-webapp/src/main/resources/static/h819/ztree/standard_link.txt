@@ -1,0 +1,12 @@
+<ul class="list-unstyled spaced2">
+    <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 本功能只适用于 zTree ，点击 zTree 节点进行对象关联。 </li>
+    <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 对象都关联在叶节点，单个叶节点可以关联多个对象，父节点不关联任何对象。</li>
+	<li> <i class="ace-icon fa fa-check bigger-110 green"></i> 这里可以使用 autocomplete 技术，返回的结果可以多选。</li>
+	<li> <i class="ace-icon fa fa-check bigger-110 green"></i> 点击父节点跳转的 URL 用 zTree 的属性</li>
+</ul>
+<div class="form-group">
+    <label>标准关联</label>
+    <input autofocus type="text" id="input-standard" placeholder="URL" class="form-control">
+</div>
+<p id="standard-error1" class="text-danger" style="display:none">只能给叶节点添加关联对象。</p>
+<p id="standard-error2" class="text-danger" style="display:none">管理对象没有填写。</p>

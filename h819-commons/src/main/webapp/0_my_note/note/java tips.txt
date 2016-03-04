@@ -1,0 +1,6 @@
+﻿变量命名：
+String srcDir = "K:\\copyis25ByDateRange\\";
+String destDir = "H:\\class\\";
+
+ArrayList: 添加、删除耗时
+LinkedList: 查找某个元素耗时

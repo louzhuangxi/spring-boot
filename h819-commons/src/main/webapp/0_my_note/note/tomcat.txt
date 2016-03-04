@@ -1,0 +1,47 @@
+﻿今天搭一个Tomcat服务器,为了方便决定将解压版（非windows的安装方式）的tomcat添加为一个windows服务。
+
+环境：
+JDK 1.5.0_06
+Tomcat-5.5.20
+Windows2003
+瑞星防火墙
+
+步骤：
+1.把JDK解压放到C:\jdk1.5.0_06下，把Tomcat解压放到C:\Tomcat-5.5.20-WEB下
+
+2.添加系统环境变量:
+JAVA_HOME=C:\jdk1.5.0_06
+CLASSPATH=.;%JAVA_HOME%\LIB
+TOMCAT_HOME=C:\Tomcat-5.5.20-WEB
+
+修改系统环境变量PATH,在它的最前面加入:
+%JAVA_HOME%\BIN;
+注：放在最前面是预防有其它的JDK或JRE路径占先，如你装了Oracle就会有一个低版本的JRE。
+
+3.在"开始"菜单运行CMD进入DOS窗口，执行cd c:\Tomcat-5.5.20-WEB\bin命令进入执行文件的目录。执行如下命令（是从DOS直接COPY出来的，含提示信息）：
+C:\Tomcat-5.5.20-WEB\bin>service install tomcat
+Installing the service 'tomcat' ...
+Using CATALINA_HOME:    C:\Tomcat-5.5.20-WEB
+Using CATALINA_BASE:    C:\Tomcat-5.5.20-WEB
+Using JAVA_HOME:        C:\jdk1.5.0_06
+Using JVM:              C:\jdk1.5.0_06\jre\bin\server\jvm.dll
+The service 'tomcat' has been installed.
+
+C:\Tomcat-5.5.20-WEB\bin>net start tomcat
+Apache Tomcat tomcat 服务正在启动 ..
+Apache Tomcat tomcat 服务已经启动成功。
+
+此时 tomcat 已经被注册为系统服务，可以在“计算机管理->服务”看到这个系统服务(需要刷新一下)，不过为手动状态，需要
+设置为自动。
+
+
+4.这时你可以打开IE，放问http://localhost:8080测试了（注意你自己指的端口）。
+
+注:为什么我在环境那声明瑞星防火墙,是因为防火运行时老装不成功,退出防火墙后才可以.重启防火墙后它才会问你是否允许Tomcat运行并打开端口,所以大家注意了.
+
+
+
+
+//
+删除服务
+service remove tomcat

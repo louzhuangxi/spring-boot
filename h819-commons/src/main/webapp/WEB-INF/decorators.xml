@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/layouts">
+	<excludes>
+        <!--
+        把静态资源都排除，且不在 WEB-INF 目录下
+        -->
+		<pattern>/static/*</pattern>
+		<pattern>/api/*</pattern>
+	</excludes>
+	
+	<decorator name="2760-default" page="2760-default.jsp">
+		<pattern>/2760/*</pattern>
+	</decorator>
+
+
+    <!-- ace-admin 源码很难模块化分离，不装饰-->
+    <!--
+    适配以  http://domain/admin/*   的请求
+    -->
+    <decorator name="admin-none">
+        <!-- These files will not get decorated. -->
+        <pattern>/ace-admin/*</pattern>
+    </decorator>
+
+
+
+    <decorator name="admin" page="admindefault.jsp">
+        <!-- These files will not get decorated. -->
+        <pattern>/adminold/*</pattern>
+    </decorator>
+
+
+</decorators>

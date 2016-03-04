@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+File appender logback configuration provided for import, equivalent to the programmatic
+initialization performed by Boot
+-->
+
+
+<included>
+
+    <!--使用之前，数据库表必须存在，参见 http://logback.qos.ch/manual/appenders.html
+    c3p0 设置-->
+    <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+        <jdbcUrl>jdbc:mysql://129.9.100.16:3306/myproject?useUnicode=true&amp;characterEncoding=utf-8</jdbcUrl>
+        <user>myproject</user>
+        <password>myproject</password>
+    </dataSource>
+
+    <appender name="db-classic-mysql-pool" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+            <dataSource class="com.alibaba.druid.pool.DruidDataSource">
+            <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+            <url>jdbc:mysql://129.9.100.16:3306/myproject?useUnicode=true&amp;characterEncoding=utf-8</url>
+            <username>myproject</username>
+            <password>myproject</password>
+            <initialSize>1</initialSize>
+            <minIdle>1</minIdle>
+            <maxActive>2</maxActive>
+            <maxWait>60000</maxWait>
+            <timeBetweenEvictionRunsMillis>60000</timeBetweenEvictionRunsMillis>
+            <minEvictableIdleTimeMillis>300000</minEvictableIdleTimeMillis>
+
+            <validationQuery>SELECT 1</validationQuery>
+            <testWhileIdle>true</testWhileIdle>
+            <testOnBorrow>false</testOnBorrow>
+            <testOnReturn>false</testOnReturn>
+        </connectionSource>
+    </appender>
+
+</included>

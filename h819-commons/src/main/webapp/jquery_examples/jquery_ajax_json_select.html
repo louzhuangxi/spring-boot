@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../Scripts/jquery-1.4.2.js"></script>
+<title>jquery ajax json</title>
+
+
+<!-- 填充 select options -->
+
+<script type="text/javascript">
+
+        $(document).ready(function() {
+            $.getJSON("../servlet/JavaObejctToJsonServlet.servlet?pluginname=ajaxjsonselect", null, function(data) {
+                $("#select").addItems(eval(data));
+            });
+        });
+
+        $.fn.addItems = function(data) {
+            return this.each(function() {
+                var list = this;
+                $.each(data, function(index, itemData) {
+                    var option = new Option(itemData.name, itemData.value);
+                    list.add(option);
+                });
+            });
+        };
+
+        $("#select").change(function() {
+            alert('you selected ' + $(this).val());
+        });
+
+</script>
+
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="">
+  <label for="select">jquery ajax json select</label>
+  <select name="select" id="select">
+  <option value="选择功能">选择功能</option>
+  </select>
+(数据项是从后台，利用 jquery ajax json 技术直接读取的)
+</form>
+</body>
+</html>

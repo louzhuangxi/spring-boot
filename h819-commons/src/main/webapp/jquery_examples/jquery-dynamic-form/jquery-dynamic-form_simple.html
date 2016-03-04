@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>jQuery Dynamic Form Demo</title>
+		<link href="Style/jquery-dynamic-form.css" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="Script/jquery/jquery-1.4.2.js"></script>
+		<script type="text/javascript" src="Script/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+		<script type="text/javascript" src="Script/jquery-dynamic-form.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				
+				//Activate the main dynamic form "#dynformname" 和下文的 fieldset 对应，定义动态表格范围
+				var mainDynamicForm = $("#dynformname").dynamicForm("#plus", "#minus", {
+					limit:5, //可以创建的个数
+					formPrefix:"mainForm",
+					createColor:"green"
+				});
+			});
+		</script>
+</head>
+
+
+<!--
+参考自，进行了简化修改
+http://code.google.com/p/jquery-dynamic-form/
+-->
+
+<body>
+
+<h1>jQuery Dynamic Form</h1>
+
+<form method="post" action="../../servlet/DynamicFormServlet.servlet" value="Post">
+
+<fieldset>
+    <legend> Nested fields duplication</legend>
+    
+    <p>
+              <label for="firstname">first name : </label>
+              <input id="firstname" type="text" name="firstname" size="40">
+    </p>
+    
+    <p>
+              <label for="lastname">last name : </label>
+              <input id="lastname" type="text" name="lastname" size="40">
+    </p>
+            
+    <fieldset id="dynformname">
+              <legend> Address</legend>
+    
+    <p>
+        <label for="state">state : </label>
+        <select id="state" name="state" size="1">
+                  <option value="France">France</option>
+                  <option value="Italy">Italy</option>
+                  <option value="Brazil">Brazil</option>
+                  <option value="Morocco">Morocco</option>
+                  <option value="China">China</option>
+                  <option value="US">United States</option>
+                </select>
+      </p>
+      
+      <p>
+        <label for="address">address : </label>
+        <input id="address" type="text" name="adr" size="30">
+      </p>
+      
+      <p>
+        <label for="postal">postal code : </label>
+        <input id="postal" type="text" name="postal_code" size="10">
+      </p>
+      
+       <p>
+        <label for="city">city : </label>
+        <input id="city" type="text" name="ville" size="50">
+      </p>
+
+	</fieldset>
+    
+    <p><span><a id="minus" href="">[-]</a> <a id="plus" href="">[+]</a></span></p>
+</fieldset>
+      
+<input type="submit" />
+
+</form>
+</body>
+</html>
