@@ -110,6 +110,7 @@ Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java uti
 flexpaper  | [flexpaper](http://flexpaper.devaldi.com/annotate-pdf-documents-online.jsp) 在线文档展示的一种解决方案 | /web
 Others  | 逐步添加 ... | /web
 
+:new:
 ### spring-security-oauth
 > spring security oauth2 , annotation 。需要注意的大坑是，oauth2-server 和 oauth2-resource 不能配置在一起，否则不能出现登录界面。貌似 xml 方式没问题。
 配置了很久，没有解决。
