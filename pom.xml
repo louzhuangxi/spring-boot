@@ -41,8 +41,7 @@
         <oracle.version.10g>10gR2-for-jdk4-5</oracle.version.10g>
         <oracle.version.9i.jdk1.4>9.0.2.0.0-for-jdk1.4</oracle.version.9i.jdk1.4>
         <oracle.version.9i.jdk1.3>9.0.2.0.0-for-jdk1.3</oracle.version.9i.jdk1.3>
-        <oracle.jdbc.driver.version>${oracle.version.12c}</oracle.jdbc.driver.version>
-
+		
         <!-- tomcat 连接池长连接查询，发现问题舍弃-->
         <tomcat-jdbc.version>8.0.12</tomcat-jdbc.version>
         <!--阿里巴巴 -->

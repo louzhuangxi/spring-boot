@@ -28,7 +28,4 @@ public class SpringBootWebappApplication extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SpringBootWebappApplication.class);
     }
-
-
-
 }

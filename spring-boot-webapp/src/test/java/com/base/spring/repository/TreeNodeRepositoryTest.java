@@ -4,7 +4,7 @@ import com.base.SpringBootWebappApplication;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.google.common.collect.Lists;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyJsonUtil;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +49,7 @@ public class TreeNodeRepositoryTest {
                 new TreeNodeEntity(TreeNodeType.Menu, "child1", 0,0,  true, father),
                 new TreeNodeEntity(TreeNodeType.Menu, "child2", 0,1,  true, father)
         );
+
         treeNodeRepository.save(list);
 
     }
@@ -78,7 +79,8 @@ public class TreeNodeRepositoryTest {
 
         // System.out.println(":"+ JSON.toJSONString(menus, preFilter, SerializerFeature.DisableCircularReferenceDetect));
 
-        MyJsonUtils.prettyPrint(menus, preFilter);
+        MyJsonUtil.prettyPrint(menus, preFilter);
+
 
     }
 

@@ -4,7 +4,7 @@ import com.base.SpringBootWebappApplication;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyJsonUtil;
 import org.h819.web.spring.jpa.DTOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,8 @@ public class ZTreeUtilTest {
         //MyJsonUtils.prettyPrint(set);
         ;
         //   ZTreeUtil.getJsonData(dtoRootNode);
-        MyJsonUtils.prettyPrint(ZTreeUtil.getJsonData(dtoRootNode));
+        MyJsonUtil.prettyPrint(ZTreeUtil.getJsonData(dtoRootNode));
+
 
     }
 

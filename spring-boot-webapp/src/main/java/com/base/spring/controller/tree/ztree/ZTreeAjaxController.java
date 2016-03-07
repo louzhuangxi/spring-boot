@@ -43,7 +43,6 @@ public class ZTreeAjaxController {
         logger.info("id={} , menuType={}", id, menuType);
         return treeNodeService.async(id, menuType);
 
-
     }
 
     /**

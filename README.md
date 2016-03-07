@@ -27,12 +27,12 @@ h819 是我的 id。
 
 ## 项目简介
 
-
+:recycle:
 ### spring-boot-web
 
 > 基于 Spring Boot 的 J2EE 开发实践，不发明什么，只是探索一种快速开发体验，开箱即用。
 
-#### 核心组件
+#### Core
 - spring boot
 
 #### Data
@@ -61,6 +61,7 @@ h819 是我的 id。
 
 #### Environment
 - Intellij IDEA
+- Maven
 - git
 
 #### Utils
@@ -78,7 +79,7 @@ h819 是我的 id。
 - [oschina ](http://www.oschina.net/)
 
 
-:new:
+:recycle:
 
 ### h819-commons
 > h819-commons
@@ -100,17 +101,17 @@ Others  | 还有一些常用工具，就不列举了 ... | /commons
 
 
 #### web 工具
-Components | Description | Source
----|---|---
-DTOUtils | PO to DTO 工具。使用 ***hibernate*** 的同学，估计对这个比较挠头，每次转换都费时费力，还容易出错。DTOUtils 可以实现自动转换，截断递归关联，对于级联层次很深的对象，可以指定转换深度。比目前大多数人采用 bean copy 的方案好。这个有时间我写一篇博客，详细说一下。 | /web
-Spring JPA   | spring jpa 动态查询工具，可以动态组装查询条件，自动分页，很好用 | /web
-Jqgird   | [Jqgrid](http://www.trirand.com/blog/?page_id=6/) 工具类，可以方便的处理查询条件。 | /web
-ZTree  | [ZTree](http://www.ztree.me/v3/main.php#_zTreeInfo/) java utils ，功能强大，做后台管理用。 | /web
-Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java utils ，ui 很好看，做展示用吧。 | /web
-flexpaper  | [flexpaper](http://flexpaper.devaldi.com/annotate-pdf-documents-online.jsp) 在线文档展示的一种解决方案 | /web
-Others  | 逐步添加 ... | /web
+Components | Description | Source | Demo
+---|---|---|---
+DTOUtils | PO to DTO 工具。使用 ***hibernate*** 的同学，估计对这个比较挠头，每次转换都费时费力，还容易出错。DTOUtils 可以实现自动转换，截断递归关联，对于级联层次很深的对象，可以指定转换深度。比目前大多数人采用 bean copy 的方案好。这个有时间我写一篇博客，详细说一下。 | /web | [url](###) 
+Spring JPA  | spring jpa 动态查询工具，可以动态组装查询条件，自动分页，很好用 | /web | [url](###) 
+Jqgird  | [Jqgrid](http://www.trirand.com/blog/?page_id=6/) 工具类，可以方便的处理查询条件。 | /web | [url](###) 
+ZTree | [ZTree](http://www.ztree.me/v3/main.php#_zTreeInfo/) java utils ，功能强大，做后台管理用。 | /web
+Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java utils ，ui 很好看，做展示用吧。 | /web | [url](###) 
+flexpaper  | [flexpaper](http://flexpaper.devaldi.com/annotate-pdf-documents-online.jsp) 在线文档展示的一种解决方案 | /web | [url](###) 
+Others | 逐步添加 ... | /web
 
-:new:
+:recycle:
 ### spring-security-oauth
 > spring security oauth2 , annotation 。需要注意的大坑是，oauth2-server 和 oauth2-resource 不能配置在一起，否则不能出现登录界面。貌似 xml 方式没问题。
 配置了很久，没有解决。
