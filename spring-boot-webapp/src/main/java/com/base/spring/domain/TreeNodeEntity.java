@@ -119,8 +119,9 @@ public class TreeNodeEntity extends BaseEntity {
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
      * 如果想要生成 Entity ，用其他有参数的构造方法。
+     * DTOUtils 中使用 public 方法生成空对象
      */
-    protected TreeNodeEntity() {
+    public TreeNodeEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
