@@ -457,6 +457,12 @@
 					showAlart("请先选择一个节点");
 					return;
 				}
+				
+				if (treeNode.name.indexOf("root_") > -1) {
+					removeCopyCutClass(); // 如果点击了 copy or cut ，去掉点击后为该节点产生的样式
+					showAlart("根节点不能删除");
+					return;
+				}
 
 				if (treeNode.isParent && treeNode.children != null && treeNode.children.length != 0) {
 					showAlart("请先清空子节点。"); // 删除操作，为了防止误删除，不允许直接删除带有子节点的父节点，给操作者一个机会。

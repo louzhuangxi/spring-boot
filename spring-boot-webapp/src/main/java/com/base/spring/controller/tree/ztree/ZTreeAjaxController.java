@@ -88,6 +88,9 @@ public class ZTreeAjaxController {
     @ResponseBody
     public String remove(@RequestParam(value = "id", required = true) Long id) {
         logger.info("del treeNode : id={} ", id);
+        TreeNodeEntity tree = treeNodeRepository.findOne(id);
+        if (tree.isRoot())
+            return "root node can not be delete";
         treeNodeRepository.delete(id);
 
         return "del succeed.";
@@ -146,14 +149,14 @@ public class ZTreeAjaxController {
     }
 
     /**
-     节点 CSS 修改
+     * 节点 CSS 修改
      *
      * @return
      */
     @RequestMapping(value = {"/node/edit/css.html"}, method = RequestMethod.POST)
     @ResponseBody
     public String editCss(@RequestParam(value = "id", required = true) Long id,
-                       @RequestParam(value = "css", required = true) String css) {
+                          @RequestParam(value = "css", required = true) String css) {
 
         logger.info("move treeNode : id={},css={}", id, css.trim());
         treeNodeService.editCss(id, css.trim());
@@ -183,7 +186,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = {"/node/link/standard.html"}, method = RequestMethod.POST)
     @ResponseBody
     public String linkStandard(@RequestParam(value = "id", required = true) Long id,
-                          @RequestParam(value = "standard", required = true) String standard) {
+                               @RequestParam(value = "standard", required = true) String standard) {
 
         logger.info("move treeNode : id={},standard={}", id, standard.trim());
         return "css edit succeed.";
