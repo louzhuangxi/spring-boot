@@ -19,7 +19,7 @@ Spring 现在基本上也一统江湖了，只要你想要的解决方案，Spri
 
 随着对相关原理理解的加深，代码在不停的 Refactor，就算是自己的编程经验总结吧。
 
-项目取名为 **spring-boot** ，意在显示的指出用的是 **Spring Boot**。
+项目取名为 **spring-boot** ，意在显式的指出用的是 **Spring Boot**。
 
 h819 是我的 id。
 
@@ -93,7 +93,7 @@ h819 是我的 id。
 
 Components | Description | Source
 ---|---|---
-Ftp | 可以连接 ftp 和 sftp | /commons
+Ftp | 可以连接 ftp 和 sftp，支持断点续传，比较文件是否发生变换 | /commons
 Exec  | java 执行系统命令 | /commons
 Pdf  | Pdf 新建、加密解密、加水印、页数统计、删除指定页等 | /commons
 QRCode  | 二维码 | /commons
