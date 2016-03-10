@@ -106,8 +106,8 @@ Components | Description | Source | Demo
 DTOUtils | PO to DTO 工具。使用 ***hibernate*** 的同学，估计对这个比较挠头，每次转换都费时费力，还容易出错。DTOUtils 可以实现自动转换，截断递归关联，对于级联层次很深的对象，可以指定转换深度。比目前大多数人采用 bean copy 的方案好。这个有时间我写一篇博客，详细说一下。 | /web | [url](###) 
 Spring JPA  | spring jpa 动态查询工具，可以动态组装查询条件，自动分页，很好用 | /web | [url](###) 
 Jqgird  | [Jqgrid](http://www.trirand.com/blog/?page_id=6/) 工具类，可以方便的处理查询条件。 | /web | [url](###) 
-ZTree | [ZTree](http://www.ztree.me/v3/main.php#_zTreeInfo/) java utils ，功能强大，做后台管理用。 | /web
-Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java utils ，ui 很好看，做展示用吧。 | /web | [url](###) 
+ZTree | [ZTree](http://www.ztree.me/v3/main.php#_zTreeInfo/) java utils ，功能强大，做后台管理用。 | /web| [demo](http://www.canhelp.cn/boot/example/tree/manage/ztree.html)
+Fuelux Tree  | [FueluxTree](http://getfuelux.com/javascript.html#tree/) java utils ，ui 很好看，做展示用吧。 | /web | [demo](http://www.canhelp.cn/boot/example/tree/manage/fuelux.html)
 flexpaper  | [flexpaper](http://flexpaper.devaldi.com/annotate-pdf-documents-online.jsp) 在线文档展示的一种解决方案 | /web | [url](###) 
 Others | 逐步添加 ... | /web
 
