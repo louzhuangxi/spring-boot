@@ -132,10 +132,10 @@
 						<!-- /section:settings.box -->
 						<div class="page-header">
 							<h1>
-								Treeview
+								Fuelux Tree
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									with selectable elements and custom icons
+									Demo
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -147,9 +147,9 @@
 								<!-- #section:plugins/fuelux.treeview -->
 								<div class="row">
 									<div class="col-sm-6">
-										<div class="widget-box widget-color-blue2">
+										<div class="widget-box widget-color-green2">
 											<div class="widget-header">
-												<h4 class="widget-title lighter smaller">Choose Categories</h4>
+												<h4 class="widget-title lighter smaller">Fuelux Tree Demo Style1</h4>
 											</div>
 
 											<div class="widget-body">
@@ -161,10 +161,10 @@
 									</div>
 
 									<div class="col-sm-6">
-										<div class="widget-box widget-color-green2">
+										<div class="widget-box widget-color-blue2">
 											<div class="widget-header">
 												<h4 class="widget-title lighter smaller">
-													Browse Files
+													Fuelux Tree Demo Style2
 													<span class="smaller-80">(with selectable folders)</span>
 												</h4>
 											</div>

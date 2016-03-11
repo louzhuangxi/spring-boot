@@ -98,7 +98,7 @@
     <!-- /.ace-settings-container -->
     <!-- /section:settings.box -->
     <div class="page-header">
-      <h1> Treeview <small> <i class="ace-icon fa fa-angle-double-right"></i> 不用 ace 的 ajax 方式导航，直接访问，演示 zTree 用法 </small> </h1>
+      <h1> ZTree  <small> <i class="ace-icon fa fa-angle-double-right"></i> Demo</small> </h1>
     </div>
     <!-- /.page-header -->
 <div class="row">
@@ -163,7 +163,7 @@
 					<hr />
                     <h4 class="header smaller lighter green"> <i class="ace-icon fa fa-object-group"></i> 节点关联对象 </h4>
                     <p>
-                      <button id="standard-link" class="btn btn-white btn-default btn-round"> <i class="ace-icon fa fa-files-o bigger-110"></i> 节点关联标准 </button>
+                      <button id="standard-link" class="btn btn-white btn-default btn-round"> <i class="ace-icon fa fa-files-o bigger-110"></i> 节点关联对象 </button>
                                      
                     </p>
                     <hr />
