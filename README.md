@@ -68,7 +68,6 @@ h819 是我的 id。
 - h819 commons
 - Apache Commons
 - Guava
-- fastjson
 
 
 #### Ask
