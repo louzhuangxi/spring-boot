@@ -5,7 +5,7 @@
 - spring-boot-web : 0.1.0
 - h819-commons : 1.0.10
 - spring-security-oauth
-- 逐步发布其他项目 ...
+- 逐步发布其他项目  ...
 
 ## 概述
 做这个项目的想法来自于 [springside](https://github.com/springside/springside4/) ,           当时自己在不停的尝试各种框架和实现技术，为了选某一种实现而比来比去大费脑筋，
