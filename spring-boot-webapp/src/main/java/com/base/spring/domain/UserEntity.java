@@ -8,9 +8,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Description : TODO(用户信息)
@@ -118,7 +116,7 @@ public class UserEntity extends BaseEntity {
 
 
     @ManyToMany(mappedBy = "users", targetEntity = GroupEntity.class)
-    private Set<GroupEntity> group = new HashSet<GroupEntity>();
+    private List<GroupEntity> group = new ArrayList<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
@@ -128,7 +126,7 @@ public class UserEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<RoleEntity> roles = new HashSet<RoleEntity>(); //set 可以过滤重复元素
+    private List<RoleEntity> roles = new ArrayList<RoleEntity>(); //set 可以过滤重复元素
 
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
@@ -201,6 +199,7 @@ public class UserEntity extends BaseEntity {
 
         for (RoleEntity roleEntity : getRoles())
             roles.add(roleEntity.getName());
+
         return roles.toArray(new String[roles.size()]);
     }
 
@@ -353,11 +352,11 @@ public class UserEntity extends BaseEntity {
     }
 
 
-    public Set<RoleEntity> getRoles() {
+    public List<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public void setRoles(List<RoleEntity> roles) {
         this.roles = roles;
     }
 
@@ -377,11 +376,11 @@ public class UserEntity extends BaseEntity {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Set<GroupEntity> getGroup() {
+    public List<GroupEntity> getGroup() {
         return group;
     }
 
-    public void setGroup(Set<GroupEntity> group) {
+    public void setGroup(List<GroupEntity> group) {
         this.group = group;
     }
 

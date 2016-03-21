@@ -29,8 +29,8 @@ public class IndexController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String root() {
         logger.info("redirect to other controller");
-        return "redirect:http://canhelp.cn";
-        // return "redirect:/menu/ajax/index.html";  // 跳转到 AceAdminAjaxMenuController 中的 url
+       // return "redirect:http://canhelp.cn";
+         return "redirect:/menu/ajax/index.html";  // 跳转到 AceAdminAjaxMenuController 中的 url
     }
 
 

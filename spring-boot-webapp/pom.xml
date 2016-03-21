@@ -175,6 +175,10 @@
             <!--
             Run clean compile and you will get your Query types generated into target/generated-sources/java.
             -->
+            <!--
+                生成的 QEntity 和原 Entity 在同一个包下，可以直接拷贝到系统的 Entity 包中；也可以把这个路径加到编译路径中，不用拷贝  -->
+            <!--
+                This annotation processor scans our entities and embeddable classes, and creates the Querydsl query types.
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
@@ -193,17 +197,15 @@
                             <goal>process</goal>
                         </goals>
                         <configuration>
-                            <!--
-                           生成的 QEntity 和原 Entity 在同一个包下，可以直接拷贝到系统的 Entity 包中；也可以把这个路径加到编译路径中，不用拷贝  -->
+
                             <outputDirectory>src/main/querydsl-sources</outputDirectory>
-                            <!--
-                            This annotation processor scans our entities and embeddable classes, and creates the Querydsl query types. -->
+
                             <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                             <logOnlyOnError>true</logOnlyOnError>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>     -->
 
         </plugins>
     </build>

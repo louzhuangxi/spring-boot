@@ -5,8 +5,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description : TODO(用户组，也可以理解为部门等逻辑结构，总之是为了给用户分组，便于授权)
@@ -27,7 +27,7 @@ public class GroupEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"group_id", "user_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<UserEntity> users = new HashSet<UserEntity>();
+    private List<UserEntity> users = new ArrayList<UserEntity>();
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)// 如果是单向多对多，只在发出方设置，接收方不做设置
     @JoinTable(name = "base_ref_group_roles", //指定关联表名
@@ -36,7 +36,7 @@ public class GroupEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "group_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<RoleEntity> roles = new HashSet<RoleEntity>();
+    private List<RoleEntity> roles = new ArrayList<RoleEntity>();
 
 
     //昵称
@@ -124,11 +124,11 @@ public class GroupEntity extends BaseEntity {
 
     }
 
-    public Set<UserEntity> getUsers() {
+    public List<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<UserEntity> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
 
@@ -140,11 +140,11 @@ public class GroupEntity extends BaseEntity {
         this.name = name;
     }
 
-    public Set<RoleEntity> getRoles() {
+    public List<RoleEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<RoleEntity> roles) {
+    public void setRoles(List<RoleEntity> roles) {
         this.roles = roles;
     }
 }

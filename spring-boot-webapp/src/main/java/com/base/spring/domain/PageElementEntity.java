@@ -1,6 +1,8 @@
 package com.base.spring.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 /**
  * Description : TODO(页面某个具体元素，如下载按钮，图片 等)
@@ -9,8 +11,9 @@ import javax.persistence.*;
  * Time: 15:15
  * To change this template use File | Settings | File Templates.
  */
-@Entity
-@Table(name = "base_page_element")
+//@Entity
+//@Table(name = "base_page_element")
+@Deprecated
 public class PageElementEntity extends BaseEntity {
 
 

@@ -67,15 +67,15 @@
 		//inline scripts related to this page
 		jQuery(function ($) {
 
-			//
-			//每次点击展开文件夹图标，都会自动执行获取 dataSource 数据源一次。所以数据源返回被点击节点的子节点即可，不必展开太多。
-			//options 是被点击的节点的数据，callback 为点击完成之后，执行的函数
 			/*
 			数据动态加载，需要在 ace_tree 配置之前，初始化该数据   http://fuelux-tutorials.herokuapp.com/tree/#custom-attributes
 			每次点击展开文件夹图标，都会自动执行获取 dataSource 数据源一次。所以数据源返回被点击节点的子节点即可，不必展开太多。
 
 			options 是被点击的节点的数据
 			callback 为点击完成之后，执行的函数
+			
+			pre select : http://stackoverflow.com/questions/17169156/how-to-preselect-items-within-a-fuel-ux-treeview
+			
 			 */
 			var remoteDateSource = function (options, callback) {
 				//console.log(options);
@@ -114,7 +114,8 @@
 			};
 
 			/*
-			ace 对 http://getfuelux.com/javascript.html#tree  做了包装
+			ace 对 http://getfuelux.com/javascript.html#tree  做了包装，下面是 fuelux tree 设置
+			下面的演示是读取同一个数据源，不同的样式 
 			 */
 			$('#tree1').ace_tree({
 				dataSource : remoteDateSource,
@@ -175,6 +176,9 @@
 				var item = items[i];
 				output += item.additionalParameters['id'] + ":" + item.text + "\n";
 				}*/
+				
+				
+				
 
 				//send output to server
 			})

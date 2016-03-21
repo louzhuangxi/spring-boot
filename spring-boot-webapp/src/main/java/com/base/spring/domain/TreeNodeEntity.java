@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Description : TODO(树状结构, type 不同，就代表不同类型的树)
@@ -18,7 +21,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "base_tree_node")
+@Table(name = "base_treenode")
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "treenode.parent", attributeNodes = {@NamedAttributeNode("parent")}),//级联 parent
         @NamedEntityGraph(name = "treenode.children", attributeNodes = {@NamedAttributeNode("children")}), // 级联 children
@@ -107,6 +110,14 @@ public class TreeNodeEntity extends BaseEntity {
     private List<TreeNodeEntity> children = new ArrayList<>();
 
 
+    /**
+     * 多个节点，可以拥有同一种权限，如 节点编辑  ...
+     * 一个节点，也可以又有多种权限
+     */
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
+    private List<RoleEntity> roles = new ArrayList<>();
+
+
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
     @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
             joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
@@ -114,7 +125,7 @@ public class TreeNodeEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<PrivilegeEntity> privileges = new HashSet<>();
+    private List<PrivilegeEntity> privileges = new ArrayList<>();
 
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
@@ -125,24 +136,6 @@ public class TreeNodeEntity extends BaseEntity {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
-
-//    /**
-//     * 菜单创建，只提供这一个构造函数，强制要求录入必需的数据项
-//     * 菜单需要初始化
-//     *
-//     * @param type     节点类型
-//     * @param name     名称
-//     * @param isParent 是否是父节点
-//     * @param parent   父菜单
-//     */
-//    public TreeNodeEntity(TreeNodeType type, String name, boolean isParent, TreeNodeEntity parent) {
-//        this.name = name;
-//        this.type = type;
-//        this.isParent = isParent;
-//        this.parent = parent;
-//
-//    }
-
 
     /**
      * 菜单创建，只提供这一个构造函数，强制要求录入必需的数据项
@@ -319,12 +312,19 @@ public class TreeNodeEntity extends BaseEntity {
         this.index = index;
     }
 
+    public List<RoleEntity> getRoles() {
+        return roles;
+    }
 
-    public Set<PrivilegeEntity> getPrivileges() {
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
+    }
+
+    public List<PrivilegeEntity> getPrivileges() {
         return privileges;
     }
 
-    public void setPrivileges(Set<PrivilegeEntity> privileges) {
+    public void setPrivileges(List<PrivilegeEntity> privileges) {
         this.privileges = privileges;
     }
 

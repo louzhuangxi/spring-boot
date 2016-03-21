@@ -21,11 +21,7 @@ public class SecurityUser extends org.springframework.security.core.userdetails.
     //通过角色，获取的是 PrivilegeEntity 中的 name , 如果 name 标识的 url 满足  ?????
     public SecurityUser(UserEntity userEntity) {
         //重新根据 UserEntity 进行包装
-        super(
-                userEntity.getUserName(),
-                userEntity.getPassword(),
-                AuthorityUtils.createAuthorityList(userEntity.getStringRoles()));
-
+        super(userEntity.getUserName(), userEntity.getPassword(), AuthorityUtils.createAuthorityList(userEntity.getStringRoles()));
 
         // 其他变量赋值
         this.user = userEntity;

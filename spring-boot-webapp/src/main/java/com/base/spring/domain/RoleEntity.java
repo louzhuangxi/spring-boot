@@ -5,8 +5,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description : TODO(角色表)
@@ -21,22 +21,31 @@ public class RoleEntity extends BaseEntity {
 
 
     @ManyToMany(mappedBy = "roles", targetEntity = GroupEntity.class)
-    private Set<GroupEntity> group = new HashSet<GroupEntity>();
+    private List<GroupEntity> group = new ArrayList<>();
 
     @ManyToMany(mappedBy = "roles", targetEntity = UserEntity.class)
-    private Set<UserEntity> users = new HashSet<UserEntity>();
+    private List<UserEntity> users = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-    @JoinTable(name = "base_ref_roles_privileges", //指定关联表名
+//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+//    @JoinTable(name = "base_ref_roles_privileges", //指定关联表名
+//            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+//            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
+//    @Fetch(FetchMode.SUBSELECT)
+//    @BatchSize(size = 100)//roles 过多的情况下应用。
+//    private Set<PrivilegeEntity> privileges = new HashSet<PrivilegeEntity>();
+
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TreeNodeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_roles_treenode", //指定关联表名
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
+            inverseJoinColumns = {@JoinColumn(name = "treenode_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "treenode_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<PrivilegeEntity> privileges = new HashSet<PrivilegeEntity>();
+    private List<TreeNodeEntity> treeNodes = new ArrayList<>();
 
     //昵称
-    @Column(name = "name",unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
     /**
@@ -54,43 +63,72 @@ public class RoleEntity extends BaseEntity {
     }
 
 
-    /**
-     * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
-     * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ????
-     *
-     * @param privilege
-     */
-    public void addPrivilege(PrivilegeEntity privilege) {
+//    /**
+//     * 自定义方法，添加学生
+//     * 注意建立关联的方法(单向的不需要)
 
-        if (!this.privileges.contains(privilege)) {
-            this.privileges.add(privilege);
-            privilege.getRoles().add(this);
+//     * @param privilege
+//     */
+//    public void addUser(UserEntity privilege) {
+//
+//        if (!this.privileges.contains(privilege)) {
+//            this.privileges.add(privilege);
+//            privilege.getRoles().add(this);
+//        }
+//
+//    }
+//
+//    /**
+//     * 自定义方法，删除学生
+//     * 注意删除关联的方法(单向的不需要)
+
+//     * @param privilege
+//     */
+//    public void removeUser(PrivilegeEntity privilege) {
+//
+//        if (this.privileges.contains(privilege)) {
+//            this.privileges.remove(privilege);
+//            privilege.getRoles().remove(this);
+//
+//        }
+//
+//    }
+
+    /**
+     * 自定义方法，添加
+     * 注意建立两个对象关联的方法(单向的不需要)
+     *
+     * @param treeNode
+     */
+    public void addTreeNode(TreeNodeEntity treeNode) {
+
+        if (!this.treeNodes.contains(treeNode)) {
+            this.treeNodes.add(treeNode);
+            treeNode.getRoles().add(this);
         }
 
     }
 
     /**
-     * 自定义方法，删除学生
+     * 自定义方法，删除
      * 注意删除关联的方法(单向的不需要)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
      *
-     * @param privilege
+     * @param treeNode
      */
-    public void removePrivilege(PrivilegeEntity privilege) {
+    public void removeTreeNode(TreeNodeEntity treeNode) {
 
-        if (this.privileges.contains(privilege)) {
-            this.privileges.remove(privilege);
-            privilege.getRoles().remove(this);
+        if (this.treeNodes.contains(treeNode)) {
+            this.treeNodes.remove(treeNode);
+            treeNode.getRoles().remove(this);
 
         }
 
     }
 
+
     /**
-     * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
-     * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ????
+     * 自定义方法，添加用户
+     * 注意建立两个对象关联的方法(单向的不需要)
      *
      * @param user
      */
@@ -104,9 +142,8 @@ public class RoleEntity extends BaseEntity {
     }
 
     /**
-     * 自定义方法，删除学生
+     * 自定义方法，删除用户
      * 注意删除关联的方法(单向的不需要)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
      *
      * @param user
      */
@@ -123,7 +160,6 @@ public class RoleEntity extends BaseEntity {
     /**
      * 自定义方法，添加学生
      * 注意建立关联的方法(单向的不需要)
-     * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ????
      *
      * @param group
      */
@@ -139,7 +175,6 @@ public class RoleEntity extends BaseEntity {
     /**
      * 自定义方法，删除学生
      * 注意删除关联的方法(单向的不需要)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
      *
      * @param group
      */
@@ -153,11 +188,11 @@ public class RoleEntity extends BaseEntity {
 
     }
 
-    public Set<UserEntity> getUsers() {
+    public List<UserEntity> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<UserEntity> users) {
+    public void setUsers(List<UserEntity> users) {
         this.users = users;
     }
 
@@ -169,19 +204,28 @@ public class RoleEntity extends BaseEntity {
         this.name = name;
     }
 
-    public Set<PrivilegeEntity> getPrivileges() {
-        return privileges;
+//    public Set<PrivilegeEntity> getPrivileges() {
+//        return privileges;
+//    }
+//
+//    public void setPrivileges(Set<PrivilegeEntity> privileges) {
+//        this.privileges = privileges;
+//    }
+
+
+    public List<TreeNodeEntity> getTreeNodes() {
+        return treeNodes;
     }
 
-    public void setPrivileges(Set<PrivilegeEntity> privileges) {
-        this.privileges = privileges;
+    public void setTreeNodes(List<TreeNodeEntity> treeNodes) {
+        this.treeNodes = treeNodes;
     }
 
-    public Set<GroupEntity> getGroup() {
+    public List<GroupEntity> getGroup() {
         return group;
     }
 
-    public void setGroup(Set<GroupEntity> group) {
+    public void setGroup(List<GroupEntity> group) {
         this.group = group;
     }
 }

@@ -93,6 +93,7 @@ public class ZTreeService {
         logger.info("Getting id={}", id);
         TreeNodeEntity parent = treeNodeRepository.findOne(id);
         parent.clearChildren();
+        parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
         treeNodeRepository.save(parent);
 
     }
