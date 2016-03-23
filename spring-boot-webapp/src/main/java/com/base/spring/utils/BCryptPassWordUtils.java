@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //http://www.mindrot.org/projects/jBCrypt/
 //org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 //BCrypt implements OpenBSD-style Blowfish password hashing using the scheme described in "A Future-Adaptable Password Scheme" by Niels Provos and David Mazieres.
-//专门用来加密密码
+// Most of the other mechanism, such as the MD5PasswordEncoder and ShaPasswordEncoder use weaker algorithms and are now deprecated.
+// BCryptPasswordEncoder 专门用来加密密码
+// MD5PasswordEncoder 和 ShaPasswordEncoder 加密强度不够，已经不推荐
 public class BCryptPassWordUtils {
 
     private static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

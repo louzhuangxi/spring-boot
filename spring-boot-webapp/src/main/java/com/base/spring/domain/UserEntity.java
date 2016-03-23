@@ -148,7 +148,7 @@ public class UserEntity extends BaseEntity {
      */
     public UserEntity(String loginName, String password, String email) {
 
-        this.userName = userName;
+        this.loginName = loginName;
         this.loginName = loginName;
         this.password = BCryptPassWordUtils.encode(password);
         this.email = email;

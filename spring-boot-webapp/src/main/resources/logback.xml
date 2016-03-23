@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <!-- logback.xml 放入 resource 目录下，spring boot 会自动加载
+    <!--
+    Spring boot 使用了 Starter POMs, 默认使用 Logback 作为日志系统，同时也支持 Log4j,Log4J2 ，但需要特殊配置
+    logback.xml 放入 resource 目录下，spring boot 会自动加载
 	选择加载的 appender
     (参考 spring boot 官方文档设置)
     -->
