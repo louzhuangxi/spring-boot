@@ -18,6 +18,7 @@ public class RegisterController {
      //http://www.baeldung.com/registration-verify-user-by-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_55_spring
     //http://www.baeldung.com/spring-security-registration-verification-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_56_spring
     //http://www.baeldung.com/spring-security-registration-i-forgot-my-password?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_57_spring
+    //http://www.baeldung.com/registration-password-strength-and-rules?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_60_spring
     /**
      * 默认首页，直接跳转到相关的 Controller
      * @return
