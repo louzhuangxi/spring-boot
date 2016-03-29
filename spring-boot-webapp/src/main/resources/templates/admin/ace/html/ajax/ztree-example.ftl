@@ -281,6 +281,7 @@
 				if (log.children("li").length > 10) { // 值保留10 行数据，防止页面变长
 					log.get(0).removeChild(log.children("li")[0]);
 				}
+
 			}
 
 			/*
