@@ -8,14 +8,16 @@ import com.itextpdf.text.pdf.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.h819.commons.MyExceptionUtils;
-import org.h819.commons.file.MyFileUtils;
 import org.h819.commons.MyStringUtils;
+import org.h819.commons.file.MyFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author H819
@@ -278,13 +280,13 @@ public class PDFUtilsBase {
 
     /**
      * 添加 javaScript action 例子. PDF 文档象 html 静态网页一样，可执行 javsScrip 脚本。
-     * <p/>
+     * <p>
      * 所谓的 adobe acrobat 开发，指的就是，如何用 acrobat 设计PDF 文件，就行设计网页文件一样。
-     * <p/>
+     * <p>
      * 在该文件中，可以设计布局，颜色，可以编写 javaScript 代码，指定表单操作等。
-     * <p/>
+     * <p>
      * 在进行 adobe reader 进行浏览 PDF 文件的时候，就会执行相应的脚本。
-     * <p/>
+     * <p>
      * 可以在 reader 阅读器中指定是否执行脚本。
      *
      * @param srciptOutFile 输出的样例文件
@@ -354,8 +356,6 @@ public class PDFUtilsBase {
 
     /**
      * 为制定文件夹内的 pdf 文件添加水印
-     * <p/>
-     * 添加方法，用 addWatermarkWithTemplate() 代替
      *
      * @param srcDir                 源文件夹
      * @param destDir                目标
@@ -364,7 +364,7 @@ public class PDFUtilsBase {
      * @param companyName            授权接受者公司名称，如"东城稻香村集团"
      * @param copyRight              授权声明，如" . 专用 . 不得传播" ,和 companyName
      *                               联合使用，会在文本上添加："东城稻香村集团 . 专用 . 不得传播"
-     * @param adminCommpanyName      授权方名称，如："首都标准网"
+     * @param adminCommpanyName      授权方名称，如："xx信息网"
      * @param adminCompanyWebSiteUrl 授权方公司网址名称，如："http://www.capital-std.com"
      * @throws java.io.IOException
      * @throws MyExceptionUtils
@@ -406,7 +406,7 @@ public class PDFUtilsBase {
         }
 
         try {
-            MyFileUtils.forceMkdir(destDir);
+            FileUtils.forceMkdir(destDir);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -544,6 +544,151 @@ public class PDFUtilsBase {
         logger.info("total " + count + " files create.");
     }
 
+
+    // // 可以设置文档的各种属性，例如作者,title 等
+//    HashMap<String, String> moreInfo = new HashMap<String, String>();
+//    moreInfo.put("Author", "H819 create");
+
+    public static void addWatermark0(File srcPdf, File destPdf, File imageFile,
+                                     File fondFile, String companyName, String copyRight,
+                                     String adminCommpanyName, String adminCompanyWebSiteUrl, Map<String, String> pdfMoreInfo)
+            throws IOException, MyExceptionUtils {
+
+
+        if (srcPdf == null || !srcPdf.exists())
+            throw new IOException("pdf file :  '" + srcPdf + "' does not exsit.");
+
+
+        if (!FilenameUtils.getExtension(srcPdf.getAbsolutePath()).toLowerCase().equals("pdf"))
+            throw new IOException("file '" + srcPdf + "'  not pdf.");
+
+        // 判断字体文件必须存在
+        if (fondFile == null || !fondFile.exists()) {
+            throw new IOException("fondFile '" + fondFile + "' does not exsit.");
+        }
+
+        // 判断图片文件信息
+        if (imageFile != null && !imageFile.exists()) {
+            // 图片信息不存在
+            throw new IOException("src directory '" + imageFile.getPath() + "' does not exsit.");
+        }
+
+
+        // 基本属性
+        Image img = null;
+        BaseFont bfont = null;
+        BaseFont bfurl = null;
+        PdfContentByte under;
+        PdfContentByte over;
+
+
+        if (imageFile != null) {
+            try {
+                img = Image.getInstance(imageFile.getAbsolutePath());
+                bfont = BaseFont.createFont(fondFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+                bfurl = BaseFont.createFont();
+            } catch (BadElementException e) {
+                e.printStackTrace();
+            } catch (DocumentException e) {
+                e.printStackTrace();
+            }
+            img.setAbsolutePosition(150, 300);
+        }
+
+
+        try {
+            // we create a reader for a certain document
+            PdfReader reader = getPdfReader(srcPdf);
+
+            int pageNumbers = reader.getNumberOfPages();
+            // we create a stamper that will copy the document to a new file
+            PdfStamper stamp = getPdfStamper(srcPdf, destPdf);
+            // adding some metadata
+            if (pdfMoreInfo != null)
+                stamp.setMoreInfo(pdfMoreInfo);
+
+            // adding content to each page
+            int number = 0;
+            while (number < pageNumbers) {// 逐页添加
+                number++;
+                // 图片
+                if (imageFile != null) {
+                    under = stamp.getUnderContent(number);
+                    // under = stamp.getOverContent(number);
+                    under.addImage(img);
+                }
+
+                // === 添加文字
+                if (companyName != null && !companyName.equals("")) {
+                    over = stamp.getOverContent(number);
+
+                    // 文字开始声明
+                    over.beginText();
+
+                    //第一行文字： 分别设置字体,大小,颜色:单位名称
+                    over.setGrayFill(0.6f);
+                    over.setFontAndSize(bfont, 35);
+                    over.setRGBColorFill(32, 178, 170);
+                    over.showTextAligned(Element.ALIGN_CENTER, companyName + copyRight, 290, 470, 45);
+                    //第二行文字： 分别设置字体,大小,颜色 :发布单位名称
+                    over.setFontAndSize(bfont, 18);
+                    over.showTextAligned(Element.ALIGN_CENTER, adminCommpanyName, 310, 430, 45);
+                    //第三行文字: 分别设置字体,大小,颜色 :发布单位网址
+                    over.setGrayFill(0.8f); // 设置字体颜色灰度
+                    over.setFontAndSize(bfurl, 10);
+                    over.setRGBColorFill(32, 178, 170);
+                    over.showTextAligned(Element.ALIGN_CENTER, adminCompanyWebSiteUrl, 320, 420, 45);
+
+                    // 文字结束声明
+                    over.endText();
+                }
+
+            }
+            stamp.close();
+            reader.close();
+
+        } catch (Exception e) {
+            logger.info(srcPdf.getAbsolutePath() + " create error.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 添加指定pdf文件的具体页为背景，可作为添加水印方法。 pdf 页面为水印
+     * <p>
+     * 此方法可以作为添加水印的方法。背景文件可以用 word 生成，格式和字体任意设置，之后可以作为新生成的文件的背景。
+     * </p>
+     * <p>
+     * 源自 iText in Action 2nd Edition，Chapter 6: Working with existing PDFs
+     * ，StampStationery
+     * </p>
+     *
+     * @param srcPdf               the original PDF
+     * @param waterMarkPdf         a PDF that will be added as background
+     * @param destPdf              the resulting PDF
+     * @param numberOfwaterMarkPdf 准备做背景的 pdf 的具体页                  z
+     * @throws java.io.IOException
+     * @throws DocumentException
+     */
+
+    public static void addWatermarkWithPdfFile(File srcPdf, File destPdf, File waterMarkPdf, int numberOfwaterMarkPdf) throws IOException, DocumentException {
+        // Create readers
+        PdfReader reader = getPdfReader(waterMarkPdf);
+        // Create the stamper
+        PdfStamper stamper = getPdfStamper(srcPdf, destPdf);
+        // Add the stationery to each page
+        PdfImportedPage page = stamper.getImportedPage(reader, numberOfwaterMarkPdf);
+        int n = stamper.getReader().getNumberOfPages();
+        PdfContentByte background;
+        for (int i = 1; i <= n; i++) {
+            background = stamper.getUnderContent(i);
+            background.addTemplate(page, 0, 0);
+        }
+        // CLose the stamper
+        stamper.close();
+        reader.close();
+    }
+
     /**
      * 压缩已经存在的 pdf 文件。实例了处理已经存在的文件的方法
      *
@@ -552,8 +697,7 @@ public class PDFUtilsBase {
      * @throws java.io.IOException
      * @throws DocumentException
      */
-    public static void compressPdf(File srcPdfFile, File descPdfFile)
-            throws IOException, DocumentException {
+    public static void compressPdf(File srcPdfFile, File descPdfFile) throws IOException, DocumentException {
 
         if (srcPdfFile == null || !srcPdfFile.exists())
             throw new IOException("src pdf file '" + srcPdfFile
@@ -642,7 +786,7 @@ public class PDFUtilsBase {
 
     /**
      * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。可以递归破解指定文件夹内的所有文件，并保留原来的目录结构
-     * <p/>
+     * <p>
      * windows 下面 "PDF Password Remover v3.1" 软件提供命令行破解，通过系统调用该命令行，进行破解
      *
      * @param srcPdfFileDir 存放待破解 pdf 文件的文件夹. 破解之后的文件，存放子默认的文件夹内。
@@ -661,7 +805,7 @@ public class PDFUtilsBase {
 
     /**
      * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。可以递归破解指定文件夹内的所有文件，并保留原来的目录结构
-     * <p/>
+     * <p>
      * windows 下面 "PDF Password Remover v3.1" 软件提供命令行破解，通过系统调用该命令行，进行破解
      *
      * @param srcDirectoryPath  存放待破解 pdf 文件的文件夹
@@ -779,9 +923,9 @@ public class PDFUtilsBase {
 
     /**
      * pdf 解密。仅能解密 owner 属性，不能解密 user 属性(owner 和 user 含义见加密方法)。
-     * <p/>
+     * <p>
      * 如果 pdf 文件 设置了打开密码，没有设置拥有者密码，不能解密
-     * <p/>
+     * <p>
      * 如果 pdf 文件设置了打开密码和拥有者密码，用拥有者密码可以解密,解密之后，pdf 文件拥有了所有编辑属性
      *
      * @param srcPdfFile    源文件
@@ -804,7 +948,6 @@ public class PDFUtilsBase {
         stamper.close();
 
     }
-
 
     /**
      * 加密 pdf 文件
@@ -972,7 +1115,7 @@ public class PDFUtilsBase {
         }
 
         try {
-            MyFileUtils.forceMkdir(descPdfFileDir);
+            FileUtils.forceMkdir(descPdfFileDir);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -1053,16 +1196,16 @@ public class PDFUtilsBase {
 
     /**
      * 去除附在 PDF 属性 field 上的 javaScript
-     * <p/>
+     * <p>
      * pdf 文件可以添加 javaScript，来实现某种功能，例如激发对话框等动作。
-     * <p/>
+     * <p>
      * javaScript 可以附加于某个 filed，此时去掉 这个 filed，使 javaScript 代码因缺少变量而无法执行
-     * <p/>
+     * <p>
      * 即可以达到去除 javaScript 的目的。
-     * <p/>
+     * <p>
      * 通过 itext 的 reader.getJavaScript()方法，可以查看 pdf 文件 JavaScript源代码(adobe pro
      * 控制台也可以看到源码)
-     * <p/>
+     * <p>
      * 通过源代码可以得到具体的 field 名称
      *
      * @param srcPdfFileDir   源文件夹
@@ -1087,7 +1230,7 @@ public class PDFUtilsBase {
             return;
         }
 
-        MyFileUtils.forceMkdir(descPdfFileDir);
+        FileUtils.forceMkdir(descPdfFileDir);
 
         // 检查磁盘空间是否充足
 
@@ -1212,7 +1355,7 @@ public class PDFUtilsBase {
         // 拷贝资源文件到临时目录
         String[] resources = new String[]{"/pdfexpiration.js"};
         String[] resPath = MyFileUtils.copyResourceFileFromJarLibToTmpDir(
-                resources, "jspdftemp", PDFUtilsBase.class);
+                resources);  //????
         // 得到资源文件内容
         String jsStr = FileUtils.readFileToString(new File(resPath[0]));
 
@@ -1394,61 +1537,18 @@ public class PDFUtilsBase {
 
     }
 
-    public static void main(String[] args) throws IOException,
-            MyExceptionUtils, DocumentException {
-        // TODO Auto-generated method stub
+    /**
+     * 简化代码编写
+     *
+     * @param srcPdf
+     * @param destPdf
+     * @return
+     * @throws IOException
+     * @throws DocumentException
+     */
 
-        File f = new File("d:\\C1068500.pdf");
-        File f2 = new File("d:\\C1068500.pdf");
-        File f3 = new File("d://field_actions.pdf");
-        File f4 = new File("d://sm.pdf");
-        File f5 = new File("d://sm_after.pdf");
-        File f6 = new File("d://000");
-        File f7 = new File("d://0000");
-        File f8 = new File("D:\\download\\DINISO2859-1Y2014(ED).PDF");
-        File f9 = new File("D:\\download\\all.pdf");
-        FileInputStream f8Stream = new FileInputStream(f8);
-
-        File[] ff = {f8, f9};
-
-        PDFUtilsBase t = new PDFUtilsBase();
-        // p.addWaterMarkToCapital(new File("D:/001/"), new File("d:/002/"),
-        // null,
-        // "北京");
-
-        // 测试加密解密
-        //  t.encryptPdf(f8, new File("D:/encryptjava.pdf"), null, null, false, false, true, true);
-        // test.decryptPdf(new File("D:/001/encryptjava.pdf"), new File(
-        // "D:/001/encryptjava_deencryptjava.pdf"), "hui");
-        // p.encryptPdf("D:/001/java.pdf", "D:/001/encryptjava2.pdf");
-        // t.testBigPdfFileRead();
-
-        // 测试 javsScript 语句
-        // test.addScriptActionsExample(new File("D:\\scriptsample.pdf"));
-        // t.addScriptExample(f4.getAbsolutePath(), f5.getAbsolutePath());
-        //	PDFUtilsBase.setExpireDateWithJavaScript(f6, f7, "2011,02,01", 20, 30);
-
-        // 非递归形式实现破解 pdf
-        // PDFUtilsBase.decryptPdf2(new File("D:\\download\\ansi\\"), new File(
-        // "D:\\download\\des\\"), new File("D:\\download\\bad\\"));
-
-        //
-        // t.getPageInfomation(f3);
-        // t.addScriptExample("d:\\hello_reverse.pdf", "d:\\1.pdf");
-
-        // 测试删除 js
-        // t.removeJavaScript(new File("d:\\23"),new
-        // File("d:\\333"),"expireCNS");
-        // System.out.println(new File("d:\\01").getFreeSpace() /1000000.00);
-
-        // 测试添加 js
-
-        // t.setExpireDateWithJavaScript(new File("d:\\23"), new
-        // File("d:\\333"),"");
-
-        // 合并文件测试
-        t.merge(ff, new File("d:\\merge.pdf"));
-
+    public static PdfStamper getPdfStamper(File srcPdf, File destPdf) throws IOException, DocumentException {
+        return new PdfStamper(getPdfReader(srcPdf), new FileOutputStream(destPdf));
     }
 
     // http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/js_api_reference.pdf
@@ -1461,12 +1561,13 @@ public class PDFUtilsBase {
      * @return PdfReader 实例
      * @throws IOException
      */
-    protected static PdfReader getPdfReader(File pdfFile) throws IOException {
+    public static PdfReader getPdfReader(File pdfFile) throws IOException {
 
+        Document.plainRandomAccess = true;
         FileInputStream fileStream = new FileInputStream(pdfFile);
         return new PdfReader(new RandomAccessFileOrArray(new FileChannelRandomAccessSource(fileStream.getChannel())), null);
-    }
 
+    }
 
     /**
      * 优化 PdfReader 读取 pdf 文件，如果 pdf 体积过大，也可以读取
@@ -1476,7 +1577,7 @@ public class PDFUtilsBase {
      * @return
      * @throws IOException
      */
-    protected static PdfReader getPdfReader(File pdfFile, String ownerPassword) throws IOException {
+    public static PdfReader getPdfReader(File pdfFile, String ownerPassword) throws IOException {
 
         FileInputStream fileStream = new FileInputStream(pdfFile);
 
@@ -1487,192 +1588,30 @@ public class PDFUtilsBase {
     }
 
     /**
-     * 测试 pdf 文件读取方法
-     *
+     * @param srcPdf
+     * @param destPdf
      * @throws IOException
-     */
-    private void testBigPdfFileRead() throws IOException {
-
-        System.out.print(" 最大可用内存，对应-Xmx ：" + Runtime.getRuntime().maxMemory());  //最大可用内存，对应-Xmx
-        System.out.print(" 当前JVM空闲内存 ：" + Runtime.getRuntime().freeMemory());  //当前JVM空闲内存
-        System.out.print(" 当前JVM占用的内存总数 ：" + Runtime.getRuntime().totalMemory());  //当前JVM占用的内存总数，其值相当于当前JVM已使用的内存及freeMemory()的总和
-
-        String fstr = "D:\\download\\all.pdf";
-
-        File f = new File(fstr);
-
-        FileInputStream fileStream = new FileInputStream(f);
-        //可以读取大文件
-        PdfReader pdfr = new PdfReader(new RandomAccessFileOrArray(new FileChannelRandomAccessSource(fileStream.getChannel())), null);
-
-        // encryptPdf()
-
-        System.out.print("\n" + fstr + " 加密 ：" + pdfr.isEncrypted());
-
-    }
-
-    /**
-     * Manipulates a PDF file src with the file dest as result
-     *
-     * @param src  the original PDF
-     * @param dest the resulting PDF
-     * @throws java.io.IOException
      * @throws DocumentException
      */
-    public void addScriptExample(File src, File dest) throws IOException,
-            DocumentException {
-        // Create a reader
-        PdfReader reader = getPdfReader(src);
-        // Create a stamper
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
-        // Get the writer (to add actions and annotations)
-        PdfWriter writer = stamper.getWriter();
-
-        PdfAction action = PdfAction
-                .javaScript(FileUtils.readFileToString(new File("d:\\js.js")),
-                        writer, true);
-        stamper.setPageAction(PdfWriter.PAGE_OPEN, action, 1);
-
-        // Close the stamper
+    public void addWaterMarkString(String srcPdf, String destPdf) throws IOException, DocumentException {
+        PdfReader reader = new PdfReader(srcPdf);
+        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destPdf));
+        PdfContentByte under = stamper.getUnderContent(1);
+        Font f = new Font(Font.FontFamily.HELVETICA, 15);
+        Phrase p = new Phrase("This watermark is added UNDER the existing content", f);
+        ColumnText.showTextAligned(under, Element.ALIGN_CENTER, p, 297, 550, 0);
+        PdfContentByte over = stamper.getOverContent(1);
+        p = new Phrase("This watermark is added ON TOP OF the existing content", f);
+        ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 500, 0);
+        p = new Phrase("This TRANSPARENT watermark is added ON TOP OF the existing content", f);
+        over.saveState();
+        PdfGState gs1 = new PdfGState();
+        gs1.setFillOpacity(0.5f);
+        over.setGState(gs1);
+        ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 450, 0);
+        over.restoreState();
         stamper.close();
-    }
-
-    /**
-     * 添加文件为背景，可作为添加水印方法。。
-     * <p>
-     * 此方法可以作为添加水印的方法。背景文件可以用 word 生成，格式和字体任意设置，之后可以作为新生成的文件的背景。
-     * </p>
-     * <p>
-     * 源自 iText in Action 2nd Edition，Chapter 6: Working with existing PDFs
-     * ，StampStationery
-     * </p>
-     *
-     * @param src      the original PDF
-     * @param template a PDF that will be added as background
-     * @param dest     the resulting PDF
-     * @throws java.io.IOException
-     * @throws DocumentException
-     */
-    public void addWatermarkWithTemplate(File src, File template,
-                                         File dest) throws IOException, DocumentException {
-        // Create readers
-        PdfReader reader = getPdfReader(src);
-        PdfReader s_reader = getPdfReader(template);
-        // Create the stamper
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
-        // Add the stationery to each page
-        PdfImportedPage page = stamper.getImportedPage(s_reader, 1);
-        int n = reader.getNumberOfPages();
-        PdfContentByte background;
-        for (int i = 1; i <= n; i++) {
-            background = stamper.getUnderContent(i);
-            background.addTemplate(page, 0, 0);
-        }
-        // CLose the stamper
-        stamper.close();
-    }
-
-    /**
-     * 获取 pdf 文件属性信息
-     *
-     * @param srcPdfFile
-     */
-    public void getPageInfomation(File srcPdfFile) {
-
-        try {
-
-            PdfReader reader = getPdfReader(srcPdfFile);
-
-            Map info = reader.getInfo();
-
-            for (Iterator i = info.keySet().iterator(); i.hasNext(); ) {
-                String key = (String) i.next();
-                String value = (String) info.get(key);
-                System.out.println(key + ": " + value);
-            }
-
-            System.out.println(MyStringUtils.center("pdf 信息", 80, "==="));
-
-            System.out.println("PDF Version: " + reader.getPdfVersion());
-            System.out.println("File length: " + reader.getFileLength());
-            System.out.println("file size: " + reader.getFileLength()
-                    / (1024.00 * 1024.00) + "M");
-
-            System.out.print("Number of pages: ");
-            System.out.println(reader.getNumberOfPages());
-            Rectangle mediabox = reader.getPageSize(1);
-            System.out.print("Size of page 1: [");
-            System.out.print(mediabox.getLeft());
-            System.out.print(',');
-            System.out.print(mediabox.getBottom());
-            System.out.print(',');
-            System.out.print(mediabox.getRight());
-            System.out.print(',');
-            System.out.print(mediabox.getTop());
-            System.out.println("]");
-            System.out.print("Rotation of page 1: ");
-            System.out.println(reader.getPageRotation(1));
-            System.out.print("Page size with rotation of page 1: ");
-            System.out.println(reader.getPageSizeWithRotation(1));
-            System.out.print("Is rebuilt? ");
-            System.out.println(reader.isRebuilt());
-            System.out.print("Is encrypted? ");
-            System.out.println(reader.isEncrypted());
-            System.out.println("filed type 'expireCNS'? "
-                    + reader.getAcroFields().getFieldType("expireCNS"));
-
-            // 所有表单信息
-            System.out.println(MyStringUtils.center("所有的 filed 信息", 80, "==="));
-            // Get the fields from the reader (read-only!!!)
-            AcroFields form = reader.getAcroFields();
-
-            // Loop over the fields and get info about them
-            Set<String> fields = form.getFields().keySet();
-            for (String key : fields) {
-                System.out.println(key + ": ");
-                switch (form.getFieldType(key)) {
-                    case AcroFields.FIELD_TYPE_CHECKBOX:
-                        System.out.println("Checkbox");
-                        break;
-                    case AcroFields.FIELD_TYPE_COMBO:
-                        System.out.println("Combobox");
-                        break;
-                    case AcroFields.FIELD_TYPE_LIST:
-                        System.out.println("List");
-                        break;
-                    case AcroFields.FIELD_TYPE_NONE:
-                        System.out.println("None");
-                        break;
-                    case AcroFields.FIELD_TYPE_PUSHBUTTON:
-                        System.out.println("Pushbutton");
-                        break;
-                    case AcroFields.FIELD_TYPE_RADIOBUTTON:
-                        System.out.println("Radiobutton");
-                        break;
-                    case AcroFields.FIELD_TYPE_SIGNATURE:
-                        System.out.println("Signature");
-                        break;
-                    case AcroFields.FIELD_TYPE_TEXT:
-                        System.out.println("Text");
-                        break;
-                    default:
-                        System.out.println("?");
-                }
-            }
-
-            System.out.println(MyStringUtils.center("javaScrpt 信息", 80, "==="));
-            System.out.println("javaScript : " + reader.getJavaScript());
-
-            reader.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
-    private void test() {
+        reader.close();
     }
 
 

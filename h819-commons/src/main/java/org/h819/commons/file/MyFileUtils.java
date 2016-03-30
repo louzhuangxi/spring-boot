@@ -3,6 +3,7 @@ package org.h819.commons.file;
 import org.apache.commons.io.*;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ import java.util.Collection;
 
 // org.apache.commons.io.FilenameUtils 中有一些文件名分隔符的有用的类，如separatorsToSystem 方法等
 // java.nio.file.Files ,java.nio.file.Paths 提供很多相应的工具
-public class MyFileUtils extends FileUtils {
+public class MyFileUtils {
 
     private static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
@@ -109,64 +110,48 @@ public class MyFileUtils extends FileUtils {
     }
 
     /**
-     * 拷贝 jar 资源中的文件到系统临时目录下
+     * 拷贝 classpath 中依赖库 jar 资源中的文件到系统临时目录下
+     * jar 必须用 java 命令打包
      *
-     * 可参考 http://codepub.cn/2015/04/22/How-to-load-resource-file-in-a-Jar-package-correctly/
-     *
-     * @param resourceNames 待拷贝的 jar 中的文件名称
-     *                      参数写法
-     *                      String[] resourceNames = new String[] { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
-     *                      此时，文件必须在 jar 文件的根目录下面，且jar 需用 java 命令打包。
-     * @param tempDir       为了容易查看，在系统临时目录下建立文件夹，存放拷贝后的文件
-     * @param callClass     调用本方法的类名，定位资源文件位置用到
+     * @param resourceName 待拷贝的 jar 中的文件名称
+     *                     参数写法
+     *                     "/license.dat" 在 jar 根目录下
+     *                     "/abc/license.dat" 在 jar /abc/ 目录下
      * @return 拷贝完成后，返回值中每个资源文件在数组中的位置顺序，和参数中该文件在数组中的位置顺序一致。
      */
-    public static String[] copyResourceFileFromJarLibToTmpDir(String[] resourceNames, String tempDir, Class callClass) {
-        // 拷贝资源文件
-
+    public static File copyResourceFileFromJarLibToTmpDir(String resourceName) {
         // 拷贝资源文件到临时目录
         // resources = new String[] { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
-        String[] resourcePath = new String[resourceNames.length];
+        InputStream is = MyFileUtils.class.getResourceAsStream(resourceName);
 
-        InputStream is = null;
-        for (int i = 0; i < resourceNames.length; i++) {
+        if (is == null) {
+            logger.info(resourceName + " not exist,has not jar liberary.");
+            return null;
+        }
 
-            // log.info("Resourcename name :" + resourceNames[i]);
+        //在系统临时目录下建立文件夹，存放拷贝后的文件
+        String tempfilepath =
+                SystemUtils.getJavaIoTmpDir()
+                        + File.separator + RandomUtils.nextInt(0, 10000) + File.separator
+                        + resourceName;
 
-            is = callClass.getClass().getResourceAsStream(resourceNames[i]);
+        File resourceFile = new File(tempfilepath);
 
-            if (is == null) {
-                logger.info(resourceNames[i] + " not exist,has not jar liberary.");
-                return null;
-            }
+        logger.info("resource copy to :" + tempfilepath);
 
-            String tempfilepath = SystemUtils.getJavaIoTmpDir()
-                    + File.separator + tempDir + File.separator
-                    + resourceNames[i];
+        try {
+            // 拷贝资源文件到临时文件夹
+            FileUtils.copyInputStreamToFile(is, resourceFile);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            IOUtils.closeQuietly(is);
+            return null;
+        }
 
-            logger.info("resource copy to :" + tempfilepath);
 
-            File f = new File(tempfilepath);
-
-            // 资源文件一般都比较小，为了得到最新的文件版本，覆盖拷贝
-            try {
-                // 拷贝资源文件到临时文件夹
-                FileUtils.copyInputStreamToFile(is, new File(tempfilepath));
-
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return null;
-            }
-
-            resourcePath[i] = tempfilepath;
-
-        }// 资源文件拷贝完毕
-
-        // for (String s : resourcePath)
-        // log.info(s);
-
-        return resourcePath;
+        IOUtils.closeQuietly(is);
+        return resourceFile;
     }
 
     /**
@@ -224,7 +209,7 @@ public class MyFileUtils extends FileUtils {
         File f = new File("D:\\download\\gz-tony-spring-authority-master\\spring-authority\\src\\java\\com\\authority\\");
         File f2 = new File("D:\\download\\jiaojie\\2");
         File f3 = new File("F:\\decryptPdfDir\\");
-        Collection<File> sf = MyFileUtils.listFiles(f3, new String[]{"AATCC112Y2014.PDF","ASTMA239Y2014.PDF"}, true,IOCase.INSENSITIVE);
+        Collection<File> sf = MyFileUtils.listFiles(f3, new String[]{"AATCC112Y2014.PDF", "ASTMA239Y2014.PDF"}, true, IOCase.INSENSITIVE);
         for (File ss : sf)
             System.out.println("ss =" + ss.getAbsolutePath());
         //MyFileUtils.convertEncoding(f, f2, StandardCharsets.UTF_8);
@@ -297,15 +282,5 @@ public class MyFileUtils extends FileUtils {
 
     }
 
-    /**
-     * 测试 copyResourceFileFromJarLibToTmpDir 方法
-     */
-
-    private void testCopyResourceFileFromJarLibToTmpDir() {
-
-        String[] resources = new String[]{"/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll"};
-        copyResourceFileFromJarLibToTmpDir(resources, "tempdir",
-                MyFileUtils.class);
-    }
 
 }

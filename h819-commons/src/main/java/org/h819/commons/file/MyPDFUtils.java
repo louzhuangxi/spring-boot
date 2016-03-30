@@ -32,7 +32,7 @@ public class MyPDFUtils extends PDFUtilsBase {
 
 
     /**
-     * 首都标准网专用方法，一些参数固定
+     * 添加水印图片
      *
      * @param srcDir      源文件夹
      * @param destDir     目标
@@ -50,7 +50,7 @@ public class MyPDFUtils extends PDFUtilsBase {
         String template_filepath = null;
 
         String[] ss = mf.copyResourceFileFromJarLibToTmpDir(
-                new String[]{"/STCAIYUNs.TTF"}, "fonttemp", MyPDFUtils.class);
+                "/STCAIYUNs.TTF"); ///???
         template_filepath = ss[0];
 
         if (companyName == null)
@@ -78,6 +78,8 @@ public class MyPDFUtils extends PDFUtilsBase {
                 false);
 
     }
+
+
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub

@@ -1,5 +1,6 @@
 package com.base.spring.utils;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -8,6 +9,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +26,29 @@ import java.util.List;
 public class Test {
 
 
-    public static void copyBeanProperties(final Object source, final Object target, final Iterable<String> properties) {
+    public static void main(String[] ags){
+
+        Test t = new Test();
+        t.testFileName();
+
+    }
+
+    private void testFileName(){
+
+        File f = new File("D:\\01\\00\\src.pdf");
+
+        System.out.println(f.getParent());
+        System.out.println(f.getName());
+        System.out.println(f.getAbsolutePath());
+        System.out.println(FilenameUtils.getPrefix(f.getAbsolutePath()));
+        System.out.println(FilenameUtils.getName(f.getAbsolutePath()));
+        System.out.println(FilenameUtils.getBaseName(f.getAbsolutePath()));
+        System.out.println(f.getParent()+File.separator+FilenameUtils.getBaseName(f.getAbsolutePath())+"_."+FilenameUtils.getExtension(f.getAbsolutePath()));
+
+
+    }
+
+    public void copyBeanProperties(final Object source, final Object target, final Iterable<String> properties) {
 
         final BeanWrapper src = new BeanWrapperImpl(source);
         final BeanWrapper trg = new BeanWrapperImpl(target);
@@ -35,7 +59,7 @@ public class Test {
 
     }
 
-    public static Object copyBeanProperties(final Object source, final Collection<String> includes) {
+    public Object copyBeanProperties(final Object source, final Collection<String> includes) {
 
         final Collection<String> excludes = new ArrayList<String>();
         final PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(source.getClass());
