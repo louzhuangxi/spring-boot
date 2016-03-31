@@ -1,6 +1,6 @@
 package org.h819.web.commons;
 
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +48,7 @@ public class MyServletUtils {
      */
     public static String getAppPath(HttpServletRequest request) {
 
-        return MyStringUtils.remove(request.getRequestURL().toString(), request.getServletPath());
+        return StringUtils.remove(request.getRequestURL().toString(), request.getServletPath());
 
     }
 

@@ -31,38 +31,6 @@ public class MyPDFUtils extends PDFUtilsBase {
      */
 
 
-    /**
-     * 添加水印图片
-     *
-     * @param srcDir      源文件夹
-     * @param destDir     目标
-     * @param imageFile   水印图片
-     * @param companyName 授权接受者公司名称，如"东城稻香村集团"
-     * @throws java.io.IOException
-     * @throws org.h819.commons.MyExceptionUtils
-     */
-    public static void addWaterMarkToCapital(File srcDir, File destDir,
-                                             File imageFile, String companyName) throws IOException, MyExceptionUtils {
-
-        // 模板文件
-        MyFileUtils mf = new MyFileUtils();
-
-        String template_filepath = null;
-
-        String[] ss = mf.copyResourceFileFromJarLibToTmpDir(
-                "/STCAIYUNs.TTF"); ///???
-        template_filepath = ss[0];
-
-        if (companyName == null)
-            addWatermark(srcDir, destDir, imageFile,
-                    new File(template_filepath), "授权文件", " . 不得传播", "首都标准网",
-                    "http://www.capital-std.com");
-        else
-            addWatermark(srcDir, destDir, imageFile,
-                    new File(template_filepath), companyName, " . 专用 . 不得传播",
-                    "首都标准网", "http://www.capital-std.com");
-
-    }
 
     /**
      * 加密 pdf 文件，不允许打印，不允许拷贝，不允许保存

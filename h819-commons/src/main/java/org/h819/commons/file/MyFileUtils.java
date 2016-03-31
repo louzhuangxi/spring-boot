@@ -3,8 +3,8 @@ package org.h819.commons.file;
 import org.apache.commons.io.*;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.h819.commons.MyConstant;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,30 +117,32 @@ public class MyFileUtils {
      *                     参数写法
      *                     "/license.dat" 在 jar 根目录下
      *                     "/abc/license.dat" 在 jar /abc/ 目录下
-     * @return 拷贝完成后，返回值中每个资源文件在数组中的位置顺序，和参数中该文件在数组中的位置顺序一致。
+     * @return 拷贝完成后的文件
      */
     public static File copyResourceFileFromJarLibToTmpDir(String resourceName) {
         // 拷贝资源文件到临时目录
-        // resources = new String[] { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
+        //  { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
+        // { "/STCAIYUN.TTF" };
         InputStream is = MyFileUtils.class.getResourceAsStream(resourceName);
 
         if (is == null) {
-            logger.info(resourceName + " not exist,has not jar liberary.");
+            logger.info(resourceName + " not exist in jar liberary.");
             return null;
         }
-
         //在系统临时目录下建立文件夹，存放拷贝后的文件
+        //建立 java_jar_source_temp 文件夹，不用随机数，否则创建文件夹过多
         String tempfilepath =
                 SystemUtils.getJavaIoTmpDir()
-                        + File.separator + RandomUtils.nextInt(0, 10000) + File.separator
+                        + File.separator + MyConstant.JarTempDir + File.separator
                         + resourceName;
 
         File resourceFile = new File(tempfilepath);
 
+
         logger.info("resource copy to :" + tempfilepath);
 
         try {
-            // 拷贝资源文件到临时文件夹
+            // 拷贝资源文件到临时文件夹，每次都覆盖
             FileUtils.copyInputStreamToFile(is, resourceFile);
         } catch (IOException e) {
             // TODO Auto-generated catch block

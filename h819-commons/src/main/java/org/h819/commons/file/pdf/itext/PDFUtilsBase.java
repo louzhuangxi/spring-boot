@@ -7,17 +7,21 @@ import com.itextpdf.text.io.FileChannelRandomAccessSource;
 import com.itextpdf.text.pdf.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
+import org.h819.commons.MyConstant;
 import org.h819.commons.MyExceptionUtils;
-import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author H819
@@ -222,14 +226,6 @@ public class PDFUtilsBase {
 
     private static Logger logger = LoggerFactory.getLogger(PDFUtilsBase.class);
 
-
-    /**
-     * 为了能继承，设置为 public
-     */
-    public PDFUtilsBase() {
-
-    }
-
 	/*
      * === 使用中文字体的三种方式
 	 * 
@@ -279,414 +275,173 @@ public class PDFUtilsBase {
 	 */
 
     /**
-     * 添加 javaScript action 例子. PDF 文档象 html 静态网页一样，可执行 javsScrip 脚本。
-     * <p>
-     * 所谓的 adobe acrobat 开发，指的就是，如何用 acrobat 设计PDF 文件，就行设计网页文件一样。
-     * <p>
-     * 在该文件中，可以设计布局，颜色，可以编写 javaScript 代码，指定表单操作等。
-     * <p>
-     * 在进行 adobe reader 进行浏览 PDF 文件的时候，就会执行相应的脚本。
-     * <p>
-     * 可以在 reader 阅读器中指定是否执行脚本。
-     *
-     * @param srciptOutFile 输出的样例文件
+     * 为了能继承，设置为 public
      */
-    public static void addScriptActionsExample(File srciptOutFile) {
+    public PDFUtilsBase() {
 
-        //
-        // PdfWriter.setAdditionalAction() 接受的参数：
-        // The action is triggered just before closing the document.
-        // PdfWriter.DOCUMENT_CLOSE
+    }
 
-        // The action is triggered just before saving the document.
-        // 意思是，填写 pdf 表单之后，点击保存按钮唤起的动作，"另存为" 操作不响应
-        // PdfWriter.WILL_SAVE
 
-        // The action is triggered just after saving the document.
-        // PdfWriter.DID_SAVE
+    /**
+     * * 添加水印
+     *
+     * @param srcPdf         源文件
+     * @param destPdf        目标文件
+     * @param waterMarkImage 水印图片
+     */
+    public static void addWatermark(File srcPdf, File destPdf, File waterMarkImage) {
+        addWatermark(srcPdf, destPdf, null, waterMarkImage);
+    }
 
-        // The action is triggered just before printing (part of) the
-        // document.
-        // PdfWriter.WILL_PRINT
 
-        // The action is triggered just after printing.
-        // PdfWriter.DID_PRINT
-
-        // PdfWriter.setPageAction 接受的参数：
-        // The action is triggered when you enter a certain page.
-        // PdfWriter.PAGE_OPEN
-
-        // The action is triggered when you leave a certain page.
-        // PdfWriter.PAGE_CLOSE
-
-        // 另外：PdfStamper stamper setPageAction() 方法，可以设置具体的页数
-
-        Document document = new Document();
-        PdfWriter writer;
-        try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream(
-                    srciptOutFile));
-
-            document.open();
-            document.add(new Paragraph("test."));
-
-            String actionsScripe = "";
-            PdfAction action;
-
-            // 执行内置的警告语句
-            actionsScripe = "app.alert('your action is PAGE_OPEN');";
-            action = PdfAction.javaScript(actionsScripe, writer);
-            writer.setPageAction(PdfWriter.PAGE_OPEN, action);
-
-            // === 执行自定义函数
-            actionsScripe = "var work = true; function loadform() { if(work=true) app.alert(\"action :print will work!\");  }";
-            writer.addJavaScript(actionsScripe);
-            action = PdfAction.javaScript("loadform();", writer);
-            writer.setAdditionalAction(PdfWriter.WILL_PRINT, action);
-
-            document.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+    /**
+     * * 添加水印
+     *
+     * @param srcPdf        源文件
+     * @param destPdf       目标文件
+     * @param waterMarkText 水印文字
+     */
+    public static void addWatermark(File srcPdf, File destPdf, String waterMarkText) {
+        addWatermark(srcPdf, destPdf, waterMarkText, null);
     }
 
     /**
-     * 为制定文件夹内的 pdf 文件添加水印
+     * * 添加水印
      *
-     * @param srcDir                 源文件夹
-     * @param destDir                目标
-     * @param imageFile              水印图片,jpeg 和 gif 格式都可以，其他的没有测试。如果不添加图片，参数需设置为 null
-     * @param fondFile               字体文件
-     * @param companyName            授权接受者公司名称，如"东城稻香村集团"
-     * @param copyRight              授权声明，如" . 专用 . 不得传播" ,和 companyName
-     *                               联合使用，会在文本上添加："东城稻香村集团 . 专用 . 不得传播"
-     * @param adminCommpanyName      授权方名称，如："xx信息网"
-     * @param adminCompanyWebSiteUrl 授权方公司网址名称，如："http://www.capital-std.com"
-     * @throws java.io.IOException
-     * @throws MyExceptionUtils
+     * @param srcPdf         源文件
+     * @param destPdf        目标文件
+     * @param waterMarkText  水印文字
+     * @param waterMarkImage 水印图片
      */
-    public static void addWatermark(File srcDir, File destDir, File imageFile,
-                                    File fondFile, String companyName, String copyRight,
-                                    String adminCommpanyName, String adminCompanyWebSiteUrl)
-            throws IOException, MyExceptionUtils {
+    public static void addWatermark(File srcPdf, File destPdf, String waterMarkText, File waterMarkImage) {
 
-        // 判断源文件夹信息文件
-        if (srcDir == null || !srcDir.exists() || !srcDir.isDirectory()) {
-            throw new IOException("src directory '" + srcDir
-                    + "' does not exsit.");
-        }
-
-        // 判断字体文件
-        if (fondFile == null || !fondFile.exists()) {
-            throw new IOException("fondFile '" + fondFile + "' does not exsit.");
-        }
-
-        // 判断图片文件信息
-        if (imageFile != null) {
-            // 图片信息不存在
-            if (!imageFile.exists())
-                throw new IOException("src directory '" + imageFile.getPath()
-                        + "' does not exsit.");
-
-            if (companyName != null) {
-                throw new MyExceptionUtils(
-                        "'image or companyName only exit one.");
-            }
-        }
-
-        // 判断需要添加的单位名称. 此处抛出异常写法不合理，日后需要总结异常写法
-        if (imageFile == null) {
-            if (companyName == null || companyName.equals("")) {
-                throw new MyExceptionUtils("'image and companyName are null.");
-            }
-        }
-
-        try {
-            FileUtils.forceMkdir(destDir);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        // 基本属性
-        Image img = null;
-        BaseFont bfont = null;
-        BaseFont bfurl = null;
-        PdfContentByte under;
-        PdfContentByte over;
-
-        try {
-
-            if (imageFile != null) {
-                img = Image.getInstance(imageFile.getAbsolutePath());
-                img.setAbsolutePosition(150, 300);
-            }
-
-            bfont = BaseFont.createFont(fondFile.getAbsolutePath(),
-                    BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            // 默认构造方法
-            bfurl = BaseFont.createFont();
-
-        } catch (BadElementException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        // 得到目标目录的所有文件
-        File[] listRootFiles = srcDir.listFiles();
-        String desFileName = "";
-        int count = 0;
-
-        for (int m = 0; m < listRootFiles.length; m++) {// 循环每个文件
-
-            String filePath = listRootFiles[m].getAbsolutePath();
-            String fileName = listRootFiles[m].getName();
-
-            if (!FilenameUtils.getExtension(fileName.toUpperCase()).equals(
-                    "PDF"))
-                continue;
-
-            // 目标文件
-            desFileName = destDir.getPath() + File.separator + "watermark_"
-                    + fileName;
-
+        if (waterMarkText == null && waterMarkImage == null)
             try {
-                // we create a reader for a certain document
-                PdfReader reader = getPdfReader(listRootFiles[m]);
-                int pageNumbers = reader.getNumberOfPages();
-                // we create a stamper that will copy the document to a new file
-                PdfStamper stamp = new PdfStamper(reader, new FileOutputStream(
-                        desFileName));
-                // adding some metadata
-                // 可以设置文档的各种属性，例如作者,title 等
-                HashMap<String, String> moreInfo = new HashMap<String, String>();
-                moreInfo.put("Author", "H819 create");
-
-                stamp.setMoreInfo(moreInfo);
-
-                // adding content to each page
-                int number = 0;
-                while (number < pageNumbers) {// 逐页添加
-                    number++;
-
-                    // 图片
-                    if (imageFile != null) {
-                        under = stamp.getUnderContent(number);
-                        // under = stamp.getOverContent(number);
-                        under.addImage(img);
-                    }
-
-                    // === 添加文字
-                    if (companyName != null && !companyName.equals("")) {
-                        over = stamp.getOverContent(number);
-
-                        // 文字开始声明
-                        over.beginText();
-
-                        // 设置字体颜色灰度
-                        // gray - a value between 0 (black) and 1 (white)
-                        over.setGrayFill(0.6f);
-
-                        // 开始设置文字
-                        // Shows text kerned right, left or center aligned with
-                        // rotation.
-                        // showTextAlignedKerned(int alignment, String text,
-                        // float
-                        // x, float y, float rotation)
-                        //
-                        // over.showTextAligned(Element.ALIGN_LEFT, "page " +
-                        // number,30, 30, 0);
-
-                        // 分别设置字体,大小,颜色:单位名称
-                        over.setFontAndSize(bfont, 35);
-                        // red ,green ,blue
-                        over.setRGBColorFill(32, 178, 170);
-                        over.showTextAligned(Element.ALIGN_CENTER, companyName
-                                + copyRight, 290, 470, 45);
-                        // 分别设置字体,大小,颜色 :发布单位名称
-                        over.setFontAndSize(bfont, 18);
-                        over.showTextAligned(Element.ALIGN_CENTER,
-                                adminCommpanyName, 310, 430, 45);
-                        // 分别设置字体,大小,颜色 :发布单位网址
-                        over.setGrayFill(0.8f);
-                        over.setFontAndSize(bfurl, 10);
-                        over.setRGBColorFill(32, 178, 170);
-                        over.showTextAligned(Element.ALIGN_CENTER,
-                                adminCompanyWebSiteUrl, 320, 420, 45);
-
-                        // 文字结束声明
-                        over.endText();
-                    }
-
-                }
-                stamp.close();
-                count++;
-                logger.info(desFileName + " create.");
-
-            } catch (Exception e) {
-                logger.info(filePath + " create error.");
+                throw new IOException(waterMarkText + " " + waterMarkImage + " all null.");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }// 文件循环完毕
-        logger.info("total " + count + " files create.");
-    }
 
-
-    // // 可以设置文档的各种属性，例如作者,title 等
-//    HashMap<String, String> moreInfo = new HashMap<String, String>();
-//    moreInfo.put("Author", "H819 create");
-
-    public static void addWatermark0(File srcPdf, File destPdf, File imageFile,
-                                     File fondFile, String companyName, String copyRight,
-                                     String adminCommpanyName, String adminCompanyWebSiteUrl, Map<String, String> pdfMoreInfo)
-            throws IOException, MyExceptionUtils {
-
-
-        if (srcPdf == null || !srcPdf.exists())
-            throw new IOException("pdf file :  '" + srcPdf + "' does not exsit.");
-
+        if (srcPdf == null || !srcPdf.exists() || !srcPdf.isFile())
+            try {
+                throw new IOException("pdf file :  '" + srcPdf + "' does not exsit.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         if (!FilenameUtils.getExtension(srcPdf.getAbsolutePath()).toLowerCase().equals("pdf"))
-            throw new IOException("file '" + srcPdf + "'  not pdf.");
-
-        // 判断字体文件必须存在
-        if (fondFile == null || !fondFile.exists()) {
-            throw new IOException("fondFile '" + fondFile + "' does not exsit.");
-        }
-
-        // 判断图片文件信息
-        if (imageFile != null && !imageFile.exists()) {
-            // 图片信息不存在
-            throw new IOException("src directory '" + imageFile.getPath() + "' does not exsit.");
-        }
-
-
-        // 基本属性
-        Image img = null;
-        BaseFont bfont = null;
-        BaseFont bfurl = null;
-        PdfContentByte under;
-        PdfContentByte over;
-
-
-        if (imageFile != null) {
             try {
-                img = Image.getInstance(imageFile.getAbsolutePath());
-                bfont = BaseFont.createFont(fondFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                bfurl = BaseFont.createFont();
-            } catch (BadElementException e) {
-                e.printStackTrace();
-            } catch (DocumentException e) {
+                throw new IOException("file '" + srcPdf + "'  not pdf.");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            img.setAbsolutePosition(150, 300);
+
+        if (waterMarkImage != null) {
+
+            if (!waterMarkImage.exists() || !waterMarkImage.isFile())
+                try {
+                    throw new IOException("img file :  '" + srcPdf + "' does not exsit.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            if (!FilenameUtils.getExtension(waterMarkImage.getAbsolutePath()).toLowerCase().equals("png"))
+                try {
+                    throw new IOException("image file '" + srcPdf + "'  not png.(必须为透明图片格式，否则会遮挡 pdf 内容)");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
 
 
         try {
-            // we create a reader for a certain document
+
+
             PdfReader reader = getPdfReader(srcPdf);
 
-            int pageNumbers = reader.getNumberOfPages();
-            // we create a stamper that will copy the document to a new file
-            PdfStamper stamp = getPdfStamper(srcPdf, destPdf);
-            // adding some metadata
-            if (pdfMoreInfo != null)
-                stamp.setMoreInfo(pdfMoreInfo);
+            int n = reader.getNumberOfPages();
+            PdfStamper stamper = getPdfStamper(srcPdf, destPdf);
 
-            // adding content to each page
-            int number = 0;
-            while (number < pageNumbers) {// 逐页添加
-                number++;
-                // 图片
-                if (imageFile != null) {
-                    under = stamp.getUnderContent(number);
-                    // under = stamp.getOverContent(number);
-                    under.addImage(img);
-                }
+            //添加属性
+            //        HashMap<String, String> moreInfo = new HashMap<String, String>();
+//        moreInfo.put("Author", "H819 create");
+//        moreInfo.put("Producer", "H819 Producer");
+//        Key = CreationDate, Value = D:20070425182920
+//        Key = Producer, Value = TH-OCR 2000 (C++/Win32)
+//        Key = Author, Value = TH-OCR 2000
+//        Key = Creator, Value = TH-OCR PDF Writer
 
-                // === 添加文字
-                if (companyName != null && !companyName.equals("")) {
-                    over = stamp.getOverContent(number);
+            // stamp.setMoreInfo(moreInfo);
 
-                    // 文字开始声明
-                    over.beginText();
-
-                    //第一行文字： 分别设置字体,大小,颜色:单位名称
-                    over.setGrayFill(0.6f);
-                    over.setFontAndSize(bfont, 35);
-                    over.setRGBColorFill(32, 178, 170);
-                    over.showTextAligned(Element.ALIGN_CENTER, companyName + copyRight, 290, 470, 45);
-                    //第二行文字： 分别设置字体,大小,颜色 :发布单位名称
-                    over.setFontAndSize(bfont, 18);
-                    over.showTextAligned(Element.ALIGN_CENTER, adminCommpanyName, 310, 430, 45);
-                    //第三行文字: 分别设置字体,大小,颜色 :发布单位网址
-                    over.setGrayFill(0.8f); // 设置字体颜色灰度
-                    over.setFontAndSize(bfurl, 10);
-                    over.setRGBColorFill(32, 178, 170);
-                    over.showTextAligned(Element.ALIGN_CENTER, adminCompanyWebSiteUrl, 320, 420, 45);
-
-                    // 文字结束声明
-                    over.endText();
-                }
+            // text
+            Phrase text = null;
+            if (waterMarkText != null) {
+                //创建一个空心字体
+                Font bfont = getPdfFont();
+                bfont.setSize(35);
+                bfont.setColor(new BaseColor(192, 192, 192));
+                text = new Phrase(waterMarkText, bfont);
+            }
+            // image watermark
+            Image img = null;
+            float w = 0;
+            float h = 0;
+            if (waterMarkImage != null) {
+                img = Image.getInstance(waterMarkImage.getAbsolutePath());
+                w = img.getScaledWidth();
+                h = img.getScaledHeight();
+                //  img.
+                img.setRotationDegrees(45);
 
             }
-            stamp.close();
+
+
+            // transparency
+            PdfGState gs1 = new PdfGState();
+            gs1.setFillOpacity(0.5f);
+            // properties
+            PdfContentByte over;
+            Rectangle pageSize;
+            float x, y;
+            // loop over every page
+            for (int i = 1; i <= n; i++) {
+                pageSize = reader.getPageSizeWithRotation(i);
+                x = (pageSize.getLeft() + pageSize.getRight()) / 2;
+                y = (pageSize.getTop() + pageSize.getBottom()) / 2;
+                // 在 pdf 内容之上添加，如果加在底部，pdf 文件内容为图片，就会遮挡而看不见
+                over = stamper.getOverContent(i);
+                // 不能加在底部
+                // over = stamp.getUnderContent(i);
+                // 不要加上 over.beginText(); over.endText(); 生成的文件会报错
+                //第一行文字： 分别设置字体,大小,颜色:单位名称
+                over.saveState(); //保存状态
+                over.setGState(gs1);
+
+                if (waterMarkText != null && waterMarkImage != null) { // 文字图片隔页添加
+                    if (i % 2 == 1) {
+                        ColumnText.showTextAligned(over, Element.ALIGN_CENTER, text, x, y, 45);
+                    } else
+                        over.addImage(img, w, 0, 0, h, x - (w / 2), y - (h / 2));
+                } else if (waterMarkText != null) {  //每页添加文字
+
+                    ColumnText.showTextAligned(over, Element.ALIGN_CENTER, text, x, y, 45);
+                    //可以接着添加第二行文字： 分别设置字体,大小,颜色 :发布单位名称
+                    // ...
+
+                } else {   //每页添加图片
+                    over.addImage(img, w, 0, 0, h, x - (w / 2), y - (h / 2));
+                }
+
+                over.restoreState();//恢复状态
+            }
+            stamper.close();
             reader.close();
 
-        } catch (Exception e) {
-            logger.info(srcPdf.getAbsolutePath() + " create error.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DocumentException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 添加指定pdf文件的具体页为背景，可作为添加水印方法。 pdf 页面为水印
-     * <p>
-     * 此方法可以作为添加水印的方法。背景文件可以用 word 生成，格式和字体任意设置，之后可以作为新生成的文件的背景。
-     * </p>
-     * <p>
-     * 源自 iText in Action 2nd Edition，Chapter 6: Working with existing PDFs
-     * ，StampStationery
-     * </p>
-     *
-     * @param srcPdf               the original PDF
-     * @param waterMarkPdf         a PDF that will be added as background
-     * @param destPdf              the resulting PDF
-     * @param numberOfwaterMarkPdf 准备做背景的 pdf 的具体页                  z
-     * @throws java.io.IOException
-     * @throws DocumentException
-     */
-
-    public static void addWatermarkWithPdfFile(File srcPdf, File destPdf, File waterMarkPdf, int numberOfwaterMarkPdf) throws IOException, DocumentException {
-        // Create readers
-        PdfReader reader = getPdfReader(waterMarkPdf);
-        // Create the stamper
-        PdfStamper stamper = getPdfStamper(srcPdf, destPdf);
-        // Add the stationery to each page
-        PdfImportedPage page = stamper.getImportedPage(reader, numberOfwaterMarkPdf);
-        int n = stamper.getReader().getNumberOfPages();
-        PdfContentByte background;
-        for (int i = 1; i <= n; i++) {
-            background = stamper.getUnderContent(i);
-            background.addTemplate(page, 0, 0);
-        }
-        // CLose the stamper
-        stamper.close();
-        reader.close();
     }
 
     /**
@@ -706,6 +461,7 @@ public class PDFUtilsBase {
         PdfReader reader = getPdfReader(srcPdfFile);
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(
                 descPdfFile.getAbsoluteFile()), PdfWriter.VERSION_1_5);
+
         stamper.getWriter().setCompressionLevel(9);
         int total = reader.getNumberOfPages() + 1;
         for (int i = 1; i < total; i++) {
@@ -1336,7 +1092,7 @@ public class PDFUtilsBase {
         }
 
         // 简单判断开始日期格式，可以用 正则表达式
-        if (MyStringUtils.countMatches(startDate, ",") != 2) {
+        if (StringUtils.countMatches(startDate, ",") != 2) {
             logger.info(startDate + " 开始日期格式录入不对，应该型如  '2011,01,01' 形式");
             return;
         }
@@ -1353,20 +1109,20 @@ public class PDFUtilsBase {
         }
 
         // 拷贝资源文件到临时目录
-        String[] resources = new String[]{"/pdfexpiration.js"};
-        String[] resPath = MyFileUtils.copyResourceFileFromJarLibToTmpDir(
-                resources);  //????
+        // String[] resources = new String[]{"/pdfexpiration.js"};
+        File resPath = MyFileUtils.copyResourceFileFromJarLibToTmpDir("/pdfexpiration.js"
+        );  //????
         // 得到资源文件内容
-        String jsStr = FileUtils.readFileToString(new File(resPath[0]));
+        String jsStr = FileUtils.readFileToString(resPath);
 
         /** 替换 js 文件中的字符串，作为输入条件 */
         // 替换开始日期
-        jsStr = MyStringUtils.replace(jsStr, "2011,01,01", startDate);
+        jsStr = StringUtils.replace(jsStr, "2011,01,01", startDate);
         // 替换到达警告期的天数
-        jsStr = MyStringUtils.replace(jsStr, "alertDays = 355", "alertDays = "
+        jsStr = StringUtils.replace(jsStr, "alertDays = 355", "alertDays = "
                 + Integer.toString(alerDays));
         // 替换到达过期天数
-        jsStr = MyStringUtils.replace(jsStr, "expiredDays = 365",
+        jsStr = StringUtils.replace(jsStr, "expiredDays = 365",
                 "expiredDays = " + Integer.toString(expiredDays));
 
         System.out.println(jsStr);
@@ -1587,32 +1343,28 @@ public class PDFUtilsBase {
         return new PdfReader(new RandomAccessFileOrArray(new FileChannelRandomAccessSource(fileStream.getChannel())), ownerPassword.getBytes());
     }
 
+
     /**
-     * @param srcPdf
-     * @param destPdf
+     * 获得自定义的空心字体 STCAIYUN.TTF，该字体已经制成为 jar，需要加入项目的 classpath
+     * 经过测试，该空心字体作为 pdf 的水印，不会遮挡 pdf 原文
+     * 需要注意的是，空心字体不能太小，否则会看不清楚
+     *
+     * @return
      * @throws IOException
-     * @throws DocumentException
      */
-    public void addWaterMarkString(String srcPdf, String destPdf) throws IOException, DocumentException {
-        PdfReader reader = new PdfReader(srcPdf);
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destPdf));
-        PdfContentByte under = stamper.getUnderContent(1);
-        Font f = new Font(Font.FontFamily.HELVETICA, 15);
-        Phrase p = new Phrase("This watermark is added UNDER the existing content", f);
-        ColumnText.showTextAligned(under, Element.ALIGN_CENTER, p, 297, 550, 0);
-        PdfContentByte over = stamper.getOverContent(1);
-        p = new Phrase("This watermark is added ON TOP OF the existing content", f);
-        ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 500, 0);
-        p = new Phrase("This TRANSPARENT watermark is added ON TOP OF the existing content", f);
-        over.saveState();
-        PdfGState gs1 = new PdfGState();
-        gs1.setFillOpacity(0.5f);
-        over.setGState(gs1);
-        ColumnText.showTextAligned(over, Element.ALIGN_CENTER, p, 297, 450, 0);
-        over.restoreState();
-        stamper.close();
-        reader.close();
+    private static Font getPdfFont() {
+
+        //空心字体
+        String fontName = "/STCAIYUN.TTF";
+
+        String fontPath =
+                SystemUtils.getJavaIoTmpDir()
+                        + File.separator + MyConstant.JarTempDir + File.separator
+                        + fontName;
+
+        if (!Files.exists(Paths.get(fontPath))) {
+            MyFileUtils.copyResourceFileFromJarLibToTmpDir(fontName);
+        }
+        return FontFactory.getFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
     }
-
-
 }

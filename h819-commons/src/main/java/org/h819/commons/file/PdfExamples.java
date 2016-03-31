@@ -5,12 +5,10 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.exceptions.BadPasswordException;
 import com.itextpdf.text.io.FileChannelRandomAccessSource;
 import com.itextpdf.text.pdf.*;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,8 +120,6 @@ public class PdfExamples {
     }
 
 
-
-
     /**
      * 测试 pdf 文件读取方法
      *
@@ -194,7 +190,7 @@ public class PdfExamples {
                 System.out.println(key + ": " + value);
             }
 
-            System.out.println(MyStringUtils.center("pdf 信息", 80, "==="));
+            System.out.println(StringUtils.center("pdf 信息", 80, "==="));
 
             System.out.println("PDF Version: " + reader.getPdfVersion());
             System.out.println("File length: " + reader.getFileLength());
@@ -225,7 +221,7 @@ public class PdfExamples {
                     + reader.getAcroFields().getFieldType("expireCNS"));
 
             // 所有表单信息
-            System.out.println(MyStringUtils.center("所有的 filed 信息", 80, "==="));
+            System.out.println(StringUtils.center("所有的 filed 信息", 80, "==="));
             // Get the fields from the reader (read-only!!!)
             AcroFields form = reader.getAcroFields();
 
@@ -263,7 +259,7 @@ public class PdfExamples {
                 }
             }
 
-            System.out.println(MyStringUtils.center("javaScrpt 信息", 80, "==="));
+            System.out.println(StringUtils.center("javaScrpt 信息", 80, "==="));
             System.out.println("javaScript : " + reader.getJavaScript());
 
             reader.close();

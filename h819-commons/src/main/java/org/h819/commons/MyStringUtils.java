@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * Time: 下午2:00
  * To change this template use File | Settings | File Templates.
  */
-public class MyStringUtils extends StringUtils {
+public class MyStringUtils {
 
     public static final String linebreak = "\n\r";
 
@@ -113,7 +113,7 @@ public class MyStringUtils extends StringUtils {
      * @return
      */
     public static boolean containsAnyCharSequence(final CharSequence cs, final CharSequence... searchCharSequences) {
-        if (isEmpty(cs) || searchCharSequences.length == 0) {
+        if (StringUtils.isEmpty(cs) || searchCharSequences.length == 0) {
             return false;
         }
 
@@ -294,7 +294,7 @@ public class MyStringUtils extends StringUtils {
      * @return
      */
     public static String center(int size, char padChar) {
-        return center("", size, padChar);
+        return StringUtils.center("", size, padChar);
     }
 
     public static String htmlToPlainText(String htmlStr) {

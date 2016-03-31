@@ -1,6 +1,6 @@
 package org.h819.commons.net.html.parser.jsoup;
 
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -81,7 +81,7 @@ public class JsoupExamples2 {
 
             Elements elem1 = elem.select("table").select("tr");
 
-            System.out.println(MyStringUtils.center(" 层级 3 ", 260, "*"));
+            System.out.println(StringUtils.center(" 层级 3 ", 260, "*"));
             System.out.println(elem1.toString());
 
             for (Element elem2 : elem1) {

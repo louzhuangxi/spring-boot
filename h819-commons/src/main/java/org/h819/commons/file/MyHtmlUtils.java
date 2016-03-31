@@ -1,6 +1,6 @@
 package org.h819.commons.file;
 
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.parser.Tag;
@@ -66,10 +66,10 @@ public class MyHtmlUtils {
 
     // 对关键字加上颜色
     public static String markKeywods (String keywords, String target) {
-        if (MyStringUtils.isNotBlank(keywords)) {
+        if (StringUtils.isNotBlank(keywords)) {
             String[] arr = keywords.split(" ");
             for (String s : arr) {
-                if (MyStringUtils.isNotBlank(s)) {
+                if (StringUtils.isNotBlank(s)) {
                     String temp = "<span class=\"highlight\">" + s + "</span>";
                     if(temp!=null)
                         target = target.replaceAll(s, temp);
@@ -83,7 +83,7 @@ public class MyHtmlUtils {
     public static List<String> getImgSrcList(String html) {
         // 2015-04-09 L.cm 避免出现空指针的问题
         List<String> list = new ArrayList<String>();
-        if (MyStringUtils.isBlank(html)) {
+        if (StringUtils.isBlank(html)) {
             return list;
         }
         Document doc = Jsoup.parseBodyFragment(html);

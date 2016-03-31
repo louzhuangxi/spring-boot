@@ -187,7 +187,7 @@ public class Test {
 
             for (String s : list) {
 
-                String ss = MyStringUtils.substringAfter(s, ":rowValue:");
+                String ss = StringUtils.substringAfter(s, ":rowValue:");
 
                 System.out.println(ss);
 
@@ -257,7 +257,7 @@ public class Test {
             String temp;
             for (int i = 0; i < arrayString.length - 1; i++) {
                 for (int j = i + 1; j < arrayString.length; j++) {
-                    if (MyStringUtils.substringAfter(arrayString[i], "-").compareTo(MyStringUtils.substringAfter(arrayString[j], "-")) > 0) {
+                    if (StringUtils.substringAfter(arrayString[i], "-").compareTo(StringUtils.substringAfter(arrayString[j], "-")) > 0) {
                         temp = arrayString[i];
                         arrayString[i] = arrayString[j];
                         arrayString[j] = temp;

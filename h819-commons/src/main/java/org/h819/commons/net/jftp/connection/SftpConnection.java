@@ -4,8 +4,8 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.SftpATTRS;
 import com.jcraft.jsch.SftpException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPFileFilter;
-import org.h819.commons.MyStringUtils;
 import org.h819.commons.net.jftp.exception.FtpException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,7 +161,7 @@ public class SftpConnection implements Connection {
             throw new FtpException("Unable to download file " + remoteFilePath, e);
         }
 
-        logger.info("download file '" + remoteFilePath + "'  to  localDirectory '" + localDirectoryPath + FILE_SEPARATOR + MyStringUtils.substringAfterLast(remoteFilePath, "/") + "' succeed.");
+        logger.info("download file '" + remoteFilePath + "'  to  localDirectory '" + localDirectoryPath + FILE_SEPARATOR + StringUtils.substringAfterLast(remoteFilePath, "/") + "' succeed.");
     }
 
 

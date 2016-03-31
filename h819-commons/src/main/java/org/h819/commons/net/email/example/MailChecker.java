@@ -8,7 +8,7 @@ package org.h819.commons.net.email.example;
  * To change this template use File | Settings | File Templates.
  */
 
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.xbill.DNS.*;
 
 import java.util.Arrays;
@@ -53,7 +53,7 @@ public final class MailChecker {
      * @return the status of the validation with a copy of the mail address on success.
      */
     public static MailChecker.AddressStatus validate(String mail) {
-        String domain = MyStringUtils.substringAfterLast(mail, "@").trim();
+        String domain = StringUtils.substringAfterLast(mail, "@").trim();
         if (domain == null) {
             // System.err.println(mail + " is no valid email address");
             return AddressStatus.wrongSchema;

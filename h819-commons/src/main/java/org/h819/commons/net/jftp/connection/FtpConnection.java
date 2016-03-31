@@ -2,12 +2,12 @@ package org.h819.commons.net.jftp.connection;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.apache.commons.net.io.CopyStreamListener;
-import org.h819.commons.MyStringUtils;
 import org.h819.commons.net.jftp.FileFilter.FileNameEqualFilter;
 import org.h819.commons.net.jftp.exception.FtpException;
 import org.joda.time.DateTime;
@@ -894,7 +894,7 @@ public class FtpConnection implements Connection {
              */
             DateTimeFormatter formatter = DateTimeFormat.forPattern(ftpModificationTimePattern).withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone(("GMT"))));
             //解析 MDTM 命令返回的字符串  "213 yyyyMMddHHmmss" 格式
-            DateTime serverTimeStamp = formatter.parseDateTime(MyStringUtils.substringAfter(ts, " ").trim());
+            DateTime serverTimeStamp = formatter.parseDateTime(StringUtils.substringAfter(ts, " ").trim());
             serverTimeStamp = serverTimeStamp.withZone(DateTimeZone.forTimeZone(TimeZone.getDefault())); //格林威治时间在0时区，转换为默认时区时间。
             /**
              *下面为测试

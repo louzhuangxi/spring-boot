@@ -1,6 +1,7 @@
 package org.h819.commons;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -149,7 +150,7 @@ public class MyDateUtils extends DateUtils {
     public static String fillYear2To4(String year) {
         String realYear = year.trim();
         // 年为非数字
-        if (!MyStringUtils.isNumeric(realYear))
+        if (!StringUtils.isNumeric(realYear))
             return null;
         // log.info("year :" + year);
         if (realYear.length() == 2) {// 补足两位年代

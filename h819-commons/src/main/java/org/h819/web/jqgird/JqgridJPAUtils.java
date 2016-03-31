@@ -1,7 +1,7 @@
 package org.h819.web.jqgird;
 
 import com.google.common.collect.Lists;
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.h819.web.spring.jpa.DynamicSpecificationUtils;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.slf4j.Logger;
@@ -166,16 +166,16 @@ public class JqgridJPAUtils {
 
         } else { //分组
 
-            String[] strings = MyStringUtils.removeEnd(sidx.trim(), ",").split(",");  //传来的排序要求 sidx =name asc, herf desc,
+            String[] strings = StringUtils.removeEnd(sidx.trim(), ",").split(",");  //传来的排序要求 sidx =name asc, herf desc,
             List<Sort.Order> orders = Lists.newArrayList();
             List<String> unique = Lists.newArrayList();
             for (String s : strings) { //拼接所有的排序请求。
-                String sortField = MyStringUtils.substringBefore(s.trim(), " ");
+                String sortField = StringUtils.substringBefore(s.trim(), " ");
                 //为了避免同一个属性，重复添加。此情况发生在 grouping:true ，但  sortname 和 sortorder 参数没有注释掉。
                 if (unique.contains(sortField))
                     continue;
                 unique.add(sortField);
-                String sortDirection = MyStringUtils.substringAfter(s.trim(), " ");
+                String sortDirection = StringUtils.substringAfter(s.trim(), " ");
                 Assert.state(sortDirection.equalsIgnoreCase("asc") || sortDirection.equalsIgnoreCase("desc"), " 'jqgrid' 中 group 的属性 groupOrder 设置不对");
                 Sort.Direction direction;
                 if (sortDirection.toLowerCase().equals("asc"))

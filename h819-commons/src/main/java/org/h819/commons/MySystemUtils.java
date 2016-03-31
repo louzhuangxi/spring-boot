@@ -276,7 +276,7 @@ public class MySystemUtils extends SystemUtils {
 	 */
 	public static String systemCharset() {
 		String charset = System.getProperty("file.encoding");
-		if(MyStringUtils.isBlank(charset)) {
+		if(StringUtils.isBlank(charset)) {
 			charset = StandardCharsets.UTF_8.toString();
 		}
 		return charset;

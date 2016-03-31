@@ -1,5 +1,6 @@
 package org.h819.commons;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.h819.commons.entity.MimeTypeEntity;
 import org.h819.commons.net.MyUrlUtils;
@@ -65,10 +66,10 @@ public class MyMimeTypeUtils {
             System.out.println(MyMimeTypeUtils.detect(new URL("http://hrss.jl.gov.cn/sydwrsgl/201403/t20140321_1635860.html"), 3));
             System.out.println(MyMimeTypeUtils.detect(new URL("http://www.canhelp.cn:8080/jpa/jpa/admin-index.html"), 3));
 
-            System.out.println(MyStringUtils.center("split", 80, "="));
+            System.out.println(StringUtils.center("split", 80, "="));
 
 
-            System.out.println(MyStringUtils.center("split", 80, "="));
+            System.out.println(StringUtils.center("split", 80, "="));
 
 
         } catch (MalformedURLException e) {
