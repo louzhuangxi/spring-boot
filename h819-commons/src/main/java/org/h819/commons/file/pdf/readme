@@ -1,19 +1,7 @@
 === itext =================================================================
-
-http://itextpdf.com/examples/
-
-http://itextpdf.com/examples/index.php?page=chapters
+http://developers.itextpdf.com/examples
 
 里面有很多代码例子，包括加密解密，证书等。
-
-写代码的时候，需要参考
-
-
-==== 依赖包: 
-bcprov.jar
-bcmail.jar
-
-itext 官方网站有说明
 
 === pdfbox ===============================================================
 

@@ -45,7 +45,7 @@ public class ZTreeUtil {
 
     /**
      * 根据已有的节点(可以有子节点)，创建一个相同的新的节点。可以递归创建
-     * <p/>
+     * <p>
      * 该方法不能象 getJsonData() 方法一样，通过临时创建的 父对象返回，因为即使是临时创建 new ，在事务中也会创建表记录。
      *
      * @param currentNode 已有节点，是数据库里一条数据，可以有子节点。在数据库中创建一个新的记录，如果有子节点，可以递归创建。在事务环境中，new 操作会自动创建表记录
@@ -71,11 +71,11 @@ public class ZTreeUtil {
     /**
      * 把 TreeNodeEntity 类型转换为 ZTreeJsonNode 类型，把其值用 parent 带回
      *
-     * @param zTreeJsonNodeParent 通过此参数，保存转换后的结果。因为利用了递归，通过参数传回转换后的结果
-     * @param treeNodeEntity      待转换的对象
+     * @param zTreeJsonNodeParentTemp 通过此参数，保存转换后的结果。因为利用了递归，可以通过参数传回转换后的结果
+     * @param treeNodeEntity          待转换的对象
      */
-    private static void convertToJsonData(ZTreeJsonNode zTreeJsonNodeParent, TreeNodeEntity treeNodeEntity) {
-        if (treeNodeEntity == null)
+    private static void convertToJsonData(ZTreeJsonNode zTreeJsonNodeParentTemp, TreeNodeEntity treeNodeEntity) {
+        if (treeNodeEntity == null || zTreeJsonNodeParentTemp == null)
             return;
 
         long id = treeNodeEntity.getId();
@@ -97,7 +97,7 @@ public class ZTreeUtil {
 
         ZTreeJsonNode zTreeNode = new ZTreeJsonNode(id, name, url, open, isParent);
 
-        zTreeJsonNodeParent.addChild(zTreeNode);
+        zTreeJsonNodeParentTemp.addChild(zTreeNode);
 
         if (!treeNodeEntity.getChildren().isEmpty())
             for (TreeNodeEntity child : treeNodeEntity.getChildren())

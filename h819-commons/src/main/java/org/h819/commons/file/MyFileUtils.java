@@ -4,7 +4,7 @@ import org.apache.commons.io.*;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.SystemUtils;
-import org.h819.commons.MyConstant;
+import org.h819.commons.MyConstants;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,7 +133,7 @@ public class MyFileUtils {
         //建立 java_jar_source_temp 文件夹，不用随机数，否则创建文件夹过多
         String tempfilepath =
                 SystemUtils.getJavaIoTmpDir()
-                        + File.separator + MyConstant.JarTempDir + File.separator
+                        + File.separator + MyConstants.JarTempDir + File.separator
                         + resourceName;
 
         File resourceFile = new File(tempfilepath);
@@ -171,6 +171,26 @@ public class MyFileUtils {
         if (recursive)
             return FileUtils.listFiles(directory, new NameFileFilter(fileNames, caseSensitivity), TrueFileFilter.INSTANCE);
         else return FileUtils.listFiles(directory, new NameFileFilter(fileNames, caseSensitivity), null);
+
+    }
+
+
+    /**
+     * 拷贝文件到指定文件夹,文件名称不变。
+     * 如果目标文件夹不存在，则创建
+     *
+     * @param srcPdf
+     * @param descDirectory
+     */
+    public static void copyFileToDirectory(File srcPdf, File descDirectory) {
+        try {
+            if (descDirectory != null && (!descDirectory.exists() || !descDirectory.isDirectory()))
+                FileUtils.forceMkdir(descDirectory);
+
+            FileUtils.copyFileToDirectory(srcPdf, descDirectory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
