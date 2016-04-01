@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.List;
 
 
 /**
@@ -314,6 +315,10 @@ public class MyPDFUtilss {
      */
     public static void addWaterMarkDerictory(File srcPdfFileDirectory, File descPdfFileDirectory, File waterMarkImage) throws IOException, DocumentException {
 
+        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
+            throw new IOException("目标文件夹不能在原文件夹中");
+
+
         if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
             return;
 
@@ -326,7 +331,6 @@ public class MyPDFUtilss {
             else return;
 
         }
-
     }
 
 
@@ -350,6 +354,9 @@ public class MyPDFUtilss {
      * @param waterMarkText        水印文字
      */
     public static void addWaterMarkDerictory(File srcPdfFileDirectory, File descPdfFileDirectory, String waterMarkText) throws IOException, DocumentException {
+
+        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
+            throw new IOException("目标文件夹不能在原文件夹中");
 
         if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
             return;
@@ -386,7 +393,7 @@ public class MyPDFUtilss {
 
 
         if (!FilenameUtils.getExtension(srcPdf.getAbsolutePath()).toLowerCase().equals("pdf"))
-            throw new FileNotFoundException("file '" + srcPdf + "'  not pdf.");
+            return;
 
 
         if (waterMarkImage != null) {
@@ -602,7 +609,10 @@ public class MyPDFUtilss {
      * @param badDirectory         存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void decryptDirectory(File srcPdfFileDirectory, File descPdfFileDirectory, File badDirectory) {
+    public static void decryptDirectory(File srcPdfFileDirectory, File descPdfFileDirectory, File badDirectory) throws IOException {
+
+        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
+            throw new IOException("目标文件夹不能在原文件夹中");
 
         if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
             return;
