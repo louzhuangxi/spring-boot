@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * 用 String 类型代表本地或服务器端文件路径，不要用 File
- * <p/>
+ * <p>
  * commons ftp 上的文件，用 org.apache.commons.net.ftp.FTPFile ，其属性不能和 File 对应
- * <p/>
+ * <p>
  * 所以用 String 代表本地文件和服务器端文件，可以通用。
  */
 
@@ -93,6 +93,18 @@ public interface Connection {
      * @throws FtpException
      */
     void uploadDirectory(String localDirectoryPath, String remoteDirectoryPath, boolean logProcess) throws FtpException;
+
+    /**
+     * Download a single file from the FTP server，断点续传，如果指定目录不存在，自动创建，可以重命名下载的文件名
+     *
+     * @param remoteFilePath     path of the file on the server
+     * @param localDirectoryPath path of directory where the file will be stored
+     * @param localFileName      下载到本地的文件名称(个别需求中，需要重命名远程文件)
+     * @param logProcess         log 中是否显示下载进度
+     * @throws IOException if any network or IO error occurred.
+     */
+    void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException;
+
 
     /**
      * Download a single file from the FTP server，断点续传，如果指定目录不存在，自动创建

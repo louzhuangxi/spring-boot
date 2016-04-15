@@ -135,7 +135,7 @@ public class SftpConnection implements Connection {
 
 
     /**
-     * Download a single file from the FTP server，未实现断点续传，如果指定目录不存在，自动创建
+     * 保持源文件名不变
      *
      * @param remoteFilePath     path of the file on the server
      * @param localDirectoryPath path of directory where the file will be stored
@@ -143,6 +143,22 @@ public class SftpConnection implements Connection {
      */
     @Override
     public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException {
+
+        downloadFile(remoteFilePath, localDirectoryPath, null, logProcess);
+
+    }
+
+    /**
+     * Download a single file from the FTP server，断点续传，如果指定目录不存在，自动创建，可以重命名下载的文件名
+     *
+     * @param remoteFilePath     path of the file on the server
+     * @param localDirectoryPath path of directory where the file will be stored
+     * @param localFileName      下载到本地的文件名称(个别需求中，需要重命名远程文件)
+     * @param logProcess         log 中是否显示下载进度
+     * @throws IOException if any network or IO error occurred.
+     */
+    @Override
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException {
 
         if (!existsFile(remoteFilePath))
             return;
@@ -154,7 +170,11 @@ public class SftpConnection implements Connection {
 
         try {
 
-            channel.get(remoteFilePath, localDirectoryPath);
+            if (localFileName == null)
+                channel.get(remoteFilePath, localDirectoryPath);
+            else
+                channel.get(remoteFilePath, localDirectoryPath + File.separator + localFileName);
+
 
         } catch (SftpException e) {
 
@@ -162,18 +182,18 @@ public class SftpConnection implements Connection {
         }
 
         logger.info("download file '" + remoteFilePath + "'  to  localDirectory '" + localDirectoryPath + FILE_SEPARATOR + StringUtils.substringAfterLast(remoteFilePath, "/") + "' succeed.");
+
     }
 
 
     /**
      * 下载指定文件夹下面的文件
-     * <p/>
+     * <p>
      * 实现过程同 FtpConnection.java 中的同名函数
      *
      * @param remoteDirectoryPath Path of the current directory being downloaded.
      * @param localDirectoryPath  path of directory where the whole remote directory will be
      *                            downloaded and saved.
-     *
      * @throws IOException if any network or IO error occurred.
      */
     @Override
@@ -260,6 +280,7 @@ public class SftpConnection implements Connection {
         logger.info("upload local Directory " + localDirectoryPath + " succeed.");
 
     }
+
 
     @Override
     public long[] directoryInfo(String remoteDirectoryPath) throws FtpException {
@@ -496,7 +517,7 @@ public class SftpConnection implements Connection {
 
     /**
      * Create a directory and all missing parent-directories.
-     * <p/>
+     * <p>
      * 设为 private ,不会有在服务器上仅仅创建文件夹的需求。
      *
      * @param remoteDirectoryPath

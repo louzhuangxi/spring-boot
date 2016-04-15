@@ -39,7 +39,7 @@ public class FtpConnection implements Connection {
     private static final String FILE_LISTING_ERROR_MESSAGE = "Unable to list files in directory %s";
     private static final String NO_SUCH_DIRECTORY_MESSAGE = "The directory %s doesn't exist on the remote server.";
     private static final String UNABLE_TO_CD_MESSAGE = "Remote server was unable to change directory.";
-    private static final String FILE_SEPARATOR = "/";
+    //  private static final String FILE_SEPARATOR = "/";
     private Logger logger = LoggerFactory.getLogger(FtpConnection.class);
 
     private FTPClient client;
@@ -170,6 +170,22 @@ public class FtpConnection implements Connection {
         return files;
     }
 
+
+    /**
+     * 文件名保持不变
+     *
+     * @param remoteFilePath     path of the file on the server
+     * @param localDirectoryPath path of directory where the file will be stored
+     * @param logProcess         log 中是否显示下载进度
+     * @throws IOException if any network or IO error occurred.
+     */
+    @Override
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException {
+
+        downloadFile(remoteFilePath, localDirectoryPath, null, logProcess);
+    }
+
+
     /**
      * Download a single file from the FTP server，支持断点续传，如果指定目录不存在，自动创建
      * commons net ftp 下载的文件，文件的最后修改日期和创建日期，均为当前时间，不会保留源文件的时间。
@@ -177,24 +193,37 @@ public class FtpConnection implements Connection {
      *
      * @param remoteFilePath     path of the file on the server
      * @param localDirectoryPath path of directory where the file will be stored
-     * @param logProcess         log 中是否显示下载进度，便于调试
+     * @param localFileName      下载到本地的文件名称(个别需求中，需要重命名远程文件) , null 为保持原文件名不变
+     * @param logProcess         log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException {
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException {
 
         try {
             FTPFile[] files = client.listFiles(new String(remoteFilePath.getBytes("GBK"), "iso-8859-1"));
 
             //检查远程文件是否存在
-            if (files.length != 1) {
+            if (!existsFile(remoteFilePath)) {
                 throw new FtpException("Unable to download file : " + remoteFilePath + " does not exist.");
             }
 
 
             //如果本地文件夹不存在，可以递归创建
-            String localFilePath = getDownloadLocalFilePath(remoteFilePath, localDirectoryPath);
+            String localFilePath;
 
+            // 如果本地文件夹不存在，可以递归创建
+            // mkdirs 可以递归创建文件夹
+            if (!Files.exists(Paths.get(localDirectoryPath)))
+                Paths.get(localDirectoryPath).toFile().mkdirs();
+
+            if (localFileName == null) {
+                localFilePath = localDirectoryPath + File.separator + Paths.get(remoteFilePath).getFileName().toString();
+            } else
+                localFilePath = localDirectoryPath + File.separator + localFileName;
+
+
+            logger.info("localFilePath={}",localFilePath);
 
             File localFile = Paths.get(localFilePath).toFile();
             long localSize = localFile.length();
@@ -308,10 +337,10 @@ public class FtpConnection implements Connection {
                 }
                 if (jFile.isDirectory()) {
                     // download the sub directory
-                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + FILE_SEPARATOR + jFile.getName(), logProcess);
+                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + File.separator + jFile.getName(), logProcess);
                 } else {
                     // download the file
-                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, logProcess);
+                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, null, logProcess);
                 }
             }
         }
@@ -340,7 +369,7 @@ public class FtpConnection implements Connection {
             }
 
             //上传后，服务器上的文件名称，如果远端文件夹不存在，可以递归创建。
-            String remoteFilePath = getUoloadloadLocalFilePath(localFilePath, remoteDirectoryPath);
+            String remoteFilePath = getRemoteUploadDirectoryPath(localFilePath, remoteDirectoryPath);
 
 
             //查看上传文件是否存在
@@ -457,7 +486,7 @@ public class FtpConnection implements Connection {
 
                 } else {
 
-                    uploadDirectory(localFile.getAbsolutePath(), remoteDirectoryPath + FILE_SEPARATOR + localFile.getName(), logProcess);
+                    uploadDirectory(localFile.getAbsolutePath(), remoteDirectoryPath + File.separator + localFile.getName(), logProcess);
                 }
             }
         }
@@ -482,7 +511,7 @@ public class FtpConnection implements Connection {
 
     /**
      * Create a directory and all missing parent-directories.递归创建
-     * <p/>
+     * <p>
      * 设为 private ,不会有在服务器上仅仅创建文件夹的需求。
      *
      * @param remoteDirectoryPath
@@ -732,7 +761,7 @@ public class FtpConnection implements Connection {
             //  不用 Long ftpServerTimeStamp = ftpFile.getLastModified().getMillis();
             // commons net ftp 中，文件的 list 方法，获取的 FTPFile 的时间，利用的是 GregorianCalendar ，没有秒属性。
             String ts = client.getModificationTime(remoteFilePath);
-           // logger.info("ftp file time ({})", ts);
+            // logger.info("ftp file time ({})", ts);
             /**
              * ftp server 上的文件的最后创建时间。
              * ftp MDTM 返回的是 GMT （格林威治时间），yyyyMMddHHmmss 格式，仅能精确到秒
@@ -749,28 +778,6 @@ public class FtpConnection implements Connection {
     }
 
     /**
-     * 通过服务器端源文件路径和本地目标文件夹路径，生成本地目标文件绝对路径，下载文件时使用。
-     * 如果本地目标文件夹不存在，则创建。
-     *
-     * @param remoteFilePath     源文件路径
-     * @param localDirectoryPath 目标文件夹路径
-     * @return
-     */
-    private String getDownloadLocalFilePath(String remoteFilePath, String localDirectoryPath) {
-
-        Path targetPath = Paths.get(localDirectoryPath);
-
-        if (!Files.exists(targetPath))
-            Paths.get(localDirectoryPath).toFile().mkdirs();
-
-        String safePath = targetPath.toString();
-        String fileName = Paths.get(remoteFilePath).getFileName().toString();
-
-
-        return safePath + FILE_SEPARATOR + fileName;
-    }
-
-    /**
      * 通过本地源文件路径和服务器端目标文件夹路径，生成服务器端目标文件绝对路径，上传时使用。
      * 如果服务器目标文件夹不存在，则创建。
      *
@@ -778,7 +785,7 @@ public class FtpConnection implements Connection {
      * @param remoteDirectoryPath 服务器目标文件夹路径
      * @return
      */
-    private String getUoloadloadLocalFilePath(String localFilePath, String remoteDirectoryPath) {
+    private String getRemoteUploadDirectoryPath(String localFilePath, String remoteDirectoryPath) {
 
         if (!existsDirectory(remoteDirectoryPath)) {
             try {
@@ -793,7 +800,7 @@ public class FtpConnection implements Connection {
         String safePath = targetPath.toString();
         String fileName = Paths.get(localFilePath).getFileName().toString();
 
-        return safePath + FILE_SEPARATOR + fileName;
+        return safePath + File.separator + fileName;
     }
 
 
@@ -809,7 +816,7 @@ public class FtpConnection implements Connection {
 
         String name = ftpFile.getName();
         long fileSize = ftpFile.getSize();
-        String fullPath = remoteDirectoryPath + FILE_SEPARATOR + ftpFile.getName();
+        String fullPath = remoteDirectoryPath + File.separator + ftpFile.getName();
         long mTime = ftpFile.getTimestamp().getTime().getTime();
         //  logger.info(" 1.  getTimestamp : "+new DateTime(mTime).withZone(DateTimeZone.forTimeZone(TimeZone.getDefault())));
         // logger.info(" 2.  getTimestamp : "+ftpFile.getTimestamp().getTimeInMillis());
@@ -857,7 +864,7 @@ public class FtpConnection implements Connection {
             //上传到 ftp 根目录，因为本方法创建的临时文件过小，本类的方法 uploadFile 需要显示上传过程，在进行除法的时候出现异常，单独实现。
 
             //上传后，服务器上的文件名称。
-            String remoteFilePath = getUoloadloadLocalFilePath(localFilePath, "temp_test_time");
+            String remoteFilePath = getRemoteUploadDirectoryPath(localFilePath, "temp_test_time");
             InputStream inputStream = null;
             try {
                 inputStream = new FileInputStream(new File(localFilePath));
