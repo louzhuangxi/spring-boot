@@ -12,11 +12,10 @@ zTree java 版，修改了一点 tree 的样式，整体样式用到了 ace admi
 
 ### DEMO
 
-- [DEMO](http://www.canhelp.cn/boot/example/tree/manage/ztree.html) : 演示，不要收藏 DEMO url ，可能会变。
-
+- <a href="http://www.canhelp.cn/boot/example/tree/manage/ztree.html" target="_blank">DEMO</a> : 演示，不要收藏 DEMO url ，可能会变。
 - 收藏项目地址即可
- - http://git.oschina.net/h819/spring-boot/tree/master/h819-ztree 
  - https://github.com/h819/spring-boot/tree/master/h819-ztree
+  - http://git.oschina.net/h819/spring-boot/tree/master/h819-ztree 
 
 ### 主要用到的依赖
 - spring boot
