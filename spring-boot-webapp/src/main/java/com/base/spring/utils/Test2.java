@@ -7,7 +7,7 @@ import com.base.spring.dto.FueluxTreeJsonNode;
 import com.base.spring.dto.FueluxTreeJsonNodeAttr;
 import com.base.spring.dto.FueluxTreeNodeType;
 import com.google.common.collect.Lists;
-import org.h819.commons.MyStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,7 +74,7 @@ public class Test2 {
         list.add(new TreeNodeEntity(TreeNodeType.Menu, "name6", 0, 6, false, parent));
 
 
-        System.out.println(MyStringUtils.center(" orignal ", 80, "*"));
+        System.out.println(StringUtils.center(" orignal ", 80, "*"));
 
         for (TreeNodeEntity entity : list)
             System.out.println(String.format("%s  |  %s | %d", entity.getName(), entity.getIndex(), list.indexOf(entity)));
@@ -82,7 +82,7 @@ public class Test2 {
 
         sortTreeNode(list);
 
-        System.out.println(MyStringUtils.center(" modify by sort ", 80, "*"));
+        System.out.println(StringUtils.center(" modify by sort ", 80, "*"));
 
 
         for (TreeNodeEntity entity : list)
@@ -92,7 +92,7 @@ public class Test2 {
 
         sortTreeNode(list, add1, add);
 
-        System.out.println(MyStringUtils.center("  sort sub", 80, "*"));
+        System.out.println(StringUtils.center("  sort sub", 80, "*"));
 
         for (TreeNodeEntity entity : list)
             System.out.println(String.format("%s  |  %s | %d", entity.getName(), entity.getIndex(), list.indexOf(entity)));

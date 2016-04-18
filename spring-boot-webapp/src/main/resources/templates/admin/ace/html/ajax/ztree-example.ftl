@@ -134,7 +134,7 @@
                     <ul class="list-unstyled spaced2">
                       <li> <i class="ace-icon fa fa-bell-o bigger-110 purple"></i> 树结构，有一个默认的根节点。创建的树状结构，从此根节点开始。增加节点，只能从父节点开始。 </li>
                       <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 树结构编辑，编辑树的结构</li>
-                      <li> <i class="ace-icon fa fa-times bigger-110 red"></i> 如果创建了父节点，想要变成叶节点，删除重新创建即可。 </li>
+                      <li> <i class="ace-icon fa fa-times bigger-110 red"></i> 如果创建了父节点，想要变成叶节点，清空子节点即可。  </li>
                     </ul>
                     <hr />
                     <h4 class="header smaller lighter info"> <i class="ace-icon fa fa-sitemap"></i> 树结构编辑 </h4>
