@@ -1,6 +1,7 @@
 /**
  * 多数据源配置 :
  * 配置 MultiConfig1 , MultiConfig2 即可
+ * 指定扫描的包，就可以自动到库中关联实体
  * Repository 和 Service 中不做任何配置，和单数据源一样。
  * Time: 2016.03.29 :16:47
  */
