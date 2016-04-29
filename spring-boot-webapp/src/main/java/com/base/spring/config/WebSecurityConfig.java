@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+//http://docs.spring.io/spring-security/site/docs/4.1.0.RC2/reference/htmlsingle/#new
+
 // 经过 spring security 处理后，controller 就不需要再理会“登陆”或者“退出”等权限验证问题，这些问题都交给 spring security 了。
 
 // spring security 中，如果想要自动加载 fetch = FetchType.LAZY 的级联对象，必需设置
