@@ -10,6 +10,32 @@ package org.h819.commons;
 public class MyFilenameUtils {
 
 
+
+    /**
+     * windows 系统中，\ , / , : , * , ? , " , < , > , | 九个字符不能出现在文件夹中，用指定的字符代替。
+     *
+     * @param filename    文件名称
+     * @param replacement 替代的字符串
+     * @return
+     */
+    public static String getWindowsLegalFileName(String filename,
+                                                 String replacement) {
+
+        return filename.
+                replace("\\", replacement).
+                replace("/", replacement).
+                replace(":", replacement).
+                replace("*", replacement).
+                replace("?", replacement).
+                replace("\"", replacement).
+                replace(">", replacement).
+                replace("|", replacement).
+                replace("<", replacement).trim();
+
+
+    }
+
+
     private static String getPath(String filePath, String append) {
 
         //  FilenameUtils.

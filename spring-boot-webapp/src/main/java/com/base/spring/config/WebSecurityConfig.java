@@ -15,7 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//http://docs.spring.io/spring-security/site/docs/4.1.0.RC2/reference/htmlsingle/#new
+//4.1 新特性
+//http://docs.spring.io/spring-security/site/docs/4.1.x/reference/htmlsingle/#new
 
 // 经过 spring security 处理后，controller 就不需要再理会“登陆”或者“退出”等权限验证问题，这些问题都交给 spring security 了。
 
@@ -125,7 +126,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         security.ignoring().antMatchers("/**"); //测试时，不加安全验证
         //
         security.ignoring()
-                .antMatchers("/resource/**","/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
+                .antMatchers("/resource/**", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
 
         /**
          *
@@ -141,7 +142,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * auth.userDetailsService() 方法的参数为 org.springframework.security.core.userdetails.UserDetailsService 类型。
      * CustomUserDetailsService 扩展了该类型
      * 注意：保存用户信息的时候，密码也要用 BCryptPasswordEncoder 加密。
-     * <p/>
+     * <p>
      * userDetailsService 只负责验证用户名是否存在
      * 本方法再加上一个密码验证
      *
