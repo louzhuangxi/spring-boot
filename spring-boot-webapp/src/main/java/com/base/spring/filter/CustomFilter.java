@@ -1,4 +1,4 @@
-package com.base.spring.custom;
+package com.base.spring.filter;
 
 
 import javax.servlet.*;

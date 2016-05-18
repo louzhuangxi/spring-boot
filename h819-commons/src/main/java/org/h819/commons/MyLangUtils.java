@@ -205,7 +205,7 @@ public class MyLangUtils {
         //  MyLangUtils.throwException(" 主动抛出异常");
 
         try {
-            System.out.println(MyFileUtils.getDetectedEncoding(new File("D:\\01\\gntl.csv")));
+            System.out.println(MyFileUtils.getEncoding(new File("D:\\01\\gntl.csv")));
         } catch (IOException e) {
             e.printStackTrace();
         }

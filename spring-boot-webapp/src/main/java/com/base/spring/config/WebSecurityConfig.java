@@ -109,6 +109,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/login?session=invalid") //
                 .maximumSessions(2).maxSessionsPreventsLogin(true) //限制用户只能从一个设备登陆，不同同时登陆多台设备
         ; //
+
+        http.headers().xssProtection(); //
+        http.csrf();
     }
 
 

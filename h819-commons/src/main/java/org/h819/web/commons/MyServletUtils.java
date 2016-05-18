@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
  */
 
 // http://www.blogjava.net/meil/archive/2006/10/10/73908.html
+//import org.springframework.web.util.WebUtils;
 public class MyServletUtils {
 
     /**
@@ -89,6 +90,7 @@ public class MyServletUtils {
                     "request resource [" + path + "] cannot be resolved to absolute file path - " +
                             "web application archive not expanded?");
         }
+
         return realPath;
     }
 

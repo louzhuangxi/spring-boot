@@ -50,7 +50,7 @@ public class MyCSVUtils {
      */
     public static Collection<CSVRecord> getCSVRecords(File csvFile, boolean duplicate) throws IOException {
 
-        List<CSVRecord> collection = CSVParser.parse(csvFile, MyFileUtils.getDetectedEncoding(csvFile), CSVFormat.DEFAULT).getRecords();
+        List<CSVRecord> collection = CSVParser.parse(csvFile, MyFileUtils.getEncoding(csvFile), CSVFormat.DEFAULT).getRecords();
 
         if (duplicate) {
             //    logger.info("in list");
@@ -89,7 +89,7 @@ public class MyCSVUtils {
      * @throws IOException
      */
     public static CSVRecord getCSVRecord(File csvFile, int recordNumber) throws IOException {
-        return CSVParser.parse(csvFile, MyFileUtils.getDetectedEncoding(csvFile), CSVFormat.DEFAULT).getRecords().get(recordNumber);
+        return CSVParser.parse(csvFile, MyFileUtils.getEncoding(csvFile), CSVFormat.DEFAULT).getRecords().get(recordNumber);
     }
 
 

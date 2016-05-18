@@ -43,7 +43,6 @@ public class MyFileUtils {
     }
 
 
-
     /**
      * Attempts to figure out the character set of the file using the excellent juniversalchardet library.
      * https://code.google.com/p/juniversalchardet/
@@ -53,7 +52,7 @@ public class MyFileUtils {
      * @return
      * @throws IOException
      */
-    public static Charset getDetectedEncoding(File file) throws IOException {
+    public static Charset getEncoding(File file) throws IOException {
 
         byte[] buf = new byte[4096];
         BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
@@ -163,14 +162,12 @@ public class MyFileUtils {
         try {
             if (descDirectory != null && (!descDirectory.exists() || !descDirectory.isDirectory()))
                 FileUtils.forceMkdir(descDirectory);
-
             FileUtils.copyFileToDirectory(srcPdf, descDirectory);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
 
     /**
      * 读取大文件，不能一次性读取，这样会占用大量内存，应逐条读取
@@ -192,27 +189,6 @@ public class MyFileUtils {
         } finally {
             LineIterator.closeQuietly(it);
         }
-    }
-
-    /**
-     * @param args
-     * @throws java.io.IOException
-     */
-    public static void main(String[] args) throws IOException {
-        // TODO Auto-generated method stub
-
-        // Windows下路径分隔符是"\"
-        // Unix与Linux下路径分隔符是"/"
-        // *****如果路径分隔符用File.separator表示，则可移植性更强。
-
-        File f = new File("D:\\download\\gz-tony-spring-authority-master\\spring-authority\\src\\java\\com\\authority\\");
-        File f2 = new File("D:\\download\\jiaojie\\2");
-        File f3 = new File("F:\\decryptPdfDir\\");
-        Collection<File> sf = MyFileUtils.listFiles(f3, new String[]{"AATCC112Y2014.PDF", "ASTMA239Y2014.PDF"}, true, IOCase.INSENSITIVE);
-        for (File ss : sf)
-            System.out.println("ss =" + ss.getAbsolutePath());
-        //MyFileUtils.convertEncoding(f, f2, StandardCharsets.UTF_8);
-        //System.out.println(f.getName());
     }
 
     /**
@@ -253,7 +229,7 @@ public class MyFileUtils {
         if (srcFile.isFile()) {
             if (FilenameUtils.isExtension(srcFile.getName().toLowerCase(), extension)) {
                 try {
-                    String encodingSrc = MyFileUtils.getDetectedEncoding(srcFile).name();
+                    String encodingSrc = MyFileUtils.getEncoding(srcFile).name();
                     // logger.info(encodingSrc);
                     InputStreamReader in = new InputStreamReader(new FileInputStream(srcFile), encodingSrc);
                     File f = new File(descDirectory + File.separator + srcFile.getName());

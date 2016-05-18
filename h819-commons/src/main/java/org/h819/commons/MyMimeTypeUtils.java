@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,27 +20,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Description : TODO(Mime Type 类)
+ * Description : TODO(Mime Type 类，读取文件内容判断，不仅仅是根据扩展名)
  * 方法一： 使用 java.net.URL : 速度很慢
- * <p/>
+ * <p>
  * 方法二： JMimeMagic http://sourceforge.net/projects/jmimemagic/ ： 已经不更新
- * <p/>
+ * <p>
  * 方法三： mime-util http://sourceforge.net/projects/mime-util/  ： 已经不更新
- * <p/>
+ * <p>
  * 方法四： Apache Tika  https://tika.apache.org/ ： 活跃项目，解析各种文档，不仅仅是检测 Mime Type，本类仅用来检测 Mime Type
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * 参考：http://www.freeformatter.com/mime-types-list.html
- * <p/>
+ * <p>
  * 参考：http://en.wikipedia.org/wiki/Internet_media_type
- * <p/>
+ * <p>
  * User: h819
  * Date: 14-4-24
  * Time: 下午2:00
- * <p/>
+ * <p>
  */
 
-@Service
+//Files.probeContentType(path) 根据扩展名判断，不准确
 public class MyMimeTypeUtils {
 
     private static Logger logger = LoggerFactory.getLogger(MyMimeTypeUtils.class);
@@ -151,7 +150,7 @@ public class MyMimeTypeUtils {
     /**
      * 利用 Tika 分析 Mime Type
      * 因为 Tika 要解析 File 、 URL 数据流，所以解析需要一定时间。不要用解析扩展名的方法，无法动态判断，不准。
-     * <p/>
+     * <p>
      * Parses the given file and returns the extracted text content.
      *
      * @param file
@@ -226,7 +225,7 @@ public class MyMimeTypeUtils {
 
     /**
      * 在线获取 mime type ，打印的结果写入到 properties 文件
-     * <p/>
+     * <p>
      * 参考：http://www.freeformatter.com/mime-types-list.html
      */
     private void printMimeType() {

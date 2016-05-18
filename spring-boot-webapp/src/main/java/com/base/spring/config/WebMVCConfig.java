@@ -1,9 +1,12 @@
 package com.base.spring.config;
 
+import com.base.spring.filter.XSSFilter;
 import com.base.spring.initialize.InitializeService;
+import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -64,20 +67,33 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         };
     }
 
+
     /**
-     * 自定义 filter 演示
+     * 将代理服务器发来的请求包含的IP地址转换成真正的用户IP
      *
      * @return
-
-     @Bean public FilterRegistrationBean someFilterRegistration() {
-     FilterRegistrationBean registration = new FilterRegistrationBean();
-     registration.setFilter(new CustomFilter());
-     registration.addUrlPatterns("/*");
-     // registration.addInitParameter("paramName", "paramValue");
-     registration.setName("someFilter");
-     return registration;
-     }
      */
+    @Bean
+    public RemoteIpFilter remoteIpFilter() {
+        logger.info("RemoteIpFilter initialized");
+        return new RemoteIpFilter();
+    }
+
+    /**
+     * 自定义 filter 演示，增加 XSSFilter
+     *
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean someFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new XSSFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("XSSFilter");
+        logger.info("XSSFilter initialized");
+        return registration;
+    }
+
 
     /**
      * Spring 3.2 及以上版本自动开启检测URL后缀,设置Response content-type功能, 如果不手动关闭这个功能,当url后缀与accept头不一致时,
