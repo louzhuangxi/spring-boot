@@ -24,7 +24,7 @@ import java.util.Date;
  //http://blog.progs.be/542/date-to-java-time
 
 //日期格式化 http://www.ocpsoft.org/prettytime/
-public class MyDateUtils extends DateUtils {
+public class MyDateUtils  {
 
     // ====== 正则表达式(为了字符串合并的时候不产生歧义，每个子字符串都用括号()括起来)=====
     /* 判断是否是正确的年份,必须以 19,20 开头，并且是四位 */
