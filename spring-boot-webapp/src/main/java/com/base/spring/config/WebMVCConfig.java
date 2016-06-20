@@ -13,13 +13,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+<<<<<<< HEAD
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+=======
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+>>>>>>> origin/master
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 // web 配置
+//WebMvcConfigurerAdapter 中有更多设置，参考文档
 @Configuration
 class WebMVCConfig extends WebMvcConfigurerAdapter {
 
@@ -96,6 +101,10 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     }
 
 
+
+
+
+
     /**
      * 注册一个拦截器
      * 拦截器只在 spring web 中使用
@@ -125,6 +134,24 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
 
+    }
+
+    /**
+     * PathMatchConfigurer 函数让开发人员可以根据需求定制URL路径的匹配规则。*
+     *
+     * @param configurer
+     */
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        /**
+         * spring mvc 默认忽略 url 中 . 后面的部分，如
+         * http://localhost:8080/abc.mm  会直接匹配为
+         * http://localhost:8080/abc 忽略了 mm
+         * 如果不想忽略，设置 setUseSuffixPatternMatch(false)
+         * /
+         */
+
+        configurer.setUseSuffixPatternMatch(false);
     }
 
 }
