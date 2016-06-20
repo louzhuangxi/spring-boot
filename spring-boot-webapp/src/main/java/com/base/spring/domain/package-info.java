@@ -9,6 +9,13 @@
  https://github.com/cbc009/spring-boot-jpa/blob/master/src%2Fmain%2Fjava%2Fcom%2Fchenbaocheng%2Fdomain%2FAdminUser.java
  https://github.com/mplushnikov/lombok-intellij-plugin
 
+ 总结：
+ 1. 先在 ide 上安装插件
+ 2. maven 引入依赖
+
+ 没必要，增加的代码没有影响使用，还是别把问题复杂化
+
+
  ===
  builder 模式：
  对于参数很多的构造方法，可以灵活的创建构造方法

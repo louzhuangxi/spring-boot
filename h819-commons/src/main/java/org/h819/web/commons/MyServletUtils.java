@@ -94,6 +94,11 @@ public class MyServletUtils {
         return realPath;
     }
 
+    public static String getRealPaths(HttpServletRequest request) {
+
+        return null;
+    }
+
     /**
      * 判断是否是 ajax 请求
      */

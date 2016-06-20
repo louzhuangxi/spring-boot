@@ -1,6 +1,8 @@
 package com.base.spring.filter.xss;
 
 import org.owasp.esapi.ESAPI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -13,6 +15,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * To change this template use File | Settings | File Templates.
  */
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
+
+    private static Logger logger = LoggerFactory.getLogger(XSSRequestWrapper.class);
+
 
     public XSSRequestWrapper(HttpServletRequest servletRequest) {
         super(servletRequest);

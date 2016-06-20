@@ -1,4 +1,4 @@
-package org.h819.commons.file;
+package org.h819.commons.file.monitor;
 
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 文件监控,commons io 实现  http://commons.apache.org/proper/commons-io/javadocs/api-release/index.html?org/apache/commons/io/monitor/package-summary.html
  * User: Jianghui
- * Date: 12-6-18
+ * Date: 2012-6-18
  * Time: 下午2:04
  * To change this template use File | Settings | File Templates.
  */

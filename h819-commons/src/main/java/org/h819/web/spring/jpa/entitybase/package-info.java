@@ -1,12 +1,12 @@
-package org.h819.web.spring.jpa.entitybase;
-
 /**
- * Description : TODO( jpa entity 基础类，其他的 entity 参考此类进行修改，以简化 entity 创建)
+ * Description : TODO()
+ * <p>
  * User: h819
- * Date: 14-5-3
- * Time: 下午9:14
- * To change this template use File | Settings | File Templates.
+ * Date: 2016/6/2
+ * Time: 9:27
  */
+package org.h819.web.spring.jpa.entitybase;
 /**
- * Package showing a simple repository interface to use basic query method execution functionality.
+ * entity 基础类，其他的 entity 继承该基础类，简化 entity 创建
+ * 实际使用时，拷贝到项目中，便于修改，不要直接继承
  */

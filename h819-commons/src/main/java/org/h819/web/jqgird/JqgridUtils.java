@@ -10,9 +10,10 @@ import java.util.Collection;
 
 /**
  * Jqgrid 工具类，可以在非 Spring 环境下运行
- * <p/>
+ * <p>
  * 根据 jqgrid 传递过来的参数，构造查询条件
- * <p/>
+ * 也可以用在类似 jqgrid 查询条件的应用中，此时需要自行构造  JqgridFilter
+ * <p>
  * 使用 ： JqgridUtils.Filter f = JqgridUtils.getSearchFilters(filters);
  */
 public class JqgridUtils {
@@ -56,6 +57,35 @@ public class JqgridUtils {
         return new Filter(searchFilters, filterRelation);
     }
 
+//    /**
+//     * 根据自行构造的 filters ，构造查询条件的集合。
+//     *
+//     * @param filters 为自行构造的 JqgridFilter
+//     * @return
+//     */
+//    public static Filter getSearchFilters(JqgridFilter filters) {
+//
+//        //如果是查询操作，有条件约束，重新准备 JqgridResponseBean
+//        //组装查询条件 filter
+//        //将查询字符串(json 格式)，包装成对象
+//
+//        Collection<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
+//        //
+//        logger.info("查询条件之间的关系：" + filters.getGroupOp());
+//        //组装 searchParams
+//        for (JqgridFilter.Rule rule : filters.getRules()) {
+//            logger.info(rule.getField() + " - " + rule.getOp() + " - " + rule.getData());
+//            //要求 jqgrid 传递的操作符，应该和 SearchFilter.Operator 中的含义一致
+//            searchFilters.add(new SearchFilter(rule.getField(), SearchFilter.Operator.valueOf(rule.getOp()), rule.getData()));
+//        }
+//        // 转换 Relation
+//        SearchFilter.Relation filterRelation;
+//        if (filters.getGroupOp().toUpperCase().equals("AND"))
+//            filterRelation = SearchFilter.Relation.AND;
+//        else filterRelation = SearchFilter.Relation.OR;
+//
+//        return new Filter(searchFilters, filterRelation);
+//    }
 
     /**
      * Inner class ，bean 格式，用于传递查询条件。
@@ -80,7 +110,6 @@ public class JqgridUtils {
         public Collection<SearchFilter> getSearchFilters() {
             return searchFilters;
         }
-
     }
 
 }

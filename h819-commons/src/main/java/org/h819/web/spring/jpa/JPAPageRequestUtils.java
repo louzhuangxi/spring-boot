@@ -23,9 +23,9 @@ import org.springframework.util.Assert;
  * Time: 下午9:20
  * To change this template use File | Settings | File Templates.
  */
-public class PageRequestUtils {
+public class JPAPageRequestUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(PageRequestUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(JPAPageRequestUtils.class);
 
 
     /**

@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <start-class>com.base.SpringBootWebappApplication</start-class>
+        <start-class>com.base.SpringBootWebappApplication</start-class><!--指定 main ，在系统有多个 main 方法时有用-->
     </properties>
 
     <dependencies>

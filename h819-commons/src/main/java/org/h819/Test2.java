@@ -1,5 +1,8 @@
 package org.h819;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.util.Assert;
+
 import java.io.File;
 
 /**
@@ -12,8 +15,13 @@ import java.io.File;
 public class Test2 {
 
     public static void main(String[] args){
-           Test2 t = new Test2();
-        t.testFileName();
+
+        int i =2999;
+
+        Assert.isTrue(NumberUtils.isNumber(String.valueOf(i))&&i>=1,"i 不是整数");
+
+
+
 
     }
 

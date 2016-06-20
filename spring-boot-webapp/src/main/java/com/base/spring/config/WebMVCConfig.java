@@ -1,5 +1,6 @@
 package com.base.spring.config;
 
+import com.base.spring.filter.HandlerInterceptor;
 import com.base.spring.filter.XSSFilter;
 import com.base.spring.initialize.InitializeService;
 import org.apache.catalina.filters.RemoteIpFilter;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.ServletContextEvent;
@@ -51,7 +53,6 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     @Bean
     protected ServletContextListener listener() {
         return new ServletContextListener() {
-
             @Override
             public void contextInitialized(ServletContextEvent sce) {
                 logger.info("ServletContext initialized");
@@ -94,6 +95,18 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         return registration;
     }
 
+
+    /**
+     * 注册一个拦截器
+     * 拦截器只在 spring web 中使用
+     * filter 可以在 java web 中使用，范围广
+     *
+     * @param registry
+     */
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new HandlerInterceptor()).addPathPatterns("/person/save/*");
+//    }
 
     /**
      * Spring 3.2 及以上版本自动开启检测URL后缀,设置Response content-type功能, 如果不手动关闭这个功能,当url后缀与accept头不一致时,

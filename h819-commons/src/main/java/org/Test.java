@@ -45,31 +45,18 @@ public class Test {
 
         Test t = new Test();
 
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "v1");
+        map.put("1", "v2");
 
-
-
-        String s = "abc, sf ,ss ss,";
-        //String[] ss = s.split(",");
-        String a =",";
-        String b ="ss";
-        String s1 = s.replaceAll(",.+,","");
-
-//        System.out.println(s1);
-//        System.out.println(MyStringUtils.removePattern(s,",.+,"));
-
-       //t.testFilfilter();
-
-      //  System.out.println(Comparable.class.isAssignableFrom(s.getClass()));
-
-      //  t.test2();
-
-        t.testGetBeanInfo();
+        for (Map.Entry<String, String> e : map.entrySet()) {
+            System.out.println(String.format("key=%s , value=%s", e.getKey(), e.getValue()));
+        }
 
     }
 
 
-
-    private void testGetBeanInfo(){
+    private void testGetBeanInfo() {
 
 
         BeanInfo beanInfo = null;
@@ -88,7 +75,7 @@ public class Test {
             System.out.println(propertyDescriptor.getName());
         }
 
-        System.out.println(StringUtils.center("  ",80,"*"));
+        System.out.println(StringUtils.center("  ", 80, "*"));
 
         for (PropertyDescriptor propertyDescriptor : descriptors) {
             System.out.println(propertyDescriptor.getName());
@@ -97,14 +84,15 @@ public class Test {
     }
 
 
-    private void test2(){
+    private void test2() {
 
-        String[] strings = {"1","2","3","4"};
+        String[] strings = {"1", "2", "3", "4"};
 
-       System.out.println( Arrays.asList(strings).subList(0,strings.length));
-        System.out.println( Arrays.asList(strings).subList(1,strings.length));
+        System.out.println(Arrays.asList(strings).subList(0, strings.length));
+        System.out.println(Arrays.asList(strings).subList(1, strings.length));
 
     }
+
     /**
      * 深圳重复标准号查看
      */
@@ -202,7 +190,6 @@ public class Test {
 
 
     }
-
 
 
     private void testDate() {

@@ -20,20 +20,21 @@ import java.io.Serializable;
 
 /**
  * Base class to derive entity classes from.
- * <p/>
+ * <p>
  * MySQL 创建 id
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * 基类统一定义id的属性名称、数据类型、列名映射及生成策略.
- * Oracle需要每个Entity独立定义id的SEQUCENCE时，不继承于本类而改为实现一个Idable的接口。
+ * Oracle需要每个 Entity 独立定义id的SEQUCENCE时，不继承于本类而改为实现一个 Idable 的接口。
  * (摘自 spring side)
  *
  * @author Oliver Gierke
  */
 
 // @MappedSuperclass  : JPA 基类的标识，表示类本身不受 Spring 管理的实体类，不会在数据库中建表，而是会由其他实体类进行扩展后建表
+//需要实现 Serializable 接口，否则在 ehcache 等缓存总，无法序列化
 @MappedSuperclass
-public abstract class AbstractMySQLEntity  implements Serializable {
+public abstract class AbstractMySQLEntity implements Serializable {
 
 
     /**
