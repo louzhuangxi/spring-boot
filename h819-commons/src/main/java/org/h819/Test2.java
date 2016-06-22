@@ -1,8 +1,5 @@
 package org.h819;
 
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.util.Assert;
-
 import java.io.File;
 
 /**
@@ -18,9 +15,31 @@ public class Test2 {
 
         int i =2999;
 
-        Assert.isTrue(NumberUtils.isNumber(String.valueOf(i))&&i>=1,"i 不是整数");
+      //  Assert.isTrue(NumberUtils.isNumber(String.valueOf(i))&&i>=1,"i 不是整数");
 
+//        int records =49;
+//        if (records < 0) {
+//            total = -1;
+//            return;
+//        }
+//
+//        long totalTemp = records / pageSize;
+//        if (records % pageSize > 0) {
+//            totalTemp++;
+//        }
+//
+//        total = (int) totalTemp;
 
+        int total =51;
+        int page =6;
+        int size =0;
+
+        if(total%page >0)
+            size = total/page +1;
+        else if(total%page ==0)
+            size = total/page;
+
+       System.out.println(size);
 
 
     }

@@ -87,6 +87,30 @@ public class JqgridUtils {
 //        return new Filter(searchFilters, filterRelation);
 //    }
 
+//    private <T> JqgridResponse stringToResponse(String responseStr, Class<T> bean) {
+//
+//        JqgridResponse vo = JSON.parseObject(responseStr, JqgridResponse.class);  //多个对象字符串，如 list 有多个对象，序列化为字符串之后，进行反序列化
+//
+//        // System.out.println(" =============== ");
+//
+//        int currentPageNo = vo.getPage(); // 当前页数
+//        int totalPage = vo.getTotal();              // 总页数
+//        int recordsSize = vo.getRecords();                    // 总记录数
+//
+//        // 根据总页数和总记录数，计算每页大小
+//        int pageSize = 0;
+//
+//        if (recordsSize % totalPage > 0)
+//            pageSize = recordsSize / totalPage + 1;
+//        else if (recordsSize % totalPage == 0)
+//            pageSize = recordsSize / totalPage;
+//
+//        return new JqgridResponse
+//                (pageSize, recordsSize, currentPageNo, MyBeanUtils.mapToBeans(vo.getRows(), bean.getClass()));
+//
+//
+//    }
+
     /**
      * Inner class ，bean 格式，用于传递查询条件。
      */

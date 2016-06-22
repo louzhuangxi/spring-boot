@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Jqgrid 工具类，只适用于 spring data jpa
+ * JPA 1.10 有Example ，适时修改此类
  * <p>
  * 当 filters 参数为 null  时，可以用作非 jqgrid 情况下
  * <p>
@@ -80,6 +81,8 @@ public class JqgridJPAUtils {
 
     /**
      * 根据 jqgrid 的 search 操作传递过来的条件(含 filters 条件)，进行分页查询。
+     * <p>
+     * findAll() 方法，会进行两次查询，先做 count 查询，之后是具体查询，所以 Page 中包含了总数和具体查询结果集
      *
      * @param repository          查询器
      * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，起始页为 0
@@ -118,6 +121,9 @@ public class JqgridJPAUtils {
 
     /**
      * 根据 jqgrid 的 search 操作传递过来的条件(含 filters 条件)，和附加的其他查询信息，进行分页查询。
+     * findAll() 方法，会进行两次查询，先做 count 查询，之后是具体查询，所以 Page 中包含了总数和具体查询结果集
+     * <p>
+     * 仅是 repository 类型不同，没有和上一个方法合并
      *
      * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的写法。
      * @param currentPageNo 当前页，实际对应 jqgrid 传递过来的 page 参数，起始页为 0

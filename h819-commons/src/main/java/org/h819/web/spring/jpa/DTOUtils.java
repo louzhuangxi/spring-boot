@@ -147,7 +147,7 @@ public class DTOUtils {
      * @return
      */
     public Map<String, Object> createDTOMapCopy(Object entityBeanPOJO) {
-        return MyBeanUtils.toMap(createDTOCopy(entityBeanPOJO, 0));
+        return MyBeanUtils.beanToMap(createDTOCopy(entityBeanPOJO, 0));
     }
 
     /**
@@ -161,7 +161,7 @@ public class DTOUtils {
      * @return
      */
     public Map<String, Object> createDTOMapCopy(Object entityBeanPOJO, int depth) {
-        return MyBeanUtils.toMap(createDTOCopy(entityBeanPOJO, depth));
+        return MyBeanUtils.beanToMap(createDTOCopy(entityBeanPOJO, depth));
     }
 
     private Object createDTOCopy(Object entityBeanPOJO, int depth) {

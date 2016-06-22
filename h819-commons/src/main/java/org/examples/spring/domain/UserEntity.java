@@ -2,7 +2,7 @@ package org.examples.spring.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.h819.commons.MyDateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.h819.web.spring.jpa.entitybase.AbstractMySQLEntity;
 
 import javax.persistence.*;
@@ -281,7 +281,7 @@ public class UserEntity extends AbstractMySQLEntity {
      * @param hours 从当前日期开始计算，过期时间
      */
     public void setExpireDate(int hours) {
-        this.expireDate = MyDateUtils.addHours(new Date(), hours);
+        this.expireDate = DateUtils.addHours(new Date(), hours);
     }
 
     public String getOperator() {

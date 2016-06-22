@@ -29,8 +29,6 @@
     <!-- in order to debug some marshalling issues, this needs to be TRACE -->
     <logger name="org.springframework.web.servlet.mvc" level="WARN" />
     <logger name="org.hibernate" level="WARN"/>
-    <logger name="org.hibernate.SQL" level="debug"/>
-
 
     <logger name="org.h819" level="DEBUG"/>
     <logger name="org.examples" level="INFO"/>

@@ -1,6 +1,10 @@
 package org.h819.commons;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.converters.SqlDateConverter;
+import org.apache.commons.beanutils.converters.SqlTimestampConverter;
 import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
@@ -11,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -74,9 +80,9 @@ public class MyBeanUtils {
 
     //Apache Commons bean : Map<String, String> objectAsMap = BeanUtils.describe(fieldNoteBook);
     //BeanUtils 的 describe 的方法就不可以 ，它的返回值类型为 <String, String> 。
-    // 我现在需要的是 <String, Object> ，等 BeanUtils 升级后是否改变这个参数(目前 1.9.2 版本)
+    // 我现在需要的是 <String, Object> ，等 BeanUtils 升级后看是否改变这个参数(目前 1.9.2 版本)
     //但他默认包含 class 属性，这里自己实现，以加深理解
-    public static Map<String, Object> toMap(Object bean) {
+    public static Map<String, Object> beanToMap(Object bean) {
 
         if (bean == null) {
             return null;
@@ -100,6 +106,102 @@ public class MyBeanUtils {
             System.out.println("transBean2Map Error " + e);
         }
         return map;
+    }
+
+    /**
+     * 转换单个 map to bean
+     *
+     * @param map  待转换的 map
+     * @param bean 满足 bean 格式，且需要有无参的构造方法
+     * @param <T>
+     * @return
+     */
+    public static <T> T mapToBean(Map<String, Object> map, Class<T> bean) {
+
+        T o = null;
+        try {
+            o = bean.newInstance();
+            mapToBean(map, o);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return o;
+    }
+
+    /**
+     * 转换多个 map to bean
+     *
+     * @param listMap 待转换的 map 集合
+     * @param bean    满足 bean 格式，且需要有无参的构造方法
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> mapToBeans(Collection<Map<String, Object>> listMap, Class<T> bean) {
+
+        List<T> list = new ArrayList(listMap.size());
+        try {
+
+            for (Map<String, Object> map : listMap) {
+                T o = bean.newInstance();
+                mapToBean(map, o);
+                list.add(o);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    /**
+     * map to bean
+     * 转换过程中，由于属性的不同，需要分别转换。
+     * java 反射机制，转换过程中属性默认都是 String 类型，否则会抛出异常，而 BeanUtils 项目，做了大量转换工作，比 java 反射机制好用
+     * BeanUtils 的 populate 方法，对 Date 属性转换，支持不好，需要自己编写转换器
+     *
+     * @param map
+     * @param bean
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    private static void mapToBean(Map<String, Object> map, Object bean) throws IllegalAccessException, InvocationTargetException {
+
+        //注册几个转换器
+        ConvertUtils.register(new SqlDateConverter(null), java.sql.Date.class);
+        ConvertUtils.register(new SqlTimestampConverter(null), java.sql.Timestamp.class);
+        //注册一个类型转换器  解决common-beanutils 给引用类型赋值
+        ConvertUtils.register(new Converter() {
+            //  @Override
+            public Object convert(Class type, Object value) { // type : 目前所遇到的数据类型。  value :目前参数的值。
+                // System.out.println(String.format("value = %s", value));
+
+                if (value == null || value.equals("") || value.equals("null"))
+                    return null;
+
+                Date date = null;
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    date = dateFormat.parse((String) value);
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+                return date;
+            }
+
+        }, Date.class);
+
+        org.apache.commons.beanutils.BeanUtils.populate(bean, map);
     }
 
     public static void main(String[] args) {

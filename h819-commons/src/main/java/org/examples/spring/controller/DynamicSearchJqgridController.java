@@ -133,32 +133,10 @@ public class DynamicSearchJqgridController {
         Specification customSpecification = JPADynamicSpecificationUtils.bySearchFilter(
                 new SearchFilter("level", SearchFilter.Operator.EQ, "1"));
 
-        /**
-         * 记录总数:
-         * ---
-         * 1. 仅有 jqgird 的 filter 查询条件时:
-         * int totalRecordsSize = JqgridJPAUtils.count(treeEntityRepository, filters);
-         * -
-         * 2. 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件时写法 (customSpecification):
-         * int totalRecordsSize = JqgridJPAUtils.count(treeEntityRepository, filters,customSpecification);
-         * -
-         * 3. 用在非 jqgrid 的条件下，没有 filter 查询条件 ,仅有自己附加查询条件时写法 (customSpecification):
-         * int totalRecordsSize = JqgridJPAUtils.count(treeEntityRepository, null ,customSpecification);
-         */
-        int totalRecordsSize = JqgridJPAUtils.count(treeEntityRepository, filters, customSpecification);
-        if (totalRecordsSize == 0)
-            return new JqgridResponse(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
-
-        /**
-         * 查询结果
-         * ---
-         * 无查询条件时写法:     Page<TreeEntity> list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters);
-         * 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件时写法 (customSpecification):     Page<TreeEntity> list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
-         */
-
 
         /**
          * 查询结果:
+         *
          * ---
          * 1. 仅有 jqgird 的 filter 查询条件时:
          * Page list1 = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters);
@@ -170,7 +148,10 @@ public class DynamicSearchJqgridController {
          *Page list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
          */
 
-        Page list = JqgridJPAUtils.getResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        Page<TreeEntity> page = JqgridJPAUtils.getResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        if (page.getTotalElements() == 0)
+            return new JqgridResponse(pageSize, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
+
 
         /**
          * POJO to DTO
@@ -183,8 +164,8 @@ public class DynamicSearchJqgridController {
 //       dtoUtils.addExcludes(WebSiteEntity.class, "webSiteColumns");
 //       dtoUtils.addExcludes(WebSiteColumnEntity.class, "snatchUrls");
 
-        JqgridResponse<TreeEntity> jqResponse = new JqgridResponse<TreeEntity>
-                (list.getSize(), totalRecordsSize, list.getNumber(), dtoUtils.createDTOcopy(list.getContent()));
+        JqgridResponse<TreeEntity> jqResponse = new JqgridResponse
+                (page.getSize(), page.getNumber(), dtoUtils.createDTOcopy(page.getContent()));
 
 
         /**
