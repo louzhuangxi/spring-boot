@@ -9,11 +9,11 @@ import java.util.Map;
 
 
 /**
- * 分页数据，有这四项，既可以组成分页列表
+ * 分页数据，有这四项，就可以组成分页列表
  *
  * @param <T>
  */
-public class Page<T> implements Serializable {
+public class PageBean<T> implements Serializable {
 
     /**
      * 当前页码
@@ -30,7 +30,7 @@ public class Page<T> implements Serializable {
 
     /**
      * Total number of records
-     * <p>
+     * <p/>
      * 记录总数
      */
 
@@ -39,16 +39,16 @@ public class Page<T> implements Serializable {
 
     /**
      * Contains the actual data
-     * <p>
+     * <p/>
      * 待显示的记录集合
      * rows 中包含的 bean ，属性名字应该和前端的变量名称对应
      */
-    private List<T> content = new ArrayList<>();
+    private List<T> content = new ArrayList();
 
 
     /**
      * Contains the actual data
-     * <p>
+     * <p/>
      * 自定义数据
      */
     private Map<String, Object> userdata;
@@ -56,7 +56,7 @@ public class Page<T> implements Serializable {
     /**
      * 必须以有参构造方法生成
      */
-    private Page() {
+    private PageBean() {
     }
 
     /**
@@ -64,11 +64,10 @@ public class Page<T> implements Serializable {
      *
      * @param pageSize      每页记录数
      * @param currentPageNo 当前页码(起始页数为 0)
-     * @param content       返回的记录集
+     * @param totalRecords  记录总数
+     * @param content       返回的单页记录集
      */
-    public Page(int pageSize,
-                int currentPageNo,
-                List<T> content) {
+    public PageBean(int pageSize, int currentPageNo, int totalRecords, List<T> content) {
 
         if (pageSize < 0 || totalRecords < 0)
 
@@ -79,7 +78,7 @@ public class Page<T> implements Serializable {
             }
         // org.springframework.data.domain.PageRequest 要求起始页 为 0 ，而 jqgrid 为 1，此处做 +1 处理
         this.currentPageNo = currentPageNo + 1;
-        this.totalRecords = content.size();
+        this.totalRecords = totalRecords;
         this.content = content;
         this.setTotalPages(pageSize);
 

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.examples.spring.repository.TreeEntityRepository;
 import org.h819.web.jqgird.JqgridJPAUtils;
-import org.h819.web.jqgird.JqgridResponse;
+import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DTOUtils;
 import org.h819.web.spring.jpa.JPADynamicSpecificationUtils;
 import org.h819.web.spring.jpa.SearchFilter;
@@ -83,7 +83,7 @@ public class DynamicSearchJqgridController {
     @RequestMapping(value = "/jqgrid-search", produces = "application/json")
     //注意 value  /jqgrid-search  ，不能为 /jqgrid-search/ ，不能多加后面的斜线
     @ResponseBody
-    public JqgridResponse jqgridSearch(
+    public JqgridPage jqgridSearch(
             @RequestParam("_search") Boolean search,
             @RequestParam(value = "filters", required = false) String filters,
             @RequestParam(value = "page", required = true) Integer currentPageNo,
@@ -150,7 +150,7 @@ public class DynamicSearchJqgridController {
 
         Page<TreeEntity> page = JqgridJPAUtils.getResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (page.getTotalElements() == 0)
-            return new JqgridResponse(pageSize, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
+            return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
 
         /**
@@ -164,8 +164,9 @@ public class DynamicSearchJqgridController {
 //       dtoUtils.addExcludes(WebSiteEntity.class, "webSiteColumns");
 //       dtoUtils.addExcludes(WebSiteColumnEntity.class, "snatchUrls");
 
-        JqgridResponse<TreeEntity> jqResponse = new JqgridResponse
-                (page.getSize(), page.getNumber(), dtoUtils.createDTOcopy(page.getContent()));
+        // 非 Jqgrid 情况下，JqgridPage 换成 PageBean 即可
+        JqgridPage<TreeEntity> jqResponse = new JqgridPage
+                (page.getSize(), page.getNumber(), (int) page.getTotalElements(), dtoUtils.createDTOcopy(page.getContent()));
 
 
         /**
@@ -173,7 +174,7 @@ public class DynamicSearchJqgridController {
          */
         //利用 map 增加自定义属性，主要用来给 DTO 增加属性，便于向页面端传送额外的变量，这样就不必到 Entity 中增加 @Transient 类型的变量了
 //        List<Map<String, Object>> listMap = Lists.newArrayList();
-//        for (TreeEntity tree : list.getContent()) {
+//        for (TreeEntity tree : page.getContent()) {
 //            Map<String, Object> map = dtoUtils.createDTOMapCopy(tree); //单个对象转换为 map ，可以给这个对象添加属性
 //            if (tree.getLevel()==0)
 //                map.put("root", "是");
