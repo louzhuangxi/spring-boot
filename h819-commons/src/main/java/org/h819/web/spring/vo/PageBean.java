@@ -30,7 +30,7 @@ public class PageBean<T> implements Serializable {
 
     /**
      * Total number of records
-     * <p/>
+     * <p>
      * 记录总数
      */
 
@@ -39,7 +39,7 @@ public class PageBean<T> implements Serializable {
 
     /**
      * Contains the actual data
-     * <p/>
+     * <p>
      * 待显示的记录集合
      * rows 中包含的 bean ，属性名字应该和前端的变量名称对应
      */
@@ -48,7 +48,7 @@ public class PageBean<T> implements Serializable {
 
     /**
      * Contains the actual data
-     * <p/>
+     * <p>
      * 自定义数据
      */
     private Map<String, Object> userdata;
@@ -65,7 +65,7 @@ public class PageBean<T> implements Serializable {
      * @param pageSize      每页记录数
      * @param currentPageNo 当前页码(起始页数为 0)
      * @param totalRecords  记录总数
-     * @param content       返回的单页记录集
+     * @param content       返回的每页记录集，最后一页的大小可能不等于 pageSize
      */
     public PageBean(int pageSize, int currentPageNo, int totalRecords, List<T> content) {
 
@@ -80,7 +80,25 @@ public class PageBean<T> implements Serializable {
         this.currentPageNo = currentPageNo + 1;
         this.totalRecords = totalRecords;
         this.content = content;
-        this.setTotalPages(pageSize);
+
+        /**
+         * 根据每页记录数和总记录数，自动计算总页数
+         * 不要放在 setTotalPages 方法中，否则 Stirng -> PageBean 反序列化时，会出现错误。
+         * 反序列化需要默认的 get set 方法
+         *
+         * @return
+         */
+        if (totalRecords < 0) {
+            totalPages = -1;
+            return;
+        }
+
+        long totalTemp = totalRecords / pageSize;
+        if (totalRecords % pageSize > 0) {
+            totalTemp++;
+        }
+        totalPages = (int) totalTemp;
+
 
     }
 
@@ -96,25 +114,10 @@ public class PageBean<T> implements Serializable {
         return totalPages;
     }
 
-    /**
-     * 根据每页记录数和总记录数，自动计算总页数
-     *
-     * @return
-     */
-    public void setTotalPages(int pageSize) {
 
+    public void setTotalPages(int totalPages) {
 
-        if (totalRecords < 0) {
-            totalPages = -1;
-            return;
-        }
-
-        long totalTemp = totalRecords / pageSize;
-        if (totalRecords % pageSize > 0) {
-            totalTemp++;
-        }
-
-        totalPages = (int) totalTemp;
+        this.totalPages = totalPages;
 
     }
 

@@ -4,10 +4,10 @@ package org.examples.spring.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.examples.spring.repository.TreeEntityRepository;
-import org.h819.web.jqgird.JqgridJPAUtils;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DTOUtils;
 import org.h819.web.spring.jpa.JPADynamicSpecificationUtils;
+import org.h819.web.spring.jpa.JPAUtils;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,7 +148,7 @@ public class DynamicSearchJqgridController {
          *Page list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
          */
 
-        Page<TreeEntity> page = JqgridJPAUtils.getResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        Page<TreeEntity> page = JPAUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (page.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -164,9 +164,14 @@ public class DynamicSearchJqgridController {
 //       dtoUtils.addExcludes(WebSiteEntity.class, "webSiteColumns");
 //       dtoUtils.addExcludes(WebSiteColumnEntity.class, "snatchUrls");
 
-        // 非 Jqgrid 情况下，JqgridPage 换成 PageBean 即可
+
         JqgridPage<TreeEntity> jqResponse = new JqgridPage
                 (page.getSize(), page.getNumber(), (int) page.getTotalElements(), dtoUtils.createDTOcopy(page.getContent()));
+
+        // 非 Jqgrid 情况下，JqgridPage 换成 PageBean 即可
+//        PageBean<StStandardEntity> response = new PageBean
+//                (page.getSize(), page.getNumber(), (int)page.getTotalElements(), dtoUtils.createDTOcopy(page.getContent()));
+
 
 
         /**

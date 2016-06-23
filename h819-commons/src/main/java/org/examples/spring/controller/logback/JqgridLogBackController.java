@@ -6,8 +6,9 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import org.examples.spring.repository.logback.LoggingEventEntityRepository;
 import org.examples.spring.service.logback.LogbackService;
-import org.h819.web.jqgird.JqgridJPAUtils;
+import org.h819.web.spring.jpa.JPAUtils;
 import org.h819.web.jqgird.JqgridPage;
+import org.h819.web.spring.jpa.DTOUtils;
 import org.h819.web.spring.jpa.JPADynamicSpecificationUtils;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.h819.web.spring.jpa.entitybase.logback.LoggingEventEntity;
@@ -79,15 +80,17 @@ public class JqgridLogBackController {
         Specification specification = JPADynamicSpecificationUtils.bySearchFilter(
                 new SearchFilter("levelString", SearchFilter.Operator.EQ, "INFO"));
 
+        DTOUtils dtoUtils = new DTOUtils();  //用法见 DTOUtils
+
         //记录总数
-        int totalRecordsSize = JqgridJPAUtils.count(loggingEventEntityRepository, filters, specification);
-        if (totalRecordsSize == 0)
+        Page<LoggingEventEntity> list = JPAUtils.getJqgridPage(loggingEventEntityRepository, page, rows, sidx, sord, filters, specification);
+
+        if (list.getTotalElements() == 0)
             return JSON.toJSONString(new JqgridPage(rows, 0, 0, Lists.newArrayList())); //构造空数据集，返回 null ，有问题
 
-        Page<LoggingEventEntity> list = JqgridJPAUtils.getResponse(loggingEventEntityRepository, page, rows, sidx, sord, filters, specification);
 
-        JqgridPage<LoggingEventEntity> response = new JqgridPage<LoggingEventEntity>
-                (list.getSize(), totalRecordsSize, list.getNumber(), list.getContent());
+        JqgridPage<LoggingEventEntity> response = new JqgridPage
+                (list.getSize(), list.getNumber(), (int) list.getTotalElements(), dtoUtils.createDTOcopy(list.getContent()));
 
         return JSON.toJSONString(response, SerializerFeature.DisableCircularReferenceDetect);
     }

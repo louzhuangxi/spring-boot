@@ -433,7 +433,7 @@
                          <packaging>jar</packaging>
                          <groupId>org.h819</groupId>
                          <artifactId>h819-commons</artifactId>
-                         <version>publish-1.0.16</version>
+                         <version>publish-1.0.17</version>
                      </configuration>
                  </execution>
                 </executions>

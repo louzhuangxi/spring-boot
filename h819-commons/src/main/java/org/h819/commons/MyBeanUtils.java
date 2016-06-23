@@ -189,7 +189,7 @@ public class MyBeanUtils {
 
                 Date date = null;
                 try {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     date = dateFormat.parse((String) value);
                 } catch (Exception e) {
 
