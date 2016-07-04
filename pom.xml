@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.3.RELEASE</version>
+        <version>1.3.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -41,7 +41,7 @@
         <oracle.version.10g>10gR2-for-jdk4-5</oracle.version.10g>
         <oracle.version.9i.jdk1.4>9.0.2.0.0-for-jdk1.4</oracle.version.9i.jdk1.4>
         <oracle.version.9i.jdk1.3>9.0.2.0.0-for-jdk1.3</oracle.version.9i.jdk1.3>
-		
+
         <!-- tomcat 连接池长连接查询，发现问题舍弃-->
         <tomcat-jdbc.version>8.0.12</tomcat-jdbc.version>
         <!--阿里巴巴 -->
@@ -51,27 +51,26 @@
 
         <!-- apache  -->
         <commons-lang3.version>3.4</commons-lang3.version>
-        <commons-beanutils.version>1.9.1</commons-beanutils.version>
-        <commons-compress.version>1.6</commons-compress.version>
+        <commons-beanutils.version>1.9.2</commons-beanutils.version>
+        <commons-compress.version>1.12</commons-compress.version>
         <commons-io.version>2.5</commons-io.version>
         <commons-configuration.version>1.10</commons-configuration.version>
-        <commons-collections4.version>4.0</commons-collections4.version>
+        <commons-collections4.version>4.1</commons-collections4.version>
         <commons-net.version>3.5</commons-net.version>
-        <jcraft-jsch.vsersion>0.1.53</jcraft-jsch.vsersion>
-
-
-
+        <jcraft-jsch.vsersion>0.1.53</jcraft-jsch.vsersion> <!--sftp-->
         <commons-email.version>1.3.3</commons-email.version>
         <commons-codec.version>1.9</commons-codec.version>
+        <commons-csv.version>1.4</commons-csv.version>
+        <commons-cli.version>1.3.1</commons-cli.version>
+        <commons-exec.version>1.3</commons-exec.version>
 
-        <apache.poi.version>3.10-FINAL</apache.poi.version>
-        <apache.poi.ooxml.version>3.10-FINAL</apache.poi.ooxml.version>
-        <apache.poi.ooxml.schemas.version>3.10-FINAL</apache.poi.ooxml.schemas.version>
+        <!-- apache poi-->
+        <apache.poi.version>3.14</apache.poi.version>
 
         <!-- 解析文件内容，判断 mime type 等功能-->
         <apache.tika.core.version>1.13</apache.tika.core.version>
-
-
+           <!-- apache httpcomponents-->
+        <apache.httpcomponents.version>4.5.1</apache.httpcomponents.version>
         <apache.velocity.version>1.7</apache.velocity.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <!-- apache end -->
@@ -104,7 +103,7 @@
 
     <modules>
         <module>spring-boot-webapp</module>
-        <module>h819-commons</module>
+        <module>h819-commons-new</module>
     </modules>
 
 </project>

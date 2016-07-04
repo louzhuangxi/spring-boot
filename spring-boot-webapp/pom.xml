@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.h819</groupId>
             <artifactId>h819-commons</artifactId>
-            <version>publish-1.0.11</version>
+            <version>publish-1.0.18</version>
         </dependency>
 
         <!-- 发布为 war 步骤

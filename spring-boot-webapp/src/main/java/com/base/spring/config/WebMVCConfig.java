@@ -1,6 +1,5 @@
 package com.base.spring.config;
 
-import com.base.spring.filter.HandlerInterceptor;
 import com.base.spring.filter.XSSFilter;
 import com.base.spring.initialize.InitializeService;
 import org.apache.catalina.filters.RemoteIpFilter;
@@ -13,11 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-<<<<<<< HEAD
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-=======
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
->>>>>>> origin/master
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.ServletContextEvent;

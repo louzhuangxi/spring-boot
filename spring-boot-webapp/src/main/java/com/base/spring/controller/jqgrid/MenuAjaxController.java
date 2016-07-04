@@ -2,10 +2,9 @@ package com.base.spring.controller.jqgrid;
 
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.repository.TreeNodeRepository;
-import com.google.common.collect.Lists;
-import org.h819.web.jqgird.JqgridJPAUtils;
-import org.h819.web.jqgird.JqgridResponse;
+import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DTOUtils;
+import org.h819.web.spring.jpa.JPAUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/grid/menu")
@@ -26,7 +26,6 @@ public class MenuAjaxController {
 
     @Autowired
     private TreeNodeRepository menuRepository;
-
 
 
     /**
@@ -43,7 +42,7 @@ public class MenuAjaxController {
     @RequestMapping(value = "/jqgrid-search", produces = "application/json")
     //注意 value  /jqgrid-search  ，不能为 /jqgrid-search/ ，不能多加后面的斜线
     @ResponseBody
-    public JqgridResponse jqgridSearch(
+    public JqgridPage jqgridSearch(
             @RequestParam("_search") Boolean search,
             @RequestParam(value = "filters", required = false) String filters,
             @RequestParam(value = "page", required = true) Integer currentPageNo,
@@ -55,16 +54,12 @@ public class MenuAjaxController {
         logger.info("search ={},page ={},rows ={},sord={},sidx={},filters={}", search, currentPageNo, pageSize, sort, sortParameter, filters);
 
         /**
-         * 记录总数
-         */
-        int totalRecordsSize = JqgridJPAUtils.count(menuRepository, filters);
-        if (totalRecordsSize == 0)
-            return new JqgridResponse(pageSize, 0, 0, Lists.newArrayList()); //构造空数据集，返回 null ，有问题
-
-        /**
          * 记录集
          */
-        Page<TreeNodeEntity> list = JqgridJPAUtils.getJqgridResponse(menuRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<TreeNodeEntity> pages = JPAUtils.getJqgridPage(menuRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        if (pages.getTotalElements() == 0)
+            return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
+
 
         /**
          * POJO to DTO
@@ -75,10 +70,11 @@ public class MenuAjaxController {
         //    dtoUtils.addExcludes(MenuEntity.class, "parent"); //在整个转换过程中，无论哪个级联层次，只要遇到 TreeEntity 类，那么他的 parent 属性就不进行转换
         dtoUtils.addExcludes(TreeNodeEntity.class, "children");
 
-        JqgridResponse<TreeNodeEntity> response = new JqgridResponse<TreeNodeEntity>(list.getSize(), totalRecordsSize, list.getNumber(), dtoUtils.createDTOcopy(list.getContent(), 1));
-        return response;
-    }
+        JqgridPage<TreeNodeEntity> jqPage = new JqgridPage
+                (pages.getSize(), pages.getNumber(), (int) pages.getTotalElements(), dtoUtils.createDTOcopy(pages.getContent()));
 
+        return jqPage;
+    }
 
 
 }
