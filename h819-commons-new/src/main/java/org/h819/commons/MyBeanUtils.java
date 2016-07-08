@@ -108,7 +108,7 @@ public class MyBeanUtils {
      * 转换单个 map to bean
      *
      * @param map  待转换的 map
-     * @param bean 满足 bean 格式，且需要有无参的构造方法
+     * @param bean 满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
      * @param <T>
      * @return
      */
@@ -132,8 +132,8 @@ public class MyBeanUtils {
     /**
      * 转换多个 map to bean
      *
-     * @param listMap 待转换的 map 集合
-     * @param bean    满足 bean 格式，且需要有无参的构造方法
+     * @param listMap 待转换的 map
+     * @param bean    满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
      * @param <T>
      * @return
      */
@@ -160,12 +160,12 @@ public class MyBeanUtils {
 
     /**
      * map to bean
-     * 转换过程中，由于属性的不同，需要分别转换。
-     * java 反射机制，转换过程中属性默认都是 String 类型，否则会抛出异常，而 BeanUtils 项目，做了大量转换工作，比 java 反射机制好用
+     * 转换过程中，由于属性的类型不同，需要分别转换。
+     * java 反射机制，转换过程中属性的类型默认都是 String 类型，否则会抛出异常，而 BeanUtils 项目，做了大量转换工作，比 java 反射机制好用
      * BeanUtils 的 populate 方法，对 Date 属性转换，支持不好，需要自己编写转换器
      *
-     * @param map
-     * @param bean
+     * @param map  待转换的 map
+     * @param bean 满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
      * @throws IllegalAccessException
      * @throws InvocationTargetException
      */
@@ -174,7 +174,7 @@ public class MyBeanUtils {
         //注册几个转换器
         ConvertUtils.register(new SqlDateConverter(null), java.sql.Date.class);
         ConvertUtils.register(new SqlTimestampConverter(null), java.sql.Timestamp.class);
-        //注册一个类型转换器  解决common-beanutils 给引用类型赋值
+        //注册一个类型转换器  解决 common-beanutils 为 Date 类型赋值
         ConvertUtils.register(new Converter() {
             //  @Override
             public Object convert(Class type, Object value) { // type : 目前所遇到的数据类型。  value :目前参数的值。
@@ -182,7 +182,6 @@ public class MyBeanUtils {
 
                 if (value == null || value.equals("") || value.equals("null"))
                     return null;
-
                 Date date = null;
                 try {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

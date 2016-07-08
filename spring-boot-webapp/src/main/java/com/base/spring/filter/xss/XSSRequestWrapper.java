@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * Time: 13:08
  * To change this template use File | Settings | File Templates.
  */
+//https://dzone.com/articles/stronger-anti-cross-site
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
     private static Logger logger = LoggerFactory.getLogger(XSSRequestWrapper.class);

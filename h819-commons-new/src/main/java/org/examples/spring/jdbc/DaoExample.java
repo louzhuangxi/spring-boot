@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 public class DaoExample {
 
     private static Logger logger = LoggerFactory.getLogger(DaoExample.class);
+
     @Autowired
     @Resource(name = "jdbcTemplateOracle")
     private JdbcTemplate jdbcTemplate;

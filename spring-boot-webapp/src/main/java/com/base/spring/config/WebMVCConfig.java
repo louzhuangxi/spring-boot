@@ -81,7 +81,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * 自定义 filter 演示，增加 XSSFilter
+     * 自定义 filter，增加 XSSFilter
      *
      * @return
      */
@@ -94,10 +94,6 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         logger.info("XSSFilter initialized");
         return registration;
     }
-
-
-
-
 
 
     /**
@@ -132,18 +128,17 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * PathMatchConfigurer 函数让开发人员可以根据需求定制URL路径的匹配规则。*
+     * PathMatchConfigurer 函数让开发人员可以根据需求定制URL路径的匹配规则。
      *
      * @param configurer
      */
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
         /**
-         * spring mvc 默认忽略 url 中 . 后面的部分，如
+         * spring mvc 默认忽略 url 中点"."后面的部分，如
          * http://localhost:8080/abc.mm  会直接匹配为
          * http://localhost:8080/abc 忽略了 mm
          * 如果不想忽略，设置 setUseSuffixPatternMatch(false)
-         * /
          */
 
         configurer.setUseSuffixPatternMatch(false);

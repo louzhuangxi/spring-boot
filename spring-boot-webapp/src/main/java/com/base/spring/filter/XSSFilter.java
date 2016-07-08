@@ -22,7 +22,7 @@ public class XSSFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        filterChain.doFilter(new XSSRequestWrapper((HttpServletRequest) httpServletRequest), httpServletResponse);
+        filterChain.doFilter(new XSSRequestWrapper(httpServletRequest), httpServletResponse);
     }
 
 }

@@ -126,7 +126,7 @@ public class AjaxLoginValidationController {
         Optional<UserEntity> userEntity = userEntityRepository.findOneByEmail(email.get());
         if (!userEntity.isPresent()) {
 
-            return ("先修正 email 错误");
+            return "先修正 email 错误";
 
         } else {
 

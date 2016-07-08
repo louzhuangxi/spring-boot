@@ -122,8 +122,6 @@
             <scope>runtime</scope>
         </dependency>
 
-
-        <!-- com.google.guava spring side org.h819.web.spring.jpa.dynamicsearch.SearchFilter.java 用到-->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

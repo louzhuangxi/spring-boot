@@ -37,14 +37,23 @@ public class Oauth2ClientRestTemplate {
     /**
      *
      * === oauth 2.0
-     *  是一种安全验证协议，有很多实现其协议的项目，如 spring security oauth2
+     *  是一种安全验证协议，有很多实现其 oauth 协议的项目，如 spring security oauth2
      *  其授权类型(grant_type)有四种，分布是 authorization_code , implicit , password , client_credentials
      *
-     *  1. 对于 authorization_code (或 implicit ，不常用)，在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，通过获取的 code -> access_token ，来访问系统的资源，增加了安全性(有 redirect_url 等参数，保证了验证过程的安全性)
-     *     目前这种认证方式是 oauth 的主要用途，如各个网站(client 提供的单点登录功能，就是利用第三方提供的 oauth 的认证，让用户通过第三方的账号，登陆本网站，而网站本身不保留用户的信息。
+     *  主要验证过程：通过身份验证以后，获得 access_token ，access_token 是获得授权的标志。access_token 有有效期，过了有效期，重新获取 access_token。
      *
-     *  2. password 方式是，client 知道了用户名和密码，获得 access_token 后，通过 access_token 访问资源；
-     *     client_credentials 是 client 知道资源的 client_id (也可以是 client_id 和 client_secret），获得 access_token 后，通过access_token 访问资源。
+     *  1. authorization_code (或 implicit ，不常用):
+     *
+     *     在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，通过获取的 code -> access_token ，来访问系统的资源，增加了安全性(有 redirect_url 等参数，保证了验证过程的安全性)
+     *     目前这种认证方式是 oauth 的主要用途，如各个网站(client) 提供的单点登录功能，就是利用第三方提供的 oauth 的认证，让用户通过第三方的账号，登陆本网站，而网站本身不保留用户的信息。
+     *
+     *  2. password 和 client_credentials 方式:
+     *
+     *     client :
+     *     知道了用户名和密码，通过登录 AuthorizationServer 获得 access_token 后，通过 access_token 访问 ResourceServer 资源；
+     *
+     *     client_credentials :
+     *     client 知道资源的 client_id (也可以是 client_id 和 client_secret），获得 access_token 后，通过access_token 访问资源。
      *
      *     对于这两种种情况，都需要用户提供身份信息，获得 access_token 后，在 access_token 的有效期内，不用再提供身份信息，通过 access_token ，访问资源。
      *     可以这样理解，和资源服务器交互 100 次，只需要第一次提供了身份信息，其余 99 次不需要提供，保护了用户的身份信息泄露？
@@ -59,12 +68,12 @@ public class Oauth2ClientRestTemplate {
      *
      *     如果不想授权了，用户的密码，或者资源授权角色即可，和 oauth2 一样
      *
-     *  3.所以，oauth2 的存在价值就是单点登录 （grant_type=authorization_code ）。
-     *    但为什么微信公众平台开发者平台（见“微信公众平台开发者文档 / 获取接口凭证： http://mp.weixin.qq.com/wiki/14/9f9c82c1af308e3b14ba9b973f99a8ba.html）
-     *    用 grant_type=client_credentials 方式，要求用户申请 appid 和 secret 之后，就可以使用其开放的 api 了 ？
-     *    我的猜测是：
-     *    腾讯有独立的用户系统，而它又对外提供单点登录的功能，所以它搭建了 oauth 系统
-     *    而对外开放 api 的验证功能，又可以通过 oauth 系统实现，所有没有必要再建立一个仅为对外开放 api 的用户系统，从而增加对外开放api系统的复杂度。
+     *  3. 所以，oauth2 的存在价值就是单点登录 （grant_type=authorization_code ）。
+     *     但为什么微信公众平台开发者平台（见“微信公众平台开发者文档 / 获取接口凭证： http://mp.weixin.qq.com/wiki/14/9f9c82c1af308e3b14ba9b973f99a8ba.html）
+     *     用 grant_type=client_credentials 方式，要求用户申请 appid 和 secret 之后，就可以使用其开放的 api 了 ？
+     *     我的猜测是：
+     *     腾讯有独立的用户系统，而它又对外提供单点登录的功能，所以它搭建了 oauth 系统
+     *     而对外开放 api 的验证功能，又可以通过 oauth 系统实现，所有没有必要再建立一个仅为对外开放 api 的用户系统，从而增加对外开放api系统的复杂度。
      *
      * ===   总结：对于一般的小系统，如果仅为对外开放 api ，可以不采 oauth2 这种设计，用系统的安全功能实现即可，可以快速开发，如上文说到的 spring security 方案。
      *
@@ -109,7 +118,6 @@ public class Oauth2ClientRestTemplate {
      * ------------------------------------------------------------------------------------------------------------------------
      *  3.  grant_type=password
      *  该方式需要提供在验证服务器上存在的用户名和密码（如果验证服务器上设置了 client 用户角色信息，则该用户还应该满足角色要求）
-     *
      *
      *------------------------------------------------------------------------------------------------------------------------
      *  4.  grant_type=client_credentials (重点，常用)
@@ -156,7 +164,7 @@ public class Oauth2ClientRestTemplate {
 
     /**
      * 该方式没有实验成功，设置为 Deprecated!
-     * <p/>
+     * <p>
      * 演示 grant_type=implicit 时，获取资源的方法
      *
      * @param client_id

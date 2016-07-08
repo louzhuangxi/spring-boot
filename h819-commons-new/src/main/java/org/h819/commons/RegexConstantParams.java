@@ -21,4 +21,6 @@ public class RegexConstantParams {
 
     //网址
     public static String reg_url_string = "^[-+]?\\d+(\\.\\d+)?$";
+    // email
+    public static String reg_email_string ="[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+";
 }

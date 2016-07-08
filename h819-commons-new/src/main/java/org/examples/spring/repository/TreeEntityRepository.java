@@ -5,28 +5,29 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Repository to access {@link com.springapp.foodsafe.entity.Order}s.
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * 相当于 Dao 层，命名为 Repository ，是为了pring 、spring side 项目命名方法保持一致
- * <p/>
+ * <p>
  * 1. 定义一个持久层的接口，该接口继承 JpaRepository、JpaSpecificationExecutor 系统接口，系统接口中定义了一些常用的增删改查，以及分页相关的方法。还有其他几个接口，可根据需要继承。
- * <p/>
+ * <p>
  * 2. 除继承的接口中的方法外，可以在接口中声明自己需要的业务方法，或者覆盖默认的方法。 spring data 可以根据业务方法的名字，自动对应数据库字段来生成查询代码 。
  * 这种自动生成的代码容易出错，可添加  @Query来自定义 JPQL 语句
- * <p/>
+ * <p>
  * 3. Spring 初始化容器时将会扫描配置文件中 repositories 属性的 base-package 指定的包目录及其子目录，为继承 Repository 或其子接口的接口创建代理对象（即接口的实现类），
  * 并将代理对象注册为 Spring Bean，业务层便可以通过 Spring 自动封装的特性来直接使用该对象，而不必为接口写实现类，直接使用接口提供的方法。
- * <p/>
+ * <p>
  * CrudRepository 、 PagingAndSortingRepository、JpaRepository 等接口 默认添加了  @Transactional ，因为本接口继承了 JpaRepository，所有默认本接口都拥有默认的事务属性
  * 即：
  * 对 find(...) 读操作添加只读事务；
- * <p/>
+ * <p>
  * 对 save(...) 和 delete(...)配置默认事务(默认的隔离级别、没有配置超时、只对运行时异常回滚)
- * <p/>
+ * <p>
  * 如果覆盖默认的事务，需要在方法处添加 @Transactional
  */
 
@@ -52,6 +53,10 @@ public interface TreeEntityRepository extends JpaRepository<TreeEntity, Long>, J
 //            subgraphs = @NamedSubgraph(name = "items", attributeNodes = @NamedAttributeNode("product")))
 
     // 此特性可以先不用，当出现查询过多时，再用来调优
+
+    //in 的使用
+    @Query("select e from TreeEntity e where e.id in ?1")
+    List<TreeEntity> findByWebSitesIn(Collection<Long> colums);
 
     /**
      * 如果是修改，必需加上  @Modifying
@@ -101,16 +106,17 @@ public interface TreeEntityRepository extends JpaRepository<TreeEntity, Long>, J
     @Query("select count(e) from TreeEntity e where e.level=1")
     Page<TreeEntity> findByLevelOne(Pageable pageable);
 
-
     //只有在事务状态下，才可以更新
+    //返回值为更新的记录数目
     @Modifying
     @Query("update TreeEntity e set e.name = ?2 where e.id=?1")
-    void renameNameTo(String id, String name);
-
+    int renameNameTo(String id, String name);
 
     //只有在事务状态下，才可以删除
+    //返回值为更新的记录数目
     @Modifying
     @Query("delete from TreeEntity e where e.name=?1")
-    void delByName(String name);
+    int delByName(String name);
+
 
 }

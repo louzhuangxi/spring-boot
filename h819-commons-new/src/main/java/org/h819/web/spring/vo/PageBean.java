@@ -1,7 +1,5 @@
 package org.h819.web.spring.vo;
 
-import org.h819.commons.MyExceptionUtils;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +67,9 @@ public class PageBean<T> implements Serializable {
      */
     public PageBean(int pageSize, int currentPageNo, int totalRecords, List<T> content) {
 
-        if (pageSize < 0 || totalRecords < 0)
+        if (pageSize < 0)
+            throw new IllegalArgumentException("页大小不能小于 0");
 
-            try {
-                throw new MyExceptionUtils("JqgridResponseBean 构造方法异常。");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         // org.springframework.data.domain.PageRequest 要求起始页 为 0 ，而 jqgrid 为 1，此处做 +1 处理
         this.currentPageNo = currentPageNo + 1;
         this.totalRecords = totalRecords;

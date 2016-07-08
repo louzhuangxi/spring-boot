@@ -26,7 +26,7 @@ public class MyEmailUtils {
      */
     public static boolean validateEmailAddress(String emailAddress) {
 
-        if (!emailAddress.matches("[\\w\\.\\-]+@([\\w\\-]+\\.)+[\\w\\-]+")) {
+        if (!emailAddress.matches(RegexConstantParams.reg_email_string)) {
             System.err.println("Format error");
             return false;
         }
