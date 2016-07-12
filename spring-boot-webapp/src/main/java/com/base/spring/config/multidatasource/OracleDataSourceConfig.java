@@ -14,7 +14,7 @@ public class OracleDataSourceConfig {    /*
 
     @Primary
     @Bean(name = "oracleDataSource")
-    @ConfigurationProperties(prefix = "oracle.datasource")
+    @ConfigurationProperties(prefix = "oracle")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }

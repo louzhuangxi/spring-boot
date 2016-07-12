@@ -34,9 +34,6 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
             @Override
             public void contextInitialized(ServletContextEvent sce) {
-                logger.info("ServletContext initialized");
-                logger.info("initialize root menu tree.");
-                initializeService.initRootNode();
             }
 
             @Override

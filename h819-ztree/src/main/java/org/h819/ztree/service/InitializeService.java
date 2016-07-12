@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Description : TODO()
  * User: h819
@@ -30,6 +32,7 @@ public class InitializeService {
      * 初始化一个根节点，所有节点均为该节点的子节点
      */
     @Transactional(readOnly = false)
+    @PostConstruct
     public void initRootNode() {
 
 

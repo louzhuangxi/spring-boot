@@ -13,7 +13,7 @@ package com.base.spring.config.multidatasource;
 public class MySQLDataSourceConfig {
                                        /*
     @Bean(name = "mysqlDataSource")
-    @ConfigurationProperties(prefix = "mysql.datasource")
+    @ConfigurationProperties(prefix = "mysql")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }

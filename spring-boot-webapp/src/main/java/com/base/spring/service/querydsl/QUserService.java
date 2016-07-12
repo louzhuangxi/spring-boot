@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Time: 22:26
  * To change this template use File | Settings | File Templates.
  */
+//http://www.baeldung.com/intro-to-querydsl
 @Service
 @Transactional
 public class QUserService {

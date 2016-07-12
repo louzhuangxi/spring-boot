@@ -46,7 +46,6 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 自定义  listener 演示
-     * 此处用作初始化相关的数据
      *
      * @return
      */
@@ -55,9 +54,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         return new ServletContextListener() {
             @Override
             public void contextInitialized(ServletContextEvent sce) {
-                logger.info("ServletContext initialized");
-                logger.info("initialize root menu tree.");
-                initializeService.initRootNode();
+
             }
 
             @Override

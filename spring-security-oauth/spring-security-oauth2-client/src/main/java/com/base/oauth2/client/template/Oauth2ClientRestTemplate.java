@@ -40,40 +40,42 @@ public class Oauth2ClientRestTemplate {
      *  是一种安全验证协议，有很多实现其 oauth 协议的项目，如 spring security oauth2
      *  其授权类型(grant_type)有四种，分布是 authorization_code , implicit , password , client_credentials
      *
-     *  主要验证过程：通过身份验证以后，获得 access_token ，access_token 是获得授权的标志。access_token 有有效期，过了有效期，重新获取 access_token。
+     *  主要验证过程：通过身份验证以后，获得 access_token ，access_token 是获得授权的标志。access_token 有有效期，过了有效期，需要重新获取 access_token。
      *
      *  1. authorization_code (或 implicit ，不常用):
      *
-     *     在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，通过获取的 code -> access_token ，来访问系统的资源，增加了安全性(有 redirect_url 等参数，保证了验证过程的安全性)
-     *     目前这种认证方式是 oauth 的主要用途，如各个网站(client) 提供的单点登录功能，就是利用第三方提供的 oauth 的认证，让用户通过第三方的账号，登陆本网站，而网站本身不保留用户的信息。
+     *     第三方网站提供用户身份验证服务。
+     *     在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，通过 client 在第三方网站登录成功后，获取到 access_token ，已表明通过身份验证，之后在访问资源服务器内容。
+     *     目前这种认证方式是 oauth 的主要用途，如各个网站提供的单点登录功能，就是利用第三方提供的 oauth 的认证，让用户通过第三方的账号，登陆本网站，而网站本身不保留用户的信息。
      *
      *  2. password 和 client_credentials 方式:
      *
-     *     client :
+     *  2.1  client :
      *     知道了用户名和密码，通过登录 AuthorizationServer 获得 access_token 后，通过 access_token 访问 ResourceServer 资源；
      *
-     *     client_credentials :
+     *  2.2  client_credentials :
      *     client 知道资源的 client_id (也可以是 client_id 和 client_secret），获得 access_token 后，通过access_token 访问资源。
      *
-     *     对于这两种种情况，都需要用户提供身份信息，获得 access_token 后，在 access_token 的有效期内，不用再提供身份信息，通过 access_token ，访问资源。
-     *     可以这样理解，和资源服务器交互 100 次，只需要第一次提供了身份信息，其余 99 次不需要提供，保护了用户的身份信息泄露？
+     *     对于这两种种情况，都需要用户向验证服务器提供身份信息，获得 access_token 后，在 access_token 的有效期内，不用再提供身份信息，通过 access_token ，访问资源。
      *
-     *     我的理解是，提供 1 次身份信息的安全风险和提供 100 差不多
-     *     所以 password , client_credentials 这种验证方式，完全可以用应用系统本身的安全策略实现，而不必在费力搭建一个 oauth 验证服务器和资源服务器，从而简化编程
-     *     有必要一定要为了 oauth 安全协议而非得用 oauth 么？难道是 access_token 有和好处？减少交互次数？
+     *  3. 关于信息传递安全
+     *     oauth 验证分为两个步骤
+     *     1）身份验证，获得 access_token
+     *     2）利用 access_token 访问资源服务器（此时不在需要身份信息，access_token 过期后，重新获取）
      *
-     *     spring security 可以这样实现：设置一类角色，赋予这个角色对特殊资源的访问权限，不就行了么？用户访问的时候，传递过来用户名和密码(和 grant_type=password 或 grant_type=client_credentials 传递过来的参数一样)
-     *     系统通过用户名和密码确认用户信息（之后设置当前访问 Session 内的用户信息为该用户的认证信息），确定用户的角色信息，之后决定是否给予其资源访问权限
-     *     这个过程和 oauth2  和的 password , authorization_code 授权过程一样，只是少了中间的 access_token
+     *     为了放置传递的信息被截获，1）步骤需要通过 https 协议进行身份验证。https 协议是加密协议，传递的用户身份信息（用户名、密码等）不会被截获。
+     *     完成了 1）的身份验证以后，为了提供效率 2）步骤可以通过 http 协议 ，这是目前大多数网站采取的策略。（2）步骤也可以用 https）
      *
-     *     如果不想授权了，用户的密码，或者资源授权角色即可，和 oauth2 一样
+     *  4. 关于开放 API 的安全验证
      *
-     *  3. 所以，oauth2 的存在价值就是单点登录 （grant_type=authorization_code ）。
-     *     但为什么微信公众平台开发者平台（见“微信公众平台开发者文档 / 获取接口凭证： http://mp.weixin.qq.com/wiki/14/9f9c82c1af308e3b14ba9b973f99a8ba.html）
-     *     用 grant_type=client_credentials 方式，要求用户申请 appid 和 secret 之后，就可以使用其开放的 api 了 ？
-     *     我的猜测是：
-     *     腾讯有独立的用户系统，而它又对外提供单点登录的功能，所以它搭建了 oauth 系统
-     *     而对外开放 api 的验证功能，又可以通过 oauth 系统实现，所有没有必要再建立一个仅为对外开放 api 的用户系统，从而增加对外开放api系统的复杂度。
+     *  4.1 采用上文提到的 oauth 方式验证
+     *      grant_type=client_credentials 的方式
+     *      此种方式，服务器端需要搭建验证服务器和资源服务器，客户端需要 oauth 客户端技术进行访问。
+     *
+     *  4.2 利用 HMAC（Hash-based Message Authentication Code 基于散列的消息认证码）
+     *
+     *
+     *
      *
      * ===   总结：对于一般的小系统，如果仅为对外开放 api ，可以不采 oauth2 这种设计，用系统的安全功能实现即可，可以快速开发，如上文说到的 spring security 方案。
      *
@@ -81,9 +83,9 @@ public class Oauth2ClientRestTemplate {
      *
      *  =====  关于生成的 access_token
      *  下面的四种方式生成的 token 和该 client 的相关信息相关:
-     *  如用一台电脑用同一浏览器登陆 AuthorizationServer 后，以后该电脑的这个浏览器在 token 有效期内不必登陆，直接返回验证成功信息；但另外一台电脑同样用该 client 登陆，则需要进行登陆验证。
-     *  另外，如果该 AuthorizationServer 没有重新启动，会直接返回 token ，不会的数据库中查询
-     *
+     *  如用一台电脑的同一浏览器登陆 AuthorizationServer 后，验证成功以后，该电脑的这个浏览器无论以哪种方式 token 有效期内不必登陆，直接返回验证成功信息。
+     *  登陆一次之后不需要再次登陆，是因为第一次登陆的 token 还没有过期，所以可以继续自动登陆。
+
      *  如果出现有时验证成功，有时不成功的情况，大多数是因为更改了相关参数，此时删除以后的  token 信息，重新启动电脑即可。
      *
      *   常用的有两种模式
@@ -99,17 +101,15 @@ public class Oauth2ClientRestTemplate {
      * 有的网站引入了第三方登陆方式，登陆一次之后不需要再次登陆，是因为第一次登陆的 token 还没有过期，所以可以继续自动登陆。
      * -
      * 实际应用场景：
-     * 单点登录： 不同的第三方应用，用验证服务器统一进行验证登陆，登陆成功之后，返回一个登陆成的 resource ，表示该用户存在，这样用户同意保存在验证服务器。
-     * 那么登陆成功后，该 client 的权限信息保存在哪里呢？登陆成功仅能证明该用户存在。
+     * 单点登录： 不同的第三方应用，用验证服务器统一进行验证登陆，登陆成功之后，返回一个登陆成的 access_token ，表示该用户存在
+     * 那么登陆成功后，该 client 的权限信息保存在哪里呢，每个用户的权限不一样，如有的仅有读权限，有的有写权限 ？登陆成功仅能证明该用户存在。
      * 可以有两种模式：
      * - 1) 用户的权限信息保存在验证服务器，可以在登陆成功时，直接返回该用户的权限信息。缺点是，验证服务器上要根据不同的应用，设置不同的用户权限，到底是管理员还是普通用户
      * - 2) 权限信息保存在第三方应用上，这样验证服务器只保证用户存在，不管该用户有什么权限。
-     * - 现在看来，应该是 1.2 方式，要不然 google 提供的登陆，没办法给那么多的第三方应用设置权限了。
+     * - 现在看来，应该是 2) 方式，要不然 google 提供的登陆，没办法给那么多的第三方应用设置权限了。
      * - 例子：google 开放的登陆，网易新闻保存到有道云笔记等，都会出现一个授权页面，就是该方式的例子。
      * -
-     * 不适用情况
-     * 不能用于 web 应用给第三方应用提供 api 接口。第三方应用调用 web 应用的开放 api 是程序自己完成的，无法进行登陆授权这一步骤。
-     * 该需求应该通过 password 或 client_credentials 方式完成。
+
      * ------------------------------------------------------------------------------------------------------------------------
      * 2.  grant_type=implicit
      *   该方式没有实验成功,据说是用在 js 中 。
