@@ -150,7 +150,7 @@ public class DynamicSearchJqgridController {
 
         Page<TreeEntity> pages = JPAUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (pages.getTotalElements() == 0)
-            return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
+            return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
 
         /**
