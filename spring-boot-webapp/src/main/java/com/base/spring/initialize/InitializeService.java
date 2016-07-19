@@ -33,12 +33,11 @@ public class InitializeService {
      * @PostConstruct // 在 Bean 初始化之前执行的操作
      * @PreDestroy //在 bean 销毁之前执行的操作
      */
-    @PostConstruct // 在 Bean 初始化之前，执行的方法
+    @PostConstruct // 在 InitializeService Bean 初始化之后执行的方法
     @Transactional(readOnly = false)
     public void initRootNode() {
         logger.info("initialize root menu tree.");
         for (TreeNodeType type : TreeNodeType.values()) {
-
             if (treeNodeRepository.getRoot(type) == null) {
                 logger.info("init {} tree root node", type);
                 TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, 0, true, null);

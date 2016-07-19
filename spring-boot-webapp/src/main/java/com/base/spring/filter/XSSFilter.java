@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Description : TODO(防御 XSS 攻击，每个输入的 request ，都进行安全转码)
+ * Description : TODO(防御 XSS 攻击，利用 filter , 对每个输入的 request ，都进行安全转码)
  * User: h819
  * Date: 2016/5/18
  * Time: 13:10
