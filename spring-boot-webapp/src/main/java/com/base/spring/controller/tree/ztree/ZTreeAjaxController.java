@@ -46,9 +46,14 @@ public class ZTreeAjaxController {
     }
 
     /**
-     * add
+     * 创建菜单
      *
-     * @return
+     * @param name
+     * @param level
+     * @param index
+     * @param isParent
+     * @param pId      被选择的子节点，在该节点下创建子节点。
+     * @param menuType 菜单类型
      */
     @RequestMapping(value = "/add.html", method = RequestMethod.POST)
     @ResponseBody
