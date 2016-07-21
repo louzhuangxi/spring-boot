@@ -69,6 +69,7 @@
 
         <!-- 解析文件内容，判断 mime type 等功能-->
         <apache.tika.core.version>1.13</apache.tika.core.version>
+
            <!-- apache httpcomponents-->
         <apache.httpcomponents.version>4.5.1</apache.httpcomponents.version>
         <apache.velocity.version>1.7</apache.velocity.version>

@@ -40,6 +40,12 @@ public class PageBean<T> implements Serializable {
      * <p>
      * 待显示的记录集合
      * rows 中包含的 bean ，属性名字应该和前端的变量名称对应
+     * ==== 需要注意：
+     * 在 String to PageBean 时：
+     * String 中的 bean 集合名字是 content ，并不能直接转换为 T 类型，所有需要再次把 String 中的 content 内容转换为 Bean，形如
+     * PageBean vo = JSON.parseObject(jsonString, PageBean.class);
+     * List<StStandardEntity> list = MyBeanUtils.mapToBeans(vo.getContent(), StStandardEntity.class);
+     * 除非指定 T 为具体的类的类型，就可以直接转换了，不需要转换为 map
      */
     private List<T> content = new ArrayList();
 

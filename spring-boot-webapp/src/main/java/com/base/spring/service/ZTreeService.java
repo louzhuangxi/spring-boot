@@ -56,19 +56,23 @@ public class ZTreeService {
             logger.info("initialize ztree async from db by id={}", id);
             TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
             TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, default_Level);
-            return JSON.toJSONString(ZTreeUtil.getJsonDataChildren((dtoNode)));
+            return JSON.toJSONString(ZTreeUtil.getJsonDataChildren(dtoNode)); //返回节点的子节点
 
         }
 
 
     }
 
+
     /**
      * 创建菜单
      *
      * @param name
-     * @param pId
-     * @return
+     * @param level
+     * @param index
+     * @param isParent
+     * @param pId      被选择的子节点，在该节点下创建子节点。
+     * @param menuType 菜单类型
      */
     @Transactional(readOnly = false)
     public void add(String name, int level, int index, boolean isParent, long pId, TreeNodeType menuType) {
@@ -87,6 +91,11 @@ public class ZTreeService {
 
     }
 
+    /**
+     * 情况子节点
+     *
+     * @param id
+     */
     @Transactional(readOnly = false)
     public void clearChildren(long id) {
 
@@ -98,23 +107,27 @@ public class ZTreeService {
 
     }
 
+
     /**
-     * @param id  保存的节点
-     * @param pId id 的父节点
+     * 粘帖
+     *
+     * @param id      保存的节点
+     * @param pId     id 的父节点
+     * @param curType
      */
     @Transactional(readOnly = false)
     public void paste(long id, long pId, String curType) {
 
-        TreeNodeEntity currentNode = treeNodeRepository.findOne(id);
-        TreeNodeEntity parentNode = treeNodeRepository.findOne(pId);
+        TreeNodeEntity currentNode = treeNodeRepository.findOne(id); //被操作的对象
+        TreeNodeEntity parentNode = treeNodeRepository.findOne(pId); //参考对象
         parentNode.setIsParent(true);
 
         if (curType.equals("copy")) {
             logger.info("copy nodes to a new parent node");
-            ZTreeUtil.createCopyNode(parentNode, currentNode); // copy 生成新的对象，并且加入到 parent 的子
+            ZTreeUtil.createCopyNode(parentNode, currentNode); // 复制一份和新生成的对象，加入到 parent 的子中。
         }
 
-        if (curType.equals("cut")) {    //cut 直接修改 currentNode 的父类，变为新的父类，不重新创建新的对象，相当于剪切过来。
+        if (curType.equals("cut")) {    //直接移动cut 直接修改 currentNode 的父类，变为新的父类，不重新创建新的对象，相当于剪切过来。
             logger.info("paste nodes to a new parent node");
             parentNode.addChildToLastIndex(currentNode);//此方法可以直接修改父类
         }
@@ -146,7 +159,6 @@ public class ZTreeService {
 
     @Transactional(readOnly = false)
     public void editCss(Long id, String css) {
-
 
         TreeNodeEntity treeNodeEntity = treeNodeRepository.findOne(id);
         treeNodeEntity.setCss(css);

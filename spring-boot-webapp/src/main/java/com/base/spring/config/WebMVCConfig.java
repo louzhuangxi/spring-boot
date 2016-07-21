@@ -1,11 +1,9 @@
 package com.base.spring.config;
 
 import com.base.spring.filter.XSSFilter;
-import com.base.spring.initialize.InitializeService;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +22,6 @@ import javax.servlet.ServletContextListener;
 class WebMVCConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(WebMVCConfig.class);
-
-
-    @Autowired
-    InitializeService initializeService;
 
     // 向系统注册一个 RequestContextListener Bean ，这样在其他组件中就可以使用了
     //  CustomUserDetailsService 用到，用于截获 HttpServletRequest
