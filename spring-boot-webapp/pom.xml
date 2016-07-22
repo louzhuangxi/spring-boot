@@ -24,11 +24,11 @@
 
     <dependencies>
 
-        <!-- h819 commons -->
+        <!-- h819 commons-->
         <dependency>
             <groupId>org.h819</groupId>
             <artifactId>h819-commons</artifactId>
-            <version>publish-1.0.18</version>
+            <version>publish-1.0.19</version>
         </dependency>
 
         <!-- 发布为 war 步骤
@@ -152,6 +152,7 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
+
 
         <!-- xss 防御
         <dependency>

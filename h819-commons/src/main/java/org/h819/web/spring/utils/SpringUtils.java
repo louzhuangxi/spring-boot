@@ -1,6 +1,5 @@
 package org.h819.web.spring.utils;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,12 +23,9 @@ public class SpringUtils {
      * @param beanName
      * @return
      */
-    public static T getWebApplicationContextBean(HttpServletRequest request, String beanName) {
+    public static <T> T getWebApplicationContextBean(HttpServletRequest request, String beanName) {
 
-        //(UserService) WebApplicationContextUtils.getWebApplicationContext(request.getServletContext()).getBean("userService");
+        //使用：UserService service = SpringUtils.getWebApplicationContextBean(httpServletRequest,"userService");
         return (T) WebApplicationContextUtils.getWebApplicationContext(request.getServletContext()).getBean(beanName);
-
     }
-
-
 }

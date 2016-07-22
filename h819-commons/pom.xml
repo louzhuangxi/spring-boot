@@ -4,8 +4,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.h819</groupId>
-    <artifactId>h819-commons-new</artifactId>
-    <name>h819-commons-new</name>
+    <artifactId>h819-commons</artifactId>
+    <name>h819-commons</name>
     <!-- 利用 maven-assembly-plugin 打包，代替默认打包命令-->
     <!-- 生成 jar ，供其他项目使用-->
     <packaging>pom</packaging>
@@ -26,16 +26,7 @@
 
     <dependencies>
 
-        <!-- h819 commons -->
-        <dependency>
-            <groupId>org.h819</groupId>
-            <artifactId>h819-commons</artifactId>
-            <version>publish-1.0.11</version>
-        </dependency>
 
-        <!-- 发布为 war 步骤
-         见 SpringBootWebappApplication.java
-         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -545,11 +536,11 @@
                         </goals>
                         <phase>validate</phase>
                         <configuration>
-                            <file>${project.build.directory}/h819-commons-new-1.0.jar</file>
+                            <file>${project.build.directory}/h819-commons-1.0.jar</file>
                             <packaging>jar</packaging>
                             <groupId>org.h819</groupId>
                             <artifactId>h819-commons</artifactId>
-                            <version>publish-1.0.18</version>
+                            <version>publish-1.0.19</version>
                         </configuration>
                     </execution>
                 </executions>

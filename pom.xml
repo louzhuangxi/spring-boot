@@ -104,7 +104,7 @@
 
     <modules>
         <module>spring-boot-webapp</module>
-        <module>h819-commons-new</module>
+        <module>h819-commons</module>
     </modules>
 
 </project>
