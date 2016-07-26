@@ -7,6 +7,11 @@
 
 /*
  http://sugarjs.com/api/Date/format 也可以，但源文件太长，这里自己定义
+
+ 用法：
+ DateUtils.getNow();
+ DateUtils.getNow();
+
  */
 var DateUtils = (function () {
     var _count = 0; // 内部变量 例子
@@ -33,17 +38,6 @@ var DateUtils = (function () {
         return [year, month, day].join('-') + " " + [hours, minutes, secondes].join(':');
 
     };
-
-    /**
-     * js 中没有 replaceAll 函数, replace 只能替换第一个字符
-     * @param searchString
-     * @param replaceString
-     * @returns {*|string|XML|void}
-     */
-    var replaceAll = function (searchString, replaceString) {
-        return searchString.replace(new RegExp(searchString, 'g'), replaceString);
-    };
-
     /*
      var m2 = function(){
      　　　　　　//...
@@ -51,15 +45,15 @@ var DateUtils = (function () {
 
 
     return {
-        getNow: getNow,
-        replaceAll: replaceAll
-        //m2 : m2
+        getNow: getNow
 
     };
 
 })();
 
-
+/*
+ StrUtils.replaceAll();
+ */
 var StrUtils = (function () {
 
     /**
@@ -83,5 +77,73 @@ var StrUtils = (function () {
         //m2 : m2
 
     };
+
+})();
+
+
+var ArrayUtils = (function () {
+
+    function removeDuplicate(array) {
+        var result = [];
+        $.each(array, function (i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+        });
+        return result;
+    }
+
+
+    function contains(value, array) {
+        var result = jQuery.inArray(value, array); //inArray 返回 value 在 array 位置
+        if (result !== -1) //找到
+            return true;
+        else return false;
+    }
+
+    function remove(value, array) {
+        return jQuery.grep(array, function (v) {
+            return v != value;
+        });
+    }
+
+
+    /**
+     * 判断是否包含
+     * @param value
+     * @param array
+     */
+    var contains = function (value, array) {
+        var result = jQuery.inArray(value, array); //inArray 返回 value 在 array 位置
+        if (result !== -1) //找到
+            return true;
+        else return false;
+    };
+
+    /**
+     去掉指定元素
+     */
+    var remove = function (value, array) {
+        return jQuery.grep(array, function (v) {
+            return v != value;
+        });
+    }
+
+    /**
+     去掉 array 中重复的元素
+     */
+    var removeDuplicate = function (array) {
+        var result = [];
+        $.each(array, function (i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+        });
+        return result;
+    }
+
+
+    return {
+        contains: contains,
+        remove: remove,
+        removeDuplicate: removeDuplicate
+
+    }
 
 })();

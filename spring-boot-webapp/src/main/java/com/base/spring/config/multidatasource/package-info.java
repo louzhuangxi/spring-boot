@@ -22,11 +22,10 @@
  * -
  * 7. 在应用测试类的时候， @Transactional 无法和数据源对应，需要指定测试用到的是哪个数据源
  * 在方法级上设置即可，不同的方法可以用不同的数据源
- * 如果在同一个方法中用到了不同的数据源，可以改写成两个方法，之后分别设置 Transactional
  * @Test
  * @Transactional(value ="mysqlTransactionManager") -
  * -
- * 8.
+ * 8. 如果在同一个方法中用到了不同的数据源，可以改写成两个方法，之后分别设置 Transactional ，见 MultiDataSourceExample
  * Time: 2016.03.29 :16:47
  */
 package com.base.spring.config.multidatasource;

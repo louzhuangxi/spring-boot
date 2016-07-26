@@ -4,7 +4,7 @@ import com.base.SpringBootWebappApplication;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.google.common.collect.Lists;
-import org.h819.commons.MyJsonUtil;
+import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,7 +79,7 @@ public class TreeNodeRepositoryTest {
 
         // System.out.println(":"+ JSON.toJSONString(menus, preFilter, SerializerFeature.DisableCircularReferenceDetect));
 
-        MyJsonUtil.prettyPrint(menus, preFilter);
+        MyJsonUtils.prettyPrint(menus, preFilter);
 
 
     }

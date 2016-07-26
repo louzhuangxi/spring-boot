@@ -122,7 +122,7 @@
 
 			var setting = {
 				view : {
-					selectedMulti : false
+					selectedMulti : true
 				},
 				edit : {
 					drag : {
