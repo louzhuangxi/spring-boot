@@ -56,8 +56,8 @@
                 <div class="widget-main">
                   <div class="row">
                     <ul class="list-unstyled spaced2">
-                      <li> <i class="ace-icon fa fa-bell-o bigger-110 purple"></i> 选择栏树节点之后，用户可以查看该所关联的标准题录信息。 </li>
-                      <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 标准的文本默认只有浏览权限。</li>
+                      <li> <i class="ace-icon fa fa-bell-o bigger-110 purple"></i> 选择树节点之后，用户可以查看该节点所关联的标准题录信息。 </li>
+                      <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 标准文本默认只有浏览权限。</li>
                       <li> <i class="ace-icon fa fa-times bigger-110 red"></i> 如果想对某个节点下的文本权限进行限定，需要单独授权。 </li>
                     </ul>
                     <hr />
@@ -81,7 +81,7 @@
                       </a> </p>
                     <hr />
 					-->
-                    <h4 class="header smaller lighter blue"> <i class="ace-icon fa fa-share-alt"></i> 对节点进行授权(可以理解成角色) </h4>
+                    <h4 class="header smaller lighter blue"> <i class="ace-icon fa fa-share-alt"></i> 对节点进行授权</h4>
                     <p>
 					
 					<div class="control-group">
@@ -92,31 +92,37 @@
 												<div class="checkbox">
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" />
-														<span class="lbl fontsize">题录浏览</span>
+														<span class="lbl fontsize">题录浏览角色</span>
 													</label>
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" />
-														<span class="lbl fontsize">题录批量下载</span>
+														<span class="lbl fontsize">题录批量下载角色</span>
 													</label>
 												</div>
+												<hr />
 												<div class="checkbox">
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" />
-														<span class="lbl fontsize">查看文本</span>
+														<span class="lbl fontsize">查看文本角色</span>
 													</label>
+													</div>
+												<div class="checkbox">
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" />
-														<span class="lbl fontsize">打印文本</span>
+														<span class="lbl fontsize">打印文本角色(包含查看)</span>
 													</label>
+													</div>
+												<div class="checkbox">
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" checked="checked" />
-														<span class="lbl fontsize">下载文本</span>
+														<span class="lbl fontsize">下载文本角色(包含查看、打印)</span>
 													</label>
+													</div>
+												<div class="checkbox">
 													<label>
 														<input name="form-field-checkbox" type="checkbox" class="ace" />
-														<span class="lbl fontsize"> 文本批量下载</span>
+														<span class="lbl fontsize"> 文本批量下载角色(包含查看、打印、下载)</span>
 													</label>
-
 												</div>
 
 												<!-- /section:custom/checkbox -->

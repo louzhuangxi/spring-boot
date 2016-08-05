@@ -40,7 +40,7 @@ public class InitializeService {
         for (TreeNodeType type : TreeNodeType.values()) {
             if (treeNodeRepository.getRoot(type) == null) {
                 logger.info("init {} tree root node", type);
-                TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, 0, true, null);
+                TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, true, null);
                 treeNodeRepository.save(root);
             }
         }

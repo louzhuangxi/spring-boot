@@ -3,37 +3,36 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+        <title>Welcome - Ace Admin</title>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<meta charset="utf-8" />
-		<title>Welcome - Ace Admin</title>
-
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 		<!--[if !IE]> -->
-		<link rel="stylesheet" href="${ctx}/ace/assets/css/pace.css" />
+		<link rel="stylesheet" href="${ctx}/ace/assets/css/pace.css" type="text/css" />
 
 		<script data-pace-options='{ "ajax": true, "document": true, "eventLag": false, "elements": false }' src="${ctx}/ace/assets/js/pace.js"></script>
 
 		<!-- <![endif]-->
 
 		<!-- bootstrap & fontawesome -->
-		<link rel="stylesheet" href="${ctx}/ace/assets/css/bootstrap.css" />
-		<link rel="stylesheet" href="${ctx}/ace/assets/css/font-awesome.css" />
+		<link rel="stylesheet"  href="${ctx}/ace/assets/css/bootstrap.css"  type="text/css" />
+		<link rel="stylesheet" href="${ctx}/ace/assets/css/font-awesome.css"  type="text/css" />
 
 		<!-- text fonts -->
-		<link rel="stylesheet" href="${ctx}/ace/assets/css/ace-fonts.css" />
+		<link rel="stylesheet" href="${ctx}/ace/assets/css/ace-fonts.css"  type="text/css"/>
 
 		<!-- ace styles -->
-		<link rel="stylesheet" href="${ctx}/ace/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style" />
+		<link rel="stylesheet"href="${ctx}/ace/assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style"   type="text/css" />
 		<!-- ztree 用到，但不知道为什么放到具体的 ztree 页面就无法显示页面，只能放到 index 中 -->
-		<link rel="stylesheet" href="${ctx}/zTree/css/metroStyle/metroStyle.css">
+		<link rel="stylesheet"   type="text/css" href="${ctx}/zTree/css/metroStyle/metroStyle.css">
 
 		<!--[if lte IE 9]>
-			<link rel="stylesheet" href="${ctx}/ace/assets/css/ace-part2.css" class="ace-main-stylesheet" />
+			<link rel="stylesheet" href="${ctx}/ace/assets/css/ace-part2.css" class="ace-main-stylesheet"  type="text/css" />
 		<![endif]-->
 
 		<!--[if lte IE 9]>
-		  <link rel="stylesheet" href="${ctx}/ace/assets/css/ace-ie.css" />
+		  <link rel="stylesheet" href="${ctx}/ace/assets/css/ace-ie.css"  type="text/css" />
 		<![endif]-->
 
 		<!-- ace settings handler -->
@@ -441,7 +440,7 @@
 
 						<b class="arrow"></b>
 					</li>
-					
+
 					<li class="">
 						<a data-url="page/menu" href="#page/jqgrid-menu">
 							<i class="menu-icon fa fa-tachometer"></i>
@@ -450,7 +449,7 @@
 
 						<b class="arrow"></b>
 					</li>
-					
+
 					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-sitemap"></i>
@@ -478,7 +477,7 @@
 								</a>
 								<b class="arrow"></b>
 							</li>
-							
+
 							<li class="">
 								<a data-url="page/ztree" href="#page/ztree?type=DepartMent">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -487,7 +486,7 @@
 
 								<b class="arrow"></b>
 							</li>
-							
+
 							<li class="">
 								<a data-url="page/ztree" href="#page/ztree?type=Standard">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -496,7 +495,7 @@
 
 								<b class="arrow"></b>
 							</li>
-							
+
 						</ul>
 					</li>
 
@@ -513,7 +512,7 @@
 						<b class="arrow"></b>
 
 						<ul class="submenu">
-							
+
 							<li class="">
 								<a data-url="page/elements" href="#page/elements">
 									<i class="menu-icon fa fa-caret-right"></i>
@@ -523,28 +522,30 @@
 								<b class="arrow"></b>
 							</li>
 
-							<li class="">
-								<a data-url="page/elements" href="#page/elements">
-									<i class="menu-icon fa fa-caret-right"></i>
-									角色定义
-								</a>
 
-								<b class="arrow"></b>
-							</li>
-							
+
 							<li class="">
 								<a data-url="page/fuelux-tree" href="#page/fuelux-tree?type=Menu">
 									<i class="menu-icon fa fa-caret-right"></i>
-									用户授权
+									用户管理
 								</a>
 
 								<b class="arrow"></b>
 							</li>
-							
+
 							<li class="">
 								<a data-url="page/typography" href="#page/typography">
 									<i class="menu-icon fa fa-caret-right"></i>
-									用户组授权
+									用户组管理
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a data-url="page/elements" href="#page/jqgrid-roles">
+									<i class="menu-icon fa fa-caret-right"></i>
+									角色管理
 								</a>
 
 								<b class="arrow"></b>

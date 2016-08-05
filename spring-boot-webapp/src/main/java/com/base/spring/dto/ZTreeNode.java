@@ -10,23 +10,22 @@ import java.util.List;
  * Time: 13:36
  * To change this template use File | Settings | File Templates.
  */
-public class ZTreeJsonNode {
+public class ZTreeNode {
 
     private long id;
     private String name;
     private String url;
     private boolean open;
     private boolean isParent;
-    private List<ZTreeJsonNode> children = new ArrayList<>();
+    private List<ZTreeNode> children = new ArrayList<>();
 
-    private ZTreeJsonNode() {
+    private ZTreeNode() {
     }
 
     /**
      * @param name
-
      */
-    public ZTreeJsonNode(String name) {
+    public ZTreeNode(String name) {
         this.name = name;
     }
 
@@ -34,10 +33,10 @@ public class ZTreeJsonNode {
      * @param id
      * @param name
      * @param url
-     * @param open     如果是父节点，则展开，如果 children 不为空，即使 isParent = false 也会展开
+     * @param open     如果是父节点，是否则展开，true 时即使 isParent = false 也会展开
      * @param isParent true 时会显示为文件夹图标。即使无子节点数据，也会设置为文件夹图标父节点
      */
-    public ZTreeJsonNode(long id, String name, String url, boolean open, boolean isParent) {
+    public ZTreeNode(long id, String name, String url, boolean open, boolean isParent) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -45,7 +44,7 @@ public class ZTreeJsonNode {
         this.isParent = isParent;
     }
 
-    public void addChild(ZTreeJsonNode child) {
+    public void addChild(ZTreeNode child) {
         this.children.add(child);
     }
 
@@ -89,11 +88,11 @@ public class ZTreeJsonNode {
         isParent = isParent;
     }
 
-    public List<ZTreeJsonNode> getChildren() {
+    public List<ZTreeNode> getChildren() {
         return children;
     }
 
-    public void setChildren(List<ZTreeJsonNode> children) {
+    public void setChildren(List<ZTreeNode> children) {
         this.children = children;
     }
 
@@ -108,10 +107,9 @@ public class ZTreeJsonNode {
     @Override
     public boolean equals(Object o) {  // 放入 set 时，判断元素是否相同的依据
         if (this == o) return true;
-        if (!(o instanceof ZTreeJsonNode)) return false;
+        if (!(o instanceof ZTreeNode)) return false;
 
-        ZTreeJsonNode zTreeNode = (ZTreeJsonNode) o;
-
+        ZTreeNode zTreeNode = (ZTreeNode) o;
         return id == zTreeNode.id;
 
     }

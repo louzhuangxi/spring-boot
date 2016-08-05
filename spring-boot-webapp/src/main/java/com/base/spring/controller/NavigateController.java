@@ -45,17 +45,17 @@ public class NavigateController {
 
 
     /**
-     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/menu
-     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/menu.html
-     * 跳转到真正的页面 :  html/ajax/content/menu.ftl
+     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-roles
+     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-roles.html
+     * 跳转到真正的页面 :  html/ajax/content/jqgrid-roles.ftl
      *
      * @return
      */
-    @RequestMapping(value = "/content/jqgrid-menu.html", method = RequestMethod.GET)  // 必须有 /content/
+    @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
     public String menu(HttpServletRequest request) {
 
-        logger.info("request path={} ,  will go to /html/ajax/content/menu.ftl", MyServletUtils.getFullPath(request));
-        return "admin/ace/html/ajax/content/menu";
+        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
+        return "admin/ace/html/ajax/content/jqgrid-roles";
     }
 
     /**

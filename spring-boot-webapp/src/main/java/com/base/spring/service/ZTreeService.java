@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
-import com.base.spring.utils.ZTreeUtil;
+import com.base.spring.utils.ZTreeUtils;
 import org.h819.web.spring.jpa.DTOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,31 +35,29 @@ public class ZTreeService {
      */
     public String async(Long id, TreeNodeType menuType) {
 
-        //默认的加载到下一级
-        int default_Level = 1;
-
+        //页面显示树状结构到第 n 级
+        int show_Level = 1;
         //List<TreeNodeEntity> treeNodeEntity = null;
         DTOUtils dtoUtils = new DTOUtils();
         dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "privilege");
 
-        if (id == null) {  // 打开页面时，第一次异步加载，不是点击了关闭的父节点，此时没有 id 参数， id=null . 返回节点本身
+        if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
             TreeNodeEntity rootNode = treeNodeRepository.getRoot(menuType);
             if (rootNode == null) {
                 logger.info("not exist any tree node !");
                 return "";
             }
-            TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode, default_Level); // 通过 DTOUtils 开控制返回的层级
-            return JSON.toJSONString(ZTreeUtil.getJsonData(dtoRootNode));
+            TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode, show_Level); // 通过 DTOUtils 开控制返回的层级
+            return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode));
 
-        } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
+        } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
             logger.info("initialize ztree async from db by id={}", id);
             TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
-            TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, default_Level);
-            return JSON.toJSONString(ZTreeUtil.getJsonDataChildren(dtoNode)); //返回节点的子节点
+            TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
+            return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode)); //返回节点的子节点
 
         }
-
 
     }
 
@@ -80,8 +78,7 @@ public class ZTreeService {
         logger.info("Getting name={} ,   pId={}", name, pId);
 
         TreeNodeEntity parent = treeNodeRepository.findOne(pId);
-        parent.setIsParent(true);  // 既然有子节点了，必然是父节点
-        TreeNodeEntity current = new TreeNodeEntity(menuType, name, level, index, isParent, parent);
+        TreeNodeEntity current = new TreeNodeEntity(menuType, name, index, isParent, parent);
         parent.addChildToLastIndex(current);
 
 //        for(TreeNodeEntity entity :parent.getChildren())
@@ -102,7 +99,7 @@ public class ZTreeService {
         logger.info("Getting id={}", id);
         TreeNodeEntity parent = treeNodeRepository.findOne(id);
         parent.clearChildren();
-        parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
+        // parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
         treeNodeRepository.save(parent);
 
     }
@@ -120,11 +117,11 @@ public class ZTreeService {
 
         TreeNodeEntity currentNode = treeNodeRepository.findOne(id); //被操作的对象
         TreeNodeEntity parentNode = treeNodeRepository.findOne(pId); //参考对象
-        parentNode.setIsParent(true);
+        // parentNode.setIsParent(true);
 
         if (curType.equals("copy")) {
             logger.info("copy nodes to a new parent node");
-            ZTreeUtil.createCopyNode(parentNode, currentNode); // 复制一份和新生成的对象，加入到 parent 的子中。
+            ZTreeUtils.createCopyNode(parentNode, currentNode); // 复制一份和新生成的对象，加入到 parent 的子中。
         }
 
         if (curType.equals("cut")) {    //直接移动cut 直接修改 currentNode 的父类，变为新的父类，不重新创建新的对象，相当于剪切过来。

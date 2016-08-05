@@ -109,10 +109,6 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
         configurer.favorPathExtension(false). //关闭URL后缀检测的方法如下
                 favorParameter(true).
-                parameterName("mediaType").
-                ignoreAcceptHeader(true).
-                useJaf(false).
-                mediaType("xml", MediaType.APPLICATION_XML).
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
 

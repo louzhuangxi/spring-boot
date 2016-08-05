@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 权限表，代办一个具体的权限，如果角色拥有此权限，表示该角色可以进行此项操作。操作可以为任何类型，只要想要进行控制的资源，觉可以放入此表。
+ * 权限表，代办一个具体的权限，如果角色拥有此权限，表示该角色可以进行此项操作。
+ * 如：打印、下载、查看、编辑 ...
+ * 操作可以为任何类型，只要想要进行控制的资源，就可以放入此表。
  * 页面用标签进行控制，只要拥有此 PrivilegeEntity 的 id ，即进行显示，表示该用户可以继续此操作
  */
 @Entity
@@ -34,8 +36,12 @@ public class PrivilegeEntity extends BaseEntity {
     @Column(name = "type", nullable = false)
     private PrivilegeType type;
 
-//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "privileges", targetEntity = RoleEntity.class)
-//    private List<RoleEntity> roles = new ArrayList<RoleEntity>();
+    /**
+     * 一个角色，可以拥有多个权限
+     */
+
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "privileges", targetEntity = RoleEntity.class)
+    private List<RoleEntity> roles = new ArrayList<>();
 
 
     /**
@@ -44,13 +50,13 @@ public class PrivilegeEntity extends BaseEntity {
     @Column(name = "url")
     private String url;
 
-
-    /**
-     * 多个节点，可以拥有同一种权限，如 节点编辑  ...
-     * 一个节点，也可以又有多种权限
-     */
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "privileges", targetEntity = TreeNodeEntity.class)
-    private List<TreeNodeEntity> treeNodes = new ArrayList<TreeNodeEntity>();
+//
+//    /**
+//     * 多个节点，可以拥有同一种权限，如 节点编辑  ...
+//     * 一个节点，也可以又有多种权限
+//     */
+//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "privileges", targetEntity = TreeNodeEntity.class)
+//    private List<TreeNodeEntity> treeNodes = new ArrayList<TreeNodeEntity>();
 
 
     /**
@@ -88,13 +94,13 @@ public class PrivilegeEntity extends BaseEntity {
         this.name = name;
     }
 
-//    public List<RoleEntity> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(List<RoleEntity> roles) {
-//        this.roles = roles;
-//    }
+    public List<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
+    }
 
     public PrivilegeType getType() {
         return type;
@@ -104,13 +110,13 @@ public class PrivilegeEntity extends BaseEntity {
         this.type = type;
     }
 
-    public List<TreeNodeEntity> getTreeNodes() {
-        return treeNodes;
-    }
-
-    public void setTreeNodes(List<TreeNodeEntity> treeNodes) {
-        this.treeNodes = treeNodes;
-    }
+//    public List<TreeNodeEntity> getTreeNodes() {
+//        return treeNodes;
+//    }
+//
+//    public void setTreeNodes(List<TreeNodeEntity> treeNodes) {
+//        this.treeNodes = treeNodes;
+//    }
 
     public String getUrl() {
         return url;

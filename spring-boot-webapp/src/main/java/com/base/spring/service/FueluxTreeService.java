@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
-import com.base.spring.utils.FueluxTreeUtil;
+import com.base.spring.utils.FueluxTreeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class FueluxTreeService {
                 return JSON.toJSONString(new ArrayList<>(0));
             }
 
-            return FueluxTreeUtil.getJsonDataString(rootNode.getChildren()); //打开所有一级节点 (跟节点的子节点)
+            return FueluxTreeUtils.getJsonDataString(rootNode.getChildren()); //打开所有一级节点 (跟节点的子节点)
 
         } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
             logger.info("initialize FueluxTree async from db by pId={}", pId);
@@ -52,7 +52,7 @@ public class FueluxTreeService {
                 logger.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));
             }
-            return FueluxTreeUtil.getJsonDataString(rootNode.getChildren());
+            return FueluxTreeUtils.getJsonDataString(rootNode.getChildren());
         }
 
     }

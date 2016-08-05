@@ -237,7 +237,7 @@ public class UserEntity extends BaseEntity {
         this.userName = userName;
     }
 
-    public boolean isAccountNonLocked() {
+    public boolean getIsAccountNonLocked() {
         return isAccountNonLocked;
     }
 
@@ -245,7 +245,7 @@ public class UserEntity extends BaseEntity {
         this.isAccountNonLocked = isAccountNonLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
+    public boolean getIsCredentialsNonExpired() {
         return isCredentialsNonExpired;
     }
 
@@ -254,7 +254,7 @@ public class UserEntity extends BaseEntity {
     }
 
 
-    public boolean isEmailValid() {
+    public boolean getEmailValid() {
         return emailValid;
     }
 
@@ -262,7 +262,7 @@ public class UserEntity extends BaseEntity {
         this.emailValid = emailValid;
     }
 
-    public boolean isReceiveEmailInfo() {
+    public boolean getReceiveEmailInfo() {
         return receiveEmailInfo;
     }
 

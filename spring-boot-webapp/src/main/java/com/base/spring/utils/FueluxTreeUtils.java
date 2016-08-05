@@ -17,10 +17,10 @@ import java.util.List;
  * Time: 13:38
  * To change this template use File | Settings | File Templates.
  */
-public class FueluxTreeUtil {
+public class FueluxTreeUtils {
 
 
-    private FueluxTreeUtil() {
+    private FueluxTreeUtils() {
     }
 
 

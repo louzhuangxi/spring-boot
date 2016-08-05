@@ -69,12 +69,11 @@ public class BaseEntity extends AbstractMySQLEntity {
     @Column(name = "enabled", columnDefinition = "boolean default true")
     private boolean enabled;
 
-
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
      * 如果想要生成 Entity ，用其他有参数的构造方法。
      */
-    protected  BaseEntity() {
+    protected BaseEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
@@ -122,7 +121,7 @@ public class BaseEntity extends AbstractMySQLEntity {
         this.remark = remark;
     }
 
-    public boolean isValid() {
+    public boolean getValid() {
         return valid;
     }
 
@@ -130,7 +129,7 @@ public class BaseEntity extends AbstractMySQLEntity {
         this.valid = valid;
     }
 
-    public boolean isEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 

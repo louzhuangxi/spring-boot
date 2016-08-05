@@ -27,47 +27,35 @@ import java.util.List;
         @NamedEntityGraph(name = "treenode.children", attributeNodes = {@NamedAttributeNode("children")}), // 级联 children
         @NamedEntityGraph(name = "treenode.parent.children", attributeNodes = {@NamedAttributeNode("parent"), @NamedAttributeNode("children")})})
 // 二者都级联
+
+// 只和 role 有关系
 public class TreeNodeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
-
-
     /**
      * 组织名称
      */
     @Column(name = "name")
     private String name;
-
-
     /**
-     * 树状结构的层级,根节点 level = 0，依次递增
-     */
-    @Column(name = "level", nullable = false)
-    private int level;
-
-    /**
-     * 菜单 url
+     * 菜单 url ，点击叶节点的时候，导航到的 url ，这个对菜单有用处。
      */
     @Column(name = "url")
     private String url;
-
     /**
      * url target
      * "_blank", "_self" 或 其他指定窗口名称
      */
     @Column(name = "target")
     private String target;
-
-
     /**
      * 菜单样式表 class 名称
      */
     @Column(name = "css")
     private String css;
-
-
     /**
-     * 在同级中的排序。需要用机制保证排序是连续的，并且从 0 开始。
+     * 在同级中的排序。
+     * 需要用机制保证排序是连续的，并且从 0 开始。
      * 如果这样，每次增加、删除或者移动，都需要把所有的节点进行重新排序。
      * 也可以不连续，但容易有点混乱，所以还是牺牲点性能，保证连续吧
      * order,index 为 mysql 关键字，不能用作字段名
@@ -75,20 +63,13 @@ public class TreeNodeEntity extends BaseEntity {
     @Column(name = "index_", nullable = false)
     private int index;
 
-
-    /**
-     * true 时会显示为文件夹图标。即使无子节点数据，也会设置为文件夹图标(父节点) ，仅为了显示方便而设这个变量。
-     * 刚添加的父节点，还没有子节点，所以判断是否是文件夹图标，不能用 children.size()
-     */
     @Column(name = "isParent", columnDefinition = "boolean default true")
     private boolean isParent;
-
     /**
      * 菜单类型 :必须
      */
     @Column(name = "type", nullable = false)
     private TreeNodeType type;
-
     /**
      * 父组织
      * 树状结构，root 节点（根节点），没有父节点，为 null
@@ -96,7 +77,6 @@ public class TreeNodeEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TreeNodeEntity parent;
-
     /**
      * 子组织
      * jpa 中，orphanRemoval = true ，才可以删除子.
@@ -110,6 +90,14 @@ public class TreeNodeEntity extends BaseEntity {
     private List<TreeNodeEntity> children = new ArrayList<>();
 
 
+//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+//    @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
+//            joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+//            uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
+//    @Fetch(FetchMode.SUBSELECT)
+//    @BatchSize(size = 100)//roles 过多的情况下应用。
+//    private List<PrivilegeEntity> privileges = new ArrayList<>();
     /**
      * 多个节点，可以拥有同一种权限，如 节点编辑  ...
      * 一个节点，也可以又有多种权限
@@ -118,14 +106,11 @@ public class TreeNodeEntity extends BaseEntity {
     private List<RoleEntity> roles = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-    @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
-            joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
-    @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<PrivilegeEntity> privileges = new ArrayList<>();
+    /**
+     * 树状结构的层级,根节点 level = 0，依次递增
+     */
+    @Transient  // 不在数据库中建立字段
+    private int level;
 
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
@@ -137,16 +122,21 @@ public class TreeNodeEntity extends BaseEntity {
         // this one is protected since it shouldn't be used directly
     }
 
+
     /**
      * 菜单创建，只提供这一个构造函数，强制要求录入必需的数据项
      * 菜单需要初始化
      *
      * @param type     节点类型
      * @param name     名称
-     * @param isParent
+     * @param index    节点的排序序号 index
+     * @param isParent 本身是否是父节点。
+     *                 由于使用了 dtoUtils 设定转换深度（children 可能不在转换层次内，不会转换，会有 children = null 情况，此时无法从 children 是否有值来判断本身是否父节点），
+     *                 所以此时还是放在构造函数内，直接作为属性设置。
      * @param parent   父菜单
      */
-    public TreeNodeEntity(TreeNodeType type, String name, int level, int index, boolean isParent, TreeNodeEntity parent) {
+
+    public TreeNodeEntity(TreeNodeType type, String name, int index, boolean isParent, TreeNodeEntity parent) {
 
         if (!name.contains("root_")) // 初始化根节点时，需要设置 parent 为 null (InitializeService.java) ，其他情况 parent 不允许 为 null
             Assert.notNull(parent, "parent can not be null.");
@@ -154,12 +144,10 @@ public class TreeNodeEntity extends BaseEntity {
         this.name = name;
         this.type = type;
         this.index = index;
-        this.level = level;
         this.isParent = isParent;
         this.parent = parent;
 
     }
-
 
     /**
      * 添加到所有子节点队列的尾部，即添加的节点 index 最大
@@ -169,13 +157,11 @@ public class TreeNodeEntity extends BaseEntity {
     public void addChildToLastIndex(TreeNodeEntity child) {
 
         if (child == null) return;
-
         child.setIndex(children.size()); // list 的 index 从 0 开始
         children.add(child);
-        child.setParent(this);
+        child.setIsParent(this);
 
     }
-
 
     /**
      * 添加子到 index 位置
@@ -210,7 +196,7 @@ public class TreeNodeEntity extends BaseEntity {
                 index++;
             }
 
-            child.setParent(this);
+            child.setIsParent(this);
 
         } else { // 同一个父节点下移动，不添加，只变换位置
 
@@ -247,13 +233,12 @@ public class TreeNodeEntity extends BaseEntity {
      * <code>false</code> if it has a parent.
      */
     public boolean isRoot() {
-        if (parent == null) {
+        if (this.parent == null) {
             return true;
         } else {
             return false;
         }
     }
-
 
     public String getCss() {
         return css;
@@ -279,20 +264,37 @@ public class TreeNodeEntity extends BaseEntity {
         this.name = name;
     }
 
-
+    /**
+     * 树状结构的层级,根节点 level = 0，依次递增
+     *
+     * @return
+     */
     public int getLevel() {
+        getLevelInit(this);
         return level;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    /**
+     * 递归计算层级，根节点为 0 级
+     *
+     * @param entity
+     * @return
+     */
+    private void getLevelInit(TreeNodeEntity entity) {
+
+        if (entity.getParent() == null) {
+            return;
+        } else {
+            level++;
+            getLevelInit(entity.getParent());
+        }
     }
 
     public TreeNodeEntity getParent() {
         return parent;
     }
 
-    public void setParent(TreeNodeEntity parent) {
+    public void setIsParent(TreeNodeEntity parent) {
         this.parent = parent;
     }
 
@@ -312,6 +314,21 @@ public class TreeNodeEntity extends BaseEntity {
         this.index = index;
     }
 
+
+    /**
+     * 是否为父节点，包含子节点，即为父节点 , true 时会显示为文件夹图标。
+     * 添加节点时，如果没有子节点，不会显示为文件夹图标，即使是想添加父节点，也会显示为叶节点图表。
+     *
+     * @return
+     */
+    public boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(boolean parent) {
+        isParent = parent;
+    }
+
     public List<RoleEntity> getRoles() {
         return roles;
     }
@@ -320,13 +337,13 @@ public class TreeNodeEntity extends BaseEntity {
         this.roles = roles;
     }
 
-    public List<PrivilegeEntity> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(List<PrivilegeEntity> privileges) {
-        this.privileges = privileges;
-    }
+//    public List<PrivilegeEntity> getPrivileges() {
+//        return privileges;
+//    }
+//
+//    public void setPrivileges(List<PrivilegeEntity> privileges) {
+//        this.privileges = privileges;
+//    }
 
 
     public TreeNodeType getType() {
@@ -337,13 +354,6 @@ public class TreeNodeEntity extends BaseEntity {
         this.type = type;
     }
 
-    public boolean getIsParent() {
-        return isParent;
-    }
-
-    public void setIsParent(boolean parent) {
-        isParent = parent;
-    }
 
     /**
      * list 中的 TreeNodeEntity 按照 index 属性排序后，重新设置 TreeNodeEntity 的 index 的值为 TreeNodeEntity 在 list 中的位置。

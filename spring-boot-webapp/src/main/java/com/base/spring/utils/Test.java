@@ -1,5 +1,6 @@
 package com.base.spring.utils;
 
+import com.base.spring.domain.TreeNodeEntity;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -25,15 +26,52 @@ import java.util.List;
  */
 public class Test {
 
+    private int level = 0;
 
-    public static void main(String[] ags){
+    public static void main(String[] ags) {
 
         Test t = new Test();
-        t.testFileName();
+        //t.testFileName();
+        t.testGetLevel();
 
     }
 
-    private void testFileName(){
+    public static void copyProperties(Object fromObj, Object toObj) {
+        Class<? extends Object> fromClass = fromObj.getClass();
+        Class<? extends Object> toClass = toObj.getClass();
+
+        try {
+            BeanInfo fromBean = Introspector.getBeanInfo(fromClass);
+            BeanInfo toBean = Introspector.getBeanInfo(toClass);
+
+            PropertyDescriptor[] toPd = toBean.getPropertyDescriptors();
+            List<PropertyDescriptor> fromPd = Arrays.asList(fromBean.getPropertyDescriptors());
+
+            for (PropertyDescriptor propertyDescriptor : toPd) {
+
+                propertyDescriptor.getDisplayName();
+                PropertyDescriptor pd = fromPd.get(fromPd.indexOf(propertyDescriptor));
+
+                if (pd.getDisplayName().equals(propertyDescriptor.getDisplayName()) && !pd.getDisplayName().equals("class")) {
+
+                    if (propertyDescriptor.getWriteMethod() != null)
+                        propertyDescriptor.getWriteMethod().invoke(toObj, pd.getReadMethod().invoke(fromObj, null));
+
+                }
+
+            }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void testFileName() {
 
         File f = new File("D:\\01\\00\\src.pdf");
 
@@ -43,7 +81,7 @@ public class Test {
         System.out.println(FilenameUtils.getPrefix(f.getAbsolutePath()));
         System.out.println(FilenameUtils.getName(f.getAbsolutePath()));
         System.out.println(FilenameUtils.getBaseName(f.getAbsolutePath()));
-        System.out.println(f.getParent()+File.separator+FilenameUtils.getBaseName(f.getAbsolutePath())+"_."+FilenameUtils.getExtension(f.getAbsolutePath()));
+        System.out.println(f.getParent() + File.separator + FilenameUtils.getBaseName(f.getAbsolutePath()) + "_." + FilenameUtils.getExtension(f.getAbsolutePath()));
 
 
     }
@@ -81,38 +119,33 @@ public class Test {
         return entityBeanVO;
     }
 
-    public static void copyProperties(Object fromObj, Object toObj) {
-        Class<? extends Object> fromClass = fromObj.getClass();
-        Class<? extends Object> toClass = toObj.getClass();
+    public void testGetLevel() {
+        TreeNodeEntity entity = new TreeNodeEntity();
+        TreeNodeEntity entity1 = new TreeNodeEntity();
 
-        try {
-            BeanInfo fromBean = Introspector.getBeanInfo(fromClass);
-            BeanInfo toBean = Introspector.getBeanInfo(toClass);
+        TreeNodeEntity entity2 = new TreeNodeEntity();
+        TreeNodeEntity entity3 = new TreeNodeEntity();
+        entity.addChildToLastIndex(entity1);
+        entity1.addChildToLastIndex(entity2);
+        entity2.addChildToLastIndex(entity3);
 
-            PropertyDescriptor[] toPd = toBean.getPropertyDescriptors();
-            List<PropertyDescriptor> fromPd = Arrays.asList(fromBean.getPropertyDescriptors());
+        getLevell(entity3);
 
-            for (PropertyDescriptor propertyDescriptor : toPd) {
+        System.out.println();
+        System.out.println("level : " + level);
 
-                propertyDescriptor.getDisplayName();
-                PropertyDescriptor pd = fromPd.get(fromPd.indexOf(propertyDescriptor));
+    }
 
-                if (pd.getDisplayName().equals(propertyDescriptor.getDisplayName()) && !pd.getDisplayName().equals("class")) {
+    private void getLevell(TreeNodeEntity entity) {
 
-                    if (propertyDescriptor.getWriteMethod() != null)
-                        propertyDescriptor.getWriteMethod().invoke(toObj, pd.getReadMethod().invoke(fromObj, null));
+        if (entity.getParent() == null) {
 
-                }
-
-            }
-        } catch (IntrospectionException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            System.out.println("null");
+            return;
+        } else {
+            level++;
+            System.out.println("level++ : "+level);
+            getLevell(entity.getParent());
         }
     }
 }

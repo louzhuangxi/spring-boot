@@ -37,7 +37,7 @@ public class ZTreeUtilTest {
         //MyJsonUtils.prettyPrint(set);
         ;
         //   ZTreeUtil.getJsonData(dtoRootNode);
-        MyJsonUtils.prettyPrint(ZTreeUtil.getJsonData(dtoRootNode));
+        MyJsonUtils.prettyPrint(ZTreeUtils.getJsonData(dtoRootNode));
 
 
     }

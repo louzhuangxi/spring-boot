@@ -15,6 +15,10 @@ import java.util.List;
  * Time: 15:15
  * To change this template use File | Settings | File Templates.
  */
+
+
+//定义一个角色：对哪些树节点有哪些权限，这些节点的权限相同；
+// 如果出现不同的节点不同的权限，那么定义为不同的角色。
 @Entity
 @Table(name = "base_role")
 public class RoleEntity extends BaseEntity {
@@ -26,14 +30,14 @@ public class RoleEntity extends BaseEntity {
     @ManyToMany(mappedBy = "roles", targetEntity = UserEntity.class)
     private List<UserEntity> users = new ArrayList<>();
 
-//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-//    @JoinTable(name = "base_ref_roles_privileges", //指定关联表名
-//            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-//            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
-//    @Fetch(FetchMode.SUBSELECT)
-//    @BatchSize(size = 100)//roles 过多的情况下应用。
-//    private Set<PrivilegeEntity> privileges = new HashSet<PrivilegeEntity>();
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_roles_privileges", //指定关联表名
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 100)//roles 过多的情况下应用。
+    private List<PrivilegeEntity> privileges = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = TreeNodeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
     @JoinTable(name = "base_ref_roles_treenode", //指定关联表名
@@ -63,36 +67,35 @@ public class RoleEntity extends BaseEntity {
     }
 
 
-//    /**
-//     * 自定义方法，添加学生
-//     * 注意建立关联的方法(单向的不需要)
+    /**
+     * 自定义方法，添加 Privilege
+     * 注意建立关联的方法(单向的不需要)
 
-//     * @param privilege
-//     */
-//    public void addUser(UserEntity privilege) {
-//
-//        if (!this.privileges.contains(privilege)) {
-//            this.privileges.add(privilege);
-//            privilege.getRoles().add(this);
-//        }
-//
-//    }
-//
-//    /**
-//     * 自定义方法，删除学生
-//     * 注意删除关联的方法(单向的不需要)
+     * @param privilege
+     */
+    public void addPrivilege(PrivilegeEntity privilege) {
 
-//     * @param privilege
-//     */
-//    public void removeUser(PrivilegeEntity privilege) {
-//
-//        if (this.privileges.contains(privilege)) {
-//            this.privileges.remove(privilege);
-//            privilege.getRoles().remove(this);
-//
-//        }
-//
-//    }
+        if (!this.privileges.contains(privilege)) {
+            this.privileges.add(privilege);
+            privilege.getRoles().add(this);
+        }
+    }
+
+    /**
+     * 自定义方法，删除 Privilege
+     * 注意删除关联的方法(单向的不需要)
+
+     * @param privilege
+     */
+    public void removePrivilege(PrivilegeEntity privilege) {
+
+        if (this.privileges.contains(privilege)) {
+            this.privileges.remove(privilege);
+            privilege.getRoles().remove(this);
+
+        }
+
+    }
 
     /**
      * 自定义方法，添加
@@ -204,13 +207,13 @@ public class RoleEntity extends BaseEntity {
         this.name = name;
     }
 
-//    public Set<PrivilegeEntity> getPrivileges() {
-//        return privileges;
-//    }
-//
-//    public void setPrivileges(Set<PrivilegeEntity> privileges) {
-//        this.privileges = privileges;
-//    }
+    public List<PrivilegeEntity> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(List<PrivilegeEntity> privileges) {
+        this.privileges = privileges;
+    }
 
 
     public List<TreeNodeEntity> getTreeNodes() {

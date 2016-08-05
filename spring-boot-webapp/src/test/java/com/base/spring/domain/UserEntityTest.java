@@ -23,8 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SpringBootWebappApplication.class)
-@Rollback(false)
+//@SpringBootTest
 @Transactional
+@Rollback(false)
 @WebAppConfiguration
 public class UserEntityTest {
 

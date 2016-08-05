@@ -1,7 +1,7 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
 <title>Treeview - Ace Admin</title>
-<link rel="stylesheet" href="${ctx}/jquery-confirm/jquery-confirm.css"/>
+<link rel="stylesheet" href="${ctx}/jquery-confirm/jquery-confirm.css" type="text/css"/>
 <style type="text/css">
 .ztree li a.copy {
 	padding-top:0;
@@ -163,7 +163,7 @@
 				async : {
 					enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
 					url : "${ctx}/tree/ztree/ajax/async.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
-					autoParam : ["id"], //异步加载时需要自动提交父节点属性的参数 。这些参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
+					autoParam : ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
 					otherParam : {
 						"menu_type" : "${menu_type}"
 					} //这个是我们可以自定义的参数。第一次加载树，决定树类型

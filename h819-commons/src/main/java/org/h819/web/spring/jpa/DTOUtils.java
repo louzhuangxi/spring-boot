@@ -19,27 +19,30 @@ import java.util.*;
  * 在 hibernate 的事务中 (@Transactional)，POJO 代表一个底层的数据库表，POJO 的任何变化，都会自动同步到底层数据库。所以POJO对象不能随意的作为一个值对象在各个层次中传递，需要转换为 DTO 对象。(详见 example.service 描述)
  * 本类是 Hibernate POJO 转换为 DTO 工具，可以设置转换深度。转换后的 DTO 对象，已经脱离事务容器控制，仅是个值对象，可以传递到任意层，并可以对该 DTO 对象进行任意修改，而不会把修改结果同步到底层数据库。
  * 由于用到了 Hibernate 和 spring 技术，所以该类只能用在应用两者的环境中。
+ * 普通的 Bean 也可以转换，不需要是 Hibernate 的实体。
  * POJO 必需有默认的无参构造方法，并且满足 Bean 的格式。
  * 转换操作，可以不在事务中 (@Transactional)。
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * ====================
  * 作用 ：
  * 一般的 POJO 转换为 DTO 工具，需要自己生成 DTO 类，之后用 Bean 拷贝工具，进行 POJO -> DTO 转换，形如 copy(beanPOJO,beanDTO) ，其做法是进行属性对应后进行拷贝。如 apache BeanUtils ,dozer (http://dozer.sourceforge.net/) 等
  * 这种方案存在两个问题：
- * 1. 需要手工生成 DTO 类，每个 POJO 对象均需要一个，操作麻烦；
- * 2. 对于有多重依赖关系的对象，就像一棵对象树一样，拷贝某个属性，会把和该属性对应的所有关联对象都进行加载(加载大量 lazy 设置的级联对象，会频繁查询数据库)，而不能设置拷贝深度或者忽略某些对象属性。尤其是对于有双向对应关系的对象，拷贝会进入死循环，互相加载。
- * <p/>
- * 3. 对于目前流行的 Entity to josnString 类型的应用，由于问题 2 的存在，转换之后的 json 字符串要不变得复杂无比(包含整个对象树，而不仅仅是需要的对象属性)，要不在转换过程中就进入了死循环，JackJson( jackjosn 提供的 @JsonIdentityInfo 级联层次过多时，不起作用。),fastJson 等工具均是此问题。
- * <p/>
+ * 1. 需要手工生成 DTO 类，每个 POJO 对象均需要手工生成，操作麻烦；
+ * 2. 对于有多重依赖关系的对象，就像一棵对象树一样，拷贝某个属性，会把和该属性对应的所有关联对象都进行加载(加载大量 lazy 设置的级联对象，会频繁查询数据库)，而不能设置拷贝深度或者忽略某些对象属性。
+ * 尤其是对于有双向对应关系的对象，拷贝会进入死循环，互相加载。
+ * 3. 对于目前流行的 Entity to jsonString 类型的应用，由于问题 2 的存在，转换之后的 json 字符串要不变得复杂无比(包含整个对象树，而不仅仅是需要的对象属性)，
+ * 要不在转换过程中就进入了死循环，JackJson( jackJson 提供的 @JsonIdentityInfo 级联层次过多时，不起作用。),fastJson 等工具均是此问题。
+ * <p>
  * ====================
  * 本方案针对上述问题，进行了优化：
  * 1. 根据 POJO 对象，自动生成 DTO 对象;
  * 2. 根据需要指定转换深度，而不必把所有的级联对象都加载进来，从而减少不必要的数据库查询；
  * 3. 根据需要，设置不需要加载的对象的属性，可以截断双向关联，避免用工具转换到 json 的时候，进入死循环。
- * 2,3 共同作用，只加载需要的属性，并且截断了双向关联，减少了不必要的数据库查询，也使得 DTO -> josnString 变得简单清晰。
- * 4. 为了便于展示，有时候需要对对象临时添加属性，一般需要在 Entity 上面添加 @Transient 标记，表示不实例化如数据库。本工具类提供了 POJO -> map DTO 方法，而不用修改 Entity 和 添加 @Transient 标记
- * <p/>
+ * 2,3 步骤 共同作用，只加载需要的属性，并且截断了双向关联，减少了不必要的数据库查询，也使得 DTO -> jsonString 变得简单清晰。
+ * 4. 为了便于展示，有时候需要对对象临时添加属性，常规做法，一般需要在 Entity 上面添加 @Transient 标记，表示不实例化到数据库。
+ * 而 本工具类提供了 POJO -> map DTO 方法，不用修改 Entity 和添加 @Transient 标记，办法为 map 后可以随意添加属性和对应的值，做法返回值。
+ * <p>
  * ====================
  * 本类中，提到的基本数据类型包括：
  * Primitive Data Types (byte,short,int,long,float,double,boolean,char)
@@ -49,24 +52,24 @@ import java.util.*;
  * - 0 级: 只转换 POJO 的基本类型(见上文)，当属性为一个对象(Entity) 或集合类型时，不转换，此时对象(Entity)属性设置为 null ，集合设置为空集合。
  * - 1 级: 除对对象本身进行 0 层次操作外，对对象属性和集合中的对象进行 0 级操作
  * - 2 级: 以此类推...
- * <p/>
+ * <p>
  * ====================
  * 1. 本类线程安全
- * <p/>
+ * <p>
  * ==============  原文注释 ===============
  * For variable depth copy, level 0 is just the primitives of the specified object.
  * Each additional level is a copy of the object's non-primitive fields, and so on.
- * <p/>
+ * <p>
  * If level is set to zero, non-primitive properties will be set to null and collections will be empty.
  * This copy performs cycle detection and sets any repeated copies to null.
- * <p/>
+ * <p>
  * If a property is of type byte[], the copy is a direct reference to the original array, no array copy is done.
- * <p/>
+ * <p>
  * This works for Hibernate objects because hibernate's persistent collections aren't copied,
  * their contents are copied into the default collection of the target class.
- * <p/>
+ * <p>
  * Copy is done according to bean properties, not necessarily through field reflection.
- * <p/>
+ * <p>
  * This class has no mutable state so is thread-safe.
  */
 
@@ -204,7 +207,6 @@ public class DTOUtils {
             List<String> nonSimplePropertyNames = getNonSimplePropertyNames(entityBeanPOJO.getClass());
             // copy entityBeanPOJO to entityBeanVO , ignore nonSimplePropertyNames properties , 不拷贝非简单属性
             BeanUtils.copyProperties(entityBeanPOJO, entityBeanVO, nonSimplePropertyNames.toArray(new String[]{}));
-
             if (depth > 0) {
 
                 // 获取当前需要从数据库加载的对象
