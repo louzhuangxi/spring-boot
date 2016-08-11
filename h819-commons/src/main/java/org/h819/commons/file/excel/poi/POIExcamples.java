@@ -17,9 +17,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-
-import static java.lang.System.out;
 
 /**
  * @author H819
@@ -284,46 +281,5 @@ public class POIExcamples {
 
     }
 
-    /**
-     * 打印 map，用于测试本类中的读取 excel 方法
-     *
-     * @param singleMap
-     */
-    private void testPrintSingleMap(Map<Integer, String> singleMap) {
-
-        if (singleMap == null)
-            logger.info("null .");
-
-        if (singleMap != null)
-            for (Object line : singleMap.entrySet()) {
-                Map.Entry entry = (Map.Entry) line;
-                Object lineNum = entry.getKey();
-                Object value = (Object) entry.getValue();
-                out.println(lineNum + ": " + value);
-
-            }
-    }
-
-    /**
-     * 打印 map ，其中 map 的值为 map,用于测试本类中的读取 excel 方法
-     *
-     * @param doubleMap
-     */
-    private void testPrintDoubleMap(Map<Integer, Map<Integer, String>> doubleMap) {
-        if (doubleMap != null)
-            for (Object line : doubleMap.entrySet()) {
-                Map.Entry entry = (Map.Entry) line;
-                Object lineNum = entry.getKey();
-                Map value = (Map) entry.getValue();
-                out.print(lineNum + ": ");
-                for (Object col : value.entrySet()) {
-                    Map.Entry entry2 = (Map.Entry) col;
-                    Object key2 = entry2.getKey();
-                    Object value2 = entry2.getValue();
-                    out.print(key2 + "=" + value2 + ";");
-                }
-                out.println("");
-            }
-    }
 
 }

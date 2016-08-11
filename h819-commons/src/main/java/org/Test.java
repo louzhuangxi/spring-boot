@@ -9,7 +9,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
-import org.h819.commons.file.excel.poi.bean.ExcelLine;
+import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

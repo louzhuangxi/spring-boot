@@ -8,15 +8,19 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.h819.commons.MyDateUtils;
-import org.h819.commons.file.excel.poi.bean.ExcelCell;
-import org.h819.commons.file.excel.poi.bean.ExcelLine;
+import org.h819.commons.file.excel.poi.vo.ExcelCell;
+import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.h819.commons.json.JsonStringLineType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -40,8 +44,8 @@ public class MyExcelUtils {
 
     private static Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);
     //默认输出的 txt 文件名
-    private static String defautTxtFile = "txtFile.txt";
-    private static String defautDatePattern = MyDateUtils.datePattern;
+    private static String defaultTxtFile = "txtFile.txt";
+    private static String defaultDatePattern = MyDateUtils.datePattern;
 
     /**
      * 只能静态引用
@@ -61,7 +65,7 @@ public class MyExcelUtils {
 
     public static void writeExcelToJsonFile(File excelFile, boolean duplicate) {
 
-        writeExcelToJsonFile(excelFile, new File(excelFile.getParent() + "\\" + defautTxtFile), defautDatePattern, duplicate);
+        writeExcelToJsonFile(excelFile, new File(excelFile.getParent() + "\\" + defaultTxtFile), defaultDatePattern, duplicate);
 
     }
 
@@ -70,18 +74,18 @@ public class MyExcelUtils {
      * 一次性读取所有数据，没有考虑性能问题。
      *
      * @param excelFile   excel 文件
-     * @param txtFile     包含 excel 数据的结果
+     * @param jsonFile    包含 excel 数据的结果
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
      * @return 包含 excel 数据的集合
      */
 
-    public static void writeExcelToJsonFile(File excelFile, File txtFile, String datePattern, boolean duplicate) {
+    public static void writeExcelToJsonFile(File excelFile, File jsonFile, String datePattern, boolean duplicate) {
 
-        Collection rowsSet = readExcel(excelFile, datePattern, duplicate);
+        List rowsSet = readExcel(excelFile, datePattern, duplicate);
         // 输出结果
         if (!rowsSet.isEmpty())
             try {
-                FileUtils.write(txtFile, JSON.toJSONString(rowsSet), StandardCharsets.UTF_8);
+                FileUtils.write(jsonFile, JSON.toJSONString(rowsSet), StandardCharsets.UTF_8);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -121,14 +125,14 @@ public class MyExcelUtils {
      * @param excelFile
      * @return
      */
-    public static Collection<ExcelLine> readExcel(File excelFile, boolean duplicate) {
-        return readExcel(excelFile, defautDatePattern, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, boolean duplicate) {
+        return readExcel(excelFile, defaultDatePattern, duplicate);
     }
 
     /**
      * 读取 excel 文件所有内容到 set 中，利用 set 的唯一性，去掉了相同行，并且保留原来的行序</br>
      * 一次性读取所有数据，没有考虑性能问题。
-     * <p>
+     * 如果单元格为空白，则返回的行中，无此单元格，所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
      *
      * @param excelFile   excel 文件
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
@@ -136,12 +140,12 @@ public class MyExcelUtils {
      * @return 包含 excel 数据的集合
      */
 
-    public static Collection<ExcelLine> readExcel(File excelFile, String datePattern, boolean duplicate) {
+    public static List<ExcelLine> readExcel(File excelFile, String datePattern, boolean duplicate) {
 
         Workbook workbook; //<-Interface, accepts both HSSF and XSSF.
         // set 可以过滤重复元素。
 
-        Collection<ExcelLine> lines = null;
+        Collection<ExcelLine> lines;
 
         if (duplicate) // 允许重复
             lines = new ArrayList();
@@ -170,24 +174,18 @@ public class MyExcelUtils {
                 // 循环行
                 for (Row row : workbook.getSheetAt(i)) {
 
-                    // 跳过空白行
-                    //  if (isBlankRow(row))
-                    //     continue;
-
                     ExcelLine excelLine = new ExcelLine();
                     excelLine.setFileName(excelFile.getName());
                     excelLine.setSheetName(workbook.getSheetName(i));
                     excelLine.setSheetNmuber(i);
                     excelLine.setLineNumber(row.getRowNum());
-
-                    // Set
-
                     //For each row, iterate through each columns
                     Iterator<Cell> cellIterator = row.cellIterator();
                     //单行的每个单元格
-                    while (cellIterator.hasNext()) { //.hasNext() 方法，如果单元格为空，结果为 false，直接跳到下一个有内容的单元格
-                        Cell cell = cellIterator.next();
+                    //   * <p>
 
+                    while (cellIterator.hasNext()) { //.hasNext() 方法原理：如果单元格为空，结果为 false，直接跳到下一个有内容的单元格。所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
+                        Cell cell = cellIterator.next();
                         ExcelCell excelCell = new ExcelCell();
                         excelCell.setTile(convertColumnIndexToTitle(cell.getColumnIndex()));
                         excelCell.setValue(getFormatCellValue(cell, datePattern));
@@ -202,20 +200,58 @@ public class MyExcelUtils {
             } //所有行完成
 
             fileInputStream.close();
-//            FileOutputStream out =
-//                    new FileOutputStream(new File("d:\\test.xlsx"));
-//           workbook.write(out);
-//            out.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         logger.info("read excel end...");
 
-        return lines;
+        //重新包装为 list
+        return new ArrayList(lines);
+    }
+
+    public static void writeExcel(List<ExcelLine> lines, File outExcelFile) throws Exception {
+
+        writeExcel(lines, null, outExcelFile);
+    }
+
+    public static void writeExcel(List<ExcelLine> lines, String sheetName, File outExcelFile) throws Exception {
+
+        if (!outExcelFile.getAbsolutePath().toLowerCase().endsWith(".xlsx")) {
+            throw new Exception("输出文件必须是 xlsx 类型");
+        }
+
+        //Blank workbook
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet;
+        //Create a blank sheet
+        if (sheetName == null)
+            sheet = workbook.createSheet();
+        else
+            sheet = workbook.createSheet(sheetName);
+        int rowNum = 0;
+        for (ExcelLine line : lines) {
+            Row row = sheet.createRow(rowNum++); //第一行
+            Set<ExcelCell> cells = line.getCellValues();
+            for (ExcelCell excelCell : cells) {
+                int cellIndex = convertColumnTitleToIndex(excelCell.getTile());  // 根据 title ，获得列序号
+                Cell newCell = row.createCell(cellIndex);
+                String value = excelCell.getValue();
+                newCell.setCellValue(value);
+            }
+        }
+        try {
+            //Write the workbook in file system
+            FileOutputStream out = new FileOutputStream(outExcelFile);
+            workbook.write(out);
+            workbook.close();
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -285,48 +321,48 @@ public class MyExcelUtils {
      * @return 替换后的行字符串 列号不存在时，返回原行字符串
      */
     @Deprecated
-    static ExcelLine replaceCellValueByColumnIndex(ExcelLine excelLine, int columnIndex, String newCellValue) {
+    static ExcelLine replaceCellValueByColumnTitleIndex(ExcelLine excelLine, int columnIndex, String newCellValue) {
 
-        return replaceCellValueByColumAlphaName(excelLine, convertColumnIndexToTitle(columnIndex), newCellValue);
+        return replaceCellValueByColumnAlphaTitleName(excelLine, convertColumnIndexToTitle(columnIndex), newCellValue);
 
     }
 
     /**
      * 替换行的指定列值
-     * <p>
-     * * 英文名字为 AA-ZZ 之间，不区分大小写
-     * <p>
-     * <p>
-     * 参考  getCellValueByColumnIndex 方法实现
      *
-     * @param excelLineBean   行字符串值
-     * @param CloumnAlphaName 指定列名称字母
-     * @param newCellValue    新列值
-     * @return 替换后的行字符串 列号不存在时，返回原行字符串
+     * @param excelLine            excel 行，只包含有值的列，空白列不包含，所以列号可能不连续
+     * @param columnAlphaTitleName 指定列名称字母
+     * @param newCellValue         新列值
+     * @return 替换后的行字符串 列名 ColumnAlphaTitleName 不存在时，返回原行字符串
      */
-    public static ExcelLine replaceCellValueByColumAlphaName(ExcelLine excelLineBean, String CloumnAlphaName, String newCellValue) {
+    public static ExcelLine replaceCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnAlphaTitleName, String newCellValue) {
 
+        boolean tag = false;
 
-        Set<ExcelCell> set = excelLineBean.getCellValues();
-        Set<ExcelCell> setNew = new LinkedHashSet<ExcelCell>(set.size());
+        Set<ExcelCell> set = excelLine.getCellValues();
+        Set<ExcelCell> setNew = new TreeSet();
 
         //重新构造，以保持单元格在 set 中的顺序
-        for (ExcelCell bean : set) {
-            if (bean.getTile().equals(CloumnAlphaName)) {
+        for (ExcelCell bean : set) {// 循环所遇列
+            if (bean.getTile().equals(columnAlphaTitleName)) {  // 找到了对应的列名
+                tag = true;
                 setNew.add(new ExcelCell(bean.getTile(), newCellValue));
-            } else
+            } else  // 没找到，则之间添加
                 setNew.add(bean);
         }
 
-        excelLineBean.setCellValues(setNew);
+        if (!tag) //excelLine 不包含指定的列名，增加一列
+            setNew.add(new ExcelCell(columnAlphaTitleName.toUpperCase(), newCellValue));
 
-        return excelLineBean;
+        // 重置 excelLineBean
+        excelLine.setCellValues(setNew);
+
+        return excelLine;
 
     }
 
     /**
      * 根据 cell 格式，自动转换 cell 内容为 String
-     * <p>
      *
      * @param cell
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
@@ -439,51 +475,6 @@ public class MyExcelUtils {
         return result - 1;
     }
 
-    /**
-     * 写 excel 例子。因为写的需求每个项目都不一样，所以这里不给通用的函数，仅给个例子，项目可根据这个函数来修改。
-     */
-    private void writeExample() {
-        // create a new workbook
-        Workbook wb = new HSSFWorkbook();
-
-        // 创建一个WorkBook，从指定的文件流中创建，即上面指定了的文件流
-        // FileInputStream readFile = new FileInputStream(templatefilepath);
-        // Workbook wb = new HSSFWorkbook(readFile);
-        // 获取指定的 sheet 对象
-        // Sheet sheet = wb.getSheetAt(0);
-
-        // create a new sheet
-        Sheet s = wb.createSheet("new sheet");
-        // declare a row object reference
-        Row r = null;
-        // declare a cell object reference
-        Cell c = null;
-
-        // create a sheet with 30 rows (0-29)
-        int rownum;
-        for (rownum = (short) 0; rownum < 30; rownum++) {
-            // create a row
-            r = s.createRow(rownum);
-            // create 10 cells (0-9) (the += 2 becomes apparent later
-            for (short cellnum = (short) 0; cellnum < 10; cellnum += 2) {
-                c = r.createCell(cellnum);
-                c.setCellValue("");
-            }
-        }
-
-        try {
-            FileOutputStream out = new FileOutputStream("d:\\workbook.xls");
-            wb.write(out);
-            out.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
 
     /**
      * 判断给定的行是否为空白行

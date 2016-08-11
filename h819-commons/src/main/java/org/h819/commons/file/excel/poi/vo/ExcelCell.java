@@ -1,13 +1,13 @@
-package org.h819.commons.file.excel.poi.bean;
+package org.h819.commons.file.excel.poi.vo;
 
 /**
- * Description : TODO()
+ * Description : TODO(实现 Comparable ，在 Excel 行中，按照列的 title 排序)
  * User: h819
  * Date: 2014-10-20
  * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public class ExcelCell {
+public class ExcelCell implements Comparable {
 
 
     //还可以添加其他单元格属性
@@ -47,4 +47,13 @@ public class ExcelCell {
     public void setValue(String value) {
         this.value = value;
     }
+
+
+    @Override
+    public int compareTo(Object o) {
+        ExcelCell a = (ExcelCell) o;
+        return this.tile.compareTo(a.tile);
+    }
+
+
 }

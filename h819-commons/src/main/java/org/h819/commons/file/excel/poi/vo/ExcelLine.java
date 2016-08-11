@@ -1,7 +1,7 @@
-package org.h819.commons.file.excel.poi.bean;
+package org.h819.commons.file.excel.poi.vo;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Description : TODO(excel 行数据，单元格无内容时，跳过，所以单元格可以不连续)
@@ -17,7 +17,7 @@ public class ExcelLine {
     private int sheetNmuber = 0;
     private int lineNumber = 0;
     //有序 Set ，按添加顺序。
-    private Set<ExcelCell> cellValues = new LinkedHashSet();
+    private Set<ExcelCell> cellValues = new TreeSet<>();
 
     public ExcelLine() {
 
