@@ -132,7 +132,7 @@ public class TreeNodeEntity extends BaseEntity {
      * @param index    节点的排序序号 index
      * @param isParent 本身是否是父节点。
      *                 由于使用了 dtoUtils 设定转换深度（children 可能不在转换层次内，不会转换，会有 children = null 情况，此时无法从 children 是否有值来判断本身是否父节点），
-     *                 所以此时还是放在构造函数内，直接作为属性设置。
+     *                 所以 isParent 还是放在构造函数内，直接作为属性设置，可以直接判断。
      * @param parent   父菜单
      */
 
@@ -159,7 +159,7 @@ public class TreeNodeEntity extends BaseEntity {
         if (child == null) return;
         child.setIndex(children.size()); // list 的 index 从 0 开始
         children.add(child);
-        child.setIsParent(this);
+        child.setParent(this);
 
     }
 
@@ -196,7 +196,7 @@ public class TreeNodeEntity extends BaseEntity {
                 index++;
             }
 
-            child.setIsParent(this);
+            child.setParent(this);
 
         } else { // 同一个父节点下移动，不添加，只变换位置
 
@@ -290,13 +290,6 @@ public class TreeNodeEntity extends BaseEntity {
         }
     }
 
-    public TreeNodeEntity getParent() {
-        return parent;
-    }
-
-    public void setIsParent(TreeNodeEntity parent) {
-        this.parent = parent;
-    }
 
     public List<TreeNodeEntity> getChildren() {
         return children;
@@ -314,6 +307,13 @@ public class TreeNodeEntity extends BaseEntity {
         this.index = index;
     }
 
+    public TreeNodeEntity getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNodeEntity parent) {
+        this.parent = parent;
+    }
 
     /**
      * 是否为父节点，包含子节点，即为父节点 , true 时会显示为文件夹图标。
@@ -325,9 +325,10 @@ public class TreeNodeEntity extends BaseEntity {
         return isParent;
     }
 
-    public void setIsParent(boolean parent) {
-        isParent = parent;
+    public void setIsParent(boolean isParent) {
+        this.isParent = isParent;
     }
+
 
     public List<RoleEntity> getRoles() {
         return roles;

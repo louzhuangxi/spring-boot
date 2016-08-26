@@ -27,7 +27,7 @@ public class ExcelCell implements Comparable {
      * @param value 数值
      */
     public ExcelCell(String tile, String value) {
-        this.tile = tile;
+        this.tile = tile.toUpperCase();
         this.value = value;
 
     }
@@ -47,6 +47,9 @@ public class ExcelCell implements Comparable {
     public void setValue(String value) {
         this.value = value;
     }
+
+
+
 
 
     @Override

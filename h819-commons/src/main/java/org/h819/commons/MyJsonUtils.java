@@ -43,7 +43,7 @@ public class MyJsonUtils {
 
 
     /**
-     * 利用 jack json ObjectMapper ，格式化输出输出任何对象
+     * 利用 jack json ObjectMapper ，格式化输出输出任何 Bean 对象
      *
      * @param object
      */

@@ -1,6 +1,6 @@
 package com.base.spring.utils;
 
-import com.base.SpringBootWebappApplication;
+import com.base.SpringBootWebAppApplication;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
@@ -16,7 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SpringBootWebappApplication.class)
+@SpringApplicationConfiguration(classes = SpringBootWebAppApplication.class)
 @Rollback(false)
 @Transactional
 @WebAppConfiguration

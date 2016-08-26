@@ -10,11 +10,11 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 // 邮箱激活 http://www.baeldung.com/registration-verify-user-by-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_47_sec
 
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
-public class SpringBootWebappApplication extends SpringBootServletInitializer {
+public class SpringBootWebAppApplication extends SpringBootServletInitializer {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringBootWebappApplication.class, args);
+        SpringApplication.run(SpringBootWebAppApplication.class, args);
     }
 
     /**
@@ -26,7 +26,7 @@ public class SpringBootWebappApplication extends SpringBootServletInitializer {
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SpringBootWebappApplication.class);
+        return application.sources(SpringBootWebAppApplication.class);
     }
 
 }

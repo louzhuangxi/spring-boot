@@ -81,7 +81,7 @@ public class MyExcelUtils {
 
     public static void writeExcelToJsonFile(File excelFile, File jsonFile, String datePattern, boolean duplicate) {
 
-        List rowsSet = readExcel(excelFile, datePattern, duplicate);
+        List rowsSet = readExcel(excelFile, datePattern, null, duplicate);
         // 输出结果
         if (!rowsSet.isEmpty())
             try {
@@ -119,15 +119,30 @@ public class MyExcelUtils {
         } else return Lists.newArrayList();
     }
 
+
     /**
      * 默认分隔符，默认日期格式
      *
      * @param excelFile
+     * @param duplicate
      * @return
      */
     public static List<ExcelLine> readExcel(File excelFile, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, duplicate);
+        return readExcel(excelFile, defaultDatePattern, null, duplicate);
     }
+
+    /**
+     * 默认分隔符，默认日期格式
+     *
+     * @param excelFile
+     * @param sheetNumber
+     * @param duplicate
+     * @return
+     */
+    public static List<ExcelLine> readExcel(File excelFile, Integer sheetNumber, boolean duplicate) {
+        return readExcel(excelFile, defaultDatePattern, sheetNumber, duplicate);
+    }
+
 
     /**
      * 读取 excel 文件所有内容到 set 中，利用 set 的唯一性，去掉了相同行，并且保留原来的行序</br>
@@ -136,11 +151,12 @@ public class MyExcelUtils {
      *
      * @param excelFile   excel 文件
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
+     * @param sheetNumber 指定的读取 sheet 序号，从 0 开始。null 为全部读取
      * @param duplicate   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
      * @return 包含 excel 数据的集合
      */
 
-    public static List<ExcelLine> readExcel(File excelFile, String datePattern, boolean duplicate) {
+    public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, boolean duplicate) {
 
         Workbook workbook; //<-Interface, accepts both HSSF and XSSF.
         // set 可以过滤重复元素。
@@ -148,7 +164,7 @@ public class MyExcelUtils {
         Collection<ExcelLine> lines;
 
         if (duplicate) // 允许重复
-            lines = new ArrayList();
+            lines = new LinkedList(); //按照 add 先后排序. LinkList add,delete 快  ArrayList get 定位快
         else
             lines = new LinkedHashSet();    // 利用 LinkedHashSet 来保证元素按照添加顺序排序，默认的比较器
 
@@ -171,18 +187,21 @@ public class MyExcelUtils {
 
             // 循环 sheet
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+
+                if (sheetNumber != null && i != sheetNumber.intValue())
+                    continue;
+
                 // 循环行
                 for (Row row : workbook.getSheetAt(i)) {
 
                     ExcelLine excelLine = new ExcelLine();
                     excelLine.setFileName(excelFile.getName());
                     excelLine.setSheetName(workbook.getSheetName(i));
-                    excelLine.setSheetNmuber(i);
+                    excelLine.setSheetNumber(i);
                     excelLine.setLineNumber(row.getRowNum());
                     //For each row, iterate through each columns
                     Iterator<Cell> cellIterator = row.cellIterator();
                     //单行的每个单元格
-                    //   * <p>
 
                     while (cellIterator.hasNext()) { //.hasNext() 方法原理：如果单元格为空，结果为 false，直接跳到下一个有内容的单元格。所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
                         Cell cell = cellIterator.next();
@@ -275,14 +294,13 @@ public class MyExcelUtils {
      * <p>
      *
      * @param excelLine   excel 单行数据
-     * @param cloumnTitle 列名 ，英文名字为 AA-ZZ 之间，不区分大小写
+     * @param columnTitle 列名 ，英文字母，不区分大小写
      * @return 不存在该单元格时，返回 null
      */
-    public static String getCellValueByColumnAlphaTitleName(ExcelLine excelLine, String cloumnTitle) {
-
+    public static String getCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnTitle) {
 
         for (ExcelCell bean : excelLine.getCellValues()) {
-            if (bean.getTile().equals(cloumnTitle.toUpperCase()))
+            if (bean.getTile().equals(columnTitle.toUpperCase()))
                 return bean.getValue();
         }
 
@@ -294,20 +312,27 @@ public class MyExcelUtils {
      *
      * @param excelLines      包含所有 excel 行的集合
      * @param lineNumber      行号
-     * @param cloumnAlphaName 列名 ，英文名字为 AA-ZZ 之间，不区分大小写
+     * @param columnAlphaName 列名 ，英文字母，不区分大小写
      * @return 不存在该单元格时，返回 null
      */
-    public static String getCellValueByCloumnAlphaNameAndLineNumber(Set<ExcelLine> excelLines, String cloumnAlphaName, int lineNumber) {
+    public static String getCellValueByColumnAlphaTitleNameAndLineNumber(List<ExcelLine> excelLines, int lineNumber, String columnAlphaName) {
 
-        for (ExcelLine lineBean : excelLines) {
-            if (lineBean.getLineNumber() == lineNumber) {
-                for (ExcelCell bean : lineBean.getCellValues()) {
-                    if (bean.getTile().equals(cloumnAlphaName.toUpperCase()))
-                        return bean.getValue();
+        for (ExcelLine line : excelLines) {
+            if (line.getLineNumber() == lineNumber) {
+                for (ExcelCell excelCell : line.getCellValues()) {
+                    if (excelCell.getTile().equalsIgnoreCase(columnAlphaName.toUpperCase()))
+                        return excelCell.getValue();
                 }
             }
         }
         return null;
+    }
+
+
+    public static ExcelLine copyCellValueByColumnAlphaTitleName(ExcelLine fromLine, String fromColumnTitle, ExcelLine toLine, String toColumnTitle) {
+        String value = getCellValueByColumnAlphaTitleName(fromLine, fromColumnTitle);
+        return replaceCellValueByColumnAlphaTitleName(toLine, toColumnTitle, value);
+
     }
 
     /**

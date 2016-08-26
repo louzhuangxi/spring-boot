@@ -14,7 +14,7 @@ public class ExcelLine {
 
     private String fileName = "";
     private String sheetName = "";
-    private int sheetNmuber = 0;
+    private int sheetNumber = 0;
     private int lineNumber = 0;
     //有序 Set ，按添加顺序。
     private Set<ExcelCell> cellValues = new TreeSet<>();
@@ -28,15 +28,15 @@ public class ExcelLine {
      *
      * @param fileName    行所在文件名称
      * @param sheetName   行所在 sheet 名称
-     * @param sheetNmuber 行所在 sheet 序号
+     * @param sheetNumber 行所在 sheet 序号
      * @param lineNumber  所在 sheet 的行号
      * @param cellValues  行单元格
      */
-    public ExcelLine(String fileName, String sheetName, int sheetNmuber, int lineNumber, Set<ExcelCell> cellValues) {
+    public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, Set<ExcelCell> cellValues) {
 
         this.fileName = fileName;
         this.sheetName = sheetName;
-        this.sheetNmuber = sheetNmuber;
+        this.sheetNumber = sheetNumber;
         this.lineNumber = lineNumber;
         this.cellValues = cellValues;
 
@@ -58,12 +58,12 @@ public class ExcelLine {
         this.fileName = fileName;
     }
 
-    public int getSheetNmuber() {
-        return sheetNmuber;
+    public int getSheetNumber() {
+        return sheetNumber;
     }
 
-    public void setSheetNmuber(int sheetNmuber) {
-        this.sheetNmuber = sheetNmuber;
+    public void setSheetNumber(int sheetNumber) {
+        this.sheetNumber = sheetNumber;
     }
 
     public int getLineNumber() {
