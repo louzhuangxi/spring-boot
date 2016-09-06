@@ -35,53 +35,7 @@ public class JPAUtils {
     private JPAUtils() {
     }
 
-
-    /**
-     * 根据 jqgrid filters 条件，进行数量查询。
-     *
-     * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的接口。
-     * @param jqgridFilters jqgrid 的 filters 参数 ,  filters 为 null  时，可以用作非 jqgrid 情况下
-     * @return
-     */
-    @Deprecated // 用不到
-    public static int countJqgrid(Repository repository, String jqgridFilters) {
-
-        if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
-            JpaRepository rep = (JpaRepository) repository;
-            return (int) rep.count();
-
-        } else {
-            JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
-            JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
-
-            return (int) rep.count(JPADynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters()));
-        }
-    }
-
-    /**
-     * 根据 jqgrid filters 条件，和附加的其他查询信息，进行数量查询。
-     *
-     * @param repository          查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的接口。
-     * @param jqgridFilters       jqgrid 的 filters 参数  ,  filters 为 null  时，可以用作非 jqgrid 情况下
-     * @param customSpecification 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件，与 filters AND 关系的查询条件，specification 的构造符合 SearchFilter 写法，详见示例项目。
-     *                            customSpecification 中指定的属性名称应该是待查询的 entity 中的属性名称，并且用改 entity 的 repository 进行查询
-     * @return
-     */
-    @Deprecated // 用不到
-    public static int countJqgrid(Repository repository, String jqgridFilters, Specification customSpecification) {
-
-        JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
-
-        if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新 jqgrid 表格时，filters.isEmpty() = true
-            return (int) rep.count(customSpecification);
-        } else {
-            JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
-            //根据 jqgrid filters 参数，构造查询条件
-            Specification specificationFilters = (JPADynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters()));
-            return (int) rep.count(JPADynamicSpecificationUtils.joinSpecification(SearchFilter.Relation.AND, customSpecification, specificationFilters));
-        }
-    }
-
+    //org.springframework.data.domain.Page 规定起始页为 0
 
     /**
      * 根据 customSpecification，进行分页查询。
@@ -89,7 +43,7 @@ public class JPAUtils {
      * findAll() 方法，会进行两次查询，先做 count 查询，之后是具体查询，所以 Page 中包含了总数和具体查询结果集
      *
      * @param repository          查询器
-     * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，起始页为 1
+     * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize            页面可显示行数
      * @param sortParameter       用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
      * @param sortDirection       排序的方式，只能为  desc 或 asc
@@ -98,13 +52,13 @@ public class JPAUtils {
      * @return
      */
 
-    public static Page getPage(JpaSpecificationExecutor repository, int currentPageNo, int pageSize, String sortParameter, String sortDirection, Specification customSpecification) {
+    public static Page getPage(JpaSpecificationExecutor repository, int currentPageNo, int pageSize, String sortParameter, Sort.Direction sortDirection, Specification customSpecification) {
 
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
 
-        return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, getSpringSort(sortParameter, sortDirection)));
+        return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, new Sort(sortDirection, sortParameter)));
 
 
     }
@@ -115,7 +69,7 @@ public class JPAUtils {
      * findAll() 方法，会进行两次查询，先做 count 查询，之后是具体查询，所以 Page 中包含了总数和具体查询结果集
      *
      * @param repository          查询器
-     * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，起始页为 1
+     * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize            页面可显示行数
      * @param sortParameter       用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
      * @param sortDirection       排序的方式，只能为  desc 或 asc
@@ -162,11 +116,11 @@ public class JPAUtils {
      * @param sortDirection 排序的方式，只能为  desc 或 asc
      * @return
      */
-    public static Page getPage(JpaRepository repository, int currentPageNo, int pageSize, String sortParameter, String sortDirection) {
+    public static Page getPage(JpaRepository repository, int currentPageNo, int pageSize, String sortParameter, Sort.Direction sortDirection) {
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
-        return repository.findAll(new PageRequest(currentPageNo, pageSize, getSpringSort(sortParameter, sortDirection)));
+        return repository.findAll(new PageRequest(currentPageNo, pageSize, new Sort(sortDirection, sortParameter)));
     }
 
 
@@ -177,7 +131,7 @@ public class JPAUtils {
      * 仅是 repository 类型不同，没有和上一个方法合并
      *
      * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的写法。
-     * @param currentPageNo 当前页，实际对应 jqgrid 传递过来的 page 参数，起始页为 1
+     * @param currentPageNo 当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize      页面可显示行数
      * @param sortParameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
      * @param sortDirection 排序的方式，只能为  desc 或 asc
@@ -247,25 +201,6 @@ public class JPAUtils {
             }
             return new Sort(orders);
         }
-    }
-
-    /**
-     * 根据 jqgrid 传过来的排序信息，构造排序所需要的 Sort
-     *
-     * @param sortParameter 用于排序的列名, grouping:true 时格式特殊，需要正确解析
-     * @param sortDirection 排序的方式，只能为  desc 或 asc
-     * @return
-     */
-    private static Sort getSpringSort(String sortParameter, String sortDirection) {
-        //排序字段
-
-        Assert.isTrue(!sortParameter.isEmpty(), " sortParameter 属性没有设置");
-        Assert.state(sortDirection.equalsIgnoreCase("asc") || sortDirection.equalsIgnoreCase("desc"), " sortDirection 只能为 asc 或 desc");
-        Sort.Direction direction;
-        if (sortDirection.toLowerCase().equals("asc"))
-            direction = Sort.Direction.ASC;
-        else direction = Sort.Direction.DESC;
-        return new Sort(direction, sortParameter);
     }
 
 

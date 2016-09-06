@@ -1,4 +1,4 @@
-package com.base.spring.dto;
+package com.base.spring.vo;
 
 /**
  * Description : TODO(ztree simpleData 格式，仅做传递数据用)

@@ -2,9 +2,9 @@ package org.h819.commons.json;
 
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.PropertyPreFilter;
-import com.google.common.collect.Maps;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +19,8 @@ import java.util.Map;
 //使用方法，见 example 方法。
 public class FastJsonPropertyPreFilter implements PropertyPreFilter {
 
-    private Map<Class<?>, String[]> includes = Maps.newHashMap();
-    private Map<Class<?>, String[]> excludes = Maps.newHashMap();
+    private Map<Class<?>, String[]> includes = new HashMap<>();
+    private Map<Class<?>, String[]> excludes = new HashMap<>();
 
     public FastJsonPropertyPreFilter() {
     }

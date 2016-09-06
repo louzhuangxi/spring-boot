@@ -1,4 +1,4 @@
-package com.base.spring.dto;
+package com.base.spring.vo;
 
 /**
  * Description : TODO(fuelux tree json Data 格式，仅做传递数据用)
@@ -31,15 +31,14 @@ public class FueluxTreeJsonNode {
     private FueluxTreeJsonNode() {
     }
 
-    public FueluxTreeJsonNode(String text, FueluxTreeNodeType type) {
-        this.text = text;
-        this.type = type;
-    }
 
-    public FueluxTreeJsonNode(String text, FueluxTreeNodeType type, Long id) {
+    public FueluxTreeJsonNode(String text, FueluxTreeNodeType type, Long id, boolean itemSelected) {
         this.text = text;
         this.type = type;
-        this.attr = new FueluxTreeJsonNodeAttr(id);
+        FueluxTreeJsonNodeAttr attr = new FueluxTreeJsonNodeAttr();
+        attr.setId(id);
+        attr.setItemSelected(itemSelected);
+        this.attr = attr;
     }
 
     public String getText() {

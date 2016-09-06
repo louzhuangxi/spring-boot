@@ -2,8 +2,8 @@ package com.base.spring.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.dto.FueluxTreeJsonNode;
-import com.base.spring.dto.FueluxTreeNodeType;
+import com.base.spring.vo.FueluxTreeJsonNode;
+import com.base.spring.vo.FueluxTreeNodeType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,8 +29,8 @@ public class FueluxTreeUtils {
      *
      * @param treeNodeEntity 待转换的对象
      */
-    public static String getJsonDataString(TreeNodeEntity treeNodeEntity) {
-        String str = JSON.toJSONString(getJsonData(treeNodeEntity));
+    public static String getFueluxTreeJson(TreeNodeEntity treeNodeEntity) {
+        String str = JSON.toJSONString(toFueluxTree(treeNodeEntity));
         return str.replaceAll("\"dataIcon\":", "\"data-icon\":");  // 替换为 Fuelux Tree 规定的格式
 
     }
@@ -40,8 +40,8 @@ public class FueluxTreeUtils {
      *
      * @param treeNodeEntities 待转换的对象
      */
-    public static String getJsonDataString(Collection<TreeNodeEntity> treeNodeEntities) {
-        String str = JSON.toJSONString(getJsonData(treeNodeEntities));
+    public static String getFueluxTreeJson(Collection<TreeNodeEntity> treeNodeEntities) {
+        String str = JSON.toJSONString(toFueluxTree(treeNodeEntities));
         return str.replaceAll("\"dataIcon\":", "\"data-icon\":");   // 替换为 Fuelux Tree 规定的格式
 
     }
@@ -52,14 +52,14 @@ public class FueluxTreeUtils {
      *
      * @param treeNodeEntity 待转换的对象
      */
-    private static List<FueluxTreeJsonNode> getJsonData(TreeNodeEntity treeNodeEntity) {
+    private static List<FueluxTreeJsonNode> toFueluxTree(TreeNodeEntity treeNodeEntity) {
         if (treeNodeEntity == null)
             return new ArrayList<>(0);
 
         List list = new ArrayList<>(1);
         list.add(treeNodeEntity);
 
-        return getJsonData(list);
+        return toFueluxTree(list);
 
     }
 
@@ -68,17 +68,17 @@ public class FueluxTreeUtils {
      *
      * @param treeNodeEntities 待转换的对象
      */
-    private static List<FueluxTreeJsonNode> getJsonData(Collection<TreeNodeEntity> treeNodeEntities) {
+    private static List<FueluxTreeJsonNode> toFueluxTree(Collection<TreeNodeEntity> treeNodeEntities) {
         if (treeNodeEntities == null || treeNodeEntities.isEmpty())
             return new ArrayList<>(0);
 
         List<FueluxTreeJsonNode> FueluxTreeNodes = new ArrayList<>(treeNodeEntities.size());
 
         for (TreeNodeEntity treeNode : treeNodeEntities)
-            if (treeNode.getIsParent())
-                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.folder, treeNode.getId()));
+            if (treeNode.getIsParent())  // 节点默认不选中
+                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.folder, treeNode.getId(), false));  ????
             else
-                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.item, treeNode.getId()));
+                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.item, treeNode.getId(), true));
 
         return FueluxTreeNodes;
 

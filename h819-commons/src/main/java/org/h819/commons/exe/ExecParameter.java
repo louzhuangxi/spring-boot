@@ -12,6 +12,17 @@ public class ExecParameter {
     private String key;
     private String value;
 
+    /**
+     * 没有无参数的构造方法，强制输入参数
+     */
+
+    /**
+     * commons exec 参数
+     * 如果参数只有 key ，没有 value , 则构造为 ExecParameter(key,MyConstant.ExecEmptyValue)
+     *
+     * @param key
+     * @param value
+     */
     public ExecParameter(String key, String value) {
         this.key = key;
         this.value = value;

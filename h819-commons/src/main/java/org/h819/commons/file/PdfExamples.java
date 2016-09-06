@@ -156,7 +156,7 @@ public class PdfExamples {
     public void addScriptExample(File src, File dest) throws IOException,
             DocumentException {
         // Create a reader
-        PdfReader reader = MyPDFUtilss.getPdfReader(src);
+        PdfReader reader = MyPDFUtils.getPdfReader(src);
         // Create a stamper
         PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(dest));
         // Get the writer (to add actions and annotations)
@@ -180,7 +180,7 @@ public class PdfExamples {
 
         try {
 
-            PdfReader reader = MyPDFUtilss.getPdfReader(srcPdfFile);
+            PdfReader reader = MyPDFUtils.getPdfReader(srcPdfFile);
 
             Map info = reader.getInfo();
 

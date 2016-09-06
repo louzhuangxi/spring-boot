@@ -33,15 +33,14 @@ public class JPAPageRequestUtils {
      *
      * @param currentPageNo  当前页码，第一页为 0
      * @param pageSize       每页记录数
-     * @param directionField 排序字段
+     * @param sortParameter 排序字段
      * @param direction      排序关键字，应为 DESC、ASC，可以为 null ，此时按默认排序，即 DESC
      * @return
      */
-    public static PageRequest createPageRequest(int currentPageNo, int pageSize, String directionField, Sort.Direction direction) {
+    public static PageRequest createPageRequest(int currentPageNo, int pageSize, String sortParameter, Sort.Direction direction) {
 
-        Assert.isTrue(direction.equals(Sort.Direction.DESC) || direction.equals(Sort.Direction.ASC), "sortType must be \"Sort.Direction.DESC  or Sort.Direction.ASC \"");
-        Assert.hasText(directionField, "fieldName must not be null or empty!");
-        return new PageRequest(currentPageNo, pageSize, new Sort(direction, directionField));
+        Assert.hasText(sortParameter, "fieldName must not be null or empty!");
+        return new PageRequest(currentPageNo, pageSize, new Sort(direction, sortParameter));
     }
 
     /**
@@ -65,5 +64,9 @@ public class JPAPageRequestUtils {
      */
     public static PageRequest createPageRequest(int currentPageNo, int pageSize, Sort sort) {
         return new PageRequest(currentPageNo, pageSize, sort);
+    }
+
+    private void test(){
+       // JPAPageRequestUtils.createPageRequest(1,10,"","s") ;
     }
 }

@@ -1,4 +1,4 @@
-package com.base.spring.dto;
+package com.base.spring.vo;
 
 /**
  * Description : TODO()

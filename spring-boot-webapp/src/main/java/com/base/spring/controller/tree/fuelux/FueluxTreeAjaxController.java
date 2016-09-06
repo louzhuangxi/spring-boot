@@ -42,10 +42,6 @@ public class FueluxTreeAjaxController {
         String fueluxJsonData = treeNodeService.async(pId, menuType);
 //        logger.info(fueluxJsonData);
         return fueluxJsonData;
-
-
-
-
     }
 
 }

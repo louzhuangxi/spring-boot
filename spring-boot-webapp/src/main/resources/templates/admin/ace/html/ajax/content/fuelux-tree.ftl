@@ -56,8 +56,8 @@
                 <div class="widget-main">
                   <div class="row">
                     <ul class="list-unstyled spaced2">
-                      <li> <i class="ace-icon fa fa-bell-o bigger-110 purple"></i> 选择树节点之后，用户可以查看该节点所关联的标准题录信息。 </li>
-                      <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 标准文本默认只有浏览权限。</li>
+                      <li> <i class="ace-icon fa fa-bell-o bigger-110 purple"></i> fuelux tree 没有选择所有(select all)功能，但角色授权不经常操作，所以逐个选择也可以忍受。 </li>
+                      <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 。</li>
                       <li> <i class="ace-icon fa fa-times bigger-110 red"></i> 如果想对某个节点下的文本权限进行限定，需要单独授权。 </li>
                     </ul>
                     <hr />
@@ -252,7 +252,7 @@
 						type : 'POST',
 						dataType : 'json',
 						success : function (response) {
-							console.log(response);
+						//	console.log(response);
 							var childObjectsArray = response;
 							if (childObjectsArray != null) //this setTimeout is only for mimicking some random delay(随机 delay)
 								setTimeout(function () {
@@ -270,8 +270,8 @@
 
 			/*
 			ace 对 http://getfuelux.com/javascript.html#tree  做了包装，下面是 fuelux tree 设置
-			下面的演示是读取同一个数据源，不同的样式 
-			 */
+			下面的演示是读取同一个数据源，不同的样式 */
+
 			$('#tree1').ace_tree({
 				dataSource : remoteDateSource,
 				//select
@@ -289,7 +289,7 @@
 			});
 
 			/* 样式2
-			$('#tree2').ace_tree({
+			$('#tree1').ace_tree({
 				dataSource : remoteDateSource,
 				//select
 				'itemSelect' : true,
@@ -328,7 +328,16 @@
 				//send output to server
 			})
 			.on('deselected.fu.tree', function(evt, data) {
-			    //console.log(data);				
+			    console.log(data);
+                console.log(evt);
+//                var array=data.selected;
+//                var i;
+//                for (i = 0; i < array.length; ++i) {
+//                    array[i].attr['id'];
+//
+//                }
+
+
 				selectedArray = getFueluxSelected(data);			
 				printLog(selectedArray);
 				 

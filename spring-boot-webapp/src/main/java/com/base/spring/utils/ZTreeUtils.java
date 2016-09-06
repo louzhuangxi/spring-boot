@@ -1,7 +1,7 @@
 package com.base.spring.utils;
 
 import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.dto.ZTreeNode;
+import com.base.spring.vo.ZTreeNode;
 
 import java.util.List;
 
@@ -44,24 +44,27 @@ public class ZTreeUtils {
 
 
     /**
-     * 根据已有的节点(该节点可以有子节点)，创建一个相同的新的节点（可以递归创建参考节点的左右子节点）
+     * 根据已有的节点(该节点可以有子节点)，创建一个相同的新的节点（可以递归创建参考节点的左右子节点），作为 parent 的子节点
+     * -
+     * 最终的结果是，parent 中新生成了一个新的和 currentNode 一样的子节点。parent 参数需要外部提供。
      * <p>
-     * 该方法不能象 getJsonData() 方法一样，通过临时创建的 父对象返回，因为即使是临时创建 new ，在事务中也会创建表记录。
+     * 该方法不能象 getJsonData() 方法一样，通过临时创建的父对象返回，因为即使是临时创建 new ，在事务中也会创建表记录。
      *
-     * @param currentNode 已有节点，是数据库里一条数据，可以有子节点。在数据库中创建一个新的记录，如果有子节点，可以递归创建。在事务环境中，new 操作会自动创建表记录
-     * @param parent      已有节点的父节点，最终的结果是，parent 中新生成了一个新的和 currentNode 一样的子节点。parent 参数需要外部提供。
+     * @param copyNode 已有节点，是数据库里一条数据，可以有子节点。在数据库中创建一个新的记录，如果有子节点，可以递归创建。在事务环境中，new 操作会自动创建表记录
+     * @param parent   新创建的节点的父节点
      */
-    public static void createCopyNode(TreeNodeEntity parent, TreeNodeEntity currentNode) {
+    public static void createCopyNode(TreeNodeEntity parent, TreeNodeEntity copyNode) {
 
-        //生成 currentNode 节点本身，在数据库中对应一条新的记录
-        TreeNodeEntity newTree = new TreeNodeEntity(currentNode.getType(), currentNode.getName(), currentNode.getIndex(), parent.getIsParent(), parent);
-        newTree.setUrl(currentNode.getUrl());
-        newTree.setCss(currentNode.getCss());
+        //生成 copyNode 节点本身，new 操作会在数据库中对应一条新的记录
+        TreeNodeEntity newTree = new TreeNodeEntity(copyNode.getType(), copyNode.getName(), copyNode.getIndex(), parent.getIsParent(), parent);
+        newTree.setUrl(copyNode.getUrl());
+        newTree.setCss(copyNode.getCss());
         parent.addChildToLastIndex(newTree); // 添加到所有子节点的尾部
+        parent.setIsParent(true);
 
         //生成 currentNode 节点的子节点
-        if (!currentNode.getChildren().isEmpty()) {
-            for (TreeNodeEntity child : currentNode.getChildren())
+        if (!copyNode.getChildren().isEmpty()) {
+            for (TreeNodeEntity child : copyNode.getChildren())
                 createCopyNode(newTree, child); // 递归
         }
 

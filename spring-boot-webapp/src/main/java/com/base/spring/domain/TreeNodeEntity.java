@@ -150,7 +150,7 @@ public class TreeNodeEntity extends BaseEntity {
     }
 
     /**
-     * 添加到所有子节点队列的尾部，即添加的节点 index 最大
+     * 添加指定节点到当前节点所有子节点队列的尾部，即添加的节点 index 最大
      *
      * @param child
      */
@@ -164,7 +164,7 @@ public class TreeNodeEntity extends BaseEntity {
     }
 
     /**
-     * 添加子到 index 位置
+     * 添加指定节点到当前节点的 index 位置
      * 每次添加或者删除了子元素，都需要重新标注其 index 属性
      *
      * @param child the node to add to the tree as a child of <code>this</code>

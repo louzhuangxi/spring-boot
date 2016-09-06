@@ -230,11 +230,26 @@ public class MyExcelUtils {
         return new ArrayList(lines);
     }
 
+    /**
+     * 写 excel , 默认 sheet 名称
+     *
+     * @param lines
+     * @param outExcelFile
+     * @throws Exception
+     */
     public static void writeExcel(List<ExcelLine> lines, File outExcelFile) throws Exception {
 
         writeExcel(lines, null, outExcelFile);
     }
 
+    /**
+     * 写 excel , 指定 sheet 名称
+     *
+     * @param lines
+     * @param sheetName
+     * @param outExcelFile
+     * @throws Exception
+     */
     public static void writeExcel(List<ExcelLine> lines, String sheetName, File outExcelFile) throws Exception {
 
         if (!outExcelFile.getAbsolutePath().toLowerCase().endsWith(".xlsx")) {
@@ -328,7 +343,15 @@ public class MyExcelUtils {
         return null;
     }
 
-
+    /**
+     * 拷贝 fromLine  fromColumnTitle 值到 toLine toColumnTitle
+     *
+     * @param fromLine
+     * @param fromColumnTitle
+     * @param toLine
+     * @param toColumnTitle
+     * @return
+     */
     public static ExcelLine copyCellValueByColumnAlphaTitleName(ExcelLine fromLine, String fromColumnTitle, ExcelLine toLine, String toColumnTitle) {
         String value = getCellValueByColumnAlphaTitleName(fromLine, fromColumnTitle);
         return replaceCellValueByColumnAlphaTitleName(toLine, toColumnTitle, value);

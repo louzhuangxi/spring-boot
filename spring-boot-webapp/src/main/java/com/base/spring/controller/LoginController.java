@@ -1,6 +1,6 @@
 package com.base.spring.controller;
 
-import com.base.spring.dto.Message;
+import com.base.spring.vo.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

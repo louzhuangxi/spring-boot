@@ -32,13 +32,25 @@ public class MyExecUtils {
      * @param exeFile   命令一般以 exe 等文件的形式存在，本参数为该命令文件的绝对值路径
      * @param arguments 参数。
      *                  命令执行的参数不需要严格的顺序，即参数先后出现在哪个位置都可以。
-     *                  如果参数是键值关系(中间用空格分开)，则必须放在一起，作为一个字符串参数，如 "-o test.pdf" ，表示输出文件为 test.pdf
      * @param exitValue 执行成功的返回值，这只之后，如果返回该值，程序不抛出异常
      */
     public static void exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
 
         if (!Files.exists(exeFile) || !exeFile.isAbsolute()) {
-            System.out.println(exeFile + " 不是绝对路径.");
+
+            System.out.println(exeFile + " 不存在");
+            return;
+        }
+
+        if (!exeFile.toFile().canRead()) {
+
+            System.out.println(exeFile + "  无读取权限");
+            return;
+        }
+
+        if (!exeFile.toFile().canExecute()) {
+
+            System.out.println(exeFile + "  无执行执行权限");
             return;
         }
 
@@ -70,7 +82,7 @@ public class MyExecUtils {
             // If the process has not yet terminated, the calling thread will be blocked until the process exits.
             // 不设置这句，下面的 outputStream 无法输出，可能是没有等到进程结束，下面的输出已经开始了。
             resultHandler.waitFor();
-          //  System.out.println(StringUtils.center(" pdf2swf.exe begin to execute ", 80, "="));
+            //  System.out.println(StringUtils.center(" pdf2swf.exe begin to execute ", 80, "="));
             if (resultHandler.hasResult()) { //如果命令进程执行有返回值，则通过该返回值进行判断提示。有的没有返回值，则无法判断
                 if (executor.isFailure(resultHandler.getExitValue()) && watchdog.killedProcess()) {//提示 process was killed
                     System.out.println("命令等待时间超过 watchdog 规定的时间，process was killed");
@@ -102,7 +114,13 @@ public class MyExecUtils {
         }
     }
 
-
+    /**
+     * 创建  CommandLine
+     *
+     * @param cmdPath
+     * @param arguments
+     * @return
+     */
     private static CommandLine getCommandLine(String cmdPath, List<ExecParameter> arguments) {
         String execStr = "'" + cmdPath + "'" + join(arguments);
         logger.info("exec command= {}", execStr);
@@ -110,42 +128,7 @@ public class MyExecUtils {
     }
 
     /**
-     * 不用，key value 直接的对应关系不好确定
-     *
-     * (key value)关系的参数，如果 value 本身有空格，会被分解成多个参数，所以对有空格的参数，加单引号包围起来。
-     * 如果用 map 方式，则需要map 的 key 可以重复，并且也需要注意空格情况
-     *
-     * @param arguments
-     * @return private static String join(String... arguments) {
-    if (arguments == null || arguments.length == 0) {
-    return "";
-    }
-    StringBuilder sb = new StringBuilder(arguments.length);
-
-    String key;
-    String value;
-
-    for (String arg : arguments) {
-    arg = arg.trim();
-
-    if (!arg.contains(" ")) {//仅有key，直接添加
-    key = arg;
-    sb.append(" ").append(key);
-    } else { // key value 对应情况如 -o c://program files//bin/cmd.exe
-    key = StringUtils.substringBefore(arg.trim(), " ").trim();
-    value = StringUtils.substringAfter(arg.trim(), " ").trim();
-    if (value.contains(" "))// 包含空格，添加单引号
-    sb.append(" ").append(key).append(" ").append("'" + value + "'");
-    else
-    sb.append(" ").append(key).append(" ").append(value);
-    }
-    }
-    return sb.toString();
-    }
-     */
-    /**
      * ExecParameter 参数，如果 key 或 value 本身有空格，会被分解成多个参数，所以对有空格的参数，加单引号包围起来。
-     * 如果 ExecParameter 用 map 代替，则需要 map 的 key 可以重复(commons collection 中有实现)，并且也需要注意空格情况
      *
      * @param arguments
      * @return

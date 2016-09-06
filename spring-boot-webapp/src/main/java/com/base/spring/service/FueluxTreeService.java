@@ -43,7 +43,7 @@ public class FueluxTreeService {
                 return JSON.toJSONString(new ArrayList<>(0));
             }
 
-            return FueluxTreeUtils.getJsonDataString(rootNode.getChildren()); //打开所有一级节点 (跟节点的子节点)
+            return FueluxTreeUtils.getFueluxTreeJson(rootNode.getChildren()); //打开所有一级节点 (跟节点的子节点)
 
         } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
             logger.info("initialize FueluxTree async from db by pId={}", pId);
@@ -52,7 +52,7 @@ public class FueluxTreeService {
                 logger.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));
             }
-            return FueluxTreeUtils.getJsonDataString(rootNode.getChildren());
+            return FueluxTreeUtils.getFueluxTreeJson(rootNode.getChildren());
         }
 
     }

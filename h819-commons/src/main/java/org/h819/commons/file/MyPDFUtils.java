@@ -23,6 +23,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -228,15 +229,16 @@ import java.util.List;
  *
  */
 
-public class MyPDFUtilss {
+public class MyPDFUtils {
 
     // 该变量专门为 countPages() 函数设立，由于使用了递归，故提到全局变量，否则每次的返回值不能累计
-    private static StringBuffer encryptPdfNamesTemp;
+    // private static StringBuffer encryptPdfNamesTemp;
+    private static List<String> tempList = new ArrayList<>();
 
     // 该变量专门为 countPages() 函数设立，由于使用了递归，故提到全局变量，否则每次的返回值不能累计
     private static int numberOfPagesOfDirectory;
 
-    private static Logger logger = LoggerFactory.getLogger(MyPDFUtilss.class);
+    private static Logger logger = LoggerFactory.getLogger(MyPDFUtils.class);
 
 	/*
      * === 使用中文字体的三种方式
@@ -289,7 +291,7 @@ public class MyPDFUtilss {
     /**
      * 静态调用
      */
-    private MyPDFUtilss() {
+    private MyPDFUtils() {
 
     }
 
@@ -303,33 +305,6 @@ public class MyPDFUtilss {
      */
     public static void addWaterMarkFile(File srcPdf, File destPdf, File waterMarkImage) throws IOException, DocumentException {
         addWaterMarkFile(srcPdf, destPdf, null, waterMarkImage);
-    }
-
-    /**
-     * 文件夹中所有文件添加水印
-     *
-     * @param srcPdfFileDirectory  源文件夹
-     * @param descPdfFileDirectory 目标文件夹
-     * @param waterMarkImage       水印图片
-     */
-    public static void addWaterMarkDerictory(File srcPdfFileDirectory, File descPdfFileDirectory, File waterMarkImage) throws IOException, DocumentException {
-
-        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
-            throw new IOException("目标文件夹不能在原文件夹中");
-
-
-        if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
-            return;
-
-        for (File file : srcPdfFileDirectory.listFiles()) {
-            String path = descPdfFileDirectory.getAbsolutePath() + File.separator + file.getName();
-            if (file.isFile()) {
-                addWaterMarkFile(file, Paths.get(path).toFile(), null, waterMarkImage);
-            } else if (file.isDirectory())
-                addWaterMarkDerictory(file, Paths.get(path).toFile(), waterMarkImage);
-            else return;
-
-        }
     }
 
 
@@ -350,6 +325,34 @@ public class MyPDFUtilss {
      *
      * @param srcPdfFileDirectory  源文件夹
      * @param descPdfFileDirectory 目标文件夹
+     * @param waterMarkImage       水印图片
+     */
+    public static void addWaterMarkDerictory(File srcPdfFileDirectory, File descPdfFileDirectory, File waterMarkImage) throws IOException, DocumentException {
+
+        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
+            throw new IOException("目标文件夹不能在原文件夹中");
+
+
+        if (!isEnoughSpace(srcPdfFileDirectory, descPdfFileDirectory))
+            return;
+
+        for (File file : srcPdfFileDirectory.listFiles()) {
+            String path = descPdfFileDirectory.getAbsolutePath() + File.separator + file.getName();
+            if (file.isFile()) {
+                addWaterMarkFile(file, Paths.get(path).toFile(), null, waterMarkImage);
+            } else if (file.isDirectory())
+                addWaterMarkDerictory(file, Paths.get(path).toFile(), waterMarkImage);
+            else return;
+
+        }
+    }
+
+
+    /**
+     * 文件夹中所有文件添加水印
+     *
+     * @param srcPdfFileDirectory  源文件夹
+     * @param descPdfFileDirectory 目标文件夹
      * @param waterMarkText        水印文字
      */
     public static void addWaterMarkDerictory(File srcPdfFileDirectory, File descPdfFileDirectory, String waterMarkText) throws IOException, DocumentException {
@@ -357,7 +360,7 @@ public class MyPDFUtilss {
         if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
             throw new IOException("目标文件夹不能在原文件夹中");
 
-        if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
+        if (!isEnoughSpace(srcPdfFileDirectory, descPdfFileDirectory))
             return;
 
         for (File file : srcPdfFileDirectory.listFiles()) {
@@ -610,11 +613,8 @@ public class MyPDFUtilss {
      */
     public static void decryptDirectory(File srcPdfFileDirectory, File descPdfFileDirectory, File badDirectory) throws IOException {
 
-        if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
-            throw new IOException("目标文件夹不能在原文件夹中");
-
-        if (!isEnoughtSpace(srcPdfFileDirectory, descPdfFileDirectory))
-            return;
+        if (!isEnoughSpace(srcPdfFileDirectory, descPdfFileDirectory))
+            throw new IOException("目标文件夹磁盘控件不够");
 
         for (File file : srcPdfFileDirectory.listFiles()) {
             String path = descPdfFileDirectory.getAbsolutePath() + File.separator + file.getName();
@@ -632,18 +632,19 @@ public class MyPDFUtilss {
      * windows 下使用
      * "PDF Password Remover v4.0" 软件提供命令行破解，通过系统调用该命令行，进行破解
      *
-     * @param srcPdf       存放待破解 pdf 文件
-     * @param descPdf      存放破解之后的 pdf 文件
-     * @param badDirectory 存放有打开密码，不能破解的 pdf 的文件夹。
+     * @param srcPdf        存放待破解 pdf 文件
+     * @param descPdf       存放破解之后的 pdf 文件
+     * @param ownerPassword 用户打开文件密码。如果设置了打开密码，需要此参数，否则不能解密
+     * @param badDirectory  存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-
-    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) {
+    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) {
 
         String extension = FilenameUtils.getExtension(srcPdf.getAbsolutePath());
 
         if (!extension.equalsIgnoreCase("pdf"))
             return;
+
         // 损坏的 0 字节文件，直接拷贝到统一的文件夹
         if (FileUtils.sizeOf(srcPdf) == 0) {
             logger.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
@@ -653,7 +654,12 @@ public class MyPDFUtilss {
 
         try {
 
-            PdfReader reader = getPdfReader(srcPdf);
+            PdfReader reader;
+            if (ownerPassword != null)
+                reader = getPdfReader(srcPdf, ownerPassword);
+            else
+                reader = getPdfReader(srcPdf);
+
             if (!reader.isEncrypted()) {// 未加密的文件，直接拷贝
                 FileUtils.copyFile(srcPdf, descPdf);
                 logger.info("not encrypted,copy {} to {} ", srcPdf.getAbsolutePath(), descPdf.getAbsoluteFile());
@@ -661,13 +667,13 @@ public class MyPDFUtilss {
             }
 
 
-            List<ExecParameter> list = new ArrayList<>();
+            List<ExecParameter> list = new ArrayList(2);
             list.add(new ExecParameter("-i", srcPdf.getAbsolutePath())); // 只有 key ，没有 value
             list.add(new ExecParameter("-o", descPdf.getAbsolutePath()));
 //            list.add(new ExecParameter("-u", ""));
 //            list.add(new ExecParameter("-w", ""));
             MyExecUtils.exec(Paths.get(getPdfPdfdecryptExec()), list, 1);
-            logger.info("encrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
+            logger.info("decrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
             // 关闭处理完成的文件
             reader.close();
 
@@ -685,65 +691,54 @@ public class MyPDFUtilss {
     }
 
     /**
-     * pdf 解密。仅能解密 owner 属性，不能解密 user 属性(owner 和 user 含义见加密方法)。
-     * <p>
-     * 如果 pdf 文件 设置了打开密码，没有设置拥有者密码，不能解密
-     * <p>
-     * 如果 pdf 文件设置了打开密码和拥有者密码，用拥有者密码可以解密,解密之后，pdf 文件拥有了所有编辑属性
+     * 破解没有用户打开密码的文件
      *
-     * @param srcPdf        源文件
-     * @param descPdf       目标文件
-     * @param ownerPassword 拥有者密码，授权编辑文件.
+     * @param srcPdf       存放待破解 pdf 文件
+     * @param descPdf      存放破解之后的 pdf 文件
+     * @param badDirectory 存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
-     * @throws DocumentException
      */
-    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword) throws IOException, DocumentException {
-
-        PdfReader reader = getPdfReader(srcPdf, ownerPassword);
-        PdfStamper stamper = getPdfStamper(srcPdf, descPdf);
-        stamper.close();
-        reader.close();
-
+    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) {
+        decryptFile(srcPdf, descPdf, null, badDirectory);
     }
 
     /**
      * 加密 pdf 文件
      *
-     * @param srcPdfFile        源文件
-     * @param descPdfFile       目标文件
-     * @param userPassword      用户密码，授权打开文件 ,null 为没有密码
-     * @param ownerPassword     拥有者密码，授权编辑文件 ,null 为没有密码
-     * @param allow_HideMenubar 是否显示菜单栏
-     * @param allow_HideToolbar 是否显示工具栏
-     * @param allow_printing    是否允许打印
-     * @param allow_copy        是否允许拷贝文字
+     * @param srcPdfFile       源文件
+     * @param descPdfFile      目标文件
+     * @param userPassword     用户密码，授权打开文件 ,null 为没有密码
+     * @param ownerPassword    拥有者密码，授权编辑文件 ,null 为没有密码
+     * @param allowHideMenuBar 是否显示菜单栏
+     * @param allowHideToolbar 是否显示工具栏
+     * @param allowPrinting    是否允许打印
+     * @param allowCopy        是否允许拷贝文字
      * @throws java.io.IOException
      * @throws DocumentException
      */
     public static void encryptPdf(File srcPdfFile, File descPdfFile,
                                   String userPassword, String ownerPassword,
-                                  boolean allow_HideMenubar, boolean allow_HideToolbar,
-                                  boolean allow_printing, boolean allow_copy) throws IOException {
+                                  boolean allowHideMenuBar, boolean allowHideToolbar,
+                                  boolean allowPrinting, boolean allowCopy) throws IOException {
 
         if (srcPdfFile == null || !srcPdfFile.exists())
             throw new IOException("src pdf file '" + srcPdfFile
-                    + "' does not exsit.");
+                    + "' does not exist.");
 
-        byte[] USER = null;
-        byte[] OWNER = null;
+        byte[] userByte = null;
+        byte[] ownerByte = null;
 
         /** User password. */
         if (userPassword != null)
-            USER = userPassword.getBytes();
+            userByte = userPassword.getBytes();
         /** Owner password. */
         if (ownerPassword != null)
-            OWNER = ownerPassword.getBytes();
+            ownerByte = ownerPassword.getBytes();
 
         try {
 
             PdfReader reader = getPdfReader(srcPdfFile);
-            PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(
-                    descPdfFile.getAbsoluteFile()));
+            PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(descPdfFile.getAbsoluteFile()));
 
             // 设置显示属性
             // 参数含义参见 PdfWriter.setViewerPreferences 方法 和 addViewerPreference
@@ -752,39 +747,33 @@ public class MyPDFUtilss {
             // 加上之后，其他参数就不好用了, 实际使用的时候，要逐个测试
 
             // 默认属性(这几个属性用 addViewerPreference 方法设置)
-            stamper.getWriter().addViewerPreference(PdfName.CENTERWINDOW,
-                    PdfBoolean.PDFTRUE);
-            stamper.getWriter().addViewerPreference(PdfName.DISPLAYDOCTITLE,
-                    PdfBoolean.PDFTRUE);
-            stamper.getWriter().addViewerPreference(PdfName.FITWINDOW,
-                    PdfBoolean.PDFTRUE);
+            stamper.getWriter().addViewerPreference(PdfName.CENTERWINDOW, PdfBoolean.PDFTRUE);
+            stamper.getWriter().addViewerPreference(PdfName.DISPLAYDOCTITLE, PdfBoolean.PDFTRUE);
+            stamper.getWriter().addViewerPreference(PdfName.FITWINDOW, PdfBoolean.PDFTRUE);
             // writer.addViewerPreference(PdfName.HIDEWINDOWUI,
             // PdfBoolean.PDFTRUE);
 
-            if (!allow_HideToolbar)
-                stamper.getWriter().addViewerPreference(PdfName.HIDETOOLBAR,
-                        PdfBoolean.PDFTRUE);
+            if (!allowHideToolbar)
+                stamper.getWriter().addViewerPreference(PdfName.HIDETOOLBAR, PdfBoolean.PDFTRUE);
 
-            if (!allow_HideMenubar)
-                stamper.getWriter().addViewerPreference(PdfName.HIDEMENUBAR,
-                        PdfBoolean.PDFTRUE);
+            if (!allowHideMenuBar)
+                stamper.getWriter().addViewerPreference(PdfName.HIDEMENUBAR, PdfBoolean.PDFTRUE);
 
             // 设置 allow 属性
-            if (allow_printing && allow_copy)
-                stamper.setEncryption(USER, OWNER, PdfWriter.ALLOW_PRINTING
-                        | PdfWriter.ALLOW_COPY, true);
+            if (allowPrinting && allowCopy)
+                stamper.setEncryption(userByte, ownerByte, PdfWriter.ALLOW_PRINTING | PdfWriter.ALLOW_COPY, true);
 
-            else if (allow_printing)
-                stamper.setEncryption(USER, OWNER, PdfWriter.ALLOW_PRINTING,
-                        true);
+            else if (allowPrinting)
+                stamper.setEncryption(userByte, ownerByte, PdfWriter.ALLOW_PRINTING, true);
 
-            else if (allow_copy)
-                stamper.setEncryption(USER, OWNER, PdfWriter.ALLOW_COPY, true);
+            else if (allowCopy)
+                stamper.setEncryption(userByte, ownerByte, PdfWriter.ALLOW_COPY, true);
 
             else
-                stamper.setEncryption(USER, OWNER, 0, true);
+                stamper.setEncryption(userByte, ownerByte, 0, true);
 
             stamper.close();
+            reader.close();
 
             logger.info(srcPdfFile.getAbsoluteFile() + " encrypt finished.");
 
@@ -803,20 +792,14 @@ public class MyPDFUtilss {
      * @param srcPdfFileDir 待检查的文件夹
      * @throws java.io.IOException
      */
-    public static void findEcryptPdf(File srcPdfFileDir) throws IOException {
+    public static void findEncryptPdf(File srcPdfFileDir) throws IOException {
 
-        encryptPdfNamesTemp = new StringBuffer();
-
+        tempList.clear();//重新初始化，否则静态变量全局不变
         testEcryptPdf(srcPdfFileDir);
 
-        if (encryptPdfNamesTemp.length() == 0)
-            FileUtils.writeStringToFile(new File(srcPdfFileDir.getParent()
-                    + File.separator + "ecrypt.txt"), "没有被加密的文件");
-        else
-            FileUtils.writeStringToFile(new File(srcPdfFileDir.getParent()
-                            + File.separator + "ecrypt.txt"),
-                    encryptPdfNamesTemp.toString());
-
+        if (tempList.size() != 0)
+            FileUtils.writeLines(new File(srcPdfFileDir.getParent()
+                    + File.separator + "encrypt.txt"), StandardCharsets.UTF_8.name(), tempList);
         logger.info(" finished!");
 
     }
@@ -843,7 +826,7 @@ public class MyPDFUtilss {
      * @param descPdfFileDir
      * @return
      */
-    private static boolean isEnoughtSpace(File srcPdfFileDir, File descPdfFileDir) {
+    private static boolean isEnoughSpace(File srcPdfFileDir, File descPdfFileDir) {
 
 
         if (!srcPdfFileDir.exists() && !srcPdfFileDir.isDirectory()) {
@@ -1078,7 +1061,7 @@ public class MyPDFUtilss {
             return;
         }
 
-        if (!isEnoughtSpace(srcPdfFileDir, descPdfFileDir))
+        if (!isEnoughSpace(srcPdfFileDir, descPdfFileDir))
             return;
 
         File listFiles[] = srcPdfFileDir.listFiles();
@@ -1188,14 +1171,12 @@ public class MyPDFUtilss {
     }
 
     /**
-     * 检查文件夹内的文件是否被加密，用到了递归方法，返回值被全局变量记录，通过 findEcryptPdf()函数调用
+     * 检查文件夹内的文件是否被加密，用到了递归方法，返回值被全局变量记录，通过 findEncryptPdf()函数调用
      *
      * @param srcPdfFileDir 待检查的文件夹
      * @throws java.io.IOException
      */
     private static void testEcryptPdf(File srcPdfFileDir) throws IOException {
-
-        encryptPdfNamesTemp = new StringBuffer();
 
         if (!srcPdfFileDir.isDirectory()) {
             logger.info("srcPdfFileDir is not a Directory: "
@@ -1215,48 +1196,36 @@ public class MyPDFUtilss {
 
         for (File f : listFiles) {
             String fileName = f.getName();
-            String extensiion = FilenameUtils.getExtension(fileName)
-                    .toLowerCase();
+            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
 
             if (f.isFile()) {
 
-                if (extensiion.equals("pdf")) {
+                if (extension.equals("pdf")) {
 
                     // 损坏的 0 字节文件，文件体积大于 40 M， 直接登记
-                    if (FileUtils.sizeOf(f) == 0
-                            || FileUtils.sizeOf(f) > 40 * 1000000) {
+                    if (FileUtils.sizeOf(f) == 0) {
 
-                        encryptPdfNamesTemp.append("size > 40M :"
-                                + f.getAbsolutePath() + "\n");
+                        tempList.add("size ==0 40M :" + f.getAbsolutePath());
                         continue;
                     }
 
-                    PdfReader reader = null;
+                    PdfReader reader;
                     try {
                         reader = getPdfReader(f);
                     } catch (BadPasswordException e) {
                         // 有打开密码的文件，不能破解，直接登记
                         e.printStackTrace();
-                        encryptPdfNamesTemp.append("can not open :"
-                                + f.getAbsolutePath() + "\n");
+                        tempList.add("BadPassword,can not open :" + f.getAbsolutePath());
                         continue;
-                    } catch (Exception e2) {
-
-                        encryptPdfNamesTemp.append("other exception :"
-                                + f.getAbsolutePath() + "\n");
-                        e2.printStackTrace();
-                        continue;
-
                     }
                     // logger.info("fileDesc name :" + fileDesc.getAbsolutePath());
 
                     if (reader.isEncrypted()) {// 未加密的文件，，直接登记
-                        encryptPdfNamesTemp.append("encrypted :"
-                                + f.getAbsolutePath() + "\n");
+                        tempList.add("encrypted :" + f.getAbsolutePath());
                         reader.close();
                         continue;
                     } else {
-                        logger.info("not encrypted :" + f.getAbsoluteFile());
+                        tempList.add("not encrypted :" + f.getAbsoluteFile());
                         reader.close();
                         continue;
                     }

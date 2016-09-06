@@ -3,7 +3,7 @@ package com.base;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 //http://kielczewski.eu/2014/12/spring-boot-security-application/
 
@@ -19,10 +19,9 @@ public class SpringBootWebAppApplication extends SpringBootServletInitializer {
 
     /**
      * 生成 war 步骤 （参见官方文档）
-     * 1. 继承 extends SpringBootServletInitializer
+     * 1. 继承 extends SpringBootServletInitializer ，使之支持 servlet
      * 2. 修改 pom  <packaging>war</packaging>
-     * 3. spring-boot-starter-web ，打包的时候排除 tomcat
-     * 4. 引入 spring-boot-starter-jetty 或 tomcat，为项目运行服务器, <scope>provided</scope>
+     * 3. 引入 spring-boot-starter-jetty 或 tomcat，为项目运行服务器, <scope>provided</scope>
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

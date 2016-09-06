@@ -22,8 +22,10 @@ import java.util.*;
  * 普通的 Bean 也可以转换，不需要是 Hibernate 的实体。
  * POJO 必需有默认的无参构造方法，并且满足 Bean 的格式。
  * 转换操作，可以不在事务中 (@Transactional)。
- * <p>
- * <p>
+ * -
+ * 注意：
+ *
+ * @Transient 标注的属性，无法转换
  * ====================
  * 作用 ：
  * 一般的 POJO 转换为 DTO 工具，需要自己生成 DTO 类，之后用 Bean 拷贝工具，进行 POJO -> DTO 转换，形如 copy(beanPOJO,beanDTO) ，其做法是进行属性对应后进行拷贝。如 apache BeanUtils ,dozer (http://dozer.sourceforge.net/) 等
@@ -74,6 +76,8 @@ import java.util.*;
  */
 
 /**
+ * @Transient 标注的属性，无法进行转换
+ * 必要时，可以通过 fastJson 的属性过滤，先序列化成字符串，之后反序列化构造成需要的 vo
  * 用法：
  * <p/>
  * DTOUtils dtoUtils = new DTOUtils();
@@ -91,7 +95,8 @@ public class DTOUtils {
 
 
     //准备实例化的对象类别，该类别可以位于级联层次的任意层次，只要属性类别为此类别，那么其属性就会被忽略。用于 hibernate 的关联关系中，可以减少级联层次，并且可以避免深度级联而陷于死循环。
-    private Map<Class<?>, String[]> excludes = new HashMap<Class<?>, String[]>();
+    //对于 @Transient 标准的属性，是临时状态，无法过滤
+    private Map<Class<?>, String[]> excludes = new HashMap();
 
 
     public DTOUtils() {
@@ -138,7 +143,7 @@ public class DTOUtils {
      * @return
      */
     private <T> Collection<T> createDTOCopyList(Collection<T> entityBeanPOJOs, int depth) {
-        List<T> list = new ArrayList<T>(entityBeanPOJOs.size());//按照原来的顺序
+        List<T> list = new ArrayList(entityBeanPOJOs.size());//按照原来的顺序
         for (T entity : entityBeanPOJOs)
             list.add((T) createDTOCopy(entity, depth));
         return list;

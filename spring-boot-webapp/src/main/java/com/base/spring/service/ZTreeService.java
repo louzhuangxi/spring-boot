@@ -83,7 +83,7 @@ public class ZTreeService {
 
 //        for(TreeNodeEntity entity :parent.getChildren())
 //            System.out.println(String.format("%s,%d,%s",entity.getName(),entity.getIndex(),entity.getParent().getName()));
-
+        parent.setIsParent(true); //如果原来为叶节点，需要设置为父节点
         treeNodeRepository.save(parent);
 
     }
@@ -99,7 +99,7 @@ public class ZTreeService {
         logger.info("Getting id={}", id);
         TreeNodeEntity parent = treeNodeRepository.findOne(id);
         parent.clearChildren();
-        // parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
+        parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
         treeNodeRepository.save(parent);
 
     }
@@ -115,21 +115,26 @@ public class ZTreeService {
     @Transactional(readOnly = false)
     public void paste(long id, long pId, String curType) {
 
-        TreeNodeEntity currentNode = treeNodeRepository.findOne(id); //被操作的对象
+        TreeNodeEntity selectNode = treeNodeRepository.findOne(id); //被操作的对象
         TreeNodeEntity parentNode = treeNodeRepository.findOne(pId); //参考对象
         // parentNode.setIsParent(true);
 
         if (curType.equals("copy")) {
             logger.info("copy nodes to a new parent node");
-            ZTreeUtils.createCopyNode(parentNode, currentNode); // 复制一份和新生成的对象，加入到 parent 的子中。
+            ZTreeUtils.createCopyNode(parentNode, selectNode); // 复制一份和新生成的对象，加入到 parent 的子中。
         }
 
-        if (curType.equals("cut")) {    //直接移动cut 直接修改 currentNode 的父类，变为新的父类，不重新创建新的对象，相当于剪切过来。
+        if (curType.equals("cut")) {    //直接移动cut : 直接修改 currentNode 的父类为新的父类，不重新创建新的对象，相当于剪切过来。
             logger.info("paste nodes to a new parent node");
-            parentNode.addChildToLastIndex(currentNode);//此方法可以直接修改父类
+            parentNode.addChildToLastIndex(selectNode);//此方法可以直接修改父类
+            parentNode.setIsParent(true); // 修改参考对象为父节点
         }
 
         treeNodeRepository.save(parentNode);
+
+        if (selectNode.getParent().getChildren().size() == 0) // 移动完成，如果没有子节点了，则标记为叶节点
+            selectNode.getParent().setIsParent(false);
+        treeNodeRepository.save(selectNode);
 
     }
 
@@ -137,7 +142,7 @@ public class ZTreeService {
     /**
      * 移动节点到指定父节点下
      *
-     * @param id    被移到节点
+     * @param id    被移动节点
      * @param pId   移动到此父节点下
      * @param index 移到到的位置
      */
@@ -149,7 +154,11 @@ public class ZTreeService {
         TreeNodeEntity parentNode = treeNodeRepository.findOne(pId);
 
         parentNode.addChildToIndex(childNode, index);
+        parentNode.setIsParent(true);
         treeNodeRepository.save(parentNode);
+
+        if (childNode.getParent().getChildren().size() == 0)
+            childNode.getParent().setIsParent(false);
         treeNodeRepository.save(childNode);
 
     }

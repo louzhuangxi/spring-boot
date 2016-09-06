@@ -2,10 +2,7 @@ package org.h819.commons;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
-
-import java.io.IOException;
 
 /**
  * Description : TODO(扩展 com.alibaba.fastjson.JSON 类)
@@ -31,7 +28,8 @@ public class MyJsonUtils {
 
     /**
      * 过滤不需要输出的属性，用法见 FastJsonPropertyPreFilter
-     * 如果不在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉
+     * -
+     * 如果不在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉，才可以不进入死循环
      *
      * @param bean
      * @param preFilter
@@ -43,27 +41,23 @@ public class MyJsonUtils {
 
 
     /**
-     * 利用 jack json ObjectMapper ，格式化输出输出任何 Bean 对象
+     * 利用 SerializerFeature.PrettyFormat ，格式化输出输出任何 Bean 对象
      *
-     * @param object
+     * @param bean
      */
-    public static void prettyPrint(Object object) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void prettyPrint(Object bean) {
+        System.out.print(JSON.toJSONString(bean, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat));
     }
 
 
     /**
-     * 利用 jack json ObjectMapper ，格式化输出输出 json 字符串 ，属性过滤器用 fastjson 实现，jack json 不知道过滤器怎么实现
-     * 如果不在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉
+     * 利用 SerializerFeature.PrettyFormat ，格式化输出输出 json 字符串 ，属性过滤器用 fastJson 实现
+     * -
+     * 如果不在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉，才可以不进入死循环
      *
      * @param bean
      */
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
-        prettyPrint(toJSONString(bean, preFilter));
+        System.out.print(JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat));
     }
 }

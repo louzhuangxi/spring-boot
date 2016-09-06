@@ -1,4 +1,4 @@
-package com.base.spring.dto;
+package com.base.spring.vo;
 
 /**
  * 定义树结构对象的类型，这样就可以组建不同类型的树
