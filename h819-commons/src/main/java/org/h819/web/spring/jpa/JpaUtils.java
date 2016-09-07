@@ -25,14 +25,14 @@ import java.util.List;
  * <p>
  * 根据 jqgrid 传递过来的参数，通过 Repository 进行查询，封装了各项查询条件。
  */
-public class JPAUtils {
+public class JpaUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JPAUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(JpaUtils.class);
 
     /**
      * 仅通过静态方法调用
      */
-    private JPAUtils() {
+    private JpaUtils() {
     }
 
     //org.springframework.data.domain.Page 规定起始页为 0
@@ -45,20 +45,19 @@ public class JPAUtils {
      * @param repository          查询器
      * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize            页面可显示行数
-     * @param sortParameter       用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sortDirection       排序的方式，只能为  desc 或 asc
+     * @param sort
      * @param customSpecification 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件,与 filters AND 关系的查询条件，specification 的构造符合 SearchFilter 写法，详见示例项目。
      *                            customSpecification 中指定的属性名称应该是待查询的 entity 中的属性名称，并且用改 entity 的 repository 进行查询
      * @return
      */
 
-    public static Page getPage(JpaSpecificationExecutor repository, int currentPageNo, int pageSize, String sortParameter, Sort.Direction sortDirection, Specification customSpecification) {
+    public static Page getPage(JpaSpecificationExecutor repository, int currentPageNo, int pageSize, Sort sort, Specification customSpecification) {
 
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
 
-        return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, new Sort(sortDirection, sortParameter)));
+        return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, sort));
 
 
     }
@@ -89,16 +88,16 @@ public class JPAUtils {
         currentPageNo = currentPageNo - 1;
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
-            return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, JPAUtils.getJqgirdSpringSort(sortParameter, sortDirection)));
+            return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, JpaUtils.getJqgirdSpringSort(sortParameter, sortDirection)));
 
         } else {
 
             JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
             //根据 jqgrid filters 参数，构造查询条件
-            Specification specificationFilters = JPADynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
+            Specification specificationFilters = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
             return rep.findAll(
-                    JPADynamicSpecificationUtils.joinSpecification(SearchFilter.Relation.AND, customSpecification, specificationFilters),
-                    new PageRequest(currentPageNo, pageSize, JPAUtils.getJqgirdSpringSort(sortParameter, sortDirection))
+                    JpaDynamicSpecificationUtils.joinSpecification(SearchFilter.Relation.AND, customSpecification, specificationFilters),
+                    new PageRequest(currentPageNo, pageSize, JpaUtils.getJqgirdSpringSort(sortParameter, sortDirection))
             );
         }
     }
@@ -112,15 +111,14 @@ public class JPAUtils {
      * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的写法。
      * @param currentPageNo 当前页，起始页为 1
      * @param pageSize      页面可显示行数
-     * @param sortParameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sortDirection 排序的方式，只能为  desc 或 asc
+     * @param sort
      * @return
      */
-    public static Page getPage(JpaRepository repository, int currentPageNo, int pageSize, String sortParameter, Sort.Direction sortDirection) {
+    public static Page getPage(JpaRepository repository, int currentPageNo, int pageSize, Sort sort) {
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
-        return repository.findAll(new PageRequest(currentPageNo, pageSize, new Sort(sortDirection, sortParameter)));
+        return repository.findAll(new PageRequest(currentPageNo, pageSize, sort));
     }
 
 
@@ -153,7 +151,7 @@ public class JPAUtils {
             JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
             JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
             //根据 jqgrid filters 参数，构造查询条件
-            Specification spec = JPADynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
+            Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
 
             return rep.findAll(spec, new PageRequest(currentPageNo, pageSize, getJqgirdSpringSort(sortParameter, sortDirection)));
         }
@@ -170,37 +168,88 @@ public class JPAUtils {
         //排序字段
         if (!sortParameter.contains(",")) { //未分组
 
-            Assert.isTrue(!sortParameter.isEmpty(), " 'jqgrid' 中 sortname 属性没有设置");
-            Assert.state(sortDirection.equalsIgnoreCase("asc") || sortDirection.equalsIgnoreCase("desc"), " 'jqgrid' 中 sortorder 属性设置不对只能为 asc 或 desc (也适用于非 jqgrid 应用)");
-            Sort.Direction direction;
-            if (sortDirection.toLowerCase().equals("asc"))
-                direction = Sort.Direction.ASC;
-            else direction = Sort.Direction.DESC;
-
-            return new Sort(direction, sortParameter);
+            return createSort(sortDirection, sortParameter);
 
         } else { //分组,grouping:true 时
 
-            String[] strings = StringUtils.removeEnd(sortParameter.trim(), ",").split(",");  //传来的排序要求 sidx =name asc, herf desc,
-            List<Sort.Order> orders = Lists.newArrayList();
-            List<String> unique = Lists.newArrayList();
-            for (String s : strings) { //拼接所有的排序请求。
-                String sortField = StringUtils.substringBefore(s.trim(), " ");
-                //为了避免同一个属性，重复添加。此情况发生在 grouping:true ，但  sortname 和 sortorder 参数没有注释掉。
-                if (unique.contains(sortField))
-                    continue;
-                unique.add(sortField);
-                String sortDirectionByGroup = StringUtils.substringAfter(s.trim(), " ");
-                Assert.state(sortDirectionByGroup.equalsIgnoreCase("asc") || sortDirectionByGroup.equalsIgnoreCase("desc"), " 'jqgrid' 中 group 的属性 groupOrder 设置不对");
-                Sort.Direction direction;
-                if (sortDirection.toLowerCase().equals("asc"))
-                    direction = Sort.Direction.ASC;
-                else direction = Sort.Direction.DESC;
+            String[] arrays = StringUtils.removeEnd(sortParameter.trim(), ",").split(",");  //传来的排序请求字符串，形如 sidx =name asc, herf desc,实际经过参数对应后变成字符串 name asc, herf desc,
+            //arrays = {[name asc],[herf desc]}
 
-                orders.add(new Sort.Order(direction, sortField));
+            List<Sort.Order> orders = Lists.newArrayList();
+            List<String> unique = Lists.newArrayList();   //为了避免同一个属性，重复添加。此情况发生在 grouping:true 时，没有进一步测试。
+            for (String s : arrays) { //拼接所有的排序请求。
+                String property = StringUtils.substringBefore(s.trim(), " ");
+                if (unique.contains(property))
+                    continue;
+                unique.add(property);
+                String direction = StringUtils.substringAfter(s.trim(), " ");
+                orders.add(createOrder(direction, property));
             }
-            return new Sort(orders);
+            return createSort(orders);
         }
+    }
+
+
+    /**
+     * 单个排序条件创建 Sort
+     *
+     * @param direction
+     * @param property
+     * @return
+     */
+    public static Sort createSort(String direction, String property) {
+        return new Sort(createOrder(property, direction));
+    }
+
+    /**
+     * 多个排序条件，一个排序方向
+     *
+     * @param direction
+     * @param property
+     * @return
+     */
+
+    public static Sort createSort(String direction, String[] property) {
+        return new Sort(createDirection(direction), property);
+    }
+
+
+    /**
+     * 通过创建多个 Order，创建多个排序条件，多个排序方向
+     *
+     * @param orders
+     * @return
+     */
+    public static Sort createSort(List<Sort.Order> orders) {
+        return new Sort(orders);
+    }
+
+    /**
+     * 创建排序条件 Order
+     *
+     * @param direction
+     * @param property
+     * @return
+     */
+    public static Sort.Order createOrder(String direction, String property) {
+        Assert.isTrue(!property.isEmpty(), " 排序字段没有指定");
+        return new Sort.Order(createDirection(direction), property);
+    }
+
+    /**
+     * String to Direction
+     *
+     * @param direction
+     * @return
+     */
+    private static Sort.Direction createDirection(String direction) {
+
+        Assert.state(direction.equalsIgnoreCase("asc") || direction.equalsIgnoreCase("desc"), " 排序 direction 只能为 asc or desc");
+        Sort.Direction directionTemp;
+        if (direction.toLowerCase().equals("asc"))
+            directionTemp = Sort.Direction.ASC;
+        else directionTemp = Sort.Direction.DESC;
+        return directionTemp;
     }
 
 

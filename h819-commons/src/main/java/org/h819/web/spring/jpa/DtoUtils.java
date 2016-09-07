@@ -91,7 +91,7 @@ import java.util.*;
  */
 
 
-public class DTOUtils {
+public class DtoUtils {
 
 
     //准备实例化的对象类别，该类别可以位于级联层次的任意层次，只要属性类别为此类别，那么其属性就会被忽略。用于 hibernate 的关联关系中，可以减少级联层次，并且可以避免深度级联而陷于死循环。
@@ -99,7 +99,7 @@ public class DTOUtils {
     private Map<Class<?>, String[]> excludes = new HashMap();
 
 
-    public DTOUtils() {
+    public DtoUtils() {
     }
 
 

@@ -37,20 +37,17 @@ public class MyExecUtils {
     public static void exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
 
         if (!Files.exists(exeFile) || !exeFile.isAbsolute()) {
-
             System.out.println(exeFile + " 不存在");
             return;
         }
 
         if (!exeFile.toFile().canRead()) {
-
-            System.out.println(exeFile + "  无读取权限");
+            System.out.println(exeFile + "  无读取'该可执行文件'权限");
             return;
         }
 
         if (!exeFile.toFile().canExecute()) {
-
-            System.out.println(exeFile + "  无执行执行权限");
+            System.out.println(exeFile + "  无执行'该可执行文件'权限");
             return;
         }
 

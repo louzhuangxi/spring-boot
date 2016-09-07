@@ -5,7 +5,7 @@ import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
 import com.base.spring.utils.ZTreeUtils;
-import org.h819.web.spring.jpa.DTOUtils;
+import org.h819.web.spring.jpa.DtoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ZTreeService {
         //页面显示树状结构到第 n 级
         int show_Level = 1;
         //List<TreeNodeEntity> treeNodeEntity = null;
-        DTOUtils dtoUtils = new DTOUtils();
+        DtoUtils dtoUtils = new DtoUtils();
         dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "privilege");
 
         if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身

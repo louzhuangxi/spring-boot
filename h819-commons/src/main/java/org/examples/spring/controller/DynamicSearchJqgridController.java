@@ -5,9 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.examples.spring.repository.TreeEntityRepository;
 import org.h819.web.jqgird.JqgridPage;
-import org.h819.web.spring.jpa.DTOUtils;
-import org.h819.web.spring.jpa.JPADynamicSpecificationUtils;
-import org.h819.web.spring.jpa.JPAUtils;
+import org.h819.web.spring.jpa.DtoUtils;
+import org.h819.web.spring.jpa.JpaDynamicSpecificationUtils;
+import org.h819.web.spring.jpa.JpaUtils;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +130,7 @@ public class DynamicSearchJqgridController {
          * 除了 jqgrid 传递过来的查询条件外, 自己又附加查询条件，构造一个自定义查询条件
          * 多个查询条件时，可以用 DynamicSpecificationUtils 合并
          */
-        Specification customSpecification = JPADynamicSpecificationUtils.bySearchFilter(
+        Specification customSpecification = JpaDynamicSpecificationUtils.bySearchFilter(
                 new SearchFilter("level", SearchFilter.Operator.EQ, "1"));
 
 
@@ -148,7 +148,7 @@ public class DynamicSearchJqgridController {
          *Page list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
          */
 
-        Page<TreeEntity> pages = JPAUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        Page<TreeEntity> pages = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -158,7 +158,7 @@ public class DynamicSearchJqgridController {
          * 转换原因见 service/package-info.java
          */
 
-        DTOUtils dtoUtils = new DTOUtils();  //用法见 DTOUtils
+        DtoUtils dtoUtils = new DtoUtils();  //用法见 DTOUtils
         dtoUtils.addExcludes(TreeEntity.class, "parent"); //在整个转换过程中，无论哪个级联层次，只要遇到 TreeEntity 类，那么他的 parent 属性就不进行转换
 //       dtoUtils.addExcludes(TreeEntity.class, "parent", "children"); //多个属性例子
 //       dtoUtils.addExcludes(WebSiteEntity.class, "webSiteColumns");

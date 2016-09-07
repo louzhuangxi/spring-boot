@@ -36,7 +36,7 @@ public class MyJsonUtils {
      * @return
      */
     public static String toJSONString(Object bean, FastJsonPropertyPreFilter preFilter) {
-        return JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect);
+        return JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat);
     }
 
 
@@ -46,7 +46,7 @@ public class MyJsonUtils {
      * @param bean
      */
     public static void prettyPrint(Object bean) {
-        System.out.print(JSON.toJSONString(bean, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat));
+        System.out.print(JSON.toJSONString(bean, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.PrettyFormat));
     }
 
 
@@ -58,6 +58,6 @@ public class MyJsonUtils {
      * @param bean
      */
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
-        System.out.print(JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.PrettyFormat));
+        System.out.print(JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.PrettyFormat));
     }
 }

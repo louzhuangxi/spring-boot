@@ -36,9 +36,9 @@ import java.util.List;
 //另外一个参考的例子：http://www.baeldung.com/spring-rest-api-query-search-language-tutorial
 //https://github.com/eugenp/tutorials/blob/master/spring-security-rest-full/src/main/java/org/baeldung/persistence/dao/UserSpecification.java
 //   Querydsl 改造 http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
-public class JPADynamicSpecificationUtils {
+public class JpaDynamicSpecificationUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JPADynamicSpecificationUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationUtils.class);
 
     /**
      * @param searchFilter 查询条件
