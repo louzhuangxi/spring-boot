@@ -1,0 +1,28 @@
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>main</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>/</directory>
+            <includes>
+                <!--仅包含下述目录下的文件-->
+                <include>**/org/h819/**</include>
+            </includes>
+            <!--排除 include 所定义的目录中的下述文件夹-->
+            <excludes>
+                <exclude>**/example/**</exclude>
+                <exclude>**/examples/**</exclude>
+                <exclude>**/tools/**</exclude>
+                <exclude>**/test/**</exclude>
+                <exclude>**/logback/**</exclude>
+                <exclude>**/static/**</exclude>
+            </excludes>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+    </fileSets>
+</assembly>
