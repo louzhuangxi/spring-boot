@@ -8,4 +8,5 @@
 //还可以参考 :
 
 //http://hutool.mydoc.io/?t=821
+//https://github.com/looly/hutool/wiki
 package org.h819.commons;
