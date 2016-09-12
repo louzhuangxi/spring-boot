@@ -3,6 +3,7 @@ package org.h819.commons.file;
 import org.apache.commons.io.*;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
 import org.mozilla.universalchardet.UniversalDetector;
@@ -152,22 +153,58 @@ public class MyFileUtils {
 
 
     /**
-     * 拷贝文件到指定文件夹,文件名称不变。
-     * 如果目标文件夹不存在，则创建
+     * 递归移动原文件夹中的所有文件到指定文件夹，目标文件夹不存在，则创建
+     * -
+     * 如目标文件已经存在，则改名，增加 _rename ，如果仍然存在，则抛出异常 org.apache.commons.io.FileExistsException
      *
-     * @param srcPdf
+     * @param srcFile
      * @param descDirectory
+     * @param existsRename  目标文件存在，是否进行重命名
      */
-    public static void copyFileToDirectory(File srcPdf, File descDirectory) {
-        try {
-            if (descDirectory != null && (!descDirectory.exists() || !descDirectory.isDirectory()))
-                FileUtils.forceMkdir(descDirectory);
-            FileUtils.copyFileToDirectory(srcPdf, descDirectory);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void moveFilesToDirectoryRecursively(File srcFile, File descDirectory, boolean existsRename) {
 
+        if (srcFile.isFile())
+            try {
+                String desFileName = descDirectory.getAbsoluteFile() + File.separator + srcFile.getName();
+                try {
+                    FileUtils.moveFileToDirectory(srcFile, descDirectory, true);
+                    System.out.println(String.format("move file %s to %s ", srcFile.getAbsoluteFile(), desFileName));
+                } catch (FileExistsException exception) {  //文件存在（仅判断了文件名重复）
+
+                    if (existsRename) {
+                        String path = StringUtils.substringBeforeLast(desFileName, ".");
+                        String extetion = StringUtils.substringAfterLast(desFileName, ".");
+                        String rename = path + "_rename." + extetion;
+                        File renamef = new File(rename);
+                        if (renamef.exists()) //改名之后还重复，则抛出异常
+                            throw new FileExistsException("已经存在 : " + rename);
+                        else {
+                            FileUtils.moveFile(srcFile, renamef);
+                            System.out.println(String.format("exists , rename and move file %s to %s ", srcFile.getAbsoluteFile(), rename));
+                        }
+                    } else {
+                        throw new FileExistsException("已经存在 : " + desFileName);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        else if (srcFile.isDirectory()) {
+            File[] files = srcFile.listFiles();
+            for (File f : files) {
+                moveFilesToDirectoryRecursively(f, descDirectory, existsRename);
+            }
+
+        } else {
+            if (!srcFile.exists())
+                try {
+                    throw new IOException(srcFile.getAbsolutePath() + " not exists");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
     }
+
 
     /**
      * 读取大文件，不能一次性读取，这样会占用大量内存，应逐条读取

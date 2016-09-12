@@ -9,6 +9,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
+import org.h819.commons.file.MyFileUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,20 +39,32 @@ public class Test {
     // File from = new File("E:\\123");
 
     //由于是递归，所以防止图片的根目录放在类变量
-    File to = new File("e:\\456");
+    File to = new File("d:\\01\\");
+    File to1 = new File("d:\\01\\zb_main.jsp");
 
 
     public static void main(String[] args) {
 
+        // File from = new File("E:\\123");
+
+        //由于是递归，所以防止图片的根目录放在类变量
+        File to = new File("d:\\01\\");
+        File to1 = new File("d:\\01\\zb_main.jsp");
+
+
         Test t = new Test();
 
-        Map<String, String> map = new HashMap<>();
-        map.put("1", "v1");
-        map.put("1", "v2");
+        t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
-        for (Map.Entry<String, String> e : map.entrySet()) {
-            System.out.println(String.format("key=%s , value=%s", e.getKey(), e.getValue()));
-        }
+//        String rename = to.getAbsoluteFile() + File.separator +
+//                FilenameUtils.getBaseName(to1.getAbsolutePath()) + "_rename." + FilenameUtils.getExtension(to1.getAbsolutePath());
+//
+//        System.out.println(to.getName());
+//        System.out.println(to1.getName());
+//        System.out.println(FilenameUtils.getExtension(to1.getAbsolutePath()));
+//        System.out.println(FilenameUtils.getFullPath(to1.getAbsolutePath()));
+//        System.out.println("rename : " + rename);
+
 
     }
 
@@ -384,6 +397,14 @@ public class Test {
         }
     }
 
+    /**
+     * 拷贝相片到根目录下，用于整理相片
+     */
+    private void moveFiles(File srcDer, File descDerictroy) {
+
+        MyFileUtils.moveFilesToDirectoryRecursively(srcDer, descDerictroy, true);
+
+    }
 
     private void findNewFile() {
 

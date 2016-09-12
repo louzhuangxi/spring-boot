@@ -638,7 +638,7 @@ public class MyPDFUtils {
      * @param badDirectory  存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) {
+    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) throws IOException {
 
         String extension = FilenameUtils.getExtension(srcPdf.getAbsolutePath());
 
@@ -648,7 +648,7 @@ public class MyPDFUtils {
         // 损坏的 0 字节文件，直接拷贝到统一的文件夹
         if (FileUtils.sizeOf(srcPdf) == 0) {
             logger.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            MyFileUtils.copyFileToDirectory(srcPdf, badDirectory);
+            FileUtils.copyDirectory(srcPdf, badDirectory,true);
             return;
         }
 
@@ -680,7 +680,7 @@ public class MyPDFUtils {
         } catch (BadPasswordException e) {
             // 有打开密码的文件，不能破解，统一拷贝至一个文件夹。
             logger.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            MyFileUtils.copyFileToDirectory(srcPdf, badDirectory);
+            FileUtils.copyFileToDirectory(srcPdf, badDirectory,true);
             e.printStackTrace();
             return;
         } catch (IOException e) {
@@ -698,7 +698,7 @@ public class MyPDFUtils {
      * @param badDirectory 存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) {
+    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) throws IOException {
         decryptFile(srcPdf, descPdf, null, badDirectory);
     }
 
