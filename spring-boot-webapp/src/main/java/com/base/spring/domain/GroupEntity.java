@@ -1,8 +1,12 @@
 package com.base.spring.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +21,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "base_group") //group 为 mysql 关键字，不能用作字段名
+@Getter
+@Setter
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class GroupEntity extends BaseEntity {
 
 
@@ -29,6 +37,7 @@ public class GroupEntity extends BaseEntity {
     @BatchSize(size = 100)//roles 过多的情况下应用。
     private List<UserEntity> users = new ArrayList<UserEntity>();
 
+
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)// 如果是单向多对多，只在发出方设置，接收方不做设置
     @JoinTable(name = "base_ref_group_roles", //指定关联表名
             joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
@@ -40,6 +49,7 @@ public class GroupEntity extends BaseEntity {
 
 
     //昵称
+
     @Column(name = "name", unique = true)
     private String name;
 
@@ -122,29 +132,5 @@ public class GroupEntity extends BaseEntity {
 
         }
 
-    }
-
-    public List<UserEntity> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
     }
 }

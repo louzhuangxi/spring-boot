@@ -1,6 +1,9 @@
 package com.base.spring.domain;
 
+import com.alibaba.fastjson.JSON;
 import com.base.spring.repository.TreeNodeRepository;
+import org.h819.commons.MyJsonUtils;
+import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,7 @@ public class TreeNodeEntityTest {
     TreeNodeRepository repository;
 
     @Test
-    public void init() {
+    public void initTreeNodes() {
 
         // 插入测试树结构数据
 
@@ -182,9 +185,33 @@ public class TreeNodeEntityTest {
         standard2.addChildToLastIndex(standard22);
         standard2.addChildToLastIndex(standard23);
 
-       //    repository.save(standard); //事务状态下，自动保存
+        //    repository.save(standard); //事务状态下，自动保存
 
     }
 
+    @Test
+    public void testLocalDateTime() {
+
+        TreeNodeEntity entity = repository.getOne(54l);
+
+//        entity.setParentNode(true);
+
+        System.out.println(entity.getCreatedDate());
+        System.out.println(entity.getModifiedDate());
+        MyJsonUtils.prettyPrint(entity.getCreatedDate());
+
+        String tree = JSON.toJSONString(entity);
+
+        System.out.println(tree);
+
+        TreeNodeEntity entity1 = JSON.parseObject(tree,TreeNodeEntity.class);
+
+        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+        preFilter.addExcludes(TreeNodeEntity.class, "parent");
+
+        MyJsonUtils.prettyPrint(entity1,preFilter);
+
+
+    }
 
 }

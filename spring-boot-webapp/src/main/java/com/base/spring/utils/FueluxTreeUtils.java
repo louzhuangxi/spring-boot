@@ -20,6 +20,13 @@ import java.util.List;
 public class FueluxTreeUtils {
 
 
+    /**
+     * 如果构造，初始化 fluelux tree 的时候，默认选中某些节点 ?
+     */
+
+    /**
+     * 静态调用
+     */
     private FueluxTreeUtils() {
     }
 
@@ -75,8 +82,8 @@ public class FueluxTreeUtils {
         List<FueluxTreeJsonNode> FueluxTreeNodes = new ArrayList<>(treeNodeEntities.size());
 
         for (TreeNodeEntity treeNode : treeNodeEntities)
-            if (treeNode.getIsParent())  // 节点默认不选中
-                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.folder, treeNode.getId(), false));  ????
+            if (treeNode.isParentNode())  // 节点默认不选中
+                FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.folder, treeNode.getId(), false));
             else
                 FueluxTreeNodes.add(new FueluxTreeJsonNode(treeNode.getName(), FueluxTreeNodeType.item, treeNode.getId(), true));
 

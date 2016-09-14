@@ -462,7 +462,7 @@
 
 						<ul class="submenu">
 							<li class="">
-								<a data-url="page/ztree" href="#page/ztree?type=Menu">
+								<a data-url="page/ztree" href="#page/ztree_menu?type=Menu">
 									<i class="menu-icon fa fa-caret-right"></i>
 									菜单树
 								</a>
@@ -471,7 +471,7 @@
 							</li>
 
 							<li class="">
-								<a data-url="page/ztree" href="#page/ztree?type=Group">
+								<a data-url="page/ztree" href="#page/ztree_menu?type=Group">
 									<i class="menu-icon fa fa-caret-right"></i>
 									用户组树
 								</a>
@@ -479,7 +479,7 @@
 							</li>
 
 							<li class="">
-								<a data-url="page/ztree" href="#page/ztree?type=DepartMent">
+								<a data-url="page/ztree" href="#page/ztree_menu?type=DepartMent">
 									<i class="menu-icon fa fa-caret-right"></i>
 									部门树
 								</a>
@@ -488,7 +488,7 @@
 							</li>
 
 							<li class="">
-								<a data-url="page/ztree" href="#page/ztree?type=Standard">
+								<a data-url="page/ztree" href="#page/ztree_menu?type=Standard">
 									<i class="menu-icon fa fa-caret-right"></i>
 									其他业务树
 								</a>
@@ -514,7 +514,7 @@
 						<ul class="submenu">
 
 							<li class="">
-								<a data-url="page/elements" href="#page/elements">
+								<a data-url="page/elements" href="#page/ztree_role?type=Menu">
 									<i class="menu-icon fa fa-caret-right"></i>
 									权限定义
 								</a>

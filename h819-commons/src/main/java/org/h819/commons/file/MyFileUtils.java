@@ -88,7 +88,7 @@ public class MyFileUtils {
 
     /**
      * 拷贝 classpath 中依赖库 jar 资源中的文件到系统临时目录下
-     * jar 必须用 java 命令打包
+     * jar 文件是必须用 java 命令打包的。
      *
      * @param resourceName 待拷贝的 jar 中的文件名称
      *                     参数写法
@@ -100,9 +100,9 @@ public class MyFileUtils {
         // 拷贝资源文件到临时目录
         //  { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
         // { "/STCAIYUN.TTF" };
-        InputStream is = MyFileUtils.class.getResourceAsStream(resourceName);
+        InputStream inputStream = MyFileUtils.class.getResourceAsStream(resourceName);
 
-        if (is == null) {
+        if (inputStream == null) {
             logger.info(resourceName + " not exist in jar liberary.");
             return null;
         }
@@ -115,21 +115,20 @@ public class MyFileUtils {
 
         File resourceFile = new File(tempfilepath);
 
-
         logger.info("resource copy to :" + tempfilepath);
 
         try {
             // 拷贝资源文件到临时文件夹，每次都覆盖
-            FileUtils.copyInputStreamToFile(is, resourceFile);
+            FileUtils.copyInputStreamToFile(inputStream, resourceFile);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            IOUtils.closeQuietly(is);
+            IOUtils.closeQuietly(inputStream);
             return null;
         }
 
 
-        IOUtils.closeQuietly(is);
+        IOUtils.closeQuietly(inputStream);
         return resourceFile;
     }
 

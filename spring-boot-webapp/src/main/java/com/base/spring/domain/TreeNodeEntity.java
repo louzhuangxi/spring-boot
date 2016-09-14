@@ -1,10 +1,15 @@
 package com.base.spring.domain;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -29,7 +34,11 @@ import java.util.List;
 // 二者都级联
 
 // 只和 role 有关系
-public class TreeNodeEntity extends BaseEntity {
+@Getter
+@Setter
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
+ public class TreeNodeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
     /**
@@ -63,17 +72,27 @@ public class TreeNodeEntity extends BaseEntity {
     @Column(name = "index_", nullable = false)
     private int index;
 
+    /**
+     * 是否为父节点，包含子节点，即为父节点 , true 时会显示为文件夹图标。
+     * 添加节点时，如果没有子节点，不会显示为文件夹图标，即使是想添加父节点，也会显示为叶节点图表。
+     */
+
+    // @getter,@setter 自动生成的方法，没有 get 和 setter 会变成  isParent() 和 setParent(boolean parent)
+    // 此时和有的反序列化工具如 fasterjson 对应不上 ，这是反序列化工具的 bug 么？
+    //只好自己实现 getter 和 setter 方法，会覆盖 @Getter   @Setter ，但为了清晰，最好去掉
     @Column(name = "isParent", columnDefinition = "boolean default true")
-    private boolean isParent;
+    private boolean isParentNode;
     /**
      * 菜单类型 :必须
      */
+
     @Column(name = "type", nullable = false)
-    private TreeNodeType type;
+      private TreeNodeType type;
     /**
      * 父组织
      * 树状结构，root 节点（根节点），没有父节点，为 null
      */
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TreeNodeEntity parent;
@@ -81,6 +100,7 @@ public class TreeNodeEntity extends BaseEntity {
      * 子组织
      * jpa 中，orphanRemoval = true ，才可以删除子.
      */
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     //如果不用此句，默认是 FetchMode.SELECT ,查询每个被关联 child ，会发送一个查询语句，供发送 n+1个。FetchMode.SUBSELECT 通过子查询一次完成，对于 child 过多的情况下，应用。
@@ -102,14 +122,17 @@ public class TreeNodeEntity extends BaseEntity {
      * 多个节点，可以拥有同一种权限，如 节点编辑  ...
      * 一个节点，也可以又有多种权限
      */
+
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
     private List<RoleEntity> roles = new ArrayList<>();
 
 
     /**
      * 树状结构的层级,根节点 level = 0，依次递增
+     * 不加 @Getter , @Setter 不自动生成
      */
     @Transient  // 不在数据库中建立字段
+    @Setter(AccessLevel.NONE) // 不创建 Setter  方法，反序列化会有问题么?
     private int level;
 
     /**
@@ -127,16 +150,16 @@ public class TreeNodeEntity extends BaseEntity {
      * 菜单创建，只提供这一个构造函数，强制要求录入必需的数据项
      * 菜单需要初始化
      *
-     * @param type     节点类型
-     * @param name     名称
-     * @param index    节点的排序序号 index
-     * @param isParent 本身是否是父节点。
-     *                 由于使用了 dtoUtils 设定转换深度（children 可能不在转换层次内，不会转换，会有 children = null 情况，此时无法从 children 是否有值来判断本身是否父节点），
-     *                 所以 isParent 还是放在构造函数内，直接作为属性设置，可以直接判断。
-     * @param parent   父菜单
+     * @param type         节点类型
+     * @param name         名称
+     * @param index        节点的排序序号 index
+     * @param isParentNode 本身是否是父节点。
+     *                     由于使用了 dtoUtils 设定转换深度（children 可能不在转换层次内，不会转换，会有 children = null 情况，此时无法从 children 是否有值来判断本身是否父节点），
+     *                     所以 isParent 还是放在构造函数内，直接作为属性设置，可以直接判断。
+     * @param parent       父菜单
      */
 
-    public TreeNodeEntity(TreeNodeType type, String name, int index, boolean isParent, TreeNodeEntity parent) {
+    public TreeNodeEntity(TreeNodeType type, String name, int index, boolean isParentNode, TreeNodeEntity parent) {
 
         if (!name.contains("root_")) // 初始化根节点时，需要设置 parent 为 null (InitializeService.java) ，其他情况 parent 不允许 为 null
             Assert.notNull(parent, "parent can not be null.");
@@ -144,7 +167,7 @@ public class TreeNodeEntity extends BaseEntity {
         this.name = name;
         this.type = type;
         this.index = index;
-        this.isParent = isParent;
+        this.isParentNode = isParentNode;
         this.parent = parent;
 
     }
@@ -226,135 +249,6 @@ public class TreeNodeEntity extends BaseEntity {
             children.clear();
     }
 
-    /**
-     * Returns if this node is the root node in the tree or not.
-     *
-     * @return <code>true</code> if this node is the root of the tree;
-     * <code>false</code> if it has a parent.
-     */
-    public boolean isRoot() {
-        if (this.parent == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public String getCss() {
-        return css;
-    }
-
-    public void setCss(String css) {
-        this.css = css;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * 树状结构的层级,根节点 level = 0，依次递增
-     *
-     * @return
-     */
-    public int getLevel() {
-        getLevelInit(this);
-        return level;
-    }
-
-    /**
-     * 递归计算层级，根节点为 0 级
-     *
-     * @param entity
-     * @return
-     */
-    private void getLevelInit(TreeNodeEntity entity) {
-
-        if (entity.getParent() == null) {
-            return;
-        } else {
-            level++;
-            getLevelInit(entity.getParent());
-        }
-    }
-
-
-    public List<TreeNodeEntity> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<TreeNodeEntity> children) {
-        this.children = children;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public TreeNodeEntity getParent() {
-        return parent;
-    }
-
-    public void setParent(TreeNodeEntity parent) {
-        this.parent = parent;
-    }
-
-    /**
-     * 是否为父节点，包含子节点，即为父节点 , true 时会显示为文件夹图标。
-     * 添加节点时，如果没有子节点，不会显示为文件夹图标，即使是想添加父节点，也会显示为叶节点图表。
-     *
-     * @return
-     */
-    public boolean getIsParent() {
-        return isParent;
-    }
-
-    public void setIsParent(boolean isParent) {
-        this.isParent = isParent;
-    }
-
-
-    public List<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
-    }
-
-//    public List<PrivilegeEntity> getPrivileges() {
-//        return privileges;
-//    }
-//
-//    public void setPrivileges(List<PrivilegeEntity> privileges) {
-//        this.privileges = privileges;
-//    }
-
-
-    public TreeNodeType getType() {
-        return type;
-    }
-
-    public void setType(TreeNodeType type) {
-        this.type = type;
-    }
-
 
     /**
      * list 中的 TreeNodeEntity 按照 index 属性排序后，重新设置 TreeNodeEntity 的 index 的值为 TreeNodeEntity 在 list 中的位置。
@@ -410,7 +304,46 @@ public class TreeNodeEntity extends BaseEntity {
 
             }
         }
-
-
     }
+
+    /**
+     * Returns if this node is the root node in the tree or not.
+     *
+     * @return <code>true</code> if this node is the root of the tree;
+     * <code>false</code> if it has a parent.
+     */
+    public boolean isRoot() {
+        if (this.parent == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 树状结构的层级,根节点 level = 0，依次递增
+     *
+     * @return
+     */
+    public int getLevel() {
+        getLevelInit(this);
+        return level;
+    }
+
+    /**
+     * 递归计算层级，根节点为 0 级
+     *
+     * @param entity
+     * @return
+     */
+    private void getLevelInit(TreeNodeEntity entity) {
+
+        if (entity.getParent() == null) {
+            return;
+        } else {
+            level++;
+            getLevelInit(entity.getParent());
+        }
+    }
+
 }

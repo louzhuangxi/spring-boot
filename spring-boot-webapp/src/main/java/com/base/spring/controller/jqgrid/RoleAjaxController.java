@@ -1,7 +1,8 @@
 package com.base.spring.controller.jqgrid;
 
+import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.repository.RoleRepository;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -25,7 +26,7 @@ public class RoleAjaxController {
     private static final Logger logger = LoggerFactory.getLogger(RoleAjaxController.class);
 
     @Autowired
-    private TreeNodeRepository menuRepository;
+    private RoleRepository roleRepository;
 
 
     /**
@@ -56,7 +57,7 @@ public class RoleAjaxController {
         /**
          * 记录集
          */
-        Page<TreeNodeEntity> pages = JpaUtils.getJqgridPage(menuRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<RoleEntity> pages = JpaUtils.getJqgridPage(roleRepository, currentPageNo, pageSize, sortParameter, sort, filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -70,7 +71,7 @@ public class RoleAjaxController {
         //    dtoUtils.addExcludes(MenuEntity.class, "parent"); //在整个转换过程中，无论哪个级联层次，只要遇到 TreeEntity 类，那么他的 parent 属性就不进行转换
         dtoUtils.addExcludes(TreeNodeEntity.class, "children");
 
-        JqgridPage<TreeNodeEntity> jqPage = new JqgridPage
+        JqgridPage<RoleEntity> jqPage = new JqgridPage
                 (pages.getSize(), pages.getNumber(), (int) pages.getTotalElements(), dtoUtils.createDTOcopy(pages.getContent()));
 
         return jqPage;

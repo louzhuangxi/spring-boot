@@ -198,7 +198,7 @@ public class JpaUtils {
      * @return
      */
     public static Sort createSort(String direction, String property) {
-        return new Sort(createOrder(property, direction));
+        return new Sort(createOrder(direction, property));
     }
 
     /**
@@ -244,6 +244,7 @@ public class JpaUtils {
      */
     private static Sort.Direction createDirection(String direction) {
 
+       // logger.info(direction);
         Assert.state(direction.equalsIgnoreCase("asc") || direction.equalsIgnoreCase("desc"), " 排序 direction 只能为 asc or desc");
         Sort.Direction directionTemp;
         if (direction.toLowerCase().equals("asc"))

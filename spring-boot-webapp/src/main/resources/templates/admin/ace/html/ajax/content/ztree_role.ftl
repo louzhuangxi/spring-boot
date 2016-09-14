@@ -124,6 +124,10 @@
 				view : {
 					selectedMulti : true
 				},
+				
+			    check: {
+					enable: true
+				},
 				edit : {
 					drag : {
 						autoExpandTrigger : true, //拖拽时父节点自动展开是否触发 onExpand 事件回调函数

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
 public class ZTreeService {
@@ -43,12 +45,15 @@ public class ZTreeService {
 
         if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
-            TreeNodeEntity rootNode = treeNodeRepository.getRoot(menuType);
-            if (rootNode == null) {
+            Optional<TreeNodeEntity> rootNode = treeNodeRepository.getRoot(menuType);
+
+
+            if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
                 return "";
             }
-            TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode, show_Level); // 通过 DTOUtils 开控制返回的层级
+
+            TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
             return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
@@ -56,9 +61,7 @@ public class ZTreeService {
             TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
             TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
             return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode)); //返回节点的子节点
-
         }
-
     }
 
 
@@ -83,7 +86,7 @@ public class ZTreeService {
 
 //        for(TreeNodeEntity entity :parent.getChildren())
 //            System.out.println(String.format("%s,%d,%s",entity.getName(),entity.getIndex(),entity.getParent().getName()));
-        parent.setIsParent(true); //如果原来为叶节点，需要设置为父节点
+        parent.setParentNode(true); //如果原来为叶节点，需要设置为父节点
         treeNodeRepository.save(parent);
 
     }
@@ -99,7 +102,7 @@ public class ZTreeService {
         logger.info("Getting id={}", id);
         TreeNodeEntity parent = treeNodeRepository.findOne(id);
         parent.clearChildren();
-        parent.setIsParent(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
+        parent.setParentNode(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
         treeNodeRepository.save(parent);
 
     }
@@ -127,13 +130,13 @@ public class ZTreeService {
         if (curType.equals("cut")) {    //直接移动cut : 直接修改 currentNode 的父类为新的父类，不重新创建新的对象，相当于剪切过来。
             logger.info("paste nodes to a new parent node");
             parentNode.addChildToLastIndex(selectNode);//此方法可以直接修改父类
-            parentNode.setIsParent(true); // 修改参考对象为父节点
+            parentNode.setParentNode(true); // 修改参考对象为父节点
         }
 
         treeNodeRepository.save(parentNode);
 
         if (selectNode.getParent().getChildren().size() == 0) // 移动完成，如果没有子节点了，则标记为叶节点
-            selectNode.getParent().setIsParent(false);
+            selectNode.getParent().setParentNode(false);
         treeNodeRepository.save(selectNode);
 
     }
@@ -154,11 +157,11 @@ public class ZTreeService {
         TreeNodeEntity parentNode = treeNodeRepository.findOne(pId);
 
         parentNode.addChildToIndex(childNode, index);
-        parentNode.setIsParent(true);
+        parentNode.setParentNode(true);
         treeNodeRepository.save(parentNode);
 
         if (childNode.getParent().getChildren().size() == 0)
-            childNode.getParent().setIsParent(false);
+            childNode.getParent().setParentNode(false);
         treeNodeRepository.save(childNode);
 
     }

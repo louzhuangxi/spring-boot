@@ -19,7 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpec
     @Query("select e from UserEntity e where e.userName=?1")
     Optional<UserEntity> findOneByUserName(String userName);
 
-
     @Query("select e from UserEntity e where e.email=?1")
     Optional<UserEntity> findOneByEmail(String email);
 }

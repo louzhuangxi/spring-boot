@@ -56,11 +56,11 @@ public class ZTreeUtils {
     public static void createCopyNode(TreeNodeEntity parent, TreeNodeEntity copyNode) {
 
         //生成 copyNode 节点本身，new 操作会在数据库中对应一条新的记录
-        TreeNodeEntity newTree = new TreeNodeEntity(copyNode.getType(), copyNode.getName(), copyNode.getIndex(), parent.getIsParent(), parent);
+        TreeNodeEntity newTree = new TreeNodeEntity(copyNode.getType(), copyNode.getName(), copyNode.getIndex(), parent.isParentNode(), parent);
         newTree.setUrl(copyNode.getUrl());
         newTree.setCss(copyNode.getCss());
         parent.addChildToLastIndex(newTree); // 添加到所有子节点的尾部
-        parent.setIsParent(true);
+        parent.setParentNode(true);
 
         //生成 currentNode 节点的子节点
         if (!copyNode.getChildren().isEmpty()) {
@@ -95,7 +95,7 @@ public class ZTreeUtils {
         if (!treeNodeEntity.getChildren().isEmpty())
             open = true;
 
-        ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeNodeEntity.getIsParent());
+        ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeNodeEntity.isParentNode());
 
         zTreeJsonNodeParentTemp.addChild(zTreeNode);
 

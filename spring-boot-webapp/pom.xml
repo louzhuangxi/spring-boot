@@ -104,6 +104,14 @@
             <version>${querydsl.version}</version>
         </dependency>
 
+        <!---->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--启用 h2
         <dependency>
             <groupId>com.h2database</groupId>

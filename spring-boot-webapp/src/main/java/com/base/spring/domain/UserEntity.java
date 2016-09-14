@@ -2,9 +2,12 @@ package com.base.spring.domain;
 
 import com.base.spring.utils.BCryptPassWordUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +23,9 @@ import java.util.List;
 // 可参考 org.springframework.security.core.userdetails.User
 @Entity
 @Table(name = "base_user")
+@Getter
+@Setter
+@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class UserEntity extends BaseEntity {
 
     /**
@@ -31,24 +37,34 @@ public class UserEntity extends BaseEntity {
     private static final int EXPIRE_DAY_AMOUNT = 24;
 
     //昵称
+
+
     @Column(name = "nick_name")
     private String nickName;
 
     //登录名
+
+
     @Column(name = "login_name", unique = true, nullable = false)
     private String loginName;
 
     //密码，必要时，加密处理
+
+
     @Column(name = "password", nullable = false)
     private String password;
 
     // 不持久化到数据库，也不显示在Restful接口的属性.
     @Transient
     @JsonIgnore
+
+
     private String passwordRepeated;
 
 
     //用户真正姓名
+
+
     @Column(name = "user_name", nullable = false)
     private String userName;
 
@@ -56,6 +72,7 @@ public class UserEntity extends BaseEntity {
     //Indicates whether the user's account has expired.
     @Column(name = "account_NonExpired", columnDefinition = "boolean default false")
     private boolean accountNonExpired;
+
 
     //Indicates whether the user is locked or unlocked.
     @Column(name = "account_NonLocked", columnDefinition = "boolean default false")
@@ -69,12 +86,16 @@ public class UserEntity extends BaseEntity {
     /**
      * 该用户是否已经通过邮件验证
      */
+
+
     @Column(name = "email_valid", columnDefinition = "boolean default false")
     private boolean emailValid;
 
     /**
      * 该用户是否接收 email 邮件通知
      */
+
+
     @Column(name = "receiveEmailInfo", columnDefinition = "boolean default true")
     private boolean receiveEmailInfo;
 
@@ -82,28 +103,36 @@ public class UserEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+
     @Column(name = "telephone")
     private String telephone;
+
 
     @Column(name = "mobile")
     private String mobile;
 
+
     @Column(name = "fax")
     private String fax;
 
+
     @Column(name = "postcode")
     private String postcode;
+
 
     //重要信息，用于找回密码，唯一
     @Column(name = "email", unique = true)
     private String email;
 
+
     @Column(name = "company")
     private String company;
+
 
     //社交工具
     @Column(name = "qq")
     private String qq;
+
 
     @Column(name = "weixin")
     private String weixin;
@@ -202,187 +231,4 @@ public class UserEntity extends BaseEntity {
 
         return roles.toArray(new String[roles.size()]);
     }
-
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getLoginName() {
-        return loginName;
-    }
-
-    public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        //new BCryptPasswordEncoder().encode(password);
-        this.password = password;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public boolean getIsAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public void setIsAccountNonLocked(boolean isAccountNonLocked) {
-        this.isAccountNonLocked = isAccountNonLocked;
-    }
-
-    public boolean getIsCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    public void setIsCredentialsNonExpired(boolean isCredentialsNonExpired) {
-        this.isCredentialsNonExpired = isCredentialsNonExpired;
-    }
-
-
-    public boolean getEmailValid() {
-        return emailValid;
-    }
-
-    public void setEmailValid(boolean emailValid) {
-        this.emailValid = emailValid;
-    }
-
-    public boolean getReceiveEmailInfo() {
-        return receiveEmailInfo;
-    }
-
-    public void setReceiveEmailInfo(boolean receiveEmailInfo) {
-        this.receiveEmailInfo = receiveEmailInfo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getFax() {
-        return fax;
-    }
-
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public String getWeixin() {
-        return weixin;
-    }
-
-    public void setWeixin(String weixin) {
-        this.weixin = weixin;
-    }
-
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-
-    public List<RoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
-    }
-
-    public String getPasswordRepeated() {
-        return passwordRepeated;
-    }
-
-    public void setPasswordRepeated(String passwordRepeated) {
-        this.passwordRepeated = passwordRepeated;
-    }
-
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public List<GroupEntity> getGroup() {
-        return group;
-    }
-
-    public void setGroup(List<GroupEntity> group) {
-        this.group = group;
-    }
-
-
 }

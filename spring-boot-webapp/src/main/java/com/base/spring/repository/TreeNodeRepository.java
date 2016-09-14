@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description : TODO()
@@ -16,6 +17,13 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface TreeNodeRepository extends JpaRepository<TreeNodeEntity, Long>, JpaSpecificationExecutor {
+
+
+    /**
+     * 返回单个对象时，如果没有值，会返回 null ，此时用 Optional 包装
+     *
+     * 返回 List 就不用 Optional 包装了，如果没有值，会返回空集合
+     */
 
     /**
      * @param name
@@ -34,6 +42,6 @@ public interface TreeNodeRepository extends JpaRepository<TreeNodeEntity, Long>,
      * @return
      */
     @Query("select e from TreeNodeEntity e where e.parent is null and e.type =?1 order by  e.index")
-    TreeNodeEntity getRoot(TreeNodeType menuType);
+    Optional<TreeNodeEntity> getRoot(TreeNodeType menuType);
 
 }

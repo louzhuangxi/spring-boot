@@ -1,6 +1,8 @@
 package com.base.spring.domain;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,9 @@ import java.util.List;
  * 操作可以为任何类型，只要想要进行控制的资源，就可以放入此表。
  * 页面用标签进行控制，只要拥有此 PrivilegeEntity 的 id ，即进行显示，表示该用户可以继续此操作
  */
-@Entity
-@Table(name = "base_privilege")
+//@Entity
+//@Table(name = "base_privilege"
+@Deprecated
 public class PrivilegeEntity extends BaseEntity {
 
 

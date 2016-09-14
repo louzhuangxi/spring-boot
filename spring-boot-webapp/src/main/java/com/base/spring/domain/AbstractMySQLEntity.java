@@ -15,8 +15,15 @@
  */
 package com.base.spring.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Base class to derive entity classes from.
@@ -33,7 +40,9 @@ import java.io.Serializable;
 
 // @MappedSuperclass  : JPA 基类的标识，表示类本身不受 Spring 管理的实体类，不会在数据库中建表，而是会由其他实体类进行扩展后建表
 @MappedSuperclass
-public abstract class AbstractMySQLEntity  implements Serializable {
+@Getter
+@Setter
+public abstract class AbstractMySQLEntity implements Serializable {
 
 
     /**
@@ -72,6 +81,29 @@ public abstract class AbstractMySQLEntity  implements Serializable {
      * java.sql.Timestamp  TIMESTAMP(6)
      */
 
+    //auditing 使用方法
+    //1. 开启 @EnableJpaAuditing
+    //2. 在 Entity 上标记 @EntityListeners(AuditingEntityListener.class)
+    // ------
+    // 在 entity 创建和修改时，会自动记录两个时间，不用程序控制，会自动维护
+
+    //LocalDateTime 和 mysql 字段类型对应时:
+    // mysql 的字段类型都没有 millisecond 属性，所以只能对应成 mysql 的 tinyblob 类型，不能直接查看
+    @Column(name = "created_date")
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
+    LocalDateTime createdDate;
+
+
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
+    LocalDateTime modifiedDate;
+
+
+//    @CreatedBy: 資料建立者
+//    @LastModifiedBy: 資料最後修改者
+    //这两个会涉及到如何获取用户问题，在 spring security 和其他的系统中，有不同的实现，暂时不用
 
     /**
      * 如果没有 @GeneratedValue ，仅有 @Id ，则主键应该由应用程序指定
@@ -93,6 +125,7 @@ public abstract class AbstractMySQLEntity  implements Serializable {
 
     /**
      * jpa 会自行设置 id，为 Entity 的唯一主键，一般不需要改动
+     * 没有 setter 方法还不行，在反序列化时(string to object )，还需要用到 setter 方法
      *
      * @param id
      */

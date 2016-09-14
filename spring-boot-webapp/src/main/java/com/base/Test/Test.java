@@ -3,6 +3,7 @@ package com.base.Test;
 import org.apache.commons.lang3.time.DateUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.text.ParseException;
@@ -24,8 +25,9 @@ public class Test {
 
         Test test = new Test();
 
-        MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
+       // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
 
+        Assert.state("assc".equalsIgnoreCase("asc")|| "DESCs".equalsIgnoreCase("desc") , " 排序 direction 只能为 asc or desc");
     }
 
 

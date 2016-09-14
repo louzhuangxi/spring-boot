@@ -2,7 +2,6 @@ package com.base.spring.service.security;
 
 
 import com.base.spring.custom.SecurityUser;
-import com.base.spring.repository.PrivilegeRepository;
 import com.base.spring.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +17,8 @@ public class CurrentUserService {
 
     @Autowired
     RoleRepository roleRepository;
-    @Autowired
-    PrivilegeRepository privilegeRepository;
+//    @Autowired
+//    PrivilegeRepository privilegeRepository;
 
     /**
      * 判断用户是否有相关权限，本方法判断依据是
