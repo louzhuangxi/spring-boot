@@ -37,19 +37,20 @@ public class JdbcUtils {
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
     /**
-     * 由于是老系统，表之间的关联是原始的，没有用 hibernate 设计，所以表之间的级联关系，无法通过 hibernate 实现 OneToOne 等关联
+     * 由于是老系统，表之间的关联是原始的，没有用 hibernate 设计，所以表之间的级联关系，无法通过 hibernate 来实现 OneToOne 等关联
      * 无论是表关联还是主键关联，都会在原始表中新建字段，这对于老系统改造来说，是不可能的，
      * 只有用 native query 查询来实现。
      * -
      * 经过测试发现， Query queryTotal = entityManager.createNativeQuery(nativeQueryCount,StStandardEntity.class);
-     * 此方法，返回的类型，只包含和数据库表对应的 StStandardEntity 中的字段，没有 join 后的其他的表的字段(如 ccsName)，需要进行再次用  @SqlResultSetMappin 做映射处理
+     * 此方法，返回的类型，只包含和数据库表对应的 StStandardEntity 中的字段，没有 join 后的其他的表的字段(如 ccsName)
+     * 需要包含其他表的字段，需要在 StStandardEntity 实体类中用  @SqlResultSetMappin 做映射处理
      * 见  https://docs.jboss.org/hibernate/orm/5.1/userguide/html_single/chapters/query-native/Native.html
      *  -
      * 例如：
      * 下面的 ccsName 等就不会返回，无法包装入 StStandardEntity ，即使是 StStandardEntity 中有 ccsName 属性和对应的 getter ,setter 方法
      * -
      * 很麻烦，抛弃此方法，直接拼装 sql 查询
-     *      -
+     * -
      * 使用 JdbcTemplate ，也就没有了 Dto 转换问题
      * -
      * 构造一个关联查询的通用语句
@@ -91,8 +92,9 @@ public class JdbcUtils {
      *                       如果是多数据源，配置时数据源没有设置 @Primary
      *                       //@Autowired //@Qualifier("oracleDataSource") JdbcTemplate jdbcTemplate; 需要指定数据源名称
      * @param dbDialect      数据库类型，不同的数据库生成的分页语句不一样
-     * @param queryNativeSql 本地查询条件，和不分页时相同，如 select * from standard st where st.namecn like '%中国%' , select st.id,st.name from standard st where st.id ='239711'
-     *                       需要注意的是，不要包含排序条件，如果有排序条件，作为下面的参数传入
+     * @param queryNativeSql 本地查询条件，和不分页时相同，如
+     *                       select * from standard st where st.namecn like '%中国%' ,
+     *                       select st.id,st.name from standard st where st.id ='239711'  等
      * @param queryArgs      arguments to bind to the query ，查询时，绑定的参数
      *                       (leaving it to the PreparedStatement to guess the corresponding SQL type ，是 Object 类型，系统可以自动匹配成 sql 类型)
      *                       无参数时，传入 new Objects[]{} 空数组即可
@@ -108,7 +110,6 @@ public class JdbcUtils {
                                                             final String queryNativeSql, Object[] queryArgs,
                                                             final String countNativeSql, Object[] countArgs,
                                                             int currentPageNo, int pageSize,
-                                                            //  String[] sortParameters, SqlUtils.SortDirection sort,
                                                             Class resultClass) {
 
         if (currentPageNo < 1)
@@ -135,7 +136,7 @@ public class JdbcUtils {
     }
 
     /**
-     * 同上，构造查询语句，不分页，不排序
+     * 同上，构造查询语句，不分页
      *
      * @param jdbcTemplate
      * @param queryNativeSql
@@ -145,7 +146,6 @@ public class JdbcUtils {
     public static <T> List<T> findByNativeSqlString(final JdbcTemplate jdbcTemplate,
                                                     final String queryNativeSql, Object[] queryArgs,
                                                     Class resultClass) {
-        //return jdbcTemplate.queryForList(queryNativeSql, args, resultClass);
         return jdbcTemplate.query(queryNativeSql, queryArgs, new BeanPropertyRowMapper(resultClass));
     }
 
