@@ -38,7 +38,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
- public class TreeNodeEntity extends BaseEntity {
+public class TreeNodeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
     /**
@@ -87,7 +87,7 @@ import java.util.List;
      */
 
     @Column(name = "type", nullable = false)
-      private TreeNodeType type;
+    private TreeNodeType type;
     /**
      * 父组织
      * 树状结构，root 节点（根节点），没有父节点，为 null

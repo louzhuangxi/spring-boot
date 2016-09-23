@@ -19,6 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <start-class>com.base.SpringBootWebAppApplication</start-class><!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动-->
     </properties>
 
@@ -32,15 +33,15 @@
         </dependency>-->
 
         <!-- h819 commons model-->
-       <dependency>
-           <groupId>org.h819</groupId>
-           <artifactId>h819-commons</artifactId>
-           <version>${h819-commons.version}</version>
-       </dependency>
+        <dependency>
+            <groupId>org.h819</groupId>
+            <artifactId>h819-commons</artifactId>
+            <version>${h819-commons.version}</version>
+        </dependency>
 
-       <!-- 发布为 war 步骤
-        见 SpringBootWebappApplication.java
-        -->
+        <!-- 发布为 war 步骤
+         见 SpringBootWebappApplication.java
+         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -167,7 +168,6 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
-
 
 
         <!-- xss 防御

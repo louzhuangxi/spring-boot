@@ -12,6 +12,8 @@ package org.examples.spring;
 
 //需要特别注意的是:
 
+// 0.  @Column(name = "name") 可以标注在字段上，也可以标注在 getter 方法上，但不能在一个 Entity 中用两种标注方法，否则会出现异常
+
 //
 // examples 中演示的例子，均用 mysql ，数据源是 transactionManagerMySQL ，否则在扫描包结构的时候，如果有 oracle 的 entity，会报错
 
