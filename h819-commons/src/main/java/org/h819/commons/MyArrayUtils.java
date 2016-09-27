@@ -14,7 +14,6 @@ public class MyArrayUtils {
 
     /**
      * 合并两个 array，保持原先后顺序
-     * 用于构造 JdbcTemplate 查询条件
      *
      * @param firstArgs  第一个 array
      * @param secondArgs 第二个 array

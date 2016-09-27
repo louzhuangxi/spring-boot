@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public class BaseEntity extends AbstractMySQLEntity {
+public abstract class BaseEntity extends AbstractMySQLEntity {
 
     /**
      * 本记录过期时间

@@ -38,7 +38,9 @@ import java.time.LocalDateTime;
  * @author Oliver Gierke
  */
 
-// @MappedSuperclass  : JPA 基类的标识，表示类本身不受 Spring 管理的实体类，不会在数据库中建表，而是会由其他实体类进行扩展后建表
+// @MappedSuperclass  :
+// 1. JPA 基类的标识，表示类本身不是一个完整的实体类，不会在数据库中建表。它的属性会创建在其子类所创建的表中
+// 2. 不能再标注@Entity或@Table注解
 @MappedSuperclass
 @Getter
 @Setter
@@ -113,7 +115,6 @@ public abstract class AbstractMySQLEntity implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     /**
      * Returns the identifier of the entity.
      *

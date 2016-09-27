@@ -99,7 +99,7 @@ public class MyDateUtilsJdk8 {
      * @param date
      * @return
      */
-    private static Date astDate(LocalTime date) {
+    public static Date astDate(LocalTime date) {
 
         //  LocalTime actually can't be converted to a Date, because it only contains the time part of DateTime.
         // Like 11:00. But no day is known. You have to supply it manually:
@@ -108,8 +108,6 @@ public class MyDateUtilsJdk8 {
         return Date.from(instant);
 
     }
-
-
 
 
     /**
