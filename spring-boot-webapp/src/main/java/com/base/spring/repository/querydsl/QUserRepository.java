@@ -1,6 +1,7 @@
 package com.base.spring.repository.querydsl;
 
 import com.base.spring.domain.UserEntity;
+import com.base.spring.repository.BaseRepository;
 
 /**
  * Description : TODO()  官方的例子，还继承了 QuerydslBinderCustomizer 我没用上，不知道怎么用?
@@ -14,7 +15,7 @@ import com.base.spring.domain.UserEntity;
  * Time: 10:45
  * To change this template use File | Settings | File Templates.    QueryDslPredicateExecutor<UserEntity>, QuerydslBinderCustomizer<QUserEntity>
  */
-public interface QUserRepository extends BaseRepository<UserEntity, Long>{
+public interface QUserRepository extends BaseRepository<UserEntity, Long> {
 
 
 }

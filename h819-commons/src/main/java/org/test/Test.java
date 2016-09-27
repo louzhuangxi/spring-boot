@@ -6,7 +6,6 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.examples.spring.domain.TreeEntity;
 import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyFileUtils;
@@ -14,12 +13,7 @@ import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.beans.BeanUtils;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
@@ -69,32 +63,7 @@ public class Test {
     }
 
 
-    private void testGetBeanInfo() {
 
-
-        BeanInfo beanInfo = null;
-        try {
-            beanInfo = Introspector.getBeanInfo(TreeEntity.class);
-        } catch (IntrospectionException e) {
-            e.printStackTrace();
-        }
-
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors(); //得到属性描述符
-
-
-        PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(TreeEntity.class);
-
-        for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-            System.out.println(propertyDescriptor.getName());
-        }
-
-        System.out.println(StringUtils.center("  ", 80, "*"));
-
-        for (PropertyDescriptor propertyDescriptor : descriptors) {
-            System.out.println(propertyDescriptor.getName());
-        }
-
-    }
 
 
     private void test2() {

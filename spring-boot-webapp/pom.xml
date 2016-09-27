@@ -98,7 +98,7 @@
             <artifactId>spring-security-test</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-        <!-- 使用 spring data jpa querydsl  -->
+        <!-- 使用 spring data jpa querydsl
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
@@ -109,7 +109,7 @@
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <version>${querydsl.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!---->
         <dependency>
@@ -214,7 +214,7 @@
             <!--
                 生成的 QEntity 和原 Entity 在同一个包下，可以直接拷贝到系统的 Entity 包中；也可以把这个路径加到编译路径中，不用拷贝  -->
             <!--
-                This annotation processor scans our entities and embeddable classes, and creates the Querydsl query types.-->
+                This annotation processor scans our entities and embeddable classes, and creates the Querydsl query types.
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
@@ -241,7 +241,7 @@
                     </execution>
                 </executions>
             </plugin>
-
+            -->
         </plugins>
     </build>
 

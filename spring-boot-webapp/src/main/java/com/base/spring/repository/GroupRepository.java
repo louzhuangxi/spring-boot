@@ -14,7 +14,7 @@ import java.util.Optional;
  * Time: 12:46
  * To change this template use File | Settings | File Templates.
  */
-public interface GroupRepository extends JpaRepository<GroupEntity, Long>, JpaSpecificationExecutor {
+public interface GroupRepository extends BaseRepository<GroupEntity, Long> {
 
     @Query("select e from GroupEntity e where e.name=?1")
     Optional<GroupEntity> findByName(String name);

@@ -7,19 +7,15 @@
  * 参考 springside 4 项目，改动并做了扩展
  * *****************************************************************************
  */
-package org.h819.web.spring.jpa;
+package com.base.spring.utils;
 
+import org.h819.web.spring.jpa.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.util.Assert;
 
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -36,11 +32,20 @@ import java.util.List;
 //另外一个参考的例子：http://www.baeldung.com/spring-rest-api-query-search-language-tutorial
 //https://github.com/eugenp/tutorials/blob/master/spring-security-rest-full/src/main/java/org/baeldung/persistence/dao/UserSpecification.java
 //   Querydsl 改造 http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
-    //https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
-    //http://blog.csdn.net/RO_wsy/article/details/51345875
-public class JpaDynamicSpecificationUtils {
+//https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
+//http://blog.csdn.net/RO_wsy/article/details/51345875
+public class JpaDynamicSpecification {
 
-    private static Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(JpaDynamicSpecification.class);
+
+
+    private Specification specification;
+
+
+    public JpaDynamicSpecification() {
+        this.specification = Specifications.where(null);
+    }
+
 
     /**
      * @param searchFilter 查询条件
@@ -52,7 +57,7 @@ public class JpaDynamicSpecificationUtils {
      *                     new SearchFilter("parent.name", SearchFilter.Operator.EQ, "pname") ，被查询对象的 parent 属性是一个对象，该对象的 name 属性等于 pname
      * @return
      */
-    public static <T> Specification bySearchFilter(final SearchFilter searchFilter) {
+    private <T> Specification bySearchFilter(final SearchFilter searchFilter) {
 
         return new Specification<T>() {
             /**
@@ -68,7 +73,7 @@ public class JpaDynamicSpecificationUtils {
                 //即被查询的属性代表的对象类型，可以是对象，也可以是字符串。不同的比较方法，要求的对象类型不同
                 //此处为自动获取
                 Class<?> javaType = getPathJavaType(root, searchFilter.fieldName);
-              //  logger.info("javaType : {}", javaType);
+                //  logger.info("javaType : {}", javaType);
                 // logic operator
                 switch (searchFilter.operator) {
 
@@ -170,113 +175,25 @@ public class JpaDynamicSpecificationUtils {
 
             }
         };
-    }
 
-    /**
-     * 构造 between 查询，包含 start , end
-     *
-     * @param attribute
-     * @param start
-     * @param end
-     * @param <T>
-     * @return
-     */
-    //Between 需要两个变量，操作特殊，不放入 bySearchFilter 方法
-    public static <T> Specification<T> byBetweenOperator(final String attribute, final Object start, final Object end) {
-
-        //
-        //  builder.between() 没有实验成功
-
-        //方法二 :构造查询条件
-        return joinSpecification(
-                SearchFilter.Relation.AND,
-                bySearchFilter(new SearchFilter(attribute, SearchFilter.Operator.GTE, start)),
-                bySearchFilter(new SearchFilter(attribute, SearchFilter.Operator.LTE, end))
-        );
-    }
-
-    /**
-     * 查询条件的相反条件
-     *
-     * @param specs 查询条件
-     * @param <T>
-     * @return
-     */
-    public static <T> Specification<T> byNotSpecification(Specification<T> specs) {
-        return Specifications.not(specs);
 
     }
 
-    /**
-     * 多个 Specification 组合
-     *
-     * @param specifications
-     * @param relation       条件之间的关系，只能有一种 , SearchFilter.Relation.AND 或者 SearchFilter.Relation.OR。
-     *                       如果有 AND 和 OR 的关系是，可以把 specifications 拆为 两个两个组合，这样就可以设置多样的关联关系
-     * @param <T>
-     * @return
-     */
-    public static <T> Specification<T> joinSpecification(final SearchFilter.Relation relation, final Specification... specifications) {
 
-        Assert.isTrue(relation.equals(SearchFilter.Relation.AND) || relation.equals(SearchFilter.Relation.OR), "relation must be \"AND | OR  \"");
+    public JpaDynamicSpecification and(final SearchFilter searchFilter) {
 
-        //构造第一个 Specification ，这么做，只是为了使用 Specifications 方法，Specifications 无法构造一个空的  Specification
-        Specification specificationFinal = Specifications.where(specifications[0]);
-        //去掉第一个
-        List<Specification> subSpecification = Arrays.asList(specifications).subList(1, specifications.length);
-
-        //在第一个的基础上，继续构造
-        for (Specification spec : subSpecification) {
-            if (relation.equals(SearchFilter.Relation.AND))
-                specificationFinal = Specifications.where(spec).and(specificationFinal);
-            else specificationFinal = Specifications.where(spec).or(specificationFinal);
-
-        }
-        return specificationFinal;
+        this.specification = Specifications.where(this.specification).and(bySearchFilter(searchFilter));
+        return this;
     }
 
-    /**
-     * 同上，集合参数形式
-     *
-     * @param specifications
-     * @param relation
-     * @param <T>
-     * @return
-     */
-    public static <T> Specification<T> joinSpecification(final SearchFilter.Relation relation, final Collection<Specification> specifications) {
-        return joinSpecification(relation, specifications.toArray(new Specification[specifications.size()]));
+    public JpaDynamicSpecification or(final SearchFilter searchFilter) {
+        this.specification = Specifications.where(this.specification).or(bySearchFilter(searchFilter));
+        return this;
     }
 
-    /**
-     * 多个 SearchFilter 创建 Specification
-     *
-     * @param relation
-     * @param searchFilters
-     * @param <T>
-     * @return
-     */
-    public static <T> Specification<T> joinSearchFilter(final SearchFilter.Relation relation, final SearchFilter... searchFilters) {
-
-        Collection<Specification> specifications = new ArrayList<Specification>(searchFilters.length);
-        for (SearchFilter filter : searchFilters)
-            specifications.add(bySearchFilter(filter));
-
-        return joinSpecification(relation, specifications);
+    public <T> Specification<T> build() {
+        return specification;
     }
-
-    /**
-     * 多个 SearchFilter 创建 Specification
-     *
-     * @param relation
-     * @param searchFilters
-     * @param <T>
-     * @return
-     */
-    public static <T> Specification<T> joinSearchFilter(final SearchFilter.Relation relation, final Collection<SearchFilter> searchFilters) {
-
-        return joinSearchFilter(relation, searchFilters.toArray(new SearchFilter[searchFilters.size()]));
-    }
-
 
     /**
      * 转换 path
@@ -284,7 +201,7 @@ public class JpaDynamicSpecificationUtils {
      * 当 jpa 对象有级联关系时，被级联的对象的某个属性作为查询条件构建 Predicate ，如
      * 查询属性为 tree.parent.name (tree 对象中的 parent 对象 的 name 属性)
      * 构建的 Predicate 中的 Path 不是
-     * return builder.equal(root.get("tree.parent.name"), "value");
+     * return build.equal(root.get("tree.parent.name"), "value");
      * 而应该是
      * return cb.equal((Path<String>) ((Path<Area>) root.get("tree")).get("parent").get("name"),"value");
      *

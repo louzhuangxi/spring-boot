@@ -14,7 +14,7 @@ import java.util.Optional;
  * Time: 12:46
  * To change this template use File | Settings | File Templates.
  */
-public interface RoleRepository extends JpaRepository<RoleEntity, Long>, JpaSpecificationExecutor {
+public interface RoleRepository extends BaseRepository<RoleEntity, Long> {
 
     @Query("select e from RoleEntity e where e.name=?1")
     Optional<RoleEntity> findByName(String name);

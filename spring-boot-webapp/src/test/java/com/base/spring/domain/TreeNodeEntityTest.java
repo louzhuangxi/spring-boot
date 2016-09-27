@@ -2,12 +2,15 @@ package com.base.spring.domain;
 
 import com.alibaba.fastjson.JSON;
 import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.utils.JpaDynamicSpecification;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
+import org.h819.web.spring.jpa.SearchFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +42,10 @@ public class TreeNodeEntityTest {
 //        TreeNodeType.Standard
 
         //系统其他的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
-        TreeNodeEntity menu = repository.getRoot(TreeNodeType.Menu); // menu , privilege
-        TreeNodeEntity group = repository.getRoot(TreeNodeType.Group);
-        TreeNodeEntity departMent = repository.getRoot(TreeNodeType.DepartMent);
-        TreeNodeEntity standard = repository.getRoot(TreeNodeType.Standard);
+        TreeNodeEntity menu = repository.getRoot(TreeNodeType.Menu).get(); // menu , privilege
+        TreeNodeEntity group = repository.getRoot(TreeNodeType.Group).get();
+        TreeNodeEntity departMent = repository.getRoot(TreeNodeType.DepartMent).get();
+        TreeNodeEntity standard = repository.getRoot(TreeNodeType.Standard).get();
 
         /**
          * 初始化 menu
@@ -192,9 +195,16 @@ public class TreeNodeEntityTest {
     @Test
     public void testLocalDateTime() {
 
-        TreeNodeEntity entity = repository.getOne(54l);
+      //  TreeNodeEntity entity = repository.getOne(54l);
 
 //        entity.setParentNode(true);
+
+
+        Specification specification = new JpaDynamicSpecification().and(new SearchFilter("id", SearchFilter.Operator.EQ, 1)).build();
+
+        TreeNodeEntity entity = (TreeNodeEntity) repository.findAll(specification).get(0);
+
+        System.out.println(entity.getId());
 
         System.out.println(entity.getCreatedDate());
         System.out.println(entity.getModifiedDate());
@@ -204,12 +214,12 @@ public class TreeNodeEntityTest {
 
         System.out.println(tree);
 
-        TreeNodeEntity entity1 = JSON.parseObject(tree,TreeNodeEntity.class);
+        TreeNodeEntity entity1 = JSON.parseObject(tree, TreeNodeEntity.class);
 
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeNodeEntity.class, "parent");
 
-        MyJsonUtils.prettyPrint(entity1,preFilter);
+        MyJsonUtils.prettyPrint(entity1, preFilter);
 
 
     }

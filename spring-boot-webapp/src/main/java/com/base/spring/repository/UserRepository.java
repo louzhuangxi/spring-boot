@@ -14,7 +14,7 @@ import java.util.Optional;
  * Time: 12:46
  * To change this template use File | Settings | File Templates.
  */
-public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpecificationExecutor {
+public interface UserRepository extends BaseRepository<UserEntity, Long> {
 
     @Query("select e from UserEntity e where e.userName=?1")
     Optional<UserEntity> findOneByUserName(String userName);

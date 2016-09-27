@@ -20,9 +20,9 @@ public class MySQLDataSourceConfig {
 
     @Bean(name = "mysqlEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            EntityManagerFactoryBuilder builder,
+            EntityManagerFactoryBuilder build,
             @Qualifier("mysqlDataSource") DataSource dataSource) {
-        return builder
+        return build
                 .dataSource(dataSource)
                 .packages("com.open.api.mysql")
                 .persistenceUnit("mysql")

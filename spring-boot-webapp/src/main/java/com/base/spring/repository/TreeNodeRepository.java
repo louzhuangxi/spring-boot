@@ -16,7 +16,7 @@ import java.util.Optional;
  * Time: 12:46
  * To change this template use File | Settings | File Templates.
  */
-public interface TreeNodeRepository extends JpaRepository<TreeNodeEntity, Long>, JpaSpecificationExecutor {
+public interface TreeNodeRepository extends BaseRepository<TreeNodeEntity, Long> {
 
 
     /**

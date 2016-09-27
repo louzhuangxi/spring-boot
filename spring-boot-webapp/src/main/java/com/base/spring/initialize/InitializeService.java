@@ -38,7 +38,7 @@ public class InitializeService {
     public void initRootNode() {
         logger.info("initialize root menu tree.");
         for (TreeNodeType type : TreeNodeType.values()) {
-            if (treeNodeRepository.getRoot(type) == null) {
+            if (!treeNodeRepository.getRoot(type).isPresent()) {
                 logger.info("init {} tree root node", type);
                 TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, true, null);
                 treeNodeRepository.save(root);
