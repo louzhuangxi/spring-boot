@@ -182,7 +182,7 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     public <T> Specification<T> build() {
-        return specification;
+        return this.specification;
     }
 
     /**
