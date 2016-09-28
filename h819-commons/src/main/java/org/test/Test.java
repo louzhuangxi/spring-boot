@@ -13,6 +13,7 @@ import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class Test {
 
         Test t = new Test();
 
-        t.moveFiles(new File("f:\\00"), new File("f:\\02"));
+      //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
 //        String rename = to.getAbsoluteFile() + File.separator +
 //                FilenameUtils.getBaseName(to1.getAbsolutePath()) + "_rename." + FilenameUtils.getExtension(to1.getAbsolutePath());
@@ -59,6 +60,8 @@ public class Test {
 //        System.out.println(FilenameUtils.getFullPath(to1.getAbsolutePath()));
 //        System.out.println("rename : " + rename);
 
+       // Assert.noNullElements(new Object[] {null,null},"不能为空");
+        Assert.hasText("s","has text");
 
     }
 

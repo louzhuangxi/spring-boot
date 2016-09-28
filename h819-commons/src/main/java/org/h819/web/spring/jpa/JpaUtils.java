@@ -94,9 +94,17 @@ public class JpaUtils {
 
             JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
             //根据 jqgrid filters 参数，构造查询条件
-            Specification specificationFilters = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
+
+            Specification specificationFilters = null;
+            if (f.getGroupRelation().equals(SearchFilter.Relation.AND))
+                specificationFilters = new JpaDynamicSpecificationBuilder().and(f.getSearchFilters()).build();
+            if (f.getGroupRelation().equals(SearchFilter.Relation.OR))
+                specificationFilters = new JpaDynamicSpecificationBuilder().or(f.getSearchFilters()).build();
+
+
+            //  Specification specificationFilters = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
             return rep.findAll(
-                    JpaDynamicSpecificationUtils.joinSpecification(SearchFilter.Relation.AND, customSpecification, specificationFilters),
+                    new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
                     new PageRequest(currentPageNo, pageSize, JpaUtils.getJqgirdSpringSort(sortParameter, sortDirection))
             );
         }
@@ -151,9 +159,15 @@ public class JpaUtils {
             JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
             JqgridUtils.Filter f = JqgridUtils.getSearchFilters(jqgridFilters);
             //根据 jqgrid filters 参数，构造查询条件
-            Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
+            Specification specificationFilters = null;
+            if (f.getGroupRelation().equals(SearchFilter.Relation.AND))
+                specificationFilters = new JpaDynamicSpecificationBuilder().and(f.getSearchFilters()).build();
+            if (f.getGroupRelation().equals(SearchFilter.Relation.OR))
+                specificationFilters = new JpaDynamicSpecificationBuilder().or(f.getSearchFilters()).build();
 
-            return rep.findAll(spec, new PageRequest(currentPageNo, pageSize, getJqgirdSpringSort(sortParameter, sortDirection)));
+            //  Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
+
+            return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize, getJqgirdSpringSort(sortParameter, sortDirection)));
         }
     }
 
@@ -192,6 +206,7 @@ public class JpaUtils {
 
     /**
      * 单个排序条件创建 Sort
+     *
      * @param direction
      * @param property
      * @return

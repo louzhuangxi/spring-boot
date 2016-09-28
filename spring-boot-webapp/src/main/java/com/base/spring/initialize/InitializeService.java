@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Description : TODO(初始化相关数据)
@@ -37,14 +39,16 @@ public class InitializeService {
     @Transactional(readOnly = false)
     public void initRootNode() {
         logger.info("initialize root menu tree.");
-        for (TreeNodeType type : TreeNodeType.values()) {
-            if (!treeNodeRepository.getRoot(type).isPresent()) {
-                logger.info("init {} tree root node", type);
-                TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, true, null);
+
+        List<TreeNodeEntity> rootTreeList = treeNodeRepository.getRoot();
+        List<TreeNodeType> listType =Arrays.asList(TreeNodeType.values());
+        for (TreeNodeEntity tree : rootTreeList) {
+            if (!listType.contains(tree.getType())) {
+                logger.info("init {} tree root node", tree.getType());
+                TreeNodeEntity root = new TreeNodeEntity(tree.getType(), "root_" + tree.getType(), 0, true, null);
                 treeNodeRepository.save(root);
             }
         }
-
 
     }
 }

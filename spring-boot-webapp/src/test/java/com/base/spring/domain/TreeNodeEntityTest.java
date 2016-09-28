@@ -1,10 +1,9 @@
 package com.base.spring.domain;
 
-import com.alibaba.fastjson.JSON;
 import com.base.spring.repository.TreeNodeRepository;
-import com.base.spring.utils.JpaDynamicSpecification;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
+import org.h819.web.spring.jpa.JpaDynamicSpecificationBuilder;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +13,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Description : TODO()
@@ -195,31 +196,37 @@ public class TreeNodeEntityTest {
     @Test
     public void testLocalDateTime() {
 
-      //  TreeNodeEntity entity = repository.getOne(54l);
+        //  TreeNodeEntity entity = repository.getOne(54l);
 
 //        entity.setParentNode(true);
 
 
-        Specification specification = new JpaDynamicSpecification().and(new SearchFilter("id", SearchFilter.Operator.EQ, 1)).build();
+        Specification specification1 = new JpaDynamicSpecificationBuilder()
+                .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外"))
+                .and(new SearchFilter("name", SearchFilter.Operator.LIKE, "iso")).build();
 
-        TreeNodeEntity entity = (TreeNodeEntity) repository.findAll(specification).get(0);
+        Specification specification = new JpaDynamicSpecificationBuilder()
+                .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null, 20)).build();
 
-        System.out.println(entity.getId());
 
-        System.out.println(entity.getCreatedDate());
-        System.out.println(entity.getModifiedDate());
-        MyJsonUtils.prettyPrint(entity.getCreatedDate());
+        // Specification specification = JpaDynamicSpecificationUtils.joinSearchFilter(SearchFilter.Relation.AND,
+//                new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外"),
+//                new SearchFilter("name", SearchFilter.Operator.LIKE, "iso"));
 
-        String tree = JSON.toJSONString(entity);
 
-        System.out.println(tree);
+        List<TreeNodeEntity> entity = repository.findAll(specification);
 
-        TreeNodeEntity entity1 = JSON.parseObject(tree, TreeNodeEntity.class);
+//        System.out.println(entity.getId());
+//
+//        System.out.println(entity.getCreatedDate());
+//        System.out.println(entity.getModifiedDate());
+//        MyJsonUtils.prettyPrint(entity.getCreatedDate());
+
 
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeNodeEntity.class, "parent");
 
-        MyJsonUtils.prettyPrint(entity1, preFilter);
+        MyJsonUtils.prettyPrint(entity, preFilter);
 
 
     }

@@ -2,8 +2,6 @@ package com.base.spring.repository;
 
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -36,9 +34,16 @@ public interface TreeNodeRepository extends BaseRepository<TreeNodeEntity, Long>
     List<TreeNodeEntity> findByContainsName(String name);
 
     /**
+     * 获所有的根节点
+     *
+     * @return
+     */
+    @Query("select e from TreeNodeEntity e where e.parent is null order by  e.index")
+    List<TreeNodeEntity> getRoot();
+
+    /**
      * 获 type 类型的根节点
      *
-     * @param menuType 节点类型
      * @return
      */
     @Query("select e from TreeNodeEntity e where e.parent is null and e.type =?1 order by  e.index")

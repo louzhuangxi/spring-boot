@@ -36,8 +36,9 @@ import java.util.List;
 //另外一个参考的例子：http://www.baeldung.com/spring-rest-api-query-search-language-tutorial
 //https://github.com/eugenp/tutorials/blob/master/spring-security-rest-full/src/main/java/org/baeldung/persistence/dao/UserSpecification.java
 //   Querydsl 改造 http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
-    //https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
-    //http://blog.csdn.net/RO_wsy/article/details/51345875
+//https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
+//http://blog.csdn.net/RO_wsy/article/details/51345875
+@Deprecated // 用 builder 代替
 public class JpaDynamicSpecificationUtils {
 
     private static Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationUtils.class);
@@ -67,29 +68,29 @@ public class JpaDynamicSpecificationUtils {
 
                 //即被查询的属性代表的对象类型，可以是对象，也可以是字符串。不同的比较方法，要求的对象类型不同
                 //此处为自动获取
-                Class<?> javaType = getPathJavaType(root, searchFilter.fieldName);
-              //  logger.info("javaType : {}", javaType);
+                Class<?> javaType = getPathJavaType(root, searchFilter.getFieldName());
+                //  logger.info("javaType : {}", javaType);
                 // logic operator
-                switch (searchFilter.operator) {
+                switch (searchFilter.getOperator()) {
 
                     case EQ:
-                        return builder.equal(translateNestedPath(javaType, root, searchFilter.fieldName), searchFilter.value);
+                        return builder.equal(translateNestedPath(javaType, root, searchFilter.getFieldName()), searchFilter.getValue());
 
                     case NE:
-                        return builder.notEqual(translateNestedPath(javaType, root, searchFilter.fieldName), searchFilter.value);
+                        return builder.notEqual(translateNestedPath(javaType, root, searchFilter.getFieldName()), searchFilter.getValue());
 
                     case LIKE: // like,notlike 操作要求：属性代表的对象， String 类型，才可以比较 。(只有字符串才可以 like)
 
                     {
                         if (javaType.equals(String.class))
-                            return builder.like(translateNestedPath(String.class, root, searchFilter.fieldName), "%" + searchFilter.value + "%");
+                            return builder.like(translateNestedPath(String.class, root, searchFilter.getFieldName()), "%" + searchFilter.getValue() + "%");
                         else
                             throw new org.springframework.transaction.TransactionSystemException("like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
 
                     case NLIKE: {
                         if (javaType.equals(String.class))
-                            return builder.notLike(translateNestedPath(String.class, root, searchFilter.fieldName), "%" + searchFilter.value + "%");
+                            return builder.notLike(translateNestedPath(String.class, root, searchFilter.getFieldName()), "%" + searchFilter.getValue() + "%");
                         else
                             throw new org.springframework.transaction.TransactionSystemException("not like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
@@ -98,7 +99,7 @@ public class JpaDynamicSpecificationUtils {
 
                     {
                         if (javaType.equals(String.class))
-                            return builder.like(translateNestedPath(String.class, root, searchFilter.fieldName), searchFilter.value + "%");
+                            return builder.like(translateNestedPath(String.class, root, searchFilter.getFieldName()), searchFilter.getValue() + "%");
                         else
                             throw new org.springframework.transaction.TransactionSystemException("STARTS_WITH 操作 ,是 like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
@@ -106,7 +107,7 @@ public class JpaDynamicSpecificationUtils {
 
                     case ENDS_WITH: {
                         if (javaType.equals(String.class))
-                            return builder.like(translateNestedPath(String.class, root, searchFilter.fieldName), "%" + searchFilter.value);
+                            return builder.like(translateNestedPath(String.class, root, searchFilter.getFieldName()), "%" + searchFilter.getValue());
                         else
                             throw new org.springframework.transaction.TransactionSystemException("ENDS_WITH 操作 ,是 like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
@@ -116,31 +117,31 @@ public class JpaDynamicSpecificationUtils {
 
                     {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.greaterThan((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.fieldName), (Comparable) searchFilter.value);
+                            return builder.greaterThan((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
                         else
                             throw new org.springframework.transaction.TransactionSystemException("不能比较! greaterThan 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
                     case GTE: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.greaterThanOrEqualTo((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.fieldName), (Comparable) searchFilter.value);
+                            return builder.greaterThanOrEqualTo((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
                         else
                             throw new org.springframework.transaction.TransactionSystemException("不能比较! greaterThanOrEqualTo 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
 
                     case LT: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.lessThan((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.fieldName), (Comparable) searchFilter.value);
+                            return builder.lessThan((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
                         else
                             throw new org.springframework.transaction.TransactionSystemException("不能比较! lessThan 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
                     case LTE: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.lessThanOrEqualTo((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.fieldName), (Comparable) searchFilter.value);
+                            return builder.lessThanOrEqualTo((Expression<? extends Comparable>) translateNestedPath(javaType, root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
                         else
                             throw new org.springframework.transaction.TransactionSystemException("不能比较! lessThanOrEqualTo 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
-                    case NN:  // 此时只需要 searchFilter.fieldName ，searchFilter.value 用不到
-                        return builder.isNotNull(translateNestedPath(javaType, root, searchFilter.fieldName));
+                    case NN:  // 此时只需要 searchFilter.getFieldName() ，searchFilter.getValue() 用不到
+                        return builder.isNotNull(translateNestedPath(javaType, root, searchFilter.getFieldName()));
                     case IN://IN , NIN  操作要求：属性代表的对象，在集合中，对象应该可以比较
 
                         /**
@@ -148,21 +149,21 @@ public class JpaDynamicSpecificationUtils {
                          * 此时： attribute 为 "province" ,  values 为 e.province 对象的集合
                          * 多个属性在不同集合中的 IN 查询，用 join 方法连接
                          *
-                         * @param searchFilter.fieldName 实体中的属性名称。对应上述列子，应是 InfoEntity 中的 province  属性。
+                         * @param searchFilter.getFieldName() 实体中的属性名称。对应上述列子，应是 InfoEntity 中的 province  属性。
                          *                  如果集合为空，会抛出异常
                          *                  处理办法是：在集合中放入一个不会影响程序运行结果的元素，进行比较。
                          *                  例如集合元素是对象 id ，long 类型，则放入 -1 ，id 不会是负数，所以不会影响程序运行。
                          *                  注意：
                          *                  1. 不能是级联属性，只能比较实体中的直接属性，例如 province.website 就不行。
                          *                  2. 如果遇到比较的是级联属性，则通过其他方法查询级联属性后再比较。如通过查询 website -> province ,之后还是直接比较 province
-                         * @param searchFilter.value    用于比较的对象集合。 对应上述列子，应该是 InfoEntity 中的 e.province 对象的集合
+                         * @param searchFilter.getValue()    用于比较的对象集合。 对应上述列子，应该是 InfoEntity 中的 e.province 对象的集合
                          * @param <T>
                          * @return
                          */
 
-                        return translateNestedPath(javaType, root, searchFilter.fieldName).in(searchFilter.value);
+                        return translateNestedPath(javaType, root, searchFilter.getFieldName()).in(searchFilter.getValue());
                     case NIN:
-                        return translateNestedPath(javaType, root, searchFilter.fieldName).in(searchFilter.value).not();
+                        return translateNestedPath(javaType, root, searchFilter.getFieldName()).in(searchFilter.getValue()).not();
                     default:
                         return null;
 
