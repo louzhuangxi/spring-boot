@@ -132,7 +132,7 @@ public class MyExcelUtils {
     }
 
     /**
-     * 默认分隔符，默认日期格式
+     * 默认分隔符，默认日期格式，指定 sheet
      *
      * @param excelFile
      * @param sheetNumber
@@ -218,7 +218,9 @@ public class MyExcelUtils {
 
             } //所有行完成
 
+            workbook.close();
             fileInputStream.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -252,7 +254,7 @@ public class MyExcelUtils {
      */
     public static void writeExcel(List<ExcelLine> lines, String sheetName, File outExcelFile) throws Exception {
 
-        if (!outExcelFile.getAbsolutePath().toLowerCase().endsWith(".xlsx")) {
+        if (!FilenameUtils.isExtension(outExcelFile.getName().toLowerCase(), "xlsx")) {
             throw new Exception("输出文件必须是 xlsx 类型");
         }
 
@@ -297,8 +299,6 @@ public class MyExcelUtils {
      * @param columnIndex 指定列序号，从 0 开始
      * @return 指定列号的单元格数值，列号不存在时，返回 ""
      */
-
-    @Deprecated
     public static String getCellValueByColumnIndex(ExcelLine excelLine, int columnIndex) {
 
         return getCellValueByColumnAlphaTitleName(excelLine, convertColumnIndexToTitle(columnIndex));
@@ -315,7 +315,7 @@ public class MyExcelUtils {
     public static String getCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnTitle) {
 
         for (ExcelCell bean : excelLine.getCellValues()) {
-            if (bean.getTile().equals(columnTitle.toUpperCase()))
+            if (bean.getTile().equalsIgnoreCase(columnTitle))
                 return bean.getValue();
         }
 
@@ -335,7 +335,7 @@ public class MyExcelUtils {
         for (ExcelLine line : excelLines) {
             if (line.getLineNumber() == lineNumber) {
                 for (ExcelCell excelCell : line.getCellValues()) {
-                    if (excelCell.getTile().equalsIgnoreCase(columnAlphaName.toUpperCase()))
+                    if (excelCell.getTile().equalsIgnoreCase(columnAlphaName))
                         return excelCell.getValue();
                 }
             }
@@ -368,8 +368,7 @@ public class MyExcelUtils {
      * @param newCellValue 新列值
      * @return 替换后的行字符串 列号不存在时，返回原行字符串
      */
-    @Deprecated
-    static ExcelLine replaceCellValueByColumnTitleIndex(ExcelLine excelLine, int columnIndex, String newCellValue) {
+    static ExcelLine replaceCellValueByColumnIndex(ExcelLine excelLine, int columnIndex, String newCellValue) {
 
         return replaceCellValueByColumnAlphaTitleName(excelLine, convertColumnIndexToTitle(columnIndex), newCellValue);
 
@@ -389,6 +388,7 @@ public class MyExcelUtils {
         for (ExcelCell bean : list) {// 循环所遇列
             if (bean.getTile().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
                 list.set(list.indexOf(bean), new ExcelCell(bean.getTile(), newCellValue));
+                break;
             }
         }
         return excelLine;
