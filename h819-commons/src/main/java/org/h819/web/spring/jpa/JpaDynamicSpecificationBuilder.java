@@ -1,19 +1,9 @@
-/**
- * ****************************************************************************
- * Copyright (c) 2005, 2014 springside.github.io
- * <p/>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * <p/>
- * 参考 springside 4 项目，改动并做了扩展
- * *****************************************************************************
- */
 package org.h819.web.spring.jpa;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
-import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -51,6 +41,7 @@ import java.util.Collection;
  * -
  * org.springframework.data.domain.Example
  * Support for query by example (QBE).
+ * -
  * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
  * -
  */
@@ -115,12 +106,14 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder and(final SearchFilter... searchFilter) {
-        return and(Arrays.asList(searchFilter));
+    public JpaDynamicSpecificationBuilder and(final SearchFilter... searchFilters) {
+        for (SearchFilter filter : searchFilters)
+            this.specification = Specifications.where(this.specification).and(bySearchFilter(filter));
+        return this;
     }
 
-    public JpaDynamicSpecificationBuilder and(final Iterable<SearchFilter> searchFilter) {
-        for (SearchFilter filter : searchFilter)
+    public JpaDynamicSpecificationBuilder and(final Iterable<SearchFilter> searchFilters) {
+        for (SearchFilter filter : searchFilters)
             this.specification = Specifications.where(this.specification).and(bySearchFilter(filter));
         return this;
     }
@@ -130,8 +123,11 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder and(final Specification... customSpecification) {
-        return and(Arrays.asList(customSpecification));
+    public JpaDynamicSpecificationBuilder and(final Specification... customSpecifications) {
+        for (Specification specification : customSpecifications)
+            this.specification = Specifications.where(this.specification).and(specification);
+        return this;
+
     }
 
     public JpaDynamicSpecificationBuilder and(final Collection<Specification> customSpecifications) {
@@ -151,12 +147,14 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder or(final SearchFilter... searchFilter) {
-        return and(Arrays.asList(searchFilter));
+    public JpaDynamicSpecificationBuilder or(final SearchFilter... searchFilters) {
+        for (SearchFilter filter : searchFilters)
+            this.specification = Specifications.where(this.specification).or(bySearchFilter(filter));
+        return this;
     }
 
-    public JpaDynamicSpecificationBuilder or(final Iterable<SearchFilter> searchFilter) {
-        for (SearchFilter filter : searchFilter)
+    public JpaDynamicSpecificationBuilder or(final Iterable<SearchFilter> searchFilters) {
+        for (SearchFilter filter : searchFilters)
             this.specification = Specifications.where(this.specification).or(bySearchFilter(filter));
         return this;
     }
@@ -166,8 +164,10 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder or(final Specification... customSpecification) {
-        return and(Arrays.asList(customSpecification));
+    public JpaDynamicSpecificationBuilder or(final Specification... customSpecifications) {
+        for (Specification specification : customSpecifications)
+            this.specification = Specifications.where(this.specification).or(specification);
+        return this;
     }
 
     public JpaDynamicSpecificationBuilder or(final Collection<Specification> customSpecifications) {
@@ -176,6 +176,11 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
+    /**
+     * 条件 not
+     *
+     * @return
+     */
     public JpaDynamicSpecificationBuilder not() {
         this.specification = Specifications.not(this.specification);
         return this;

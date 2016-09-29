@@ -267,7 +267,7 @@ public class MyExcelUtils {
         int rowNum = 0;
         for (ExcelLine line : lines) {
             Row row = sheet.createRow(rowNum++); //第一行
-            Set<ExcelCell> cells = line.getCellValues();
+            List<ExcelCell> cells = line.getCellValues();
             for (ExcelCell excelCell : cells) {
                 int cellIndex = convertColumnTitleToIndex(excelCell.getTile());  // 根据 title ，获得列序号
                 Cell newCell = row.createCell(cellIndex);
@@ -279,7 +279,7 @@ public class MyExcelUtils {
             //Write the workbook in file system
             FileOutputStream out = new FileOutputStream(outExcelFile);
             workbook.write(out);
-            workbook.close();
+            workbook.close(); //
             out.flush();
             out.close();
 
@@ -385,28 +385,13 @@ public class MyExcelUtils {
      */
     public static ExcelLine replaceCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnAlphaTitleName, String newCellValue) {
 
-        boolean tag = false;
-
-        Set<ExcelCell> set = excelLine.getCellValues();
-        Set<ExcelCell> setNew = new TreeSet();
-
-        //重新构造，以保持单元格在 set 中的顺序
-        for (ExcelCell bean : set) {// 循环所遇列
-            if (bean.getTile().equals(columnAlphaTitleName)) {  // 找到了对应的列名
-                tag = true;
-                setNew.add(new ExcelCell(bean.getTile(), newCellValue));
-            } else  // 没找到，则之间添加
-                setNew.add(bean);
+        List<ExcelCell> list = excelLine.getCellValues();
+        for (ExcelCell bean : list) {// 循环所遇列
+            if (bean.getTile().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
+                list.set(list.indexOf(bean), new ExcelCell(bean.getTile(), newCellValue));
+            }
         }
-
-        if (!tag) //excelLine 不包含指定的列名，增加一列
-            setNew.add(new ExcelCell(columnAlphaTitleName.toUpperCase(), newCellValue));
-
-        // 重置 excelLineBean
-        excelLine.setCellValues(setNew);
-
         return excelLine;
-
     }
 
     /**

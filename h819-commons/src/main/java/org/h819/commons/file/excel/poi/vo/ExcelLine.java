@@ -1,7 +1,7 @@
 package org.h819.commons.file.excel.poi.vo;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description : TODO(excel 行数据，单元格无内容时，跳过，所以单元格可以不连续)
@@ -17,7 +17,7 @@ public class ExcelLine {
     private int sheetNumber = 0;
     private int lineNumber = 0;
     //有序 Set ，按添加顺序。
-    private Set<ExcelCell> cellValues = new TreeSet<>();
+    private List<ExcelCell> cellValues = new ArrayList();
 
     public ExcelLine() {
 
@@ -32,7 +32,7 @@ public class ExcelLine {
      * @param lineNumber  所在 sheet 的行号
      * @param cellValues  行单元格
      */
-    public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, Set<ExcelCell> cellValues) {
+    public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, List<ExcelCell> cellValues) {
 
         this.fileName = fileName;
         this.sheetName = sheetName;
@@ -74,11 +74,11 @@ public class ExcelLine {
         this.lineNumber = lineNumber;
     }
 
-    public Set<ExcelCell> getCellValues() {
+    public List<ExcelCell> getCellValues() {
         return cellValues;
     }
 
-    public void setCellValues(Set<ExcelCell> cellValues) {
+    public void setCellValues(List<ExcelCell> cellValues) {
         this.cellValues = cellValues;
     }
 

@@ -28,10 +28,12 @@
         <!-- spring -->
         <springloaded.version>1.2.4.RELEASE</springloaded.version>
         <spring.security.version>4.1.3.RELEASE</spring.security.version>
-
+        <!--querydsl 不用，原因见 JpaDynamicSpecificationBuilder
         <querydsl.apt.version>1.1.3</querydsl.apt.version>
-        <querydsl.version>4.1.4</querydsl.version><!--此版本号，最好和 spring boot jpa 中的 querydsl 对应-->
+        <querydsl.version>4.1.4</querydsl.version>-->
         <lombok.version>1.16.10</lombok.version>
+        <ehcache.version>3.1.2</ehcache.version>
+
 
         <!-- db -->
         <mysql.jdbc.driver.version>5.1.34</mysql.jdbc.driver.version>
@@ -65,7 +67,7 @@
         <commons-exec.version>1.3</commons-exec.version>
 
         <!-- apache poi-->
-        <apache.poi.version>3.14</apache.poi.version>
+        <apache.poi.version>3.15</apache.poi.version>
 
         <!-- 解析文件内容，判断 mime type 等功能-->
         <apache.tika.core.version>1.13</apache.tika.core.version>

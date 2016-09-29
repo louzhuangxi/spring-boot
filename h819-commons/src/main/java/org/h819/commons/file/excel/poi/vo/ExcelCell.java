@@ -37,7 +37,7 @@ public class ExcelCell implements Comparable {
     }
 
     public void setTile(String tile) {
-        this.tile = tile;
+        this.tile = tile.toUpperCase();
     }
 
     public String getValue() {

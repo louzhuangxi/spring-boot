@@ -1,7 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2005, 2014 springside.github.io
- * 参考 springside 4 项目，改动并做了扩展.  SearchFilter 类做了简化
- *******************************************************************************/
 package org.h819.web.spring.jpa;
 
 import org.springframework.util.Assert;
