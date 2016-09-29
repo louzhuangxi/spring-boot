@@ -303,7 +303,9 @@ public class JpaDynamicSpecificationBuilder {
                     case NIN:
                         return getNestedPath(root, searchFilter.getFieldName()).in(searchFilter.getValue()).not();
 
-                    case BETWEEN:  //BETWEEN 操作要求：属性代表的对象，应该可以进行比较，即实现了 Comparable 才可以，这符合 java 对象比较的原则
+                    case BETWEEN:
+                        //BETWEEN 操作要求：属性代表的对象，应该可以进行比较，即实现了 Comparable 才可以，这符合 java 对象比较的原则
+                        //包含两个边界 : betweenFrom <= object <= betweenTo
                         if (Comparable.class.isAssignableFrom(javaType))
                             return builder.between((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getBetweenFrom(), (Comparable) searchFilter.getBetweenTo());
                         else

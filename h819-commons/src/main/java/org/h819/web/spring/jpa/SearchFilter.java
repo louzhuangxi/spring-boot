@@ -43,6 +43,7 @@ public class SearchFilter {
 
     /**
      * 构造一个 between and 查询条件
+     * CriteriaBuilder between  包含两个边界 : betweenFrom <= object <= betweenTo
      *
      * @param fieldName
      * @param operator
