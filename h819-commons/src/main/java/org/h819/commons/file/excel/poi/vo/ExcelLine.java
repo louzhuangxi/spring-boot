@@ -1,7 +1,6 @@
 package org.h819.commons.file.excel.poi.vo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -17,7 +16,7 @@ public class ExcelLine {
     private String sheetName = "";
     private int sheetNumber = 0;
     private int lineNumber = 0;
-    private List<ExcelCell> cellValues = new ArrayList<>();
+    private Set<ExcelCell> cellValues = new TreeSet<>() ;
 
     public ExcelLine() {
 
@@ -32,7 +31,7 @@ public class ExcelLine {
      * @param lineNumber  所在 sheet 的行号
      * @param cellValues  行单元格,TreeSet 重新包装去重复，变为有序(按照 title 排序, ExcelCell 实现了 Comparable)
      */
-    public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, List<ExcelCell> cellValues) {
+    public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, Set<ExcelCell> cellValues) {
 
         this.fileName = fileName;
         this.sheetName = sheetName;
@@ -77,15 +76,13 @@ public class ExcelLine {
     /**
      * TreeSet 重新包装，变为有序且不重复
      */
-    public List<ExcelCell> getCellValues() {
-        return new ArrayList<>(new TreeSet<>(cellValues));
+    public Set<ExcelCell> getCellValues() {
+        return new TreeSet<>(cellValues);
     }
 
-
-    public void setCellValues(List<ExcelCell> cellValues) {
+    public void setCellValues(Set<ExcelCell> cellValues) {
         this.cellValues = cellValues;
     }
-
 
     /**
      * 增加一个单元格

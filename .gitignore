@@ -2,9 +2,8 @@
 #/doc/*
 #!/doc/SQL/
 /h819-commons/src/main/webapp
-#/h819-commons/src/main/resources
 /h819-commons/src/main/java/org/h819/tools
-/h819-commons/src/test
+
 
 
 ## Java.gitignore

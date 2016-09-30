@@ -198,7 +198,7 @@ public class MyExcelUtils {
         int rowNum = 0;
         for (ExcelLine line : lines) {
             Row row = sheet.createRow(rowNum++); //第一行
-            List<ExcelCell> cells = line.getCellValues();
+            Set<ExcelCell> cells = line.getCellValues();
             for (ExcelCell excelCell : cells) {
                 int cellIndex = convertColumnTitleToIndex(excelCell.getTitle());  // 根据 title ，获得列序号
                 Cell newCell = row.createCell(cellIndex);
@@ -321,13 +321,15 @@ public class MyExcelUtils {
 
         boolean exist = false;
 
-        List<ExcelCell> list = excelLine.getCellValues();
-        for (ExcelCell bean : list) {// 循环所遇列
+        Set<ExcelCell> set = excelLine.getCellValues();
+        for (ExcelCell bean : set) {// 循环所遇列
             if (bean.getTitle().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
                 //System.out.println("title="+bean.getTitle()+" , "+"new title="+columnAlphaTitleName);
-                list.set(list.indexOf(bean), new ExcelCell(bean.getTitle(), newCellValue));
+               // list.set(list.indexOf(bean), new ExcelCell(bean.getTitle(), newCellValue));
+                set.remove(bean);
+                set.add(new ExcelCell(bean.getTitle(), newCellValue)) ;
                 exist = true;
-                excelLine.setCellValues(list); //更新 excelLine
+                excelLine.setCellValues(set); //更新 excelLine
                 break;
             }
         }
