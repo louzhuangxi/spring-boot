@@ -1,8 +1,5 @@
 package org.h819.commons.file;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Lists;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
@@ -13,7 +10,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.h819.commons.MyDateUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelCell;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
-import org.h819.commons.json.JsonStringLineType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -53,72 +48,6 @@ public class MyExcelUtils {
     private MyExcelUtils() {
 
     }
-
-    /**
-     * 转换 excel 数据至 txt 数据。
-     * <p>
-     * 默认保存在 excel 同级目录，默认文件名和单元格分隔符。
-     *
-     * @param excelFile
-     * @return
-     */
-
-    public static void writeExcelToJsonFile(File excelFile, boolean duplicate) {
-
-        writeExcelToJsonFile(excelFile, new File(excelFile.getParent() + "\\" + defaultTxtFile), defaultDatePattern, duplicate);
-
-    }
-
-    /**
-     * 转换 excel 数据至 json  数据。
-     * 一次性读取所有数据，没有考虑性能问题。
-     *
-     * @param excelFile   excel 文件
-     * @param jsonFile    包含 excel 数据的结果
-     * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
-     * @return 包含 excel 数据的集合
-     */
-
-    public static void writeExcelToJsonFile(File excelFile, File jsonFile, String datePattern, boolean duplicate) {
-
-        List rowsSet = readExcel(excelFile, datePattern, null, duplicate);
-        // 输出结果
-        if (!rowsSet.isEmpty())
-            try {
-                FileUtils.write(jsonFile, JSON.toJSONString(rowsSet), StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-    }
-
-    /**
-     * 反序列化 json 数据为 excel 对象
-     *
-     * @param jsonFile 包含由 excle 序列化生成的 json 字符串的文件
-     * @param type     jsonFile 中的序列化字符串：
-     *                 每行是一个 json ，表示 excel 一行数据用 true 表示；
-     *                 多个 json在一个集合中，序列化之后为一个字符串， false。
-     *                 反序列化时，读取字符串方法不同。
-     * @return 无序 list ，可通过相关属性判断顺序
-     * @throws IOException
-     */
-    public static List<ExcelLine> readFromJsonFile(File jsonFile, JsonStringLineType.LineType type) throws IOException {
-
-        if (type.equals(JsonStringLineType.LineType.ArrayObject)) {//读出一个字符串，反序列化数组
-
-            List<ExcelLine> lineBeans = JSON.parseArray(FileUtils.readFileToString(jsonFile, StandardCharsets.UTF_8), ExcelLine.class);
-            return lineBeans;
-
-        } else if (type.equals(JsonStringLineType.LineType.Object)) { //逐行读出单个对象
-
-            List<String> list = FileUtils.readLines(jsonFile);
-            List<ExcelLine> multi = new ArrayList<ExcelLine>(list.size());
-            for (String s : list)
-                multi.add(JSON.parseObject(s, ExcelLine.class));
-            return multi;
-        } else return Lists.newArrayList();
-    }
-
 
     /**
      * 默认分隔符，默认日期格式
@@ -202,11 +131,11 @@ public class MyExcelUtils {
                     //For each row, iterate through each columns
                     Iterator<Cell> cellIterator = row.cellIterator();
                     //单行的每个单元格
-
-                    while (cellIterator.hasNext()) { //.hasNext() 方法原理：如果单元格为空，结果为 false，直接跳到下一个有内容的单元格。所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
+                    //.hasNext() 方法原理：如果单元格为空，结果为 false，直接跳到下一个有内容的单元格。所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
+                    while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
                         ExcelCell excelCell = new ExcelCell();
-                        excelCell.setTile(convertColumnIndexToTitle(cell.getColumnIndex()));
+                        excelCell.setTitle(convertColumnIndexToTitle(cell.getColumnIndex()));
                         excelCell.setValue(getFormatCellValue(cell, datePattern));
                         excelLine.addCellValue(excelCell);
 
@@ -271,7 +200,7 @@ public class MyExcelUtils {
             Row row = sheet.createRow(rowNum++); //第一行
             List<ExcelCell> cells = line.getCellValues();
             for (ExcelCell excelCell : cells) {
-                int cellIndex = convertColumnTitleToIndex(excelCell.getTile());  // 根据 title ，获得列序号
+                int cellIndex = convertColumnTitleToIndex(excelCell.getTitle());  // 根据 title ，获得列序号
                 Cell newCell = row.createCell(cellIndex);
                 String value = excelCell.getValue();
                 newCell.setCellValue(value);
@@ -315,7 +244,7 @@ public class MyExcelUtils {
     public static String getCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnTitle) {
 
         for (ExcelCell bean : excelLine.getCellValues()) {
-            if (bean.getTile().equalsIgnoreCase(columnTitle))
+            if (bean.getTitle().equalsIgnoreCase(columnTitle))
                 return bean.getValue();
         }
 
@@ -332,10 +261,13 @@ public class MyExcelUtils {
      */
     public static String getCellValueByColumnAlphaTitleNameAndLineNumber(List<ExcelLine> excelLines, int lineNumber, String columnAlphaName) {
 
+        if (excelLines.size() < lineNumber)
+            throw new IllegalArgumentException(lineNumber + " 超过总行数 ...");
+
         for (ExcelLine line : excelLines) {
             if (line.getLineNumber() == lineNumber) {
                 for (ExcelCell excelCell : line.getCellValues()) {
-                    if (excelCell.getTile().equalsIgnoreCase(columnAlphaName))
+                    if (excelCell.getTitle().equalsIgnoreCase(columnAlphaName))
                         return excelCell.getValue();
                 }
             }
@@ -354,6 +286,9 @@ public class MyExcelUtils {
      */
     public static ExcelLine copyCellValueByColumnAlphaTitleName(ExcelLine fromLine, String fromColumnTitle, ExcelLine toLine, String toColumnTitle) {
         String value = getCellValueByColumnAlphaTitleName(fromLine, fromColumnTitle);
+        if (value == null)
+            throw new IllegalArgumentException("fromColumnTitle wrong," + fromColumnTitle + " 源单元格不存在");
+
         return replaceCellValueByColumnAlphaTitleName(toLine, toColumnTitle, value);
 
     }
@@ -361,7 +296,7 @@ public class MyExcelUtils {
     /**
      * 替换行的指定列值
      * <p>
-     * 用 replaceCellValueByColumAlphaName 代替 ，以符合 Excel 习惯
+     * 用 replaceCellValueByColumnAlphaTitleName 代替 ，以符合 Excel 习惯
      *
      * @param excelLine    行字符串值
      * @param columnIndex  指定列号 ，从 0 开始
@@ -384,13 +319,22 @@ public class MyExcelUtils {
      */
     public static ExcelLine replaceCellValueByColumnAlphaTitleName(ExcelLine excelLine, String columnAlphaTitleName, String newCellValue) {
 
+        boolean exist = false;
+
         List<ExcelCell> list = excelLine.getCellValues();
         for (ExcelCell bean : list) {// 循环所遇列
-            if (bean.getTile().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
-                list.set(list.indexOf(bean), new ExcelCell(bean.getTile(), newCellValue));
+            if (bean.getTitle().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
+                //System.out.println("title="+bean.getTitle()+" , "+"new title="+columnAlphaTitleName);
+                list.set(list.indexOf(bean), new ExcelCell(bean.getTitle(), newCellValue));
+                exist = true;
+                excelLine.setCellValues(list); //更新 excelLine
                 break;
             }
         }
+
+        if (!exist) //excelLine 不包含指定的列名，增加一列
+            excelLine.addCellValue((new ExcelCell(columnAlphaTitleName.toUpperCase(), newCellValue)));
+
         return excelLine;
     }
 

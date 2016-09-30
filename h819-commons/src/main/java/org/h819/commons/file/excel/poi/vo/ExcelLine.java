@@ -2,9 +2,10 @@ package org.h819.commons.file.excel.poi.vo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 /**
- * Description : TODO(excel 行数据，单元格无内容时，跳过，所以单元格可以不连续)
+ * Description : TODO(excel 行数据，单元格无内容时，读取程序会跳过，所以单元格可能不连续)
  * User: h819
  * Date: 2014-10-20
  * Time: 12:29
@@ -16,8 +17,7 @@ public class ExcelLine {
     private String sheetName = "";
     private int sheetNumber = 0;
     private int lineNumber = 0;
-    //有序 Set ，按添加顺序。
-    private List<ExcelCell> cellValues = new ArrayList();
+    private List<ExcelCell> cellValues = new ArrayList<>();
 
     public ExcelLine() {
 
@@ -30,7 +30,7 @@ public class ExcelLine {
      * @param sheetName   行所在 sheet 名称
      * @param sheetNumber 行所在 sheet 序号
      * @param lineNumber  所在 sheet 的行号
-     * @param cellValues  行单元格
+     * @param cellValues  行单元格,TreeSet 重新包装去重复，变为有序(按照 title 排序, ExcelCell 实现了 Comparable)
      */
     public ExcelLine(String fileName, String sheetName, int sheetNumber, int lineNumber, List<ExcelCell> cellValues) {
 
@@ -74,9 +74,13 @@ public class ExcelLine {
         this.lineNumber = lineNumber;
     }
 
+    /**
+     * TreeSet 重新包装，变为有序且不重复
+     */
     public List<ExcelCell> getCellValues() {
-        return cellValues;
+        return new ArrayList<>(new TreeSet<>(cellValues));
     }
+
 
     public void setCellValues(List<ExcelCell> cellValues) {
         this.cellValues = cellValues;

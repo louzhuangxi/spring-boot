@@ -10,8 +10,13 @@ package org.h819.commons.file.excel.poi.vo;
 public class ExcelCell implements Comparable {
 
 
+    /**
+     * title 构造的时候，直接转换为大写
+     */
+
     //还可以添加其他单元格属性
-    private String tile = "";
+    //单元格横向表头 A,B,C ...
+    private String title = "";
     private String value = "";
 
 
@@ -23,21 +28,21 @@ public class ExcelCell implements Comparable {
     /**
      * 构造 excel 单元格键值
      *
-     * @param tile  单元格 title
+     * @param title 单元格 title
      * @param value 数值
      */
-    public ExcelCell(String tile, String value) {
-        this.tile = tile.toUpperCase();
+    public ExcelCell(String title, String value) {
+        this.title = title.toUpperCase();
         this.value = value;
 
     }
 
-    public String getTile() {
-        return tile;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTile(String tile) {
-        this.tile = tile.toUpperCase();
+    public void setTitle(String title) {
+        this.title = title.toUpperCase();
     }
 
     public String getValue() {
@@ -49,10 +54,16 @@ public class ExcelCell implements Comparable {
     }
 
 
+    /**
+     * 实现 Comparable ，在 set 中，按照 title 排序
+     *
+     * @param o
+     * @return
+     */
     @Override
     public int compareTo(Object o) {
         ExcelCell a = (ExcelCell) o;
-        return this.tile.compareTo(a.tile);
+        return this.title.compareTo(a.title);
     }
 
 

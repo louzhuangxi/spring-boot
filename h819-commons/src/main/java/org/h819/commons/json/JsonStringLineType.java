@@ -25,8 +25,7 @@ public class JsonStringLineType {
     //List<VO> vo = JSON.parseArray("...", VO.class);  //多个对象字符串，如 list 有多个对象，序列化为字符串之后，进行反序列化
 
     public enum LineType {
-        ArrayObject, Object;
-        //等于,不等于，包含，大于，大于等于，小于，小于等于,notNull;
+        ListObject, Object
     }
 }
 
