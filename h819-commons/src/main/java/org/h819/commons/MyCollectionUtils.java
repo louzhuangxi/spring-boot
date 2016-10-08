@@ -51,7 +51,7 @@ public class MyCollectionUtils {
     public static <T> Collection removeDuplicate(Collection<T> collection) {
 
         // return collection.parallelStream().distinct().collect(Collectors.toList());  jdk8
-        return new ArrayList<T>(new HashSet<T>(collection));//利用 set 过滤
+        return new ArrayList<>(new HashSet<T>(collection));//利用 set 过滤
     }
 
     /**

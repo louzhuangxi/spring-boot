@@ -1,6 +1,6 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
-<title>menu</title>
+<title>角色授权</title>
 
 <link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
 <link rel="stylesheet" href="${ctx}/ace/assets/css/bootstrap-datepicker3.css"/>
@@ -39,6 +39,49 @@
         <!-- PAGE CONTENT ENDS -->
     </div><!-- /.col -->
 </div><!-- /.row -->
+
+
+<div id="modal-table" class="modal fade" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog">
+		<form id="informationForm">
+			<div class="modal-content">
+				<div class="modal-header no-padding">
+					<div class="table-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							<span class="white">&times;</span>
+						</button>
+						角色授权
+					</div>
+				</div>
+				<div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
+					<div id="modal-tip" class="red clearfix"></div>
+					<input id="roleKeyId" type="hidden" />
+					<div class="widget-box widget-color-blue2">
+						<div class="widget-body">
+							<div class="widget-main padding-8">
+								<div class="zTreeDemoBackground left">
+								    <ul id="treeDemo" class="ztree"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer no-margin-top">
+					<div class="text-center">
+						<button id="submitButton" type="submit" class="btn btn-white btn-default btn-round">
+							<i class="ace-icon fa fa-floppy-o bigger-120"></i>
+							保存
+						</button>
+						<button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+							<i class="ace-icon fa fa-share bigger-120"></i>
+							取消
+						</button>
+					</div>
+				</div>
+			</div><!-- /.modal-content -->
+		</form>
+	</div><!-- /.modal-dialog -->
+</div>
 
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
@@ -87,21 +130,21 @@
             验证 code
              */
 
-            function checkcode(value, colname) {
+            function checkname(value, name) {
 
                 // alert("value :" +value +" , colname :" +colname);
-                var result = null; // mypricecheck 函数的返回值，作为验证结果
-                var ids = jQuery(grid_selector).jqGrid('getGridParam', 'selrow'); //编辑时，只能编辑一个条目。无法选了多个行时进行判断，未找到方法。
+                var result = null; // checkname 函数的返回值，作为验证结果
+                var ids = jQuery(grid_selector).jqGrid('getGridParam', 'selrow'); //编辑时，返回的被选择的条目。只能返回一个，无法选了多个行时进行判断，未找到方法。
                 // alert("ids :" +ids);
                 $.ajax({
                     async: false, //同步请求，ajax 返回
                     type: "POST",
-                    url: "${ctx}/validate/ajax/menu/code/validate.html",
+                    url: "${ctx}/validate/ajax/role/name/exist.html",
                     data: { //传递的参数和值
                         //oper: "unsubscribe",
                         // 在jqgrid 中提交，必须包含 oper 变量，名称 "oper" 不能改变
-                        code: value,
-                        id: ids //传递被选中的行 id
+                        name: value,
+                        ids: ids //传递被选中的行 id
                     },
                     dataType: "html",
                     //data 发送到 服务器端的格式 // 不要用 json ，会有 syntaxerror unexpected token < 错误发生，直接跳到 error : 部分
@@ -125,54 +168,6 @@
                         jQuery(grid_selector).trigger("reloadGrid");
                     }
                 });
-
-                return result;
-            };
-
-            /*
-            自定义的验证方法 远程
-            验证 pcode
-             */
-
-            function checkpcode(value, colname) {
-
-                //alert("value :" +value +" , colname :" +colname);
-                var result = null; // mypricecheck 函数的返回值，作为验证结果
-                var ids = jQuery(grid_selector).jqGrid('getGridParam', 'selrow'); //编辑时，只能编辑一个条目。无法选了多个行时进行判断，未找到方法。
-                // alert("ids :" +ids);
-                $.ajax({
-                    async: false, //同步请求，必需设为 false,否则 mypricecheck 方法会先于 ajax 方法执行。
-                    type: "POST",
-                    url: "${ctx}/validate/ajax/menu/pcode/validate.html",
-                    data: { //传递的参数和值
-                        //oper: "unsubscribe",
-                        // 在jqgrid 中提交，必须包含 oper 变量，名称 "oper" 不能改变
-                        pcode: value,
-                        id: ids //传递被选中的行 id
-                    },
-                    dataType: "html",
-                    //data 发送到 服务器端的格式 // 不要用 json ，会有 syntaxerror unexpected token < 错误发生，直接跳到 error : 部分
-                    //contentType: "application/json; charset=utf-8",
-                    success: function (data, textStatus, jqXHR) { //data 为 url 返回的字符串，用于提示不同的验证信息    , 可以为 "true"  或 "false" 或 "其他错误信息"
-                        //alert("data: "+data);
-                        if (data == "true") //返回字符串"true"，表示验证通过，不显示任何信息
-                            result = new Array(true, "");
-                        else
-                            result = new Array(false, data); //返回其他字符串，把其他字符串作为出错的信息，进行显示. 如果返回字符串为 false ，不显示任何信息
-
-                        // alert("success textStatus: "+textStatus);
-                        //alert("success jqXHR: "+jqXHR.status+','+jqXHR.statusText);
-                        //jQuery(grid_selector).trigger("reloadGrid"); //ajax 函数执行成功之后，jgrid 刷新当前表格
-                    },
-
-                    error: function (jqXHR, textStatus, errorThrown) { //打印出错信息，便于调试
-                        alert("error jqXHR: " + jqXHR.status + ',' + jqXHR.statusText);
-                        alert("error textStatus: " + textStatus); //"timeout", "error", "abort", and "parsererror" 有四种错误代码，errorThrown 是错误具体信息
-                        alert("error errorThrown : " + errorThrown);
-                        jQuery(grid_selector).trigger("reloadGrid");
-                    }
-                });
-
                 return result;
             };
 
@@ -215,7 +210,7 @@
                 caption: "最新消息",//表格描述
 
                 height: 250,
-                colNames: [' ', 'ID', '菜单编码', '菜单名称', '菜单 class', '菜单 data-url', '同层级中序号', '上级菜单编码'],
+                colNames: [' ', 'ID', '角色名称', '授权'],
                 colModel: [
                     {
                         name: 'myac', index: '', width: 20, fixed: true, sortable: false, resize: false, search: false
@@ -241,65 +236,25 @@
                          }
                     },
                     */
-                    {name: 'id', index: 'id', width: 50, hidden: true, search: true, sorttype: "int", editable: true}, // ace admin 1.3.4 ，不知道为什么，add 时，不显示第一行，所以只好加入 id 行，真正显示从 name 起
-                    {
-                        name: 'code',
-                        index: 'code',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true, custom: true, custom_func: checkcode}
-                    },
+                    {name: 'id', index: 'id', width: 50, hidden: true, search: true, sorttype: "int", editable: true}, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
                     {
                         name: 'name',
                         index: 'name',
-                        width: 50,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true}
-                    },
-                    //{name:'webSite.name',index:'webSite.name', width:70, editable: true,edittype:"checkbox",editoptions: {value:"Yes:No"},unformat: aceSwitch},
-                    {
-                        name: 'css',
-                        index: 'css',
-                        width: 50,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true}
-                    },
-                    {
-                        name: 'url',
-                        index: 'url',
-                        width: 200,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true}
-                    },
-                    {
-                        name: 'order',
-                        index: 'order',
-                        width: 50,
-                        search: false,
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true, integer: true}
-                    },
-                    {
-                        name: 'parent.code',
-                        index: 'parent.code',
                         width: 100,
                         search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
                         editable: true,
                         edittype: 'text',
-                        editrules: {required: true, custom: true, custom_func: checkpcode}
+                        editrules: {required: true, custom: true, custom_func: checkname} //
+                    },
+                    {
+                        name: '',
+                        index: '',
+						label : '授权',
+                        width: 100,
+                        search: false,
+                        editable: false,
+        				formatter : authorityFormatter //显示一个图标
                     }
                     /*
                     formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d'}
@@ -324,7 +279,7 @@
 
 
                 sortable: true,  //可以排序
-                sortname: 'level',  //默认排序字段名，点击表头字段排序后，该变量值变为被点击的变量名称
+                sortname: 'name',  //默认排序字段名，点击表头字段排序后，该变量值变为被点击的变量名称
                 sortorder: "desc", //默认排序方式：正序，点击表头字段排序后，该变量值变为 desc
 
                 rowNum: 10, //每页默认显示记录数目
@@ -358,6 +313,13 @@
                  */
 
             });
+			
+			function authorityFormatter(cellvalue, options, cell) {
+        			var template = "<button data-toggle='modal' onclick='javascript:$(\"#modal-table\").modal(\"toggle\");$(\"#roleKeyId\").val(\"" + cell.roleKey +"\")' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
+        			return template;
+        		}
+        		
+			
             $(window).triggerHandler('resize.jqGrid');//trigger window resize to make the grid get the correct size
 
 
@@ -595,4 +557,187 @@
             });
         });
     });
+</script>
+
+<!-- ztree -->
+<script type="text/javascript">
+	//引入加载的 js
+	var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/utils.js", null]
+	//var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
+
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+		//inline scripts related to this page
+		jQuery(function ($) {
+
+			var setting = {
+			
+				view : {
+					selectedMulti : true
+				},
+				
+			    check: {
+					enable: true
+				},
+
+				data : {
+					keep : {
+						parent : false, //父节点 允许添加子节点
+						leaf : false //子节点 允许添加子节点
+					},
+					simpleData : {
+						enable : false
+					}
+				},
+				callback : {
+
+				},
+
+				async : {
+					enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
+					url : "${ctx}/tree/ztree/ajax/async.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+					autoParam : ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
+					otherParam : {
+						"menu_type" : "${menu_type}"
+					} //这个是我们可以自定义的参数。第一次加载树，决定树类型
+					// dataType: "text",//默认text
+					// type:"get",//默认post
+				}
+			};
+
+			//放置 ztree 的元素 id，参见上文。js 函数最后定义
+			var ztree_root = "treeDemo";
+
+			/*================================ tools begin ================================================*/
+
+			/*
+			打印操作过程
+			 */
+			function printLog(str, type) {
+				if (!log)
+					log = $("#log");
+				log.append("<li> <i class='" + type + "'></i>" + "[ " + DateUtils.getNow() + " ] &nbsp; " + str + "</li>");
+
+				if (log.children("li").length > 10) { // 值保留10 行数据，防止页面变长
+					log.get(0).removeChild(log.children("li")[0]);
+				}
+			}
+
+			/*
+			弹出警示框
+			jquery-confirm
+			 */
+			function showAlart(alart_message) {
+				$.alert({
+					title : '',
+					icon : 'fa fa-warning red2',
+					content : alart_message,
+					animation : 'zoom',
+					confirmButton : "确定",
+					confirmButtonClass : "btn btn-primary btn-round",
+					confirm : function () {}
+				});
+			}
+
+			/*
+			弹出警示框
+			jquery-confirm
+			处理代码应该写在 confirm 函数体里面，不能包装成方法
+			//浏览器会顺序执行，而不等待 confirm 执行完成
+			应该是 confirm 方法异步执行造成的
+
+			$.confirm({
+			title: '',
+			icon: 'fa fa-warning red2',
+			content: confirm_message,
+			animation: 'zoom',
+			confirmButton: "确定",
+			cancelButton:"取消",
+			confirmButtonClass:"btn btn-primary btn-round",
+			cancelButtonClass: 'btn-danger',
+			confirm: function(){
+			//
+			},
+
+			cancel: function(){
+			//
+			}
+
+			});
+
+
+			/*
+			调用浏览器调试日志, 打印字符串
+			message 可以是任何对象。
+			需要注意的是:
+			如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
+			如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+			 */
+			function logger(message) {
+				console.log(message);
+			}
+
+			/*
+			class = btn 按钮点击之后，鼠标离开，释放焦点。
+			 */
+			$(".btn").mouseup(function () {
+				$(this).blur();
+			})
+
+			/*
+			当第一次点击复制或者粘帖按钮之后，被选中的节点会自动加上 a.copy or a.cut 样式(本页中面定义)。
+			但如果不想复制或者粘帖，再接着选择其他的节点，第一次点击选择的节点的样式仍然存在，影响页面效果，这里去掉。
+			下文的 fontCss() 方法也能完成同样的功能，就用这个吧，不研究了。
+			 */
+			function removeCopyCutClass() {
+				$("#treeDemo li").parent().find('li').find('a').removeClass("copy").removeClass("cut");
+			}
+
+			/**
+			获取选取的唯一节点(如果多个节点，不用此方法)，如果未选取，则弹出警告。
+			 */
+			function getZTree(root) {
+				return $.fn.zTree.getZTreeObj(root);
+			}
+
+			/**
+			获取选取的唯一节点(如果多个节点，不用此方法)
+			返回 treeNode 类型,详见 api
+			 */
+			function getZTreeSingleNode(root) {
+				var zTree = $.fn.zTree.getZTreeObj(root);
+				var nodes = zTree.getSelectedNodes();
+				return nodes[0];
+			}
+
+		   
+		  
+		/**
+		  点击保存按钮
+		*/		  
+
+		$('#submitButton').click(function() {
+		   
+		   var zTree = $.fn.zTree.getZTreeObj(ztree_root);
+			var nodes = zTree.getCheckedNodes(true);
+			logger(nodes);
+			
+			});
+
+			$(document).ready(function () {
+				//$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+				$.fn.zTree.init($("#treeDemo"), setting); //异步加载,设置 ztree 节点
+				$("#addLeaf").bind("click", {
+					isParent : false
+				}, add);
+				$("#edit").bind("click", edit);
+				$("#remove").bind("click", remove);
+				$("#copy").bind("click", copy);
+				$("#cut").bind("click", cut);
+				$("#paste").bind("click", paste);
+
+				$("#clearChildren").bind("click", clearChildren);
+			});
+
+		});
+	});
 </script>

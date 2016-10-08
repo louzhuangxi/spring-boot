@@ -14,6 +14,10 @@ import java.util.Optional;
  */
 public interface RoleRepository extends BaseRepository<RoleEntity, Long> {
 
+    /**
+     * @param name 唯一
+     * @return
+     */
     @Query("select e from RoleEntity e where e.name=?1")
     Optional<RoleEntity> findByName(String name);
 }

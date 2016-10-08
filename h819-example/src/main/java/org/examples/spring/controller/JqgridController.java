@@ -41,9 +41,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/ace-admin")
-public class DynamicSearchJqgridController {
+public class JqgridController {
 
-    private static Logger logger = LoggerFactory.getLogger(DynamicSearchJqgridController.class);
+    private static Logger logger = LoggerFactory.getLogger(JqgridController.class);
     @Autowired
     TreeEntityRepository treeEntityRepository;
 
@@ -229,7 +229,7 @@ public class DynamicSearchJqgridController {
     @RequestMapping(value = "/jqgrid-edit")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public void jqgridCURD(
-            @RequestParam(value = "oper", required = true) String oper,
+            @RequestParam(value = "oper", required = true) String oper, // jqgrid 传递过来的 edit 标记
             //  @RequestParam(value = "id", required = true) String id, //单选时
             @RequestParam(value = "id", required = true) String[] ids, //多选时，如果为单选，数组只有一个值
             @RequestParam(value = "code", required = false) String code,

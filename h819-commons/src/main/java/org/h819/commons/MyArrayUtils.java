@@ -22,7 +22,7 @@ public class MyArrayUtils {
      * @param <T>
      * @return
      */
-    public static <T> T[] concatArrays(final T[] firstArgs, final T[] secondArgs) {
+    public static <T> T[] joinArrays(final T[] firstArgs, final T[] secondArgs) {
         T[] result = Arrays.copyOf(firstArgs, firstArgs.length + secondArgs.length);
         System.arraycopy(secondArgs, 0, result, firstArgs.length, secondArgs.length);
         return result;

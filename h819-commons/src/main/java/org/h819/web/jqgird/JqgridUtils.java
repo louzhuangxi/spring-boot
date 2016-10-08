@@ -44,7 +44,7 @@ public class JqgridUtils {
         logger.info("查询条件之间的关系：" + jqgridFilterBean.getGroupOp());
         //组装 searchParams
         for (JqgridFilter.Rule rule : jqgridFilterBean.getRules()) {
-            logger.info(rule.getField() + " - " + rule.getOp() + " - " + rule.getData());
+            logger.info(rule.getField() + "  " + rule.getOp() + " '" + rule.getData()+"'");
             //要求 jqgrid 传递的操作符，应该和 SearchFilter.Operator 中的含义一致
             searchFilters.add(new SearchFilter(rule.getField(), SearchFilter.Operator.valueOf(rule.getOp()), rule.getData()));
         }

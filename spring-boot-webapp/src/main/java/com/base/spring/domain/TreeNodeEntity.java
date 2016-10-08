@@ -107,7 +107,7 @@ public class TreeNodeEntity extends BaseEntity {
     //n+1问题，需要根据实际情况调试
     @BatchSize(size = 100)//child 过多的情况下应用。
     @OrderBy("index ASC")
-    private List<TreeNodeEntity> children = new ArrayList<>();
+    private List<TreeNodeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
 
 
 //    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
@@ -345,5 +345,4 @@ public class TreeNodeEntity extends BaseEntity {
             getLevelInit(entity.getParent());
         }
     }
-
 }

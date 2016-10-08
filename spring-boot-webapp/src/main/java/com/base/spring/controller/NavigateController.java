@@ -51,9 +51,11 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
-    public String menu(HttpServletRequest request) {
+    public String menu(HttpServletRequest request, Model model) {
 
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
+        model.addAttribute("app_path", MyServletUtils.getAppPath(request));
+        model.addAttribute("menu_type", "Menu"); //对菜单进行授权
         return "admin/ace/html/ajax/content/jqgrid-roles";
     }
 
