@@ -28,12 +28,6 @@ public class ZTreeNode {
     private ZTreeNode() {
     }
 
-    /**
-     * @param name
-     */
-    private ZTreeNode(String name) {
-        this.name = name;
-    }
 
     /**
      * @param id
