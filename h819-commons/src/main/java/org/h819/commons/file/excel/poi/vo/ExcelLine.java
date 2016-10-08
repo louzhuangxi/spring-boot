@@ -75,7 +75,7 @@ public class ExcelLine {
     }
 
     /**
-     * TreeSet 重新包装，变为有序且不重复
+     * TreeSet 重新包装，变为有序且不重复，按照 title 排序
      */
     public List<ExcelCell> getCellValues() {
         return new ArrayList<>(new TreeSet<>(cellValues));

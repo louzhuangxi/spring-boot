@@ -30,7 +30,7 @@ public class MyArrayUtils {
 
 
     /**
-     * Arrays.asList 生成的 list 大小不可变，重新生成。
+     * Arrays.asList 生成的 list 大小不可变，重新包装。
      *
      * @param ts
      * @param <T>
