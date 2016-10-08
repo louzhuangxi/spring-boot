@@ -73,7 +73,7 @@ public class JpaDynamicSpecificationBuilder {
      */
     private <T> Path getNestedPath(Root<T> root, String filterFieldName) {
 
-        String[] names = filterFieldName.split("\\.");
+        String[] names = filterFieldName.split("\\."); // filterFieldName = tree.parent.name
         Path nestedPath = root;
         //递归构造 Path
         // 找到最终属性的 tree.parent.name 所代表的 path ，相当于 root.get("tree").get("parent").get("name");

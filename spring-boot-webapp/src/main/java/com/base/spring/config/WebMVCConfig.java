@@ -4,7 +4,7 @@ import com.base.spring.filter.XSSFilter;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -23,12 +23,19 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(WebMVCConfig.class);
 
+    /**
+     * 自定义，并注册   listener 演示
+     * 直接用 Bean ，也可以用 ServletListenerRegistrationBean
+     *
+     * @return
+     */
     // 向系统注册一个 RequestContextListener Bean ，这样在其他组件中就可以使用了
     //  CustomUserDetailsService 用到，用于截获 HttpServletRequest
     //  @Autowired
     //  private HttpServletRequest request;
     @Bean
     public RequestContextListener requestContextListener() {
+
         return new RequestContextListener();
     }
 
@@ -39,12 +46,13 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     // 所有过滤器的调用顺序跟添加的顺序相反，过滤器的实现是责任链模式，
 
     /**
-     * 自定义  listener 演示
+     * 自定义，并注册   listener 演示
      *
      * @return
      */
     @Bean
     protected ServletContextListener listener() {
+
         return new ServletContextListener() {
             @Override
             public void contextInitialized(ServletContextEvent sce) {
@@ -61,18 +69,23 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
 
     /**
+     * 自定义，并注册 filter
      * 将代理服务器发来的请求包含的IP地址转换成真正的用户IP
      *
      * @return
      */
     @Bean
-    public RemoteIpFilter remoteIpFilter() {
+    public FilterRegistrationBean remoteIpFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new RemoteIpFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("RemoteIpFilter");
         logger.info("RemoteIpFilter initialized");
-        return new RemoteIpFilter();
+        return registration;
     }
 
     /**
-     * 自定义 filter，增加 XSSFilter
+     * 自定义，并注册 filter (通过 FilterRegistrationBean)，增加 XSSFilter
      *
      * @return
      */
