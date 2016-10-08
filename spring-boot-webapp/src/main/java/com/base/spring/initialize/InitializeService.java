@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class InitializeService {
     TreeNodeRepository treeNodeRepository;
 
     /**
-     * 初始化一个根节点，所有节点均为该节点的子节点
+     * 初始化 TreeNodeType 中定义的所有类型的根节点，所有节点均为该节点的子节点
      *
      * @PostConstruct // 在 Bean 初始化之前执行的操作
      * @PreDestroy //在 bean 销毁之前执行的操作
@@ -39,13 +40,18 @@ public class InitializeService {
     @Transactional(readOnly = false)
     public void initRootNode() {
         logger.info("initialize root menu tree.");
-
         List<TreeNodeEntity> rootTreeList = treeNodeRepository.getRoot();
-        List<TreeNodeType> listType =Arrays.asList(TreeNodeType.values());
+        List<TreeNodeType> rootTreeNodeType = new ArrayList<>(rootTreeList.size());
         for (TreeNodeEntity tree : rootTreeList) {
-            if (!listType.contains(tree.getType())) {
-                logger.info("init {} tree root node", tree.getType());
-                TreeNodeEntity root = new TreeNodeEntity(tree.getType(), "root_" + tree.getType(), 0, true, null);
+            rootTreeNodeType.add(tree.getType());
+        }
+
+        List<TreeNodeType> listType = Arrays.asList(TreeNodeType.values());
+
+        for (TreeNodeType type : listType) {
+            if (!rootTreeNodeType.contains(type)) {
+                logger.info("init {} tree root node", type);
+                TreeNodeEntity root = new TreeNodeEntity(type, "root_" + type, 0, true, null);
                 treeNodeRepository.save(root);
             }
         }

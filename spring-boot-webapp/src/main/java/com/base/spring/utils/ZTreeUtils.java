@@ -27,7 +27,7 @@ public class ZTreeUtils {
      */
     public static ZTreeNode getJsonData(TreeNodeEntity treeNode) {
 
-        ZTreeNode parentTemp = new ZTreeNode("temp"); //创建一个临时的变量，用于保存转换结果。
+        ZTreeNode parentTemp = new ZTreeNode(0, "name", "url", false, false, false); //创建一个临时的变量，用于保存转换结果。
         convertTreeNodeToZTreeNode(treeNode, parentTemp);
         return parentTemp.getChildren().get(0); // parentTemp 只有一个子元素，为待转换的 treeNode
     }
@@ -95,7 +95,7 @@ public class ZTreeUtils {
         if (!treeNodeEntity.getChildren().isEmpty())
             open = true;
 
-        ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeNodeEntity.isParentNode());
+        ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeNodeEntity.isParentNode(), false);
 
         zTreeJsonNodeParentTemp.addChild(zTreeNode);
 
