@@ -1,7 +1,8 @@
 package com.base.spring.utils;
 
+import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.vo.ZTreeNode;
+import com.base.spring.vo.ZTreeNodeBean;
 
 import java.util.List;
 
@@ -22,13 +23,13 @@ public class ZTreeUtils {
     /**
      * 把 TreeNodeEntity 类型转换为 ZTreeJsonNode 类型
      *
-     * @param treeNode 待转换的对象
+     * @param zTreeNode 待转换的对象
      * @return
      */
-    public static ZTreeNode getJsonData(TreeNodeEntity treeNode) {
+    public static ZTreeNodeBean getJsonData(TreeNodeEntity zTreeNode, RoleEntity roleEntity) {
 
-        ZTreeNode parentTemp = new ZTreeNode(0, "name", "url", false, false, false); //创建一个临时的变量，用于保存转换结果。
-        convertTreeNodeToZTreeNode(treeNode, parentTemp);
+        ZTreeNodeBean parentTemp = new ZTreeNodeBean(0, "name", "url", false, false, false); //创建一个临时的变量，用于保存转换结果。
+        convertTreeNodeToZTreeNode(zTreeNode, parentTemp, roleEntity);
         return parentTemp.getChildren().get(0); // parentTemp 只有一个子元素，为待转换的 treeNode
     }
 
@@ -38,8 +39,8 @@ public class ZTreeUtils {
      * @param treeNode 待转换的对象
      * @return
      */
-    public static List<ZTreeNode> getJsonDataChildren(TreeNodeEntity treeNode) {
-        return getJsonData(treeNode).getChildren();
+    public static List<ZTreeNodeBean> getJsonDataChildren(TreeNodeEntity treeNode, RoleEntity roleEntity) {
+        return getJsonData(treeNode, roleEntity).getChildren();
     }
 
 
@@ -76,7 +77,7 @@ public class ZTreeUtils {
      * @param zTreeJsonNodeParentTemp 通过此参数，保存转换后的结果。因为利用了递归，可以通过参数传回转换后的结果
      * @param treeNodeEntity          待转换的对象
      */
-    private static void convertTreeNodeToZTreeNode(TreeNodeEntity treeNodeEntity, ZTreeNode zTreeJsonNodeParentTemp) {
+    private static void convertTreeNodeToZTreeNode(TreeNodeEntity treeNodeEntity, ZTreeNodeBean zTreeJsonNodeParentTemp, RoleEntity roleEntity) {
         if (treeNodeEntity == null || zTreeJsonNodeParentTemp == null)
             return;
 
@@ -90,18 +91,24 @@ public class ZTreeUtils {
         String name = treeNodeEntity.getName();
         String url = treeNodeEntity.getUrl();
         boolean open = false;
+        boolean checked = false;
 
         //是否展开有子节点的父节点
         if (!treeNodeEntity.getChildren().isEmpty())
             open = true;
 
-        ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeNodeEntity.isParentNode(), false);
+        //是否属于指定的 RoleEntity
+        if (roleEntity != null)
+            if (treeNodeEntity.getRoles().contains(roleEntity))
+                checked = true;
+
+        ZTreeNodeBean zTreeNode = new ZTreeNodeBean(id, name, url, open, treeNodeEntity.isParentNode(), checked);
 
         zTreeJsonNodeParentTemp.addChild(zTreeNode);
 
         if (!treeNodeEntity.getChildren().isEmpty())
             for (TreeNodeEntity child : treeNodeEntity.getChildren())
-                convertTreeNodeToZTreeNode(child, zTreeNode);
+                convertTreeNodeToZTreeNode(child, zTreeNode, roleEntity);
 
     }
 

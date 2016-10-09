@@ -124,6 +124,8 @@ public class TreeNodeEntity extends BaseEntity {
      */
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 100)//roles 过多的情况下应用。
     private List<RoleEntity> roles = new ArrayList<>();
 
 

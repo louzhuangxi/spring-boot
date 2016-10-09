@@ -2,6 +2,7 @@ package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
+import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeNodeRepository;
 import com.base.spring.service.ZTreeService;
 import org.slf4j.Logger;
@@ -26,6 +27,8 @@ public class ZTreeAjaxController {
     @Autowired
     TreeNodeRepository treeNodeRepository;
     @Autowired
+    RoleRepository roleRepository;
+    @Autowired
     ZTreeService treeNodeService;
 
     /**
@@ -44,25 +47,26 @@ public class ZTreeAjaxController {
     public String async(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
-        return treeNodeService.async(id, menuType, 1);
+        return treeNodeService.asyncTree(id, menuType);  //返回初始的树
 
     }
 
     /**
-     * 需要 check nodes ,展开所有层级,对于 getCheckedNodes 时有用，方便选择
-     * 层级设置为 100 (100 足够大)。
-     *
      * @param id
      * @param menuType
      * @return
      */
-    @RequestMapping(value = "/async_check.html", produces = "application/json")
+    @RequestMapping(value = "/async_roles.html", produces = "application/json")
     @ResponseBody
-    public String asyncRole(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
+    public String asyncRole(@RequestParam(value = "id", required = false) Long id,
+                            @RequestParam(value = "menu_type", required = true) TreeNodeType menuType,
+                            @RequestParam(value = "role_id", required = true) String roleId) {
 
-        logger.info("id={} , menuType={}", id, menuType);
-        return treeNodeService.async(id, menuType, 100);
-
+        logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
+        if (roleId.isEmpty())    // 还没有选择 role，返回初始的树
+            return treeNodeService.asyncTree(id, menuType);
+        else
+            return treeNodeService.asyncRoleTree(id, menuType, roleRepository.findOne(Long.valueOf(roleId))); //和 role 关联的树节点会自动选中
     }
 
     /**

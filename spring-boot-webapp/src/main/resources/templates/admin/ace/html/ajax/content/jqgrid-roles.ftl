@@ -52,7 +52,7 @@
                 <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
                     <div id="modal-tip" class="red clearfix"></div>
                     <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
-                    <input id="roleId" type="hidden"/>
+                    <input id="roleId" type="hidden" value=""/>
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
                             <div class="widget-main padding-8">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="modal-footer no-margin-top">
-                    <div class="text-center">
+                    <div class="text-center">      <!--  data-dismiss="modal" 点击后会关闭 modal -->
                         <button id="submitButton" type="submit" class="btn btn-white btn-default btn-round"
                                 data-dismiss="modal">
                             <i class="ace-icon fa fa-floppy-o bigger-120"></i>
@@ -84,25 +84,6 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     var scripts = [null, "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js", "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js", "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js", null]
-
-
-    /**
-     * 重新异步加载 ztree 节点
-     */
-    function refreshNode() {
-        //console.log("refreshNode");
-        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-        var type = "refresh";
-        var silent = true;
-        var nodes = zTree.getNodes(); // 返回所有根节点
-        if (nodes.length == 0) {
-            return;
-        }
-        for (var i = 0, l = nodes.length; i < l; i++) {
-            zTree.reAsyncChildNodes(nodes[i], type, silent);
-            if (!silent) zTree.selectNode(nodes[i]);
-        }
-    }
 
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
@@ -338,7 +319,6 @@
              * refreshNode 必须放在最后，以便于获得 roleId
              * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 执行之后生成，调用不到  jqgrid 内部的 js 函数
              *
-
              */
             function authorityFormatter(cellvalue, options, cell) {
                 var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\");refreshNode()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
@@ -591,6 +571,91 @@
     var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/utils.js", null]
     //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
 
+
+    //放置 ztree 的元素 id，参见上文。js 函数最后定义
+    var ztree_root = "treeDemo";
+
+
+    function getZTree(root) {
+        return $.fn.zTree.getZTreeObj(root);
+    }
+
+
+    /*
+    弹出警示框
+    jquery-confirm
+     */
+    function showAlart(alart_message) {
+        $.alert({
+            title: '',
+            icon: 'fa fa-warning red2',
+            content: alart_message,
+            animation: 'zoom',
+            confirmButton: "确定",
+            confirmButtonClass: "btn btn-primary btn-round",
+            confirm: function () {
+            }
+        });
+    }
+
+    /*
+    弹出警示框
+    jquery-confirm
+    处理代码应该写在 confirm 函数体里面，不能包装成方法
+    //浏览器会顺序执行，而不等待 confirm 执行完成
+    应该是 confirm 方法异步执行造成的
+
+    $.confirm({
+    title: '',
+    icon: 'fa fa-warning red2',
+    content: confirm_message,
+    animation: 'zoom',
+    confirmButton: "确定",
+    cancelButton:"取消",
+    confirmButtonClass:"btn btn-primary btn-round",
+    cancelButtonClass: 'btn-danger',
+    confirm: function(){
+    //
+    },
+
+    cancel: function(){
+    //
+    }
+
+    });
+
+
+    /*
+    调用浏览器调试日志, 打印字符串
+    message 可以是任何对象。
+    需要注意的是:
+    如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
+    如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+     */
+    function logger(message) {
+        console.log(message);
+    }
+
+    /**
+     * 重新异步加载 ztree 节点
+     * 此函数可以供页面所有元素调用
+     * 自动调用 ztree setting 中的 async 定义的方法
+     */
+    function refreshNode() {
+        var zTree = getZTree(ztree_root);
+        var type = "refresh";
+        var silent = true;
+        var nodes = zTree.getNodes(); // 返回所有根节点
+        if (nodes.length == 0) {
+            return;
+        }
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            zTree.reAsyncChildNodes(nodes[i], type, silent);
+            if (!silent) zTree.selectNode(nodes[i]);
+        }
+    }
+
+
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         //inline scripts related to this page
         jQuery(function ($) {
@@ -614,92 +679,27 @@
                         enable: false
                     }
                 },
+
                 callback: {},
 
                 async: {
                     enable: true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
-                    url: "${ctx}/tree/ztree/ajax/async_check.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+                    url: "${ctx}/tree/ztree/ajax/async_roles.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
-                        "menu_type": "${menu_type}"
+                        "menu_type": "${menu_type}",
+                      //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
+                        "role_id": function () {
+                            return $("#roleId").val();
+                        }
                     } //这个是我们可以自定义的参数。第一次加载树，决定树类型
                     // dataType: "text",//默认text
                     // type:"get",//默认post
                 }
             };
 
-            //放置 ztree 的元素 id，参见上文。js 函数最后定义
-            var ztree_root = "treeDemo";
-
             /*================================ tools begin ================================================*/
 
-            /*
-            打印操作过程
-             */
-            function printLog(str, type) {
-                if (!log)
-                    log = $("#log");
-                log.append("<li> <i class='" + type + "'></i>" + "[ " + DateUtils.getNow() + " ] &nbsp; " + str + "</li>");
-
-                if (log.children("li").length > 10) { // 值保留10 行数据，防止页面变长
-                    log.get(0).removeChild(log.children("li")[0]);
-                }
-            }
-
-            /*
-            弹出警示框
-            jquery-confirm
-             */
-            function showAlart(alart_message) {
-                $.alert({
-                    title: '',
-                    icon: 'fa fa-warning red2',
-                    content: alart_message,
-                    animation: 'zoom',
-                    confirmButton: "确定",
-                    confirmButtonClass: "btn btn-primary btn-round",
-                    confirm: function () {
-                    }
-                });
-            }
-
-            /*
-            弹出警示框
-            jquery-confirm
-            处理代码应该写在 confirm 函数体里面，不能包装成方法
-            //浏览器会顺序执行，而不等待 confirm 执行完成
-            应该是 confirm 方法异步执行造成的
-
-            $.confirm({
-            title: '',
-            icon: 'fa fa-warning red2',
-            content: confirm_message,
-            animation: 'zoom',
-            confirmButton: "确定",
-            cancelButton:"取消",
-            confirmButtonClass:"btn btn-primary btn-round",
-            cancelButtonClass: 'btn-danger',
-            confirm: function(){
-            //
-            },
-
-            cancel: function(){
-            //
-            }
-
-            });
-
-
-            /*
-            调用浏览器调试日志, 打印字符串
-            message 可以是任何对象。
-            需要注意的是:
-            如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
-            如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
-             */
-            function logger(message) {
-                console.log(message);
-            }
 
             /*
             class = btn 按钮点击之后，鼠标离开，释放焦点。
@@ -718,14 +718,10 @@
             }
 
 
-            function getZTree(root) {
-                return $.fn.zTree.getZTreeObj(root);
-            }
-
             /**
              点击保存按钮，关联所有树节点到选中的 roleId 上
              */
-           // 获取所有被 checked 的节点的 id
+                    // 获取所有被 checked 的节点的 id
             var ids = new Array();
             var ids_str = "";
 

@@ -1,6 +1,7 @@
 package com.base.spring.service;
 
 import com.alibaba.fastjson.JSON;
+import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
@@ -24,6 +25,32 @@ public class ZTreeService {
     private TreeNodeRepository treeNodeRepository;
 
     /**
+     * 异步加载原始树
+     *
+     * @param id
+     * @param menuType
+     * @return
+     */
+    public String asyncTree(Long id, TreeNodeType menuType) {
+        return async(id, menuType, 1, null);
+    }
+
+
+    /**
+     * 根据 role ，异步加载树
+     * 需要 check nodes , 展开所有层级, 对于 getCheckedNodes 时有用，方便选择
+     * 层级设置为 100 (100 足够大)。
+     *
+     * @param id
+     * @param menuType
+     * @return
+     */
+    public String asyncRoleTree(Long id, TreeNodeType menuType, RoleEntity roleEntity) {
+        return async(id, menuType, 100, roleEntity);
+    }
+
+
+    /**
      * ztree 异步模式加载数据
      * 两种情况返回值不一样。
      * id==null ，返回一个节点
@@ -35,13 +62,16 @@ public class ZTreeService {
      * @param show_Level 页面显示树状结构到第 n 级
      * @return
      */
-    public String async(Long id, TreeNodeType menuType, int show_Level) {
+    private String async(Long id, TreeNodeType menuType, int show_Level, RoleEntity roleEntity) {
 
         //页面显示树状结构到第 n 级
 
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();
-        dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "privilege");
+        if (roleEntity == null)
+            dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "roles");
+        else
+            dtoUtils.addExcludes(TreeNodeEntity.class, "parent");
 
         if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
@@ -54,13 +84,13 @@ public class ZTreeService {
 
             TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
 
-            return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode));
+            return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode, roleEntity));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
             logger.info("initialize ztree async from db by id={}", id);
             TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
             TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
-            return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode)); //返回节点的子节点
+            return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点
         }
     }
 

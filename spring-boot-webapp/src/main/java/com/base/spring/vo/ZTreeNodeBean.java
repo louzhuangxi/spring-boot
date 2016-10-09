@@ -14,7 +14,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 
-public class ZTreeNode {
+public class ZTreeNodeBean {
     @Getter
     @Setter
     private long id;
@@ -34,9 +34,9 @@ public class ZTreeNode {
     private boolean checked;
     @Getter
     @Setter
-    private List<ZTreeNode> children = new ArrayList<>();
+    private List<ZTreeNodeBean> children = new ArrayList<>();
 
-    private ZTreeNode() {
+    private ZTreeNodeBean() {
     }
 
 
@@ -48,7 +48,7 @@ public class ZTreeNode {
      * @param isParent true 时会显示为文件夹图标。即使无子节点数据，也会设置为文件夹图标父节点
      * @param checked  节点展示的时候，是否被选中
      */
-    public ZTreeNode(long id, String name, String url, boolean open, boolean isParent, boolean checked) {
+    public ZTreeNodeBean(long id, String name, String url, boolean open, boolean isParent, boolean checked) {
 
 
         this.id = id;
@@ -59,7 +59,7 @@ public class ZTreeNode {
         this.checked = checked;
     }
 
-    public void addChild(ZTreeNode child) {
+    public void addChild(ZTreeNodeBean child) {
         this.children.add(child);
     }
 
@@ -84,9 +84,9 @@ public class ZTreeNode {
     @Override
     public boolean equals(Object o) {  // 放入 set 时，判断元素是否相同的依据
         if (this == o) return true;
-        if (!(o instanceof ZTreeNode)) return false;
+        if (!(o instanceof ZTreeNodeBean)) return false;
 
-        ZTreeNode zTreeNode = (ZTreeNode) o;
+        ZTreeNodeBean zTreeNode = (ZTreeNodeBean) o;
         return id == zTreeNode.id;
 
     }
