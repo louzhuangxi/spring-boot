@@ -13,16 +13,27 @@ import java.util.List;
  * Time: 13:36
  * To change this template use File | Settings | File Templates.
  */
-@Setter
-@Getter
-public class ZTreeNode {
 
+public class ZTreeNode {
+    @Getter
+    @Setter
     private long id;
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
     private String url;
+    @Getter
+    @Setter
     private boolean open;
+    // @Getter
+    // @Setter
+    // 不用默认生成的，解决生成 json string ，is_ 问题
     private boolean isParent;
     private boolean checked;
+    @Getter
+    @Setter
     private List<ZTreeNode> children = new ArrayList<>();
 
     private ZTreeNode() {
@@ -38,6 +49,8 @@ public class ZTreeNode {
      * @param checked  节点展示的时候，是否被选中
      */
     public ZTreeNode(long id, String name, String url, boolean open, boolean isParent, boolean checked) {
+
+
         this.id = id;
         this.name = name;
         this.url = url;
@@ -48,6 +61,23 @@ public class ZTreeNode {
 
     public void addChild(ZTreeNode child) {
         this.children.add(child);
+    }
+
+
+    public boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(boolean parent) {
+        isParent = parent;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
 

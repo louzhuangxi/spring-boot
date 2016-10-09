@@ -1,10 +1,12 @@
 package org.h819.commons.file;
 
-import org.h819.commons.MyArrayUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelCell;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Description : TODO()
@@ -91,8 +93,11 @@ public class MyExcelUtilsTest {
         cell2.setTitle("b");
         cell2.setValue("b_value");
 
+        Set set = new HashSet<>();
+        set.add(cell);
+        set.add(cell2);
 
-        line.setCellValues(MyArrayUtils.asArrayList(cell, cell2));
+        line.setCellValues(set);
         // Arrays.asList 生成的 list 大小不可变 ，重新生成
         //   MyJsonUtils.prettyPrint(line);
 

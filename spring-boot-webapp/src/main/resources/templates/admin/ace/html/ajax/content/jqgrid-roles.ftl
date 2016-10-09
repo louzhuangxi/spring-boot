@@ -21,11 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-            You can have a custom jqGrid download here:
-            <a href="http://www.trirand.com/blog/?page_id=6" target="_blank">
-                http://www.trirand.com/blog/?page_id=6
-                <i class="fa fa-external-link bigger-110"></i>
-            </a>
+            授权资源
         </div>
 
         <table id="grid-table"></table>
@@ -55,7 +51,8 @@
                 </div>
                 <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
                     <div id="modal-tip" class="red clearfix"></div>
-                    <input id="roleKeyId" type="hidden"/>
+                    <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
+                    <input id="roleId" type="hidden"/>
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
                             <div class="widget-main padding-8">
@@ -68,7 +65,8 @@
                 </div>
                 <div class="modal-footer no-margin-top">
                     <div class="text-center">
-                        <button id="submitButton" type="submit" class="btn btn-white btn-default btn-round">
+                        <button id="submitButton" type="submit" class="btn btn-white btn-default btn-round"
+                                data-dismiss="modal">
                             <i class="ace-icon fa fa-floppy-o bigger-120"></i>
                             保存
                         </button>
@@ -86,6 +84,26 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     var scripts = [null, "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js", "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js", "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js", null]
+
+
+    /**
+     * 重新异步加载 ztree 节点
+     */
+    function refreshNode() {
+        //console.log("refreshNode");
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        var type = "refresh";
+        var silent = true;
+        var nodes = zTree.getNodes(); // 返回所有根节点
+        if (nodes.length == 0) {
+            return;
+        }
+        for (var i = 0, l = nodes.length; i < l; i++) {
+            zTree.reAsyncChildNodes(nodes[i], type, silent);
+            if (!silent) zTree.selectNode(nodes[i]);
+        }
+    }
+
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
         jQuery(function ($) {
@@ -314,8 +332,16 @@
 
             });
 
+
+            /**
+             * 每次点击授权按钮，都重新异步加载 ztree 一次，因为每个权限已经关联的节点不同，都需要重新加载
+             * refreshNode 必须放在最后，以便于获得 roleId
+             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 执行之后生成，调用不到  jqgrid 内部的 js 函数
+             *
+
+             */
             function authorityFormatter(cellvalue, options, cell) {
-                var template = "<button data-toggle='modal' onclick='javascript:$(\"#modal-table\").modal(\"toggle\");$(\"#roleKeyId\").val(\"" + cell.roleKey + "\")' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\");refreshNode()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
                 return template;
             }
 
@@ -592,7 +618,7 @@
 
                 async: {
                     enable: true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
-                    url: "${ctx}/tree/ztree/ajax/async.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+                    url: "${ctx}/tree/ztree/ajax/async_check.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
                         "menu_type": "${menu_type}"
@@ -697,53 +723,56 @@
             }
 
             /**
-             获取选取的唯一节点(如果多个节点，不用此方法)
-             返回 treeNode 类型,详见 api
+             点击保存按钮，关联所有树节点到选中的 roleId 上
              */
-            function getZTreeSingleNode(root) {
-                var zTree = getZTree(ztree_root);
-                var nodes = zTree.getSelectedNodes();
-                return nodes[0];
-            }
-
-            /**
-             * 展开有子节点被勾选的父节点
-             *
-             */
-            //展开选中子节点的向上父节点
-            function InitialNodeOpen() {
-                var zTree = getZTree(ztree_root);
-                //获得选中的节点
-                var SelectedNodes = zTree.getCheckedNodes(true);
-                for (var i = 0; i < SelectedNodes.length; i++) {
-                    OpenParentNode(SelectedNodes[i], zTree);
-                }
-            }
-
-            //递归查找父节点并展开父节点
-            function OpenParentNode(node,zTree) {
-                //获取当前节点的父节点
-                var parentNode = node.getParentNode();
-                if (parentNode != null) {
-                    //展开父节点
-                    zTree.expandNode(parentNode, true, true, true);
-                    //继续递归向上查找
-                    OpenParentNode(parentNode, zTree);
-                }
-            }
-
-            /**
-             点击保存按钮
-             http://blog.csdn.net/linwei_1029/article/details/8720887
-             */
+           // 获取所有被 checked 的节点的 id
+            var ids = new Array();
+            var ids_str = "";
 
             $('#submitButton').click(function () {
 
                 var zTree = getZTree(ztree_root);
-                var nodes = zTree.getCheckedNodes(true);
-                logger(nodes);
+                var nodes = zTree.getCheckedNodes(true); //返回的是一个数组
+                //logger(nodes);
+                getAllIds(nodes);
+                //测试
+                for (i = 0; i < ids.length; i++) {
+                    ids_str += ids[i] + ",";
+                }
+                //logger("text="+text);
+
+
+                $.ajax({ //ajax 提交到controller的delApplication方法处理
+                    type: "post",
+                    async: false,
+                    url: "${ctx}/grid/role/get_checked_nodes.html",
+                    data: { //传递的参数和值
+                        ids_str: ids_str,
+                        role_id: $("#roleId").val()
+                    },
+                    dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                    success: function (data) { //处理成功的回调函数
+
+                    },
+                    error: function () {
+
+                    }
+                    //处理失败的回到函数
+                });
 
             });
+
+
+            /**
+             查找
+             */
+            function getAllIds(nodes) {
+
+                for (i = 0; i < nodes.length; i++) {
+                    ids.push(nodes[i].id);
+                }
+            }
+
 
             $(document).ready(function () {
                 //$.fn.zTree.init($("#treeDemo"), setting, zNodes);

@@ -3,6 +3,8 @@ package com.base.spring.repository;
 import com.base.spring.domain.RoleEntity;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,4 +22,8 @@ public interface RoleRepository extends BaseRepository<RoleEntity, Long> {
      */
     @Query("select e from RoleEntity e where e.name=?1")
     Optional<RoleEntity> findByName(String name);
+
+    @Query("select e from RoleEntity e where e.id in ?1")
+    List<RoleEntity> findByIdIn(Collection<Long> ids);
+
 }

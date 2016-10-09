@@ -277,7 +277,7 @@
 			 */
 			function getZTreeSingleNode(root) {
 				var zTree = $.fn.zTree.getZTreeObj(root);
-				var nodes = zTree.getSelectedNodes();
+				var nodes = zTree.getSelectedNodes();  //返回的是一个数组
 				return nodes[0];
 			}
 

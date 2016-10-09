@@ -3,14 +3,6 @@
  */
 
 /*
- * @Transactional 属性
- * @Transactional 1. 注解在类上，表示该注解对于所有该类中的 public 方法都生效；注解方法上，则代表该注解仅对该方法有效，会覆盖先前从类层次继承下来的注解。
- * 2. 事务一般都在 Service 层配置，默认为 readOnly ，以提高性能；需要覆盖默认配置的，加在 Service 的方法上，如本例的 deleteOrUpdate()
- * 3. spring 代理的 Repository 接口，默认继承 spring jpa 的默认 @Transactional 设置，即 查询为 readOnly=true , update/delete 为 readOnly=false , 不需要在 Repository 接口处做 @Transactional 设置
- * 4.  @Transactional 注解应该只被应用到 public 方法上
- * <p/>
- * 类之间相互调用，@Transactional 的作用顺序：事务应该设置在调用类上。
- * <p/>
  * spring jpa ，关于事务中的实体管理
  * <p/>
  * 只读事务和没有事务有什么区别?

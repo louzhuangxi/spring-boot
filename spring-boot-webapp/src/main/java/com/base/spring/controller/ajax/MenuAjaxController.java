@@ -1,4 +1,4 @@
-package com.base.spring.controller.jqgrid;
+package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.repository.TreeNodeRepository;

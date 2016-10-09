@@ -1,4 +1,4 @@
-package com.base.spring.controller.tree.ztree;
+package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
@@ -30,7 +30,10 @@ public class ZTreeAjaxController {
 
     /**
      * 异步加载，获取数据。
+     * <p>
      * 点击关闭的父节点，传过来该父节点的 id，会激发本函数
+     * <p>
+     * 维护界面，不涉及 getCheckedNodes 操作，展开指定层级即可
      *
      * @param id       首次加载页面，没有点击某个关闭的父节点，此时 id=null
      * @param menuType 第一次加载树，决定了是哪种类型
@@ -41,7 +44,24 @@ public class ZTreeAjaxController {
     public String async(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
-        return treeNodeService.async(id, menuType);
+        return treeNodeService.async(id, menuType, 1);
+
+    }
+
+    /**
+     * 需要 check nodes ,展开所有层级,对于 getCheckedNodes 时有用，方便选择
+     * 层级设置为 100 (100 足够大)。
+     *
+     * @param id
+     * @param menuType
+     * @return
+     */
+    @RequestMapping(value = "/async_check.html", produces = "application/json")
+    @ResponseBody
+    public String asyncRole(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
+
+        logger.info("id={} , menuType={}", id, menuType);
+        return treeNodeService.async(id, menuType, 100);
 
     }
 

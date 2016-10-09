@@ -57,6 +57,9 @@ public class MyJsonUtils {
      *
      * @param bean
      */
+    //        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+//        preFilter.addExcludes(InfoEntity.class, "refUserInfoEntities"); //在整个转换过程中，无论哪个级联层次，只要遇到 InfoEntity 类，那么他的 refUserInfoEntities 属性就不进行转换
+//        preFilter.addExcludes(ProvinceEntity.class, "parent", "children"); //多个属性
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
         System.out.print(JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.PrettyFormat));
     }

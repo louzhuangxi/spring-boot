@@ -15,7 +15,8 @@ import java.util.Map;
  * Time: 10:01
  * To change this template use File | Settings | File Templates.
  */
-
+//com.alibaba.fastjson.serializer.SimplePropertyPreFilter 也可以达到本类的效果，但不如本类易用，使用本类
+//https://github.com/alibaba/fastjson/wiki/%E4%BD%BF%E7%94%A8SimplePropertyPreFilter%E8%BF%87%E6%BB%A4%E5%B1%9E%E6%80%A7
 //使用方法，见 example 方法。
 public class FastJsonPropertyPreFilter implements PropertyPreFilter {
 

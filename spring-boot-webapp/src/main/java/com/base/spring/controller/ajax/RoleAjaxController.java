@@ -1,7 +1,9 @@
-package com.base.spring.controller.jqgrid;
+package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.RoleEntity;
 import com.base.spring.repository.RoleRepository;
+import com.base.spring.repository.TreeNodeRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,15 +23,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/grid/role")
+@Transactional(readOnly = true)
 public class RoleAjaxController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleAjaxController.class);
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private TreeNodeRepository treeNodeRepository;
 
 
     /**
@@ -93,6 +100,7 @@ public class RoleAjaxController {
      * @param ids  选取的行的 id
      * @param name
      */
+    @Transactional(readOnly = false)
     @RequestMapping(value = "/jqgrid-edit")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public void jqgridCURD(
@@ -142,6 +150,42 @@ public class RoleAjaxController {
         } else {
             //do none. 没有其他的 oper 参数值了
         }
+
+        return;
+    }
+
+    @Transactional(readOnly = false)
+    @RequestMapping(value = "/get_checked_nodes.html")
+    //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    public void getCheckedNodes(@RequestParam(value = "ids_str", required = true) String ids,
+                                @RequestParam(value = "role_id", required = true) String roleId,
+                                RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+        /**
+         *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
+         */
+
+        logger.info("ids={} , roleId={}", ids, roleId);
+        String[] idArray = StringUtils.removeEnd(ids, ",").split(",");
+        List<Long> listId = new ArrayList<>(idArray.length);
+
+        RoleEntity roleEntity = roleRepository.findOne(Long.valueOf(roleId.trim()));
+        //roleEntity.addTreeNode(null);
+
+        for (String id : idArray) {
+            System.out.println("id=" + id);
+            // roleEntity.addTreeNode();
+            listId.add(Long.valueOf(id.trim()));
+        }
+
+        //建立关联
+        roleEntity.addTreeNodes(treeNodeRepository.findByIdIn(listId));
+        roleRepository.save(roleEntity);
+//
+//        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
+//        filter.addExcludes(TreeNodeEntity.class, "parent", "roles", "children");
+//
+//        MyJsonUtils.prettyPrint(treeNodeRepository.findByIdIn(listId), filter);
 
         return;
     }

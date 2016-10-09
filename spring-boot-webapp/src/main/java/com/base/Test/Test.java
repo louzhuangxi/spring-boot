@@ -27,6 +27,7 @@ public class Test {
 
        // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
 
+        System.out.print("中文");
         Assert.state("assc".equalsIgnoreCase("asc")|| "DESCs".equalsIgnoreCase("desc") , " 排序 direction 只能为 asc or desc");
     }
 

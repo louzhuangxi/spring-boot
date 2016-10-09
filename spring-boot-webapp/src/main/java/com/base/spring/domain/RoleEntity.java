@@ -122,7 +122,12 @@ public class RoleEntity extends BaseEntity {
             this.treeNodes.add(treeNode);
             treeNode.getRoles().add(this);
         }
+    }
 
+
+    public void addTreeNodes(List<TreeNodeEntity> treeNodes) {
+        for (TreeNodeEntity entity : treeNodes)
+            addTreeNode(entity);
     }
 
     /**

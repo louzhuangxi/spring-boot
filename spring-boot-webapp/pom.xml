@@ -207,7 +207,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
 
             </plugin>
-
             <!--
             Run clean compile and you will get your Query types generated into target/generated-sources/java.
             -->

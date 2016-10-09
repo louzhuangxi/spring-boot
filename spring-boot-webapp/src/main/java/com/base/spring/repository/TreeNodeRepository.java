@@ -4,6 +4,7 @@ import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.domain.TreeNodeType;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +49,8 @@ public interface TreeNodeRepository extends BaseRepository<TreeNodeEntity, Long>
      */
     @Query("select e from TreeNodeEntity e where e.parent is null and e.type =?1 order by  e.index")
     Optional<TreeNodeEntity> getRoot(TreeNodeType menuType);
+
+    @Query("select e from TreeNodeEntity e where e.id in ?1")
+    List<TreeNodeEntity> findByIdIn(Collection<Long> ids);
 
 }

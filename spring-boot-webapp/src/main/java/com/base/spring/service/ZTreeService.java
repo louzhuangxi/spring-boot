@@ -23,8 +23,6 @@ public class ZTreeService {
     @Autowired
     private TreeNodeRepository treeNodeRepository;
 
-    //  ZTreeUtil utils = new ZTreeUtil();
-
     /**
      * ztree 异步模式加载数据
      * 两种情况返回值不一样。
@@ -33,13 +31,14 @@ public class ZTreeService {
      * 所以返回值用 String , 不用 ZTreeJsonNode 对象
      *
      * @param id
+     * @param menuType
+     * @param show_Level 页面显示树状结构到第 n 级
      * @return
      */
-    public String async(Long id, TreeNodeType menuType) {
-
+    public String async(Long id, TreeNodeType menuType, int show_Level) {
 
         //页面显示树状结构到第 n 级
-        int show_Level = 1;
+
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();
         dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "privilege");
@@ -48,13 +47,13 @@ public class ZTreeService {
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
             Optional<TreeNodeEntity> rootNode = treeNodeRepository.getRoot(menuType);
 
-
             if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
                 return "";
             }
 
             TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
+
             return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
