@@ -47,7 +47,7 @@ public class FueluxTreeService {
             return FueluxTreeUtils.getFueluxTreeJson(rootNode.get().getChildren()); //打开所有一级节点 (跟节点的子节点)
 
         } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
-            logger.info("initialize FueluxTree async from db by pId={}", pId);
+            logger.info("initialize FueluxTree asyncByTreeType from db by pId={}", pId);
             TreeNodeEntity rootNode = treeNodeRepository.findOne(pId);
             if (rootNode == null) {
                 logger.info("not exist any tree node !");

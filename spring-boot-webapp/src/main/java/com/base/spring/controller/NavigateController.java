@@ -51,11 +51,12 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
-    public String menu(HttpServletRequest request, Model model) {
+    public String menu(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
 
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
+        logger.info("treeType ={}", treeType);
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        model.addAttribute("menu_type", "Menu"); //对菜单进行授权
+        model.addAttribute("tree_type", treeType); //对菜单进行授权
         return "admin/ace/html/ajax/content/jqgrid-roles";
     }
 
@@ -66,13 +67,13 @@ public class NavigateController {
      *
      * @return
      */
-    @RequestMapping(value = "/content/ztree_menu.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String menuTree(@RequestParam(value = "type",required = true) String type, HttpServletRequest request, Model model) {
-        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree_menu.ftl", MyServletUtils.getFullPath(request), type);
+    @RequestMapping(value = "/content/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
+    public String menuTree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
+        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree_menu.ftl", MyServletUtils.getFullPath(request), treeType);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        model.addAttribute("menu_type", type);
-        return "admin/ace/html/ajax/content/ztree_menu";
+        model.addAttribute("tree_type", treeType);
+        return "admin/ace/html/ajax/content/ztree-type";
     }
 
 
@@ -84,14 +85,13 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/ztree_role.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String menuTree2(@RequestParam(value = "type",required = true) String type, HttpServletRequest request, Model model) {
+    public String menuTree2(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
         logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), type);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         model.addAttribute("menu_type", type);
         return "admin/ace/html/ajax/content/ztree_role";
     }
-
 
 
     /**
@@ -103,7 +103,7 @@ public class NavigateController {
      */
     @Deprecated // 用 zTree 代替
     @RequestMapping(value = "/content/fuelux-tree.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String fueluxTree(@RequestParam(value = "type",required = true) String type, HttpServletRequest request, Model model) {
+    public String fueluxTree(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
         logger.info("request path={} , type={},  will go to /html/ajax/content/fuelux-tree.ftl", MyServletUtils.getFullPath(request), type);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));

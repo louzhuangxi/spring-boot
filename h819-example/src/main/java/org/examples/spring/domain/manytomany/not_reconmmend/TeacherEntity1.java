@@ -46,7 +46,7 @@ public class TeacherEntity1 {
 
     /**
      * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
+     * 注意建立关联的方法(单向的只要在主动方添加)
      *
      * @param student
      */
@@ -59,7 +59,7 @@ public class TeacherEntity1 {
 
     /**
      * 自定义方法，删除学生
-     * 注意删除关联的方法(单向的不需要)
+     * 注意建立关联的方法(单向的只要在主动方删除)
      *
      * @param student
      */
@@ -69,6 +69,13 @@ public class TeacherEntity1 {
             this.students.remove(student);
         }
 
+    }
+
+    /**
+     * 可以直接清除关联关系
+     */
+    public void clearStudent() {
+        this.students.clear();
     }
 
     public Set<StudentEntity1> getStudents() {

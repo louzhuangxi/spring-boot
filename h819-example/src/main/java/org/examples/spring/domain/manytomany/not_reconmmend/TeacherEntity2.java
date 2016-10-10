@@ -27,7 +27,6 @@ import java.util.Set;
 public class TeacherEntity2 {
 
 
-
     @ManyToMany(fetch = FetchType.LAZY) // 双向向多对多，发出方设置，接收方均做设置
     @JoinTable(name = "example_ref_teacher_student2", //指定关联表名
             joinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
@@ -52,7 +51,7 @@ public class TeacherEntity2 {
 
     /**
      * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
+     * 注意添加关联的方法(双向关联的，需要双方都要添加)
      * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作
      *
      * @param student
@@ -68,7 +67,7 @@ public class TeacherEntity2 {
 
     /**
      * 自定义方法，删除学生
-     * 注意删除关联的方法(单向的不需要)
+     * 注意添加关联的方法(双向关联的，需要双方都要删除)
      * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作
      *
      * @param student
@@ -81,6 +80,14 @@ public class TeacherEntity2 {
 
         }
 
+    }
+
+
+    /**
+     * 可以直接清除关联关系
+     */
+    public void clearStudent() {
+        this.students.clear();
     }
 
     public Set<StudentEntity2> getStudents() {

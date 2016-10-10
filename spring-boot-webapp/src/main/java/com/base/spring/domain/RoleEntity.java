@@ -81,36 +81,6 @@ public class RoleEntity extends BaseEntity {
 
 
     /**
-     * 自定义方法，添加 Privilege
-     * 注意建立关联的方法(单向的不需要)
-
-     * @param privilege
-     */
-//    public void addPrivilege(PrivilegeEntity privilege) {
-//
-//        if (!this.privileges.contains(privilege)) {
-//            this.privileges.add(privilege);
-//            privilege.getRoles().add(this);
-//        }
-//    }
-
-    /**
-     * 自定义方法，删除 Privilege
-     * 注意删除关联的方法(单向的不需要)
-
-     * @param privilege
-     */
-//    public void removePrivilege(PrivilegeEntity privilege) {
-//
-//        if (this.privileges.contains(privilege)) {
-//            this.privileges.remove(privilege);
-//            privilege.getRoles().remove(this);
-//
-//        }
-//
-//    }
-
-    /**
      * 自定义方法，添加
      * 注意建立两个对象关联的方法(单向的不需要)
      *
@@ -124,7 +94,11 @@ public class RoleEntity extends BaseEntity {
         }
     }
 
-
+    /**
+     * 添加多个
+     *
+     * @param treeNodes
+     */
     public void addTreeNodes(List<TreeNodeEntity> treeNodes) {
         for (TreeNodeEntity entity : treeNodes)
             addTreeNode(entity);
@@ -132,7 +106,7 @@ public class RoleEntity extends BaseEntity {
 
     /**
      * 自定义方法，删除
-     * 注意删除关联的方法(单向的不需要)
+     * 注意解除关联的方法(单向的不需要)
      *
      * @param treeNode
      */
@@ -143,9 +117,24 @@ public class RoleEntity extends BaseEntity {
             treeNode.getRoles().remove(this);
 
         }
-
     }
 
+    /**
+     * 删除多个
+     *
+     * @param treeNodes
+     */
+    public void removeTreeNodes(List<TreeNodeEntity> treeNodes) {
+        for (TreeNodeEntity entity : treeNodes)
+            removeTreeNode(entity);
+    }
+
+    /**
+     * 清空子
+     */
+    public void clearTreeNodes() {
+        this.treeNodes.clear();
+    }
 
     /**
      * 自定义方法，添加用户

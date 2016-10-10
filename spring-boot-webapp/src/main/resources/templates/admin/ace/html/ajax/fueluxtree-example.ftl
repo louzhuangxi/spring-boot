@@ -295,7 +295,7 @@
 					console.log(parent_id);
 					if (parent_id != null) {
 						$.ajax({
-							url : "${ctx}/tree/fuelux/ajax/async.html",
+							url : "${ctx}/tree/fuelux/ajax/asyncByTreeType.html",
 							data : {
 								pId : parent_id,
 								menu_type : 'Menu'

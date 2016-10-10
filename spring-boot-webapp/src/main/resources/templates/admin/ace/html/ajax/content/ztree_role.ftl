@@ -165,8 +165,8 @@
 				},
 
 				async : {
-					enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
-					url : "${ctx}/tree/ztree/ajax/async.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+					enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
+					url : "${ctx}/tree/ztree/ajax/asyncByTreeType.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
 					autoParam : ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
 					otherParam : {
 						"menu_type" : "${menu_type}"
@@ -689,7 +689,7 @@
 					},
 					dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 					success : function (data) { //处理成功的回调函数
-						//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+						//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
 						zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh", true);
 						// 此处进行复制，剪切后的 处理
 						if (curType === "copy")
@@ -769,7 +769,7 @@
 					},
 					dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 					success : function (data) { //处理成功的回调函数
-						//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+						//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
 						// zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
 						printLog(targetNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;移动完成 ", logIocn_move);
 					},
@@ -843,7 +843,7 @@
 								},
 								dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 								success : function (data) { //处理成功的回调函数
-									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
 									// zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
 									printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;CSS 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_css.val() + " </code>", logIocn_move);
 								},
@@ -907,7 +907,7 @@
 								},
 								dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 								success : function (data) { //处理成功的回调函数
-									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
 									// zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
 									printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_url.val() + " </code>", logIocn_move);
 								},
@@ -973,7 +973,7 @@
 								},
 								dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 								success : function (data) { //处理成功的回调函数
-									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+									//添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
 									// zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
 									printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_standard.val() + " </code>", logIocn_move);
 								},

@@ -1,6 +1,5 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
-<#assign treeType = "${tree_type}">
 <title>角色授权</title>
 
 <link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
@@ -22,15 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-
-        <#if treeType == "Menu">
-            定义菜单资源角色
-        <#elseif treeType == "Standard">
-            定义标准资源角色
-        <#elseif treeType == "">
-            定义 xx 资源角色
-        </#if>
-
+            授权资源
         </div>
 
         <table id="grid-table"></table>
@@ -62,6 +53,7 @@
                     <div id="modal-tip" class="red clearfix"></div>
                     <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
                     <input id="roleId" type="hidden" value=""/> <!-- roleId 权限 id -->
+                    <input id="treeType" type="hidden" value=""/> <!-- treeType , ztree 类型-->
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
                             <div class="widget-main padding-8">
@@ -218,7 +210,7 @@
                 caption: "最新消息",//表格描述
 
                 height: 250,
-                colNames: [' ', 'ID', '角色名称', '资源授权'],
+                colNames: [' ', 'ID', '角色名称', '菜单资源授权', '标准资源授权'],
                 colModel: [
                     {
                         name: 'myac', index: '', width: 20, fixed: true, sortable: false, resize: false, search: false
@@ -610,7 +602,34 @@
         });
     }
 
-     /*
+    /*
+    弹出警示框
+    jquery-confirm
+    处理代码应该写在 confirm 函数体里面，不能包装成方法
+    //浏览器会顺序执行，而不等待 confirm 执行完成
+    应该是 confirm 方法异步执行造成的
+
+    $.confirm({
+    title: '',
+    icon: 'fa fa-warning red2',
+    content: confirm_message,
+    animation: 'zoom',
+    confirmButton: "确定",
+    cancelButton:"取消",
+    confirmButtonClass:"btn btn-primary btn-round",
+    cancelButtonClass: 'btn-danger',
+    confirm: function(){
+    //
+    },
+
+    cancel: function(){
+    //
+    }
+
+    });
+
+
+    /*
     调用浏览器调试日志, 打印字符串
     message 可以是任何对象。
     需要注意的是:
@@ -669,11 +688,13 @@
 
                 async: {
                     enable: true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
-                    url: "${ctx}/tree/ztree/ajax/asyncByTreeTypeAndRole.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+                    url: "${ctx}/tree/ztree/ajax/async_roles.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
-                        "tree_type": "${tree_type}",
-                      //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
+                        "menu_type": function () {
+                            return $("#treeType").val();
+                        },
+                        //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
                         "role_id": function () {
                             return $("#roleId").val();
                         }

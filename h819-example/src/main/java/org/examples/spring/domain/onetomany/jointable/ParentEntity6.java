@@ -49,7 +49,7 @@ public class ParentEntity6 {
 
     /**
      * 增加一个 ChildEntity5 ，不必通过 list
-     * 注意建立关联的方法(单向的不需要)
+     * 注意添加关联的方法(双向关联的，需要双方都要添加)
      *
      * @param child
      */
@@ -61,7 +61,7 @@ public class ParentEntity6 {
     }
 
     /**
-     * 注意解除关联的方法(单向的不需要)
+     * 注意添加关联的方法(双向关联的，需要双方都要删除)
      *
      * @param child
      */
@@ -72,6 +72,14 @@ public class ParentEntity6 {
             this.children.remove(child);
         }
     }
+
+    /**
+     * 可以直接清除关联关系
+     */
+    public void clearStudent() {
+        this.children.clear();
+    }
+
 
     public Set<ChildEntity6> getChildren() {
         return children;

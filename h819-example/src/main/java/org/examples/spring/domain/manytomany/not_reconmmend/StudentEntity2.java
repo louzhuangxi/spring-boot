@@ -58,7 +58,7 @@ public class StudentEntity2 {
 
     /**
      * 自定义方法，添加老师
-     * 注意添加关联的方法(单向的不需要)
+     * 注意添加关联的方法(双向关联的，需要双方都要添加)
      * 属性 teacher.students 设置为 public ，否则无法直接获取
      *
      * @param teacher
@@ -74,7 +74,7 @@ public class StudentEntity2 {
 
     /**
      * 自定义方法，删除老师
-     * 注意删除关联的方法(单向的不需要)
+     * 注意删除关联的方法(双向关联的，需要双方都要删除)
      * 属性 teacher.students 设置为 public ，否则无法直接获取
      *
      * @param teacher
@@ -88,6 +88,16 @@ public class StudentEntity2 {
         }
 
     }
+
+    /**
+     * 可以直接清除关联关系
+     */
+    public void clearTeacher() {
+
+        this.teachers.clear();
+
+    }
+
 
     public Set<TeacherEntity2> getTeachers() {
         return teachers;

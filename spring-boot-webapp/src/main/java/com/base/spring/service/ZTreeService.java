@@ -64,8 +64,6 @@ public class ZTreeService {
      */
     private String async(Long id, TreeNodeType menuType, int show_Level, RoleEntity roleEntity) {
 
-        //页面显示树状结构到第 n 级
-
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();
         if (roleEntity == null)
@@ -87,7 +85,7 @@ public class ZTreeService {
             return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode, roleEntity));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
-            logger.info("initialize ztree async from db by id={}", id);
+            logger.info("initialize ztree asyncByTreeType from db by id={}", id);
             TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
             TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
             return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点

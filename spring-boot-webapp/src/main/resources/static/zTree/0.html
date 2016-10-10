@@ -257,7 +257,7 @@
 			},
 			
 			async : {
-				enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.async 内的其它参数。
+				enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
 				url : "${ctx}/treenode/ajax/async.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
 				autoParam : ["id"]//异步加载时需要自动提交父节点属性的参数 。这些参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个父节点。
 				//otherParam:{"otherParam":"zTreeAsyncTest"}, //这个是我们可以自定义的参数
@@ -504,7 +504,7 @@
 			/*
 			$.ajax({ //ajax 提交到controller的delApplication方法处理
 			type : "post",
-			async : false,
+			asyncByTreeType : false,
 			url : "${ctx}/treenode/ajax/edit.html",
 			data : { //传递的参数和值
 			id : treeNode.id,
@@ -565,7 +565,7 @@
 					/*
 					$.ajax({ //ajax 提交到controller的delApplication方法处理
 					type : "post",
-					async : false,
+					asyncByTreeType : false,
 					url : "${ctx}/treenode/ajax/del.html",
 					data : { //传递的参数和值
 					id : treeNode.id
@@ -622,7 +622,7 @@
 					/*
 					$.ajax({ //ajax 提交到controller的delApplication方法处理
 					type : "post",
-					async : false,
+					asyncByTreeType : false,
 					url : "${ctx}/treenode/ajax/clear.html",
 					data : { //传递的参数和值
 					id : treeNode.id
@@ -797,7 +797,7 @@
 			
 			$.ajax({               
                  type:"post",
-                 async:false,
+                 asyncByTreeType:false,
                 url : "${ctx}/treenode/ajax/move.html",              
 				 data : { //传递的参数和值
 						id : treeNode.id, //
@@ -807,7 +807,7 @@
 					},
                  dataType:"html",                    //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
                  success:function(data){             //处理成功的回调函数                    
-                      //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 async 才可以执行
+                      //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
                     // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
 					 
                      },

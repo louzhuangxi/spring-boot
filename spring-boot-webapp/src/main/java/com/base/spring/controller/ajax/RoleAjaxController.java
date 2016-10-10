@@ -2,8 +2,7 @@ package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.RoleEntity;
 import com.base.spring.repository.RoleRepository;
-import com.base.spring.repository.TreeNodeRepository;
-import org.apache.commons.lang3.StringUtils;
+import com.base.spring.service.RoleService;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -23,19 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/grid/role")
-@Transactional(readOnly = true)
 public class RoleAjaxController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleAjaxController.class);
 
+
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private TreeNodeRepository treeNodeRepository;
+    private RoleService roleService;
 
 
     /**
@@ -154,9 +152,9 @@ public class RoleAjaxController {
         return;
     }
 
-    @Transactional(readOnly = false)
     @RequestMapping(value = "/get_checked_nodes.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+
     public void getCheckedNodes(@RequestParam(value = "ids_str", required = true) String ids,
                                 @RequestParam(value = "role_id", required = true) String roleId,
                                 RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
@@ -166,27 +164,17 @@ public class RoleAjaxController {
          */
 
         logger.info("ids={} , roleId={}", ids, roleId);
-        String[] idArray = StringUtils.removeEnd(ids, ",").split(",");
-        List<Long> listId = new ArrayList<>(idArray.length);
-
-        RoleEntity roleEntity = roleRepository.findOne(Long.valueOf(roleId.trim()));
-        //roleEntity.addTreeNode(null);
-
-        for (String id : idArray) {
-            System.out.println("id=" + id);
-            // roleEntity.addTreeNode();
-            listId.add(Long.valueOf(id.trim()));
-        }
-
-        //建立关联
-        roleEntity.addTreeNodes(treeNodeRepository.findByIdIn(listId));
-        roleRepository.save(roleEntity);
 //
-//        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
-//        filter.addExcludes(TreeNodeEntity.class, "parent", "roles", "children");
+//        if (ids == null)
+//            System.out.println("null");
 //
-//        MyJsonUtils.prettyPrint(treeNodeRepository.findByIdIn(listId), filter);
+//        if (ids.isEmpty())
+//            System.out.println("empty");
+//
+//        if (ids.equals(""))
+//            System.out.println("equals");
 
+         roleService.associate(ids, roleId);
         return;
     }
 }

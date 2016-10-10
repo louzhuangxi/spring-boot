@@ -42,9 +42,9 @@ public class ZTreeAjaxController {
      * @param menuType 第一次加载树，决定了是哪种类型
      * @return
      */
-    @RequestMapping(value = "/async.html", produces = "application/json")
+    @RequestMapping(value = "/asyncByTreeType.html", produces = "application/json")
     @ResponseBody
-    public String async(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
+    public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "tree_type", required = true) TreeNodeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
         return treeNodeService.asyncTree(id, menuType);  //返回初始的树
@@ -56,13 +56,14 @@ public class ZTreeAjaxController {
      * @param menuType
      * @return
      */
-    @RequestMapping(value = "/async_roles.html", produces = "application/json")
+    @RequestMapping(value = "/asyncByTreeTypeAndRole.html", produces = "application/json")
     @ResponseBody
-    public String asyncRole(@RequestParam(value = "id", required = false) Long id,
-                            @RequestParam(value = "menu_type", required = true) TreeNodeType menuType,
-                            @RequestParam(value = "role_id", required = true) String roleId) {
+    public String asyncByTreeTypeAndRole(@RequestParam(value = "id", required = false) Long id,
+                                         @RequestParam(value = "tree_type", required = true) TreeNodeType menuType,
+                                         @RequestParam(value = "role_id", required = true) String roleId) {
 
         logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
+
         if (roleId.isEmpty())    // 还没有选择 role，返回初始的树
             return treeNodeService.asyncTree(id, menuType);
         else
@@ -77,7 +78,7 @@ public class ZTreeAjaxController {
      * @param index
      * @param isParent
      * @param pId      被选择的子节点，在该节点下创建子节点。
-     * @param menuType 菜单类型
+     * @param treeType 菜单类型
      */
     @RequestMapping(value = "/add.html", method = RequestMethod.POST)
     @ResponseBody
@@ -85,10 +86,10 @@ public class ZTreeAjaxController {
                       @RequestParam(value = "level", required = true) Integer level,
                       @RequestParam(value = "index", required = true) Integer index,
                       @RequestParam(value = "pId", required = true) Long pId,
-                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "menu_type", required = false) TreeNodeType menuType) {
-        logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, menuType);
+                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "tree_type", required = false) TreeNodeType treeType) {
+        logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
 
-        treeNodeService.add(name, level, index, isParent, pId, menuType);
+        treeNodeService.add(name, level, index, isParent, pId, treeType);
         return "add succeed.";
     }
 
