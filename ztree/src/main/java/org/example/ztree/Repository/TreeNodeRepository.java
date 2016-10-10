@@ -1,13 +1,14 @@
-package org.h819.ztree.Repository;
+package org.example.ztree.Repository;
 
 
-import org.h819.ztree.domain.TreeNodeEntity;
-import org.h819.ztree.domain.TreeNodeType;
+import org.example.ztree.domain.TreeNodeEntity;
+import org.example.ztree.domain.TreeNodeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Description : TODO()
@@ -35,6 +36,13 @@ public interface TreeNodeRepository extends JpaRepository<TreeNodeEntity, Long>,
      * @return
      */
     @Query("select e from TreeNodeEntity e where e.parent is null and e.type =?1 order by  e.index")
-    TreeNodeEntity getRoot(TreeNodeType menuType);
+    Optional<TreeNodeEntity> getRoot(TreeNodeType menuType);
 
+    /**
+     * 获所有的根节点
+     *
+     * @return
+     */
+    @Query("select e from TreeNodeEntity e where e.parent is null order by  e.index")
+    List<TreeNodeEntity> getRoot();
 }

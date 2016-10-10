@@ -1,4 +1,4 @@
-package org.h819.ztree.dto;
+package org.example.ztree.dto;
 
 import java.util.ArrayList;
 import java.util.List;

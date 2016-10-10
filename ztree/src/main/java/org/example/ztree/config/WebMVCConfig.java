@@ -1,13 +1,10 @@
-package org.h819.ztree.config;
+package org.example.ztree.config;
 
-import org.h819.ztree.service.InitializeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.ServletContextEvent;
@@ -16,11 +13,6 @@ import javax.servlet.ServletContextListener;
 // web 配置
 @Configuration
 class WebMVCConfig extends WebMvcConfigurerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(WebMVCConfig.class);
-
-
-    @Autowired
-    InitializeService initializeService;
 
     /**
      * 自定义  listener 演示
@@ -38,26 +30,12 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
             @Override
             public void contextDestroyed(ServletContextEvent sce) {
-                logger.info("ServletContext destroyed");
+
+                System.out.println("ServletContext destroyed");
             }
 
         };
     }
-
-    /**
-     * 自定义 filter 演示
-     *
-     * @return
-
-     @Bean public FilterRegistrationBean someFilterRegistration() {
-     FilterRegistrationBean registration = new FilterRegistrationBean();
-     registration.setFilter(new CustomFilter());
-     registration.addUrlPatterns("/*");
-     // registration.addInitParameter("paramName", "paramValue");
-     registration.setName("someFilter");
-     return registration;
-     }
-     */
 
     /**
      * Spring 3.2 及以上版本自动开启检测URL后缀,设置Response content-type功能, 如果不手动关闭这个功能,当url后缀与accept头不一致时,
@@ -69,13 +47,26 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
         configurer.favorPathExtension(false). //关闭URL后缀检测的方法如下
                 favorParameter(true).
-                parameterName("mediaType").
-                ignoreAcceptHeader(true).
-                useJaf(false).
-                mediaType("xml", MediaType.APPLICATION_XML).
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
 
+    }
+
+    /**
+     * PathMatchConfigurer 函数让开发人员可以根据需求定制URL路径的匹配规则。
+     *
+     * @param configurer
+     */
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        /**
+         * spring mvc 默认忽略 url 中点"."后面的部分，如
+         * http://localhost:8080/abc.mm  会直接匹配为
+         * http://localhost:8080/abc 忽略了 mm
+         * 如果不想忽略，设置 setUseSuffixPatternMatch(false)
+         */
+
+        configurer.setUseSuffixPatternMatch(false);
     }
 
 }

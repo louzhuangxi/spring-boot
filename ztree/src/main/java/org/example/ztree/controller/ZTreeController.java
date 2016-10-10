@@ -1,10 +1,10 @@
-package org.h819.ztree.controller;
+package org.example.ztree.controller;
 
 
-import org.h819.ztree.Repository.TreeNodeRepository;
-import org.h819.ztree.domain.TreeNodeEntity;
-import org.h819.ztree.domain.TreeNodeType;
-import org.h819.ztree.service.ZTreeService;
+import org.example.ztree.Repository.TreeNodeRepository;
+import org.example.ztree.domain.TreeNodeEntity;
+import org.example.ztree.domain.TreeNodeType;
+import org.example.ztree.service.ZTreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class ZTreeController {
     ZTreeService treeNodeService;
 
 
-    @RequestMapping(value ="/index.html", method = RequestMethod.GET)
+    @RequestMapping(value ="/", method = RequestMethod.GET)
     public String ztree(HttpServletRequest request, Model model) {
         logger.info("go to ztree");
         model.addAttribute("app_path", StringUtils.remove(request.getRequestURL().toString(), request.getServletPath()));
@@ -55,7 +55,7 @@ public class ZTreeController {
     public String async(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
-        return treeNodeService.async(id, menuType);
+        return treeNodeService.asyncTree(id, menuType);
 
     }
 

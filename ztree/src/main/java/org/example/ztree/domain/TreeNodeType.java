@@ -1,4 +1,4 @@
-package org.h819.ztree.domain;
+package org.example.ztree.domain;
 
 /**
  * 定义树结构对象的类型，这样就可以组建不同类型的树

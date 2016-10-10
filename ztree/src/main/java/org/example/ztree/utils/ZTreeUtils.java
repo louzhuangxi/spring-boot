@@ -1,8 +1,8 @@
-package org.h819.ztree.utils;
+package org.example.ztree.utils;
 
 
-import org.h819.ztree.domain.TreeNodeEntity;
-import org.h819.ztree.dto.ZTreeJsonNode;
+import org.example.ztree.domain.TreeNodeEntity;
+import org.example.ztree.dto.ZTreeJsonNode;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import java.util.List;
  * Time: 13:38
  * To change this template use File | Settings | File Templates.
  */
-public class ZTreeUtil {
+public class ZTreeUtils {
 
 
-    private ZTreeUtil() {
+    private ZTreeUtils() {
     }
 
     /**
@@ -55,11 +55,11 @@ public class ZTreeUtil {
     public static void createCopyNode(TreeNodeEntity parent, TreeNodeEntity currentNode) {
 
         //生成 currentNode 节点本身，在数据库中对应一条新的记录
-        TreeNodeEntity newTree = new TreeNodeEntity(currentNode.getType(), currentNode.getName(), currentNode.getLevel(), currentNode.getIndex(), currentNode.getIsParent(), parent);
+        TreeNodeEntity newTree = new TreeNodeEntity(currentNode.getType(), currentNode.getName(), currentNode.getIndex(), currentNode.isParentNode(), parent);
         newTree.setUrl(currentNode.getUrl());
         newTree.setCss(currentNode.getCss());
         parent.addChildToLastIndex(newTree); // 添加到所有子节点的尾部
-        parent.setIsParent(true);
+        parent.setParentNode(true);
 
         //生成 currentNode 节点的子节点
         if (!currentNode.getChildren().isEmpty()) {
@@ -94,7 +94,7 @@ public class ZTreeUtil {
         if (!treeNodeEntity.getChildren().isEmpty())
             open = true;
 
-        boolean isParent = treeNodeEntity.getIsParent();
+        boolean isParent = treeNodeEntity.isParentNode();
 
         ZTreeJsonNode zTreeNode = new ZTreeJsonNode(id, name, url, open, isParent);
 
