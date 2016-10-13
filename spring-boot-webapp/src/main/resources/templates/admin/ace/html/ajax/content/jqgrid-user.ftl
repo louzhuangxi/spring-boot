@@ -1,6 +1,6 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
-<title>角色授权</title>
+<title>用户管理</title>
 
 <link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
 <link rel="stylesheet" href="${ctx}/ace/assets/css/bootstrap-datepicker3.css"/>
@@ -21,7 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-            授权资源
+            用户管理
         </div>
 
         <table id="grid-table"></table>
@@ -171,6 +171,16 @@
                 return result;
             };
 
+            //检查 invalid
+            function myinvalidcheck(value, colname) {
+
+                // alert("value :" +value +" , colname :" +colname);
+                if (value == "是" || value == "否") //返回字符串"true"，表示验证通过，不显示任何信息
+                    return new Array(true, "");
+                else
+                    return new Array(false, "通过验证字段：只能填写 '是' 或 '否' "); //返回其他字符串，把其他字符串作为出错的信息，进行显示
+            };
+
 
             jQuery(grid_selector).jqGrid({
                 //direction: "rtl",
@@ -202,15 +212,15 @@
 
 
                 //配置,参见 http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
-                url: "${ctx}/grid/role/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
-                editurl: "${ctx}/grid/role/jqgrid-edit",//nothing is saved
+                url: "${ctx}/grid/user/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
+                editurl: "${ctx}/grid/user/jqgrid-edit",//nothing is saved
 
                 datatype: "json", // 返回的数据类型
                 mtype: "post", // 提交方式
                 caption: "最新消息",//表格描述
 
                 height: 250,
-                colNames: [' ', 'ID', '角色名称', '菜单资源授权', '标准资源授权'],
+                colNames: [' ', 'ID', '登录名', '密码', '用户名', '单位', '电话', 'email', '创建时间', '所属群组', '角色授权', '备注', '通过验证'],
                 colModel: [
                     {
                         name: 'myac', index: '', width: 20, fixed: true, sortable: false, resize: false, search: false
@@ -236,16 +246,94 @@
                          }
                     },
                     */
-                    {name: 'id', index: 'id', width: 50, hidden: true, search: true, sorttype: "int", editable: true}, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
                     {
-                        name: 'name',
-                        index: 'name',
+                        name: 'id',
+                        index: 'id',
+                        width: 50,
+                        hidden: true,
+                        search: true,
+                        sorttype: "int",
+                        editable: true
+                    }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
+                    {
+                        name: 'loginName',
+                        index: 'loginName',
                         width: 100,
                         search: true,
                         searchoptions: {sopt: ["cn", "eq"]},
                         editable: true,
                         edittype: 'text',
-                        editrules: {required: true, custom: true, custom_func: checkname} //
+                        editrules: {required: true} //, custom: true, custom_func: checkname
+                    },//
+                    {
+                        name: 'password',
+                        index: 'password',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: true} //
+                    },
+
+                    {
+                        name: 'userName',
+                        index: 'userName',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: true} //
+                    },
+                    {
+                        name: 'company',
+                        index: 'company',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: false} //
+                    },
+                    {
+                        name: 'telephone',
+                        index: 'telephone',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: false} //
+                    },
+                    {
+                        name: 'email',
+                        index: 'email',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: true} //
+                    },
+                    {
+                        name: 'createdDate',
+                        index: 'createdDate',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: false,
+                        edittype: 'text',
+                        editrules: {required: true} //
+                    },                  
+                    {
+                        name: '',
+                        index: '',
+                        label: '用户群',
+                        width: 100,
+                        search: false,
+                        editable: false,
+                        formatter: authorityFormatterMenu //显示一个图标
                     },
                     {
                         name: '',
@@ -255,6 +343,41 @@
                         search: false,
                         editable: false,
                         formatter: authorityFormatterMenu //显示一个图标
+                    },
+					{
+                        name: 'remark',
+                        index: 'remark',
+                        width: 100,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: false} //
+                    },
+                    {
+                        name: 'valid',
+                        index: 'valid',
+                        width: 80,
+                        search: true,
+                        searchoptions: {sopt: ["cn", "eq"]},
+                        editable: true,
+                        edittype: 'text',
+                        editrules: {required: true, custom: true, custom_func: myinvalidcheck},
+                        formatter: function (cellvalue, options, rowObject) {//显示时，以连接显示. formatter:'showLink' 可以有更多设置
+                            // alert(rowObject.valid);
+                            if (rowObject.valid == true)
+                                return "是";
+                            else return "否";
+
+                        },
+                        unformat: function (cellvalue, options) {//，编辑时，显示原值。不加此设置，会有链接标签.
+                            return cellvalue;
+                        },
+                        cellattr: function (rowId, cellValues, rawObject, cm, rdata) {
+                            if (cellValues == '是') {
+                                return ' class="alert alert-success"';
+                            }
+                        }
                     }
                     /*
                     formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d'}
@@ -279,7 +402,7 @@
 
 
                 sortable: true,  //可以排序
-                sortname: 'name',  //默认排序字段名，点击表头字段排序后，该变量值变为被点击的变量名称
+                sortname: 'createdDate',  //默认排序字段名，点击表头字段排序后，该变量值变为被点击的变量名称
                 sortorder: "desc", //默认排序方式：正序，点击表头字段排序后，该变量值变为 desc
 
                 rowNum: 10, //每页默认显示记录数目
@@ -565,222 +688,6 @@
                 $.jgrid.gridDestroy(grid_selector);
                 $('.ui-jqdialog').remove();
             });
-        });
-    });
-</script>
-
-<!-- ztree -->
-<script type="text/javascript">
-    //引入加载的 js
-    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/utils.js", null]
-    //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
-
-
-    //放置 ztree 的元素 id，参见上文。js 函数最后定义
-    var ztree_root = "treeDemo";
-
-
-    function getZTree(root) {
-        return $.fn.zTree.getZTreeObj(root);
-    }
-
-
-    /*
-    弹出警示框
-    jquery-confirm
-     */
-    function showAlart(alart_message) {
-        $.alert({
-            title: '',
-            icon: 'fa fa-warning red2',
-            content: alart_message,
-            animation: 'zoom',
-            confirmButton: "确定",
-            confirmButtonClass: "btn btn-primary btn-round",
-            confirm: function () {
-            }
-        });
-    }
-
-    /*
-    弹出警示框
-    jquery-confirm
-    处理代码应该写在 confirm 函数体里面，不能包装成方法
-    //浏览器会顺序执行，而不等待 confirm 执行完成
-    应该是 confirm 方法异步执行造成的
-
-    $.confirm({
-    title: '',
-    icon: 'fa fa-warning red2',
-    content: confirm_message,
-    animation: 'zoom',
-    confirmButton: "确定",
-    cancelButton:"取消",
-    confirmButtonClass:"btn btn-primary btn-round",
-    cancelButtonClass: 'btn-danger',
-    confirm: function(){
-    //
-    },
-
-    cancel: function(){
-    //
-    }
-
-    });
-
-
-    /*
-    调用浏览器调试日志, 打印字符串
-    message 可以是任何对象。
-    需要注意的是:
-    如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
-    如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
-     */
-    function logger(message) {
-        console.log(message);
-    }
-
-    /**
-     * 重新异步加载 ztree 节点
-     * 此函数可以供页面所有元素调用
-     * 自动调用 ztree setting 中的 asyncByTreeType 定义的方法
-     */
-    function refreshNode() {
-        var zTree = getZTree(ztree_root);
-        var type = "refresh";
-        var silent = true;
-        var nodes = zTree.getNodes(); // 返回所有根节点
-        if (nodes.length == 0) {
-            return;
-        }
-        for (var i = 0, l = nodes.length; i < l; i++) {
-            zTree.reAsyncChildNodes(nodes[i], type, silent);
-            if (!silent) zTree.selectNode(nodes[i]);
-        }
-    }
-
-
-    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
-        //inline scripts related to this page
-        jQuery(function ($) {
-
-            var setting = {
-
-                view: {
-                    selectedMulti: true
-                },
-
-                check: {
-                    enable: true
-                },
-
-                data: {
-                    keep: {
-                        parent: false, //父节点 允许添加子节点
-                        leaf: false //子节点 允许添加子节点
-                    },
-                    simpleData: {
-                        enable: false
-                    }
-                },
-
-                callback: {},
-
-                async: {
-                    enable: true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
-                    url: "${ctx}/tree/ztree/ajax/async_roles.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
-                    autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
-                    otherParam: {
-                        "menu_type": function () {
-                            return $("#treeType").val();
-                        },
-                        //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
-                        "role_id": function () {
-                            return $("#roleId").val();
-                        }
-                    } //这个是我们可以自定义的参数。第一次加载树，决定树类型
-                    // dataType: "text",//默认text
-                    // type:"get",//默认post
-                }
-            };
-
-            /*================================ tools begin ================================================*/
-
-
-            /*
-            class = btn 按钮点击之后，鼠标离开，释放焦点。
-             */
-            $(".btn").mouseup(function () {
-                $(this).blur();
-            })
-
-            /*
-            当第一次点击复制或者粘帖按钮之后，被选中的节点会自动加上 a.copy or a.cut 样式(本页中面定义)。
-            但如果不想复制或者粘帖，再接着选择其他的节点，第一次点击选择的节点的样式仍然存在，影响页面效果，这里去掉。
-            下文的 fontCss() 方法也能完成同样的功能，就用这个吧，不研究了。
-             */
-            function removeCopyCutClass() {
-                $("#treeDemo li").parent().find('li').find('a').removeClass("copy").removeClass("cut");
-            }
-
-
-            /**
-             点击保存按钮，关联所有树节点到选中的 roleId 上
-             */
-                    // 获取所有被 checked 的节点的 id
-            var ids = new Array();
-            var ids_str = "";
-
-            $('#submitButton').click(function () {
-
-                var zTree = getZTree(ztree_root);
-                var nodes = zTree.getCheckedNodes(true); //返回的是一个数组
-                //logger(nodes);
-                getAllIds(nodes);
-                //测试
-                for (i = 0; i < ids.length; i++) {
-                    ids_str += ids[i] + ",";
-                }
-                //logger("text="+text);
-
-
-                $.ajax({ //ajax 提交到controller的delApplication方法处理
-                    type: "post",
-                    async: false,
-                    url: "${ctx}/grid/role/get_checked_nodes.html",
-                    data: { //传递的参数和值
-                        ids_str: ids_str,
-                        role_id: $("#roleId").val()
-                    },
-                    dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                    success: function (data) { //处理成功的回调函数
-
-                    },
-                    error: function () {
-
-                    }
-                    //处理失败的回到函数
-                });
-
-            });
-
-
-            /**
-             查找
-             */
-            function getAllIds(nodes) {
-
-                for (i = 0; i < nodes.length; i++) {
-                    ids.push(nodes[i].id);
-                }
-            }
-
-
-            $(document).ready(function () {
-                //$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-                $.fn.zTree.init($("#treeDemo"), setting); //异步加载,设置 ztree 节点
-            });
-
         });
     });
 </script>

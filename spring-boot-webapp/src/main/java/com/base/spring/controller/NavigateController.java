@@ -51,7 +51,7 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
-    public String menu(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
+    public String role(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
 
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
         logger.info("treeType ={}", treeType);
@@ -61,19 +61,33 @@ public class NavigateController {
     }
 
     /**
-     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/ztree_menu
-     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/ztree_menu.html
-     * 跳转到真正的页面 :  html/ajax/content/ztree_menu.ftl
+     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-user
+     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-user.html
+     * 跳转到真正的页面 :  html/ajax/content/jqgrid-user.ftl
      *
      * @return
      */
-    @RequestMapping(value = "/content/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String menuTree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
-        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree_menu.ftl", MyServletUtils.getFullPath(request), treeType);
+    @RequestMapping(value = "/content/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
+    public String user( HttpServletRequest request, Model model) {
+        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        model.addAttribute("tree_type", treeType);
-        return "admin/ace/html/ajax/content/ztree-type";
+        return "admin/ace/html/ajax/content/jqgrid-user";
+    }
+
+    /**
+     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-group
+     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-group.html
+     * 跳转到真正的页面 :  html/ajax/content/jqgrid-group.ftl
+     *
+     * @return
+     */
+    @RequestMapping(value = "/content/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
+    public String group( HttpServletRequest request, Model model) {
+        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
+
+        model.addAttribute("app_path", MyServletUtils.getAppPath(request));
+        return "admin/ace/html/ajax/content/jqgrid-group";
     }
 
 

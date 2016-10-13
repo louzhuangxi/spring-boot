@@ -244,7 +244,15 @@
                          }
                     },
                     */
-                    {name: 'id', index: 'id', width: 50, hidden: true, search: true, sorttype: "int", editable: true}, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
+                    {
+                        name: 'id',
+                        index: 'id',
+                        width: 50,
+                        hidden: true,
+                        search: false,
+                        sorttype: "int",
+                        editable: false
+                    }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
                     {
                         name: 'name',
                         index: 'name',
@@ -610,13 +618,13 @@
         });
     }
 
-     /*
-    调用浏览器调试日志, 打印字符串
-    message 可以是任何对象。
-    需要注意的是:
-    如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
-    如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
-     */
+    /*
+   调用浏览器调试日志, 打印字符串
+   message 可以是任何对象。
+   需要注意的是:
+   如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
+   如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+    */
     function logger(message) {
         console.log(message);
     }
@@ -673,7 +681,7 @@
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
                         "tree_type": "${tree_type}",
-                      //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
+                        //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
                         "role_id": function () {
                             return $("#roleId").val();
                         }

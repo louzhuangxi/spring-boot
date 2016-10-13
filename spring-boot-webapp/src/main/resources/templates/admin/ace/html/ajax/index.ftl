@@ -527,7 +527,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a data-url="page/fuelux-tree" href="#page/fuelux-tree?treeType=Menu">
+                        <a data-url="page/fuelux-tree" href="#page/jqgrid-user">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户
                         </a>
@@ -536,7 +536,7 @@
                     </li>
 
                     <li class="">
-                        <a data-url="page/typography" href="#page/typography">
+                        <a data-url="page/typography" href="#page/jqgrid-group">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户组
                         </a>
