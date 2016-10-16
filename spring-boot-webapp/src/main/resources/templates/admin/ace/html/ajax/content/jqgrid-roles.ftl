@@ -1,6 +1,6 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
-<#assign treeType = "${tree_type}">
+<#assign treeType = "${treeType}">
 <title>角色授权</title>
 
 <link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
@@ -251,7 +251,7 @@
                         hidden: true,
                         search: false,
                         sorttype: "int",
-                        editable: false
+                        editable: true  // 必须设为 true ，否则不能正确显示
                     }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
                     {
                         name: 'name',
@@ -680,7 +680,7 @@
                     url: "${ctx}/tree/ztree/ajax/asyncByTreeTypeAndRole.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
-                        "tree_type": "${tree_type}",
+                        "treeType": "${treeType}",
                         //  "role_id": $("#roleId").val(),  不行，只能初始化时读取一次，无法动态获取 roleId 的值。只能用函数返回,函数会动态执行，每次加载都会重新读取一遍
                         "role_id": function () {
                             return $("#roleId").val();

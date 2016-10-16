@@ -1,21 +1,29 @@
 package com.base.spring.controller;
 
 
+import com.base.spring.vo.Message;
 import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description : TODO(ace admin template ajax 方式导航, 本项目用到。都是点击菜单传来，所以都是 Get)
  * 参见 AceAdminAjaxMenuExampleController 说明
+ * spring mvc , freeMarker : 传递 非字符串变量到页面，必须用  @ModelAttribute("model") ModelMap model
  */
+         //      http://stackoverflow.com/questions/18490026/refresh-reload-the-content-in-div-using-jquery-ajax
+
 
 @Controller
 @RequestMapping("/menu/ajax")
@@ -56,7 +64,7 @@ public class NavigateController {
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
         logger.info("treeType ={}", treeType);
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        model.addAttribute("tree_type", treeType); //对菜单进行授权
+        model.addAttribute("treeType", treeType); //对菜单进行授权
         return "admin/ace/html/ajax/content/jqgrid-roles";
     }
 
@@ -68,9 +76,8 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String user( HttpServletRequest request, Model model) {
+    public String user(HttpServletRequest request, Model model) {
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
-
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         return "admin/ace/html/ajax/content/jqgrid-user";
     }
@@ -81,30 +88,36 @@ public class NavigateController {
      * 跳转到真正的页面 :  html/ajax/content/jqgrid-group.ftl
      *
      * @return
+     * @ModelAttribute("model") ModelMap model 必须是这句
      */
     @RequestMapping(value = "/content/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String group( HttpServletRequest request, Model model) {
+    public String group(HttpServletRequest request, @ModelAttribute("model") ModelMap model) { //传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型s
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
-
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
+        // List<String> users = Lists.newArrayList("jiang", "hui", "text");
+        List<Message> users = new ArrayList<>();
+        users.add(new Message("jiang", "hui"));
+        users.add(new Message("jiang1", "hui1"));
+        model.addAttribute("users", users);
+        model.addAttribute("hello", "hello j");
         return "admin/ace/html/ajax/content/jqgrid-group";
     }
 
 
     /**
-     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/ztree_role
-     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/ztree_role.html
-     * 跳转到真正的页面 :  html/ajax/content/ztree_role.ftl
+     * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/ztree-type.html
+     * 被解析为  :  http://localhost:8888/base/menu/ajax/content/ztree-type.html
+     * 跳转到真正的页面 :  html/ajax/content/ztree-type.ftl
      *
      * @return
      */
-    @RequestMapping(value = "/content/ztree_role.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String menuTree2(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
-        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), type);
+    @RequestMapping(value = "/content/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
+    public String menuTree2(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
+        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        model.addAttribute("menu_type", type);
-        return "admin/ace/html/ajax/content/ztree_role";
+        model.addAttribute("treeType", treeType);
+        return "admin/ace/html/ajax/content/ztree-type";
     }
 
 

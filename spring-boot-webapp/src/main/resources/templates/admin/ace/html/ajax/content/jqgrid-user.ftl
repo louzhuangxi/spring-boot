@@ -84,7 +84,6 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     var scripts = [null,
-        "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js",
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
         null]
@@ -254,7 +253,7 @@
                         index: 'id',
                         width: 50,
                         hidden: true,
-                        search: true,
+                        search: false,
                         sorttype: "int",
                         editable: true
                     }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起

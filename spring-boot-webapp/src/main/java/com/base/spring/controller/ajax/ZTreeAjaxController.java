@@ -44,7 +44,7 @@ public class ZTreeAjaxController {
      */
     @RequestMapping(value = "/asyncByTreeType.html", produces = "application/json")
     @ResponseBody
-    public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "tree_type", required = true) TreeNodeType menuType) {
+    public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeNodeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
         return treeNodeService.asyncTree(id, menuType);  //返回初始的树
@@ -59,7 +59,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = "/asyncByTreeTypeAndRole.html", produces = "application/json")
     @ResponseBody
     public String asyncByTreeTypeAndRole(@RequestParam(value = "id", required = false) Long id,
-                                         @RequestParam(value = "tree_type", required = true) TreeNodeType menuType,
+                                         @RequestParam(value = "treeType", required = true) TreeNodeType menuType,
                                          @RequestParam(value = "role_id", required = true) String roleId) {
 
         logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
@@ -86,7 +86,7 @@ public class ZTreeAjaxController {
                       @RequestParam(value = "level", required = true) Integer level,
                       @RequestParam(value = "index", required = true) Integer index,
                       @RequestParam(value = "pId", required = true) Long pId,
-                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "tree_type", required = false) TreeNodeType treeType) {
+                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "treeType", required = false) TreeNodeType treeType) {
         logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
 
         treeNodeService.add(name, level, index, isParent, pId, treeType);

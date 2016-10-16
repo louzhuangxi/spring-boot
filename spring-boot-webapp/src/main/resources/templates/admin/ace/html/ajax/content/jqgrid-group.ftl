@@ -1,10 +1,10 @@
-<#--声明变量-->
+<#--声明变量  <#assign user = "${users}">-->
 <#assign ctx = "${context.contextPath}">
+
 <title>用户管理</title>
 
-<link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.custom.css"/>
+<link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
 <link rel="stylesheet" href="${ctx}/ace/assets/css/ui.jqgrid.css"/>
-
 
 <!-- ajax layout which only needs content area -->
 <div class="page-header">
@@ -21,7 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-            群组管理
+            用户管理
         </div>
 
         <table id="grid-table"></table>
@@ -39,14 +39,14 @@
 
 <div id="modal-table" class="modal fade" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog">
-        <form id="informationForm" class="form-horizontal" role="form">
+        <form id="informationForm">
             <div class="modal-content">
                 <div class="modal-header no-padding">
                     <div class="table-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <span class="white">&times;</span>
                         </button>
-                        角色授权
+                        选择用户
                     </div>
                 </div>
                 <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
@@ -57,17 +57,87 @@
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
                             <div class="widget-main padding-8">
-                                <!--custom begin-->
+                                <!-- custom begin -->
 
-                                <div>
-                                    <div class="space-2"></div>
-
-                                    <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="Choose a State...">
-                                        <option value="AL">Alabama</option>
-                                        <option value="AK">Alaska</option>
-                                    </select>
+                                <div class="control-group">
+                                    <!-- #section:custom/checkbox -->
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-radio" type="radio" class="ace" value="true"/>
+                                            <span class="lbl"> 全选</span>
+                                        </label>
+                                    </div>
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-radio" type="radio" class="ace" value="false"/>
+                                            <span class="lbl"> 全不选</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <!--custom end-->
+
+
+                                <div class="control-group">
+                                    <!-- #section:custom/checkbox -->
+
+                                <#list model["users"] as user>
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
+                                            <span class="lbl"> ${user.name}</span>
+                                        </label>
+                                    </div>
+                                </#list>
+
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
+                                            <span class="lbl"> choice 1</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
+                                            <span class="lbl"> choice 2</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox"  type="checkbox" class="ace ace-checkbox-2"/>
+                                            <span class="lbl"> choice 3</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                                <div class="control-group">
+                                    <!-- #section:custom/checkbox -->
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
+                                            <span class="lbl"> choice 4</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
+                                            <span class="lbl"> choice 5</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="checkbox inline">
+                                        <label>
+                                            <input name="form-field-checkbox"  type="checkbox" class="ace ace-checkbox-2"/>
+                                            <span class="lbl"> choice 6</span>
+                                        </label>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- custom end -->
 
                             </div>
                         </div>
@@ -94,7 +164,6 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     var scripts = [null,
-        "${ctx}/ace/assets/js/jquery-ui.custom.js",
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
         null]
@@ -102,14 +171,24 @@
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
         jQuery(function ($) {
+
+
+            <!-- select checkbox -->
+            $('.control-group input[type="radio"]').click(function () {
+
+              //  console.log($(this).val());
+
+                if ($(this).val() === 'true') {
+                    $('.control-group input[type="checkbox"]').prop('checked', true);
+                } else if ($(this).val() === 'false') {
+                    $('.control-group input[type="checkbox"]').prop('checked', false);
+                }
+            });
+
+
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
 
-
-            // Multiple select 用到
-
-            <!-- 多选 -->
-            $(".chosen-select").chosen();
 
             var parent_column = $(grid_selector).closest('[class*="col-"]');
             //resize to fit page size
@@ -125,7 +204,7 @@
                         $(grid_selector).jqGrid('setGridWidth', parent_column.width());
                     }, 0);
                 }
-            })
+            });
 
             //if your grid is inside another element, for example a tab pane, you should use its parent's width:
             /**
@@ -188,6 +267,17 @@
                 });
                 return result;
             };
+
+            //检查 invalid
+            function myinvalidcheck(value, colname) {
+
+                // alert("value :" +value +" , colname :" +colname);
+                if (value == "是" || value == "否") //返回字符串"true"，表示验证通过，不显示任何信息
+                    return new Array(true, "");
+                else
+                    return new Array(false, "通过验证字段：只能填写 '是' 或 '否' "); //返回其他字符串，把其他字符串作为出错的信息，进行显示
+            };
+
 
             jQuery(grid_selector).jqGrid({
                 //direction: "rtl",
@@ -258,7 +348,7 @@
                         index: 'id',
                         width: 50,
                         hidden: true,
-                        search: true,
+                        search: false,
                         sorttype: "int",
                         editable: true
                     }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
@@ -376,7 +466,7 @@
              * 每次点击授权按钮，都要显示该 role 已经关联的节点
              * 因为每个 role 已经关联的节点不同，所以每次点击授权按钮，都重新异步加载 ztree 一次
              * refreshNode 必须放在点击执行的 js 函数的最后，以便于 roleId 赋值后获得
-             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部        ;refreshNode()
+             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部     ;refreshNode()
              *
              */
             function authorityFormatterMenu(cellvalue, options, cell) {
@@ -620,8 +710,6 @@
                 $.jgrid.gridDestroy(grid_selector);
                 $('.ui-jqdialog').remove();
             });
-
         });
     });
 </script>
-
