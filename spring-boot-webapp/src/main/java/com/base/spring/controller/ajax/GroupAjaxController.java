@@ -1,11 +1,8 @@
 package com.base.spring.controller.ajax;
 
 import com.base.spring.domain.GroupEntity;
-import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.UserEntity;
-import com.base.spring.repository.UserRepository;
+import com.base.spring.repository.GroupRepository;
 import com.base.spring.service.RoleService;
-import com.base.spring.utils.BCryptPassWordUtils;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -27,14 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/grid/user")
-public class UserAjaxController {
+@RequestMapping("/grid/group")
+public class GroupAjaxController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserAjaxController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroupAjaxController.class);
 
 
     @Autowired
-    private UserRepository userRepository;
+    private GroupRepository groupRepository;
     @Autowired
     private RoleService roleService;
 
@@ -67,7 +64,7 @@ public class UserAjaxController {
         /**
          * 记录集
          */
-        Page<UserEntity> pages = JpaUtils.getJqgridPage(userRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<GroupEntity> pages = JpaUtils.getJqgridPage(groupRepository, currentPageNo, pageSize, sortParameter, sort, filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -79,11 +76,9 @@ public class UserAjaxController {
 
         DtoUtils dtoUtils = new DtoUtils();  //用法见 DTOUtils
         //    dtoUtils.addExcludes(MenuEntity.class, "parent"); //在整个转换过程中，无论哪个级联层次，只要遇到 TreeEntity 类，那么他的 parent 属性就不进行转换
-        dtoUtils.addExcludes(RoleEntity.class, "treeNodes", "users", "group");
         dtoUtils.addExcludes(GroupEntity.class, "users", "roles");
 
-
-        JqgridPage<UserEntity> jqPage = new JqgridPage
+        JqgridPage<GroupEntity> jqPage = new JqgridPage
                 (pages.getSize(), pages.getNumber(), (int) pages.getTotalElements(), dtoUtils.createDTOcopy(pages.getContent()));
 
         return jqPage;
@@ -107,13 +102,7 @@ public class UserAjaxController {
     public void jqgridCURD(
             @RequestParam(value = "oper", required = true) String oper, // jqgrid 传递过来的 edit 标记
             @RequestParam(value = "id", required = true) String[] ids, //多选时，如果为单选，数组只有一个值
-            @RequestParam(value = "loginName", required = false) String loginName, // 删除时没有此变量
-            @RequestParam(value = "password", required = false) String password,
-            @RequestParam(value = "userName", required = false) String userName,  // 删除时没有此变量
-            @RequestParam(value = "company", required = false) String company,
-            @RequestParam(value = "telephone", required = false) String telephone,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "valid", required = false) String valid,
+            @RequestParam(value = "name", required = false) String name, // 删除时没有此变量
             @RequestParam(value = "remark", required = false) String remark,
             RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -121,8 +110,7 @@ public class UserAjaxController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("oper ={},ids={},loginname={},password={},userName={},company={},telephone={},email={},valid={},remark={}",
-                oper, ids, loginName, password, userName, company, telephone, email, valid, remark);
+        logger.info("oper ={},ids={},name={},remark={}", oper, ids, name, remark);
 
 
         //删除
@@ -131,7 +119,7 @@ public class UserAjaxController {
             //多选时，逐个处理
             for (String id : ids) {
                 logger.info("id =" + id);
-                userRepository.delete(Long.valueOf(id));
+                groupRepository.delete(Long.valueOf(id));
             }
 
             return; //删除后返回
@@ -139,25 +127,11 @@ public class UserAjaxController {
         } else if (oper.equals("add")) {
 
             logger.info("add action.");
-            Assert.hasText(loginName.trim(), "loginName must not be null!");
-            Assert.hasText(password.trim(), "password must not be null!");
-            Assert.hasText(userName.trim(), "userName must not be null!");
-            Assert.hasText(email.trim(), "email must not be null!");
-            UserEntity entity = new UserEntity();
-            entity.setLoginName(loginName);
-            entity.setPassword(BCryptPassWordUtils.encode(password));
-            entity.setUserName(userName);
-            entity.setCompany(company);
-            entity.setTelephone(telephone);
-            entity.setEmail(email);
-            if (valid.equals("是"))
-                entity.setValid(true);
-            else if (valid.equals("否"))
-                entity.setValid(false);
-            else {
-            }
+            Assert.hasText(name.trim(), "name must not be null!");
+            GroupEntity entity = new GroupEntity();
+            entity.setName(name);
             entity.setRemark(remark);
-            userRepository.save(entity);
+            groupRepository.save(entity);
             // do add action
 
         } else if (oper.equals("edit")) {
@@ -167,25 +141,11 @@ public class UserAjaxController {
             for (String id : ids) {
                 logger.info("id =" + id);
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
-                Assert.hasText(loginName.trim(), "loginName must not be null!");
-                Assert.hasText(password.trim(), "password must not be null!");
-                Assert.hasText(userName.trim(), "userName must not be null!");
-                Assert.hasText(email.trim(), "email must not be null!");
-                UserEntity entity = userRepository.findOne(Long.valueOf(id));
-                entity.setLoginName(loginName);
-                entity.setPassword(BCryptPassWordUtils.encode(password));
-                entity.setUserName(userName);
-                entity.setCompany(company);
-                entity.setTelephone(telephone);
-                entity.setEmail(email);
-                if (valid.equals("是"))
-                    entity.setValid(true);
-                else if (valid.equals("否"))
-                    entity.setValid(false);
-                else {
-                }
+                Assert.hasText(name.trim(), "name must not be null!");
+                GroupEntity entity = groupRepository.findOne(Long.valueOf(id));
+                entity.setName(name);
                 entity.setRemark(remark);
-                userRepository.save(entity);
+                groupRepository.save(entity);
             }
         } else {
             //do none. 没有其他的 oper 参数值了

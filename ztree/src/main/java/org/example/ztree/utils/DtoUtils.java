@@ -12,9 +12,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-/**
- * see http://git.oschina.net/h819/spring-boot
- */
 public class DtoUtils {
 
 

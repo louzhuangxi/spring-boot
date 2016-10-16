@@ -2,8 +2,9 @@
 <#assign ctx = "${context.contextPath}">
 <title>用户管理</title>
 
-<link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
+<link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.custom.css"/>
 <link rel="stylesheet" href="${ctx}/ace/assets/css/ui.jqgrid.css"/>
+
 
 <!-- ajax layout which only needs content area -->
 <div class="page-header">
@@ -20,7 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-            用户管理
+            群组管理
         </div>
 
         <table id="grid-table"></table>
@@ -38,7 +39,7 @@
 
 <div id="modal-table" class="modal fade" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog">
-        <form id="informationForm">
+        <form id="informationForm" class="form-horizontal" role="form">
             <div class="modal-content">
                 <div class="modal-header no-padding">
                     <div class="table-header">
@@ -56,9 +57,18 @@
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
                             <div class="widget-main padding-8">
-                                <div class="zTreeDemoBackground left">
-                                    <ul id="treeDemo" class="ztree"></ul>
+                                <!--custom begin-->
+
+                                <div>
+                                    <div class="space-2"></div>
+
+                                    <select multiple="" class="chosen-select form-control" id="form-field-select-4" data-placeholder="Choose a State...">
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                    </select>
                                 </div>
+                                <!--custom end-->
+
                             </div>
                         </div>
                     </div>
@@ -84,7 +94,7 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     var scripts = [null,
-        "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js",
+        "${ctx}/ace/assets/js/jquery-ui.custom.js",
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
         null]
@@ -95,6 +105,11 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
 
+
+            // Multiple select 用到
+
+            <!-- 多选 -->
+            $(".chosen-select").chosen();
 
             var parent_column = $(grid_selector).closest('[class*="col-"]');
             //resize to fit page size
@@ -174,17 +189,6 @@
                 return result;
             };
 
-            //检查 invalid
-            function myinvalidcheck(value, colname) {
-
-                // alert("value :" +value +" , colname :" +colname);
-                if (value == "是" || value == "否") //返回字符串"true"，表示验证通过，不显示任何信息
-                    return new Array(true, "");
-                else
-                    return new Array(false, "通过验证字段：只能填写 '是' 或 '否' "); //返回其他字符串，把其他字符串作为出错的信息，进行显示
-            };
-
-
             jQuery(grid_selector).jqGrid({
                 //direction: "rtl",
 
@@ -215,15 +219,15 @@
 
 
                 //配置,参见 http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
-                url: "${ctx}/grid/user/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
-                editurl: "${ctx}/grid/user/jqgrid-edit",//nothing is saved
+                url: "${ctx}/grid/group/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
+                editurl: "${ctx}/grid/group/jqgrid-edit",//nothing is saved
 
                 datatype: "json", // 返回的数据类型
                 mtype: "post", // 提交方式
                 caption: "最新消息",//表格描述
 
                 height: 250,
-                colNames: [' ', 'ID', '登录名', '密码', '用户名', '单位', '电话', 'email', '创建时间', '所属群组', '角色授权', '备注', '通过验证'],
+                colNames: [' ', 'ID', '群组名称', '创建时间', '组内用户', '角色授权', '备注'],
                 colModel: [
                     {
                         name: 'myac', index: '', width: 20, fixed: true, sortable: false, resize: false, search: false
@@ -258,63 +262,10 @@
                         sorttype: "int",
                         editable: true
                     }, // ace admin 1.3.4 ，不知道为什么，不显示 id 行，真正显示从 name 起
-                    {
-                        name: 'loginName',
-                        index: 'loginName',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true} //, custom: true, custom_func: checkname
-                    },//
-                    {
-                        name: 'password',
-                        index: 'password',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true}, //
-                        formatter: function (cellvalue, options, rowObject) {//显示时，以连接显示. formatter:'showLink' 可以有更多设置
-                                return "密文显示,只能查看";
-                        }//
-                    },
 
                     {
-                        name: 'userName',
-                        index: 'userName',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true} //
-                    },
-                    {
-                        name: 'company',
-                        index: 'company',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: false} //
-                    },
-                    {
-                        name: 'telephone',
-                        index: 'telephone',
-                        width: 100,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: false} //
-                    },
-                    {
-                        name: 'email',
-                        index: 'email',
+                        name: 'name',
+                        index: 'name',
                         width: 100,
                         search: true,
                         searchoptions: {sopt: ["cn", "eq"]},
@@ -331,7 +282,7 @@
                         editable: false,
                         edittype: 'text',
                         editrules: {required: true} //
-                    },                  
+                    },
                     {
                         name: '',
                         index: '',
@@ -350,7 +301,7 @@
                         editable: false,
                         formatter: authorityFormatterMenu //显示一个图标
                     },
-					{
+                    {
                         name: 'remark',
                         index: 'remark',
                         width: 100,
@@ -359,31 +310,6 @@
                         editable: true,
                         edittype: 'text',
                         editrules: {required: false} //
-                    },
-                    {
-                        name: 'valid',
-                        index: 'valid',
-                        width: 80,
-                        search: true,
-                        searchoptions: {sopt: ["cn", "eq"]},
-                        editable: true,
-                        edittype: 'text',
-                        editrules: {required: true, custom: true, custom_func: myinvalidcheck},
-                        formatter: function (cellvalue, options, rowObject) {//显示时，以连接显示. formatter:'showLink' 可以有更多设置
-                            // alert(rowObject.valid);
-                            if (rowObject.valid == true)
-                                return "是";
-                            else return "否";
-
-                        },
-                        unformat: function (cellvalue, options) {//，编辑时，显示原值。不加此设置，会有链接标签.
-                            return cellvalue;
-                        },
-                        cellattr: function (rowId, cellValues, rawObject, cm, rdata) {
-                            if (cellValues == '是') {
-                                return ' class="alert alert-success"';
-                            }
-                        }
                     }
                     /*
                     formatter: 'date', formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d'}
@@ -450,11 +376,11 @@
              * 每次点击授权按钮，都要显示该 role 已经关联的节点
              * 因为每个 role 已经关联的节点不同，所以每次点击授权按钮，都重新异步加载 ztree 一次
              * refreshNode 必须放在点击执行的 js 函数的最后，以便于 roleId 赋值后获得
-             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部
+             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部        ;refreshNode()
              *
              */
             function authorityFormatterMenu(cellvalue, options, cell) {
-                var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\");refreshNode()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\")' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
                 return template;
             }
 
@@ -694,6 +620,8 @@
                 $.jgrid.gridDestroy(grid_selector);
                 $('.ui-jqdialog').remove();
             });
+
         });
     });
 </script>
+

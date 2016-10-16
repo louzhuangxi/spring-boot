@@ -1,9 +1,5 @@
 package org.example.ztree.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -28,16 +24,6 @@ import java.util.List;
  */
 @Entity
 @Table(name = "base_treenode")
-@NamedEntityGraphs({
-        @NamedEntityGraph(name = "treenode.parent", attributeNodes = {@NamedAttributeNode("parent")}),//级联 parent
-        @NamedEntityGraph(name = "treenode.children", attributeNodes = {@NamedAttributeNode("children")}), // 级联 children
-        @NamedEntityGraph(name = "treenode.parent.children", attributeNodes = {@NamedAttributeNode("parent"), @NamedAttributeNode("children")})})
-// 二者都级联
-
-// 只和 role 有关系
-@Getter
-@Setter
-@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class TreeNodeEntity implements Serializable {
 
@@ -126,7 +112,6 @@ public class TreeNodeEntity implements Serializable {
      * 不加 @Getter , @Setter 不自动生成
      */
     @Transient  // 不在数据库中建立字段
-    @Setter(AccessLevel.NONE) // 不创建 Setter  方法，反序列化会有问题么?
     private int level;
 
     /**
@@ -338,5 +323,89 @@ public class TreeNodeEntity implements Serializable {
             level++;
             getLevelInit(entity.getParent());
         }
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public String getCss() {
+        return css;
+    }
+
+    public void setCss(String css) {
+        this.css = css;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public TreeNodeType getType() {
+        return type;
+    }
+
+    public void setType(TreeNodeType type) {
+        this.type = type;
+    }
+
+    public TreeNodeEntity getParent() {
+        return parent;
+    }
+
+    public void setParent(TreeNodeEntity parent) {
+        this.parent = parent;
+    }
+
+    public List<TreeNodeEntity> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TreeNodeEntity> children) {
+        this.children = children;
+    }
+
+    public boolean isParentNode() {
+        return isParentNode;
+    }
+
+    public void setParentNode(boolean parentNode) {
+        isParentNode = parentNode;
     }
 }
