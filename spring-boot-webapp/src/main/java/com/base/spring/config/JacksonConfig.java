@@ -1,6 +1,5 @@
 package com.base.spring.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -30,7 +29,7 @@ public class JacksonConfig {
          * @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
          * LocalDateTime modifiedDate;
          */
-        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new JavaTimeModule()); // 由于 jpa 2.1 不支持 LocalDate , 转换为 jackson 时，也不支持，只能自定义转换
         //==
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true); // pretty print
 

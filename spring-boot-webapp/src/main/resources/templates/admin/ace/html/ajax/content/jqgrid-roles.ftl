@@ -101,6 +101,61 @@
             var pager_selector = "#grid-pager";
 
 
+
+
+
+            /**
+             点击保存按钮，关联所有树节点到选中的 roleId 上
+             */
+                    // 获取所有被 checked 的节点的 id
+            var ids = new Array();
+            var ids_str = "";
+
+            $('#submitButton').click(function () {
+
+                var zTree = getZTree(ztree_root);
+                var nodes = zTree.getCheckedNodes(true); //返回的是一个数组
+                //logger(nodes);
+                getAllIds(nodes);
+                //测试
+                for (i = 0; i < ids.length; i++) {
+                    ids_str += ids[i] + ",";
+                }
+                //logger("text="+text);
+
+
+                $.ajax({ //ajax 提交到controller的delApplication方法处理
+                    type: "post",
+                    async: false,
+                    url: "${ctx}/grid/role/get_checked_nodes.html",
+                    data: { //传递的参数和值
+                        ids_str: ids_str,
+                        role_id: $("#roleId").val()
+                    },
+                    dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                    success: function (data) { //处理成功的回调函数
+
+                    },
+                    error: function () {
+
+                    }
+                    //处理失败的回到函数
+                });
+
+            });
+
+
+            /**
+             查找
+             */
+            function getAllIds(nodes) {
+
+                for (i = 0; i < nodes.length; i++) {
+                    ids.push(nodes[i].id);
+                }
+            }
+
+
             var parent_column = $(grid_selector).closest('[class*="col-"]');
             //resize to fit page size
             $(window).on('resize.jqGrid', function () {
@@ -332,10 +387,10 @@
 
 
             /**
-             *点击后，加载 menu tree
+             *点击后，在 Bootstrap Modals 中 加载 menu tree
              *
              * 每次点击授权按钮，都要显示该 role 已经关联的节点
-             * 因为每个 role 已经关联的节点不同，所以每次点击授权按钮，都重新异步加载 ztree 一次
+             * 因为每个 role 已经关联的节点不同，所以每次点击授权按钮，代表不同的roleId , 都重新异步加载 ztree 一次
              * refreshNode 必须放在点击执行的 js 函数的最后，以便于 roleId 赋值后获得
              * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部
              *
@@ -630,6 +685,11 @@
     }
 
     /**
+     *
+     * Bootstrap Modals.js 是弹出框，是网页加载后，弹出指定的 div 的内容，该 div 内容是网页加载后的网页呈现内容的一部分
+     * modal 只是弹出而已。
+     * 所以想要刷新这部分内容，需要程序加载一次 modal div 的内容
+     * ---
      * 重新异步加载 ztree 节点
      * 此函数可以供页面所有元素调用
      * 自动调用 ztree setting 中的 asyncByTreeType 定义的方法
@@ -709,59 +769,6 @@
             function removeCopyCutClass() {
                 $("#treeDemo li").parent().find('li').find('a').removeClass("copy").removeClass("cut");
             }
-
-
-            /**
-             点击保存按钮，关联所有树节点到选中的 roleId 上
-             */
-                    // 获取所有被 checked 的节点的 id
-            var ids = new Array();
-            var ids_str = "";
-
-            $('#submitButton').click(function () {
-
-                var zTree = getZTree(ztree_root);
-                var nodes = zTree.getCheckedNodes(true); //返回的是一个数组
-                //logger(nodes);
-                getAllIds(nodes);
-                //测试
-                for (i = 0; i < ids.length; i++) {
-                    ids_str += ids[i] + ",";
-                }
-                //logger("text="+text);
-
-
-                $.ajax({ //ajax 提交到controller的delApplication方法处理
-                    type: "post",
-                    async: false,
-                    url: "${ctx}/grid/role/get_checked_nodes.html",
-                    data: { //传递的参数和值
-                        ids_str: ids_str,
-                        role_id: $("#roleId").val()
-                    },
-                    dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                    success: function (data) { //处理成功的回调函数
-
-                    },
-                    error: function () {
-
-                    }
-                    //处理失败的回到函数
-                });
-
-            });
-
-
-            /**
-             查找
-             */
-            function getAllIds(nodes) {
-
-                for (i = 0; i < nodes.length; i++) {
-                    ids.push(nodes[i].id);
-                }
-            }
-
 
             $(document).ready(function () {
                 //$.fn.zTree.init($("#treeDemo"), setting, zNodes);

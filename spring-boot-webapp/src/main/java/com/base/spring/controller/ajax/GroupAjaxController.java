@@ -1,8 +1,17 @@
 package com.base.spring.controller.ajax;
 
+/**
+ * 构造了两个 modal
+ */
+
 import com.base.spring.domain.GroupEntity;
+import com.base.spring.domain.RoleEntity;
+import com.base.spring.domain.UserEntity;
 import com.base.spring.repository.GroupRepository;
-import com.base.spring.service.RoleService;
+import com.base.spring.repository.RoleRepository;
+import com.base.spring.repository.UserRepository;
+import com.base.spring.service.GroupService;
+import com.base.spring.service.UserService;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -13,7 +22,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/grid/group")
@@ -33,7 +45,13 @@ public class GroupAjaxController {
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
-    private RoleService roleService;
+    private GroupService groupService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private UserService userService;
 
 
     /**
@@ -154,29 +172,158 @@ public class GroupAjaxController {
         return;
     }
 
-    @RequestMapping(value = "/get_checked_nodes.html")
+    /**
+     * 返回 jquery.load 加载指定的页面
+     * <p>
+     * 根据 group id ，获取所有 users ，传递到 bootstrap_modal
+     *
+     * @param groupId
+     * @param redirectAttrs
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/bootstrap_modal_load_users.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    public String bootsTrapModalLoadUsers(
+            @RequestParam(value = "group_id", required = true) String groupId,
+            RedirectAttributes redirectAttrs, @ModelAttribute("model") ModelMap model,//传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型
+            HttpServletRequest request, HttpServletResponse response) {
 
-    public void getCheckedNodes(@RequestParam(value = "ids_str", required = true) String ids,
-                                @RequestParam(value = "role_id", required = true) String roleId,
-                                RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
+        logger.info("ids={}", groupId);
+
+        Assert.notNull(groupId, "groupId is null");
+
+        List<UserEntity> usersChecked = new ArrayList<>();
+        List<UserEntity> usersUnChecked = new ArrayList<>();
+
+        //获取所有用户
+        List<UserEntity> userEntityList = userRepository.findAll();
+        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+
+        //分为两组 : 已经和 group 关联的/未关联的
+        if (groupEntity != null) {
+            for (UserEntity user : userEntityList) {
+                if (user.getGroups().contains(groupEntity))
+                    usersChecked.add(user);
+                else usersUnChecked.add(user);
+            }
+        } else
+            usersUnChecked.addAll(userEntityList);
+
+        DtoUtils utils = new DtoUtils();
+        utils.addExcludes(UserEntity.class, "roles");
+        utils.addExcludes(GroupEntity.class, "roles", "users");
+
+//        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersChecked));
+//        System.out.println("=============");
+//        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
+
+        model.addAttribute("usersChecked", utils.createDTOcopy(usersChecked));
+        model.addAttribute("usersUnChecked", utils.createDTOcopy(usersUnChecked));
+
+        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-users";
+    }
+
+
+    /**
+     * 关联被选中的 user 到 Group
+     * 注意 spring mvc controller 接收 array 类型的参数
+     *
+     * @param groupId
+     * @param userIds
+     */
+    @RequestMapping(value = "/get_checked_checkbox_users.html")
+    //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    public void bootsTrapModalAssociateUsers(
+            @RequestParam(value = "group_id", required = true) String groupId,
+            @RequestParam(value = "checkbox[]", required = false) String[] userIds) {
+
+
+        logger.info("group id ={}", groupId);
+        if (userIds != null)
+            logger.info("user id ={}", userIds);
+        groupService.associateUsers(userIds, groupId);
+    }
+
+    /**
+     * 返回 jquery.load 加载指定的页面
+     * <p>
+     * 根据 group id ，获取所有 users ，传递到 bootstrap_modal
+     *
+     * @param groupId
+     * @param redirectAttrs
+     * @param model
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/bootstrap_modal_load_roles.html")
+    //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    public String bootsTrapModalLoadRoles(
+            @RequestParam(value = "group_id", required = true) String groupId,
+            RedirectAttributes redirectAttrs, @ModelAttribute("model") ModelMap model,//传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型
+            HttpServletRequest request, HttpServletResponse response) {
 
         /**
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("ids={} , roleId={}", ids, roleId);
-//
-//        if (ids == null)
-//            System.out.println("null");
-//
-//        if (ids.isEmpty())
-//            System.out.println("empty");
-//
-//        if (ids.equals(""))
-//            System.out.println("equals");
+        logger.info("ids={}", groupId);
 
-        roleService.associate(ids, roleId);
-        return;
+        Assert.notNull(groupId, "groupId is null");
+
+        List<RoleEntity> rolesChecked = new ArrayList<>();
+        List<RoleEntity> rolesUnChecked = new ArrayList<>();
+
+        //获取所有用户
+        List<RoleEntity> roleEntityList = roleRepository.findAll();
+        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+
+        //分为两组 : 已经和 group 关联的/未关联的
+        if (groupEntity != null) {
+            for (RoleEntity role : roleEntityList) {
+                if (role.getUsers().contains(groupEntity))
+                    rolesChecked.add(role);
+                else rolesUnChecked.add(role);
+            }
+        } else
+            rolesUnChecked.addAll(roleEntityList);
+
+        DtoUtils utils = new DtoUtils();
+        utils.addExcludes(RoleEntity.class, "roles", "users", "groups");
+
+//        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersChecked));
+//        System.out.println("=============");
+//        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
+
+        model.addAttribute("rolesChecked", utils.createDTOcopy(rolesChecked));
+        model.addAttribute("rolesUnChecked", utils.createDTOcopy(rolesUnChecked));
+
+        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-roles";
     }
+
+
+    /**
+     * 关联被选中的 user 到 Group
+     * 注意 spring mvc controller 接收 array 类型的参数
+     *
+     * @param groupId
+     * @param roleIds
+     */
+    @RequestMapping(value = "/get_checked_checkbox_roles.html")
+    //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    public void bootsTrapModalAssociateRoles(
+            @RequestParam(value = "group_id", required = true) String groupId,
+            @RequestParam(value = "checkbox[]", required = false) String[] roleIds) // 前端的参数为 checkbox , array 类型
+    {
+
+        logger.info("group id ={}", groupId);
+        if (roleIds != null)
+            logger.info("role id ={}", roleIds);
+        userService.associateRoles(roleIds, groupId);
+
+    }
+
 }

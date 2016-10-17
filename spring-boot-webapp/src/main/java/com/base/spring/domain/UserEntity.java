@@ -145,7 +145,7 @@ public class UserEntity extends BaseEntity {
 
 
     @ManyToMany(mappedBy = "users", targetEntity = GroupEntity.class)
-    private List<GroupEntity> group = new ArrayList<>();
+    private List<GroupEntity> groups = new ArrayList<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
@@ -200,6 +200,11 @@ public class UserEntity extends BaseEntity {
 
     }
 
+    public void addRoles(List<RoleEntity> roles) {
+        for (RoleEntity entity : roles)
+            addRole(entity);
+    }
+
     /**
      * 自定义方法，删除学生
      * 注意删除关联的方法(单向的不需要)
@@ -215,6 +220,59 @@ public class UserEntity extends BaseEntity {
 
         }
 
+    }
+
+    public void removeRoles(List<RoleEntity> roles) {
+
+        for (RoleEntity entity : roles)
+            removeRole(entity);
+
+    }
+
+    public void clearRoles() {
+        this.roles.clear();
+    }
+
+    public void addGroup(GroupEntity group) {
+
+        if (!this.groups.contains(group)) {
+            this.groups.add(group);
+            group.getUsers().add(this);
+        }
+
+    }
+
+    public void addGroups(List<GroupEntity> groups) {
+        for (GroupEntity entity : groups)
+            addGroup(entity);
+    }
+
+    /**
+     * 自定义方法，删除学生
+     * 注意删除关联的方法(单向的不需要)
+     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
+     *
+     * @param group
+     */
+    public void removeGroup(GroupEntity group) {
+
+        if (this.groups.contains(group)) {
+            this.groups.remove(group);
+            group.getUsers().remove(this);
+
+        }
+
+    }
+
+    public void removeGroups(List<GroupEntity> groups) {
+
+        for (GroupEntity entity : groups)
+            removeGroup(entity);
+
+    }
+
+    public void clearGroups() {
+        this.groups.clear();
     }
 
     /**

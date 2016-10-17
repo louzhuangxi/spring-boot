@@ -43,9 +43,6 @@ public class NavigateController {
      */
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String home(HttpServletRequest request) {
-//        logger.info("getPathInfo={} , getPathTranslated ={} ,getRequestURI={} , getRequestURL={} , getLocalAddr={} ,getRemoteAddr ={},getQueryString={}",
-//                request.getPathInfo(), request.getPathTranslated(), request.getRequestURI(), MyServletUtils.getFullPath(request)
-//                , request.getLocalAddr(), request.getRemoteAddr(),request.getQueryString());
         logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         return "admin/ace/html/ajax/index";
     }

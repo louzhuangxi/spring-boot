@@ -35,7 +35,7 @@ public class RoleEntity extends BaseEntity {
 
 
     @ManyToMany(mappedBy = "roles", targetEntity = GroupEntity.class)
-    private List<GroupEntity> group = new ArrayList<>();
+    private List<GroupEntity> groups = new ArrayList<>();
 
 
     @ManyToMany(mappedBy = "roles", targetEntity = UserEntity.class)
@@ -175,8 +175,8 @@ public class RoleEntity extends BaseEntity {
      */
     public void addGroup(GroupEntity group) {
 
-        if (!this.group.contains(group)) {
-            this.group.add(group);
+        if (!this.groups.contains(group)) {
+            this.groups.add(group);
             group.getRoles().add(this);
         }
 
@@ -190,8 +190,8 @@ public class RoleEntity extends BaseEntity {
      */
     public void removeGroup(GroupEntity group) {
 
-        if (this.group.contains(group)) {
-            this.group.remove(group);
+        if (this.groups.contains(group)) {
+            this.groups.remove(group);
             group.getRoles().remove(this);
 
         }

@@ -2,7 +2,7 @@ package com.base.spring.domain.validator;
 
 
 import com.base.spring.domain.UserEntity;
-import com.base.spring.service.user.UserService;
+import com.base.spring.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

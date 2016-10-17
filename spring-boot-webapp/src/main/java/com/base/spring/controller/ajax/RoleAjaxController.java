@@ -76,7 +76,7 @@ public class RoleAjaxController {
 
         DtoUtils dtoUtils = new DtoUtils();  //用法见 DTOUtils
         //    dtoUtils.addExcludes(MenuEntity.class, "parent"); //在整个转换过程中，无论哪个级联层次，只要遇到 TreeEntity 类，那么他的 parent 属性就不进行转换
-        dtoUtils.addExcludes(RoleEntity.class, "treeNodes", "users", "group");
+        dtoUtils.addExcludes(RoleEntity.class, "treeNodes", "users", "groups");
 
 
         JqgridPage<RoleEntity> jqPage = new JqgridPage

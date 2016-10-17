@@ -5,7 +5,9 @@ Console appender logback configuration provided for import, equivalent to the pr
 initialization performed by Boot
 -->
 
+
 <included>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %caller{1} - %msg%n</pattern>

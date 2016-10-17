@@ -51,18 +51,23 @@ public class RoleService {
             return;
         }
 
+        //构造 id 集合
         String[] idArray = StringUtils.removeEnd(treeNodeIds, ",").split(",");
         List<Long> listTreeId = new ArrayList<>(idArray.length);
-
         for (String id : idArray) {
             // System.out.println("id=" + id);
             // roleEntity.addTreeNode();
             listTreeId.add(Long.valueOf(id.trim()));
         }
 
-        //重新建立关联，原来的关联关系会被替代
+        /**
+         * 重新建立关联，原来的关联关系会被替代
+         * */
+        // 被选中的节点
         List<TreeNodeEntity> targetTreeNodes = treeNodeRepository.findByIdIn(listTreeId);
+        // role 已经关联的节点
         List<TreeNodeEntity> sourceTreeNodes = roleEntity.getTreeNodes();
+        // 需要删除的节点
         List<TreeNodeEntity> deleteTreeNodes = new ArrayList<>();
 
 

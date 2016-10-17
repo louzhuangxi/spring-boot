@@ -1,7 +1,7 @@
 <#--声明变量  <#assign user = "${users}">-->
 <#assign ctx = "${context.contextPath}">
 
-<title>用户管理</title>
+<title>群组管理</title>
 
 <link rel="stylesheet" href="${ctx}/ace/assets/css/jquery-ui.css"/>
 <link rel="stylesheet" href="${ctx}/ace/assets/css/ui.jqgrid.css"/>
@@ -21,7 +21,7 @@
     <div class="col-xs-12">
         <!-- PAGE CONTENT BEGINS -->
         <div class="well well-sm">
-            用户管理
+            群组管理
         </div>
 
         <table id="grid-table"></table>
@@ -36,8 +36,8 @@
     </div><!-- /.col -->
 </div><!-- /.row -->
 
-
-<div id="modal-table" class="modal fade" tabindex="-1" data-backdrop="static">
+<!-- bootstrap model users-->
+<div id="modal-table-users" class="modal fade" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog">
         <form id="informationForm">
             <div class="modal-content">
@@ -52,100 +52,73 @@
                 <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
                     <div id="modal-tip" class="red clearfix"></div>
                     <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
-                    <input id="roleId" type="hidden" value=""/> <!-- roleId 权限 id -->
-                    <input id="treeType" type="hidden" value=""/> <!-- treeType , ztree 类型-->
+                    <input id="groupId" type="hidden" value=""/> <!-- groupId -->
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
-                            <div class="widget-main padding-8">
+                            <div id="custom_modal_users" class="widget-main padding-8">
                                 <!-- custom begin -->
 
-                                <div class="control-group">
-                                    <!-- #section:custom/checkbox -->
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-radio" type="radio" class="ace" value="true"/>
-                                            <span class="lbl"> 全选</span>
-                                        </label>
-                                    </div>
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-radio" type="radio" class="ace" value="false"/>
-                                            <span class="lbl"> 全不选</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-
-                                <div class="control-group">
-                                    <!-- #section:custom/checkbox -->
-
-                                <#list model["users"] as user>
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
-                                            <span class="lbl"> ${user.name}</span>
-                                        </label>
-                                    </div>
-                                </#list>
-
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
-                                            <span class="lbl"> choice 1</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
-                                            <span class="lbl"> choice 2</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox"  type="checkbox" class="ace ace-checkbox-2"/>
-                                            <span class="lbl"> choice 3</span>
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                <div class="control-group">
-                                    <!-- #section:custom/checkbox -->
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
-                                            <span class="lbl"> choice 4</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox" type="checkbox" class="ace"/>
-                                            <span class="lbl"> choice 5</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="checkbox inline">
-                                        <label>
-                                            <input name="form-field-checkbox"  type="checkbox" class="ace ace-checkbox-2"/>
-                                            <span class="lbl"> choice 6</span>
-                                        </label>
-                                    </div>
-
-                                </div>
-
+                                <!-- load by jquery.load()
+                                 refreshBootstrapModalUsers();
+                                -->
 
                                 <!-- custom end -->
-
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer no-margin-top">
                     <div class="text-center">      <!--  data-dismiss="modal" 点击后会关闭 modal -->
-                        <button id="submitButton" type="submit" class="btn btn-white btn-default btn-round"
+                        <button id="submitButtonUsers" type="submit" class="btn btn-white btn-default btn-round"
+                                data-dismiss="modal">
+                            <i class="ace-icon fa fa-floppy-o bigger-120"></i>
+                            保存
+                        </button>
+                        <button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+                            <i class="ace-icon fa fa-share bigger-120"></i>
+                            取消
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- bootstrap model roles -->
+<div id="modal-table-roles" class="modal fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <form id="informationForm">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        选择角色
+                    </div>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
+                    <div id="modal-tip" class="red clearfix"></div>
+                    <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
+                    <input id="groupId" type="hidden" value=""/> <!-- groupId -->
+                    <div class="widget-box widget-color-blue2">
+                        <div class="widget-body">
+                            <div id="custom_modal_roles" class="widget-main padding-8">
+                                <!-- custom begin -->
+
+                                <!-- load by jquery.load()
+                                refreshBootstrapModalRoles
+                                -->
+
+                                <!-- custom end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <div class="text-center">      <!--  data-dismiss="modal" 点击后会关闭 modal -->
+                        <button id="submitButtonRoles" type="submit" class="btn btn-white btn-default btn-round"
                                 data-dismiss="modal">
                             <i class="ace-icon fa fa-floppy-o bigger-120"></i>
                             保存
@@ -166,25 +139,140 @@
     var scripts = [null,
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
-        null]
+        null];
+
+    /**
+     * Bootstrap Modals.js 是弹出框，是网页加载后，弹出指定的 div 的内容，该 div 内容是网页加载后的网页呈现内容的一部分
+     * modal 只是弹出而已。
+     * 所以想要刷新这部分内容，需要程序加载一次 modal div 的内容 , 用 jqury.load() 刷新指定的 div 内容
+     * -
+     * 此函数可以供页面所有元素调用
+     * 点击按钮，刷新 div 内容
+     */
+    function refreshBootstrapModalUsers() {
+        console.log("refreshBootstrapModalUsers , group id =" + $("#groupId").val());
+        //传递 group id 到后台，更新 model 中的 users
+        /**
+         * 动态加载 bootstrap model
+         * .load( url [, data ] [, complete ] )
+         * */
+        $("#custom_modal_users").load(
+                "${ctx}/grid/group/bootstrap_modal_load_users.html",
+                {
+                    group_id: $("#groupId").val()
+                }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
+                function (response, status, xhr) {
+                    if (status == 'success') {
+                        console.log("bootstrap_modal_load_users success");
+                        //$('#notification-bar').text('The page has been successfully loaded');
+                    } else if (status == "error") {
+                        console.log("bootstrap_modal_load_users false");
+                        //$('#notification-bar').text('An error occurred');
+                    }
+                }
+        );
+
+    }
+    ;
+
+
+    /**
+     * 点击 bootstrap modal 提交按钮
+     * */
+    $('#submitButtonUsers').click(function () {
+
+        console.log("submitButtonUsers button click");
+        //获取所有选中的 checkbox
+        var values = $('input[type="checkbox"].ace:checked').map(function () {
+            return $(this).val();
+        }).toArray();
+
+        $.ajax({ //ajax 提交到controller的delApplication方法处理
+            type: "post",
+            async: false,
+            url: "${ctx}/grid/group/get_checked_checkbox_users.html",
+            data: { //传递的参数和值
+                checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
+                group_id: $("#groupId").val()
+            },
+            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+            success: function (data) { //处理成功的回调函数
+
+            }
+
+            ,
+            error: function () {
+
+            }
+            //处理失败的回到函数
+        });
+    });
+
+    /**
+     * 同上 , for roles
+     */
+    function refreshBootstrapModalRoles() {
+        console.log("refreshBootstrapModalRoles , group id =" + $("#groupId").val());
+        //传递 group id 到后台，更新 model 中的 users
+        /**
+         * 动态加载 bootstrap model
+         * .load( url [, data ] [, complete ] )
+         * */
+        $("#custom_modal_roles").load(
+                "${ctx}/grid/group/bootstrap_modal_load_roles.html",
+                {
+                    group_id: $("#groupId").val()
+                }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
+                function (response, status, xhr) {
+                    if (status == 'success') {
+                        console.log("bootstrap_modal_load_roles success");
+                        //$('#notification-bar').text('The page has been successfully loaded');
+                    } else if (status == "error") {
+                        console.log("bootstrap_modal_load_roles false");
+                        //$('#notification-bar').text('An error occurred');
+                    }
+                }
+        );
+
+    }
+    ;
+
+
+    /**
+     * 点击 bootstrap modal 提交按钮
+     * */
+    $('#submitButtonRoles').click(function () {
+
+        console.log("submitButtonRoles button click");
+        //获取所有选中的 checkbox
+        var values = $('input[type="checkbox"].ace:checked').map(function () {
+            return $(this).val();
+        }).toArray();
+
+        $.ajax({ //ajax 提交到controller的delApplication方法处理
+            type: "post",
+            async: false,
+            url: "${ctx}/grid/group/get_checked_checkbox_roles.html",
+            data: { //传递的参数和值
+                checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
+                group_id: $("#groupId").val()
+            },
+            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+            success: function (data) { //处理成功的回调函数
+
+            }
+
+            ,
+            error: function () {
+
+            }
+            //处理失败的回到函数
+        });
+    });
 
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
         jQuery(function ($) {
-
-
-            <!-- select checkbox -->
-            $('.control-group input[type="radio"]').click(function () {
-
-              //  console.log($(this).val());
-
-                if ($(this).val() === 'true') {
-                    $('.control-group input[type="checkbox"]').prop('checked', true);
-                } else if ($(this).val() === 'false') {
-                    $('.control-group input[type="checkbox"]').prop('checked', false);
-                }
-            });
-
 
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
@@ -380,7 +468,7 @@
                         width: 100,
                         search: false,
                         editable: false,
-                        formatter: authorityFormatterMenu //显示一个图标
+                        formatter: authorityFormatterUsers //显示一个图标
                     },
                     {
                         name: '',
@@ -389,7 +477,7 @@
                         width: 100,
                         search: false,
                         editable: false,
-                        formatter: authorityFormatterMenu //显示一个图标
+                        formatter: authorityFormatterRoles //显示一个图标
                     },
                     {
                         name: 'remark',
@@ -461,16 +549,20 @@
 
 
             /**
-             *点击后，加载 menu tree
+             *点击后，在 Bootstrap Modals 中 ，根据 groupId 加载 users
              *
-             * 每次点击授权按钮，都要显示该 role 已经关联的节点
-             * 因为每个 role 已经关联的节点不同，所以每次点击授权按钮，都重新异步加载 ztree 一次
+             * 因为每个 groupId 已经关联的 users 不同，所以每次点击按钮，代表不同 groupId , 都重新异步加载  一次
              * refreshNode 必须放在点击执行的 js 函数的最后，以便于 roleId 赋值后获得
-             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部     ;refreshNode()
+             * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部
              *
              */
-            function authorityFormatterMenu(cellvalue, options, cell) {
-                var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\")' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
+            function authorityFormatterUsers(cellvalue, options, cell) {
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table-users\").modal(\"toggle\");$(\"#groupId\").val(\"" + cell.id + "\");refreshBootstrapModalUsers()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-users bigger-110 grey'></i></button>";
+                return template;
+            }
+
+            function authorityFormatterRoles(cellvalue, options, cell) {
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table-roles\").modal(\"toggle\");$(\"#groupId\").val(\"" + cell.id + "\");refreshBootstrapModalRoles()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
                 return template;
             }
 
@@ -703,6 +795,7 @@
                 $('.navtable .ui-pg-button').tooltip({container: 'body'});
                 $(table).find('.ui-pg-div').tooltip({container: 'body'});
             }
+
 
             //var selr = jQuery(grid_selector).jqGrid('getGridParam','selrow');
 

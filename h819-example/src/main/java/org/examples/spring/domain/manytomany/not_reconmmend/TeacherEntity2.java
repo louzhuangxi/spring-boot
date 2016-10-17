@@ -3,6 +3,7 @@ package org.examples.spring.domain.manytomany.not_reconmmend;
 import com.google.common.collect.Sets;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,6 +66,12 @@ public class TeacherEntity2 {
 
     }
 
+    public void addStudents(List<StudentEntity2> students) {
+        for (StudentEntity2 entity : students)
+            addStudent(entity);
+
+    }
+
     /**
      * 自定义方法，删除学生
      * 注意添加关联的方法(双向关联的，需要双方都要删除)
@@ -82,6 +89,12 @@ public class TeacherEntity2 {
 
     }
 
+    public void removeStudents(List<StudentEntity2> students) {
+
+        for (StudentEntity2 entity : students)
+            removeStudent(entity);
+
+    }
 
     /**
      * 可以直接清除关联关系

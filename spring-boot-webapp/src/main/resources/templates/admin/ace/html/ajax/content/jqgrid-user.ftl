@@ -35,8 +35,8 @@
     </div><!-- /.col -->
 </div><!-- /.row -->
 
-
-<div id="modal-table" class="modal fade" tabindex="-1" data-backdrop="static">
+<!-- bootstrap model groups-->
+<div id="modal-table-groups" class="modal fade" tabindex="-1" data-backdrop="static">
     <div class="modal-dialog">
         <form id="informationForm">
             <div class="modal-content">
@@ -45,27 +45,79 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <span class="white">&times;</span>
                         </button>
-                        角色授权
+                        选择群组
                     </div>
                 </div>
                 <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
                     <div id="modal-tip" class="red clearfix"></div>
                     <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
-                    <input id="roleId" type="hidden" value=""/> <!-- roleId 权限 id -->
-                    <input id="treeType" type="hidden" value=""/> <!-- treeType , ztree 类型-->
+                    <input id="userId" type="hidden" value=""/> <!-- userId -->
                     <div class="widget-box widget-color-blue2">
                         <div class="widget-body">
-                            <div class="widget-main padding-8">
-                                <div class="zTreeDemoBackground left">
-                                    <ul id="treeDemo" class="ztree"></ul>
-                                </div>
+                            <div id="custom_modal_groups" class="widget-main padding-8">
+                                <!-- custom begin -->
+
+                                <!-- load by jquery.load()
+                                 refreshBootstrapModalUsers();
+                                -->
+
+                                <!-- custom end -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer no-margin-top">
                     <div class="text-center">      <!--  data-dismiss="modal" 点击后会关闭 modal -->
-                        <button id="submitButton" type="submit" class="btn btn-white btn-default btn-round"
+                        <button id="submitButtonGroups" type="submit" class="btn btn-white btn-default btn-round"
+                                data-dismiss="modal">
+                            <i class="ace-icon fa fa-floppy-o bigger-120"></i>
+                            保存
+                        </button>
+                        <button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+                            <i class="ace-icon fa fa-share bigger-120"></i>
+                            取消
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </form>
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- bootstrap model roles -->
+<div id="modal-table-roles" class="modal fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-dialog">
+        <form id="informationForm">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <span class="white">&times;</span>
+                        </button>
+                        选择角色
+                    </div>
+                </div>
+                <div class="modal-body" style="max-height: 500px;overflow-y: scroll;">
+                    <div id="modal-tip" class="red clearfix"></div>
+                    <!--通过表单，在 jqgrid 和 ztree 之间传递参数-->
+                    <input id="groupId" type="hidden" value=""/> <!-- groupId -->
+                    <div class="widget-box widget-color-blue2">
+                        <div class="widget-body">
+                            <div id="custom_modal_roles" class="widget-main padding-8">
+                                <!-- custom begin -->
+
+                                <!-- load by jquery.load()
+                                refreshBootstrapModalRoles
+                                -->
+
+                                <!-- custom end -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <div class="text-center">      <!--  data-dismiss="modal" 点击后会关闭 modal -->
+                        <button id="submitButtonRoles" type="submit" class="btn btn-white btn-default btn-round"
                                 data-dismiss="modal">
                             <i class="ace-icon fa fa-floppy-o bigger-120"></i>
                             保存
@@ -86,7 +138,138 @@
     var scripts = [null,
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
+        "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js",
         null]
+
+
+    /**
+     * Bootstrap Modals.js 是弹出框，是网页加载后，弹出指定的 div 的内容，该 div 内容是网页加载后的网页呈现内容的一部分
+     * modal 只是弹出而已。
+     * 所以想要刷新这部分内容，需要程序加载一次 modal div 的内容 , 用 jqury.load() 刷新指定的 div 内容
+     * -
+     * 此函数可以供页面所有元素调用
+     * 点击按钮，刷新 div 内容
+     */
+    function refreshBootstrapModalGroups() {
+        console.log("refreshBootstrapModalGroups , user id =" + $("#userId").val());
+        /**
+         * 动态加载 bootstrap model
+         * .load( url [, data ] [, complete ] )
+         * */
+        $("#custom_modal_groups").load(
+                "${ctx}/grid/user/bootstrap_modal_load_groups.html",
+                {
+                    user_id: $("#userId").val()
+                }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
+                function (response, status, xhr) {
+                    if (status == 'success') {
+                        console.log("bootstrap_modal_load_groups success");
+                        //$('#notification-bar').text('The page has been successfully loaded');
+                    } else if (status == "error") {
+                        console.log("bootstrap_modal_load_groups false");
+                        //$('#notification-bar').text('An error occurred');
+                    }
+                }
+        );
+
+    }
+    ;
+
+
+    /**
+     * 点击 bootstrap modal 提交按钮
+     * */
+    $('#submitButtonGroups').click(function () {
+
+        console.log("submitButtonGroups button click");
+        //获取所有选中的 checkbox
+        var values = $('input[type="checkbox"].ace:checked').map(function () {
+            return $(this).val();
+        }).toArray();
+
+        $.ajax({ //ajax 提交到controller的delApplication方法处理
+            type: "post",
+            async: false,
+            url: "${ctx}/grid/user/get_checked_checkbox_groups.html",
+            data: { //传递的参数和值
+                checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
+                user_id: $("#userId").val()
+            },
+            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+            success: function (data) { //处理成功的回调函数
+
+            }
+
+            ,
+            error: function () {
+
+            }
+            //处理失败的回到函数
+        });
+    });
+
+    /**
+     * 同上 , for roles
+     */
+    function refreshBootstrapModalRoles() {
+        console.log("refreshBootstrapModalRoles , user id =" + $("#userId").val());
+        //传递 group id 到后台，更新 model 中的 users
+        /**
+         * 动态加载 bootstrap model
+         * .load( url [, data ] [, complete ] )
+         * */
+        $("#custom_modal_roles").load(
+                "${ctx}/grid/user/bootstrap_modal_load_roles.html",
+                {
+                    user_id: $("#userId").val()
+                }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
+                function (response, status, xhr) {
+                    if (status == 'success') {
+                        console.log("bootstrap_modal_load_roles success");
+                        //$('#notification-bar').text('The page has been successfully loaded');
+                    } else if (status == "error") {
+                        console.log("bootstrap_modal_load_roles false");
+                        //$('#notification-bar').text('An error occurred');
+                    }
+                }
+        );
+
+    }
+    ;
+
+
+    /**
+     * 点击 bootstrap modal 提交按钮
+     * */
+    $('#submitButtonRoles').click(function () {
+
+        console.log("submitButtonRoles button click");
+        //获取所有选中的 checkbox
+        var values = $('input[type="checkbox"].ace:checked').map(function () {
+            return $(this).val();
+        }).toArray();
+
+        $.ajax({ //ajax 提交到controller的delApplication方法处理
+            type: "post",
+            async: false,
+            url: "${ctx}/grid/user/get_checked_checkbox_roles.html",
+            data: { //传递的参数和值
+                checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
+                group_id: $("#userId").val()
+            },
+            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+            success: function (data) { //处理成功的回调函数
+
+            }
+
+            ,
+            error: function () {
+
+            }
+            //处理失败的回到函数
+        });
+    });
+
 
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
@@ -338,7 +521,7 @@
                         width: 100,
                         search: false,
                         editable: false,
-                        formatter: authorityFormatterMenu //显示一个图标
+                        formatter: authorityFormatterGroups //显示一个图标
                     },
                     {
                         name: '',
@@ -347,7 +530,7 @@
                         width: 100,
                         search: false,
                         editable: false,
-                        formatter: authorityFormatterMenu //显示一个图标
+                        formatter: authorityFormatterRoles //显示一个图标
                     },
 					{
                         name: 'remark',
@@ -452,8 +635,14 @@
              * refreshNode 函数必须放在调用  jqgrid 函数之外，因为是生成的 button onclick 代码，这段代码在 jqgrid 之外，部内在 jqgrid 内部
              *
              */
-            function authorityFormatterMenu(cellvalue, options, cell) {
-                var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\");refreshNode()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
+
+            function authorityFormatterGroups(cellvalue, options, cell) {
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table-groups\").modal(\"toggle\");$(\"#userId\").val(\"" + cell.id + "\");refreshBootstrapModalGroups()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-users bigger-110 grey'></i></button>";
+                return template;
+            }
+
+            function authorityFormatterRoles(cellvalue, options, cell) {
+                var template = "<button data-toggle='modal' onclick='$(\"#modal-table-roles\").modal(\"toggle\");$(\"#userId\").val(\"" + cell.id + "\");refreshBootstrapModalRoles()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
                 return template;
             }
 

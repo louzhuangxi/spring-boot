@@ -78,8 +78,15 @@ public class GroupEntity extends BaseEntity {
 
         if (!this.roles.contains(role)) {
             this.roles.add(role);
-            role.getGroup().add(this);
+            role.getGroups().add(this);
         }
+
+    }
+
+    public void addRoles(List<RoleEntity> roles) {
+
+        for (RoleEntity entity : roles)
+            addRole(entity);
 
     }
 
@@ -94,12 +101,16 @@ public class GroupEntity extends BaseEntity {
 
         if (this.roles.contains(role)) {
             this.roles.remove(role);
-            role.getGroup().remove(this);
+            role.getGroups().remove(this);
 
         }
-
     }
 
+    public void removeRoles(List<RoleEntity> roles) {
+
+        for (RoleEntity entity : roles)
+            removeRole(entity);
+    }
 
     /**
      * 自定义方法，添加权限
@@ -112,8 +123,15 @@ public class GroupEntity extends BaseEntity {
 
         if (!this.users.contains(user)) {
             this.users.add(user);
-            user.getGroup().add(this);
+            user.getGroups().add(this);
         }
+
+    }
+
+    public void addUsers(List<UserEntity> users) {
+
+        for (UserEntity userEntity : users)
+            addUser(userEntity);
 
     }
 
@@ -128,9 +146,28 @@ public class GroupEntity extends BaseEntity {
 
         if (this.users.contains(user)) {
             this.users.remove(user);
-            user.getGroup().remove(this);
+            user.getGroups().remove(this);
 
         }
-
     }
+
+    public void removeUsers(List<UserEntity> users) {
+        for (UserEntity userEntity : users)
+            removeUser(userEntity);
+    }
+
+    /**
+     * 清空 user
+     */
+    public void clearUsers() {
+        this.users.clear();
+    }
+
+    /**
+     * 清空 role
+     */
+    public void clearRoles() {
+        this.roles.clear();
+    }
+
 }
