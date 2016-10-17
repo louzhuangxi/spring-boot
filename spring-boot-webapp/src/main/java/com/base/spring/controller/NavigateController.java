@@ -1,7 +1,6 @@
 package com.base.spring.controller;
 
 
-import com.base.spring.vo.Message;
 import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Description : TODO(ace admin template ajax 方式导航, 本项目用到。都是点击菜单传来，所以都是 Get)
@@ -91,12 +88,6 @@ public class NavigateController {
     public String group(HttpServletRequest request, @ModelAttribute("model") ModelMap model) { //传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型s
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
-        // List<String> users = Lists.newArrayList("jiang", "hui", "text");
-        List<Message> users = new ArrayList<>();
-        users.add(new Message("jiang", "hui"));
-        users.add(new Message("jiang1", "hui1"));
-        model.addAttribute("users", users);
-        model.addAttribute("hello", "hello j");
         return "admin/ace/html/ajax/content/jqgrid-group";
     }
 

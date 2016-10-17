@@ -26,7 +26,11 @@ public class TeacherEntity1 {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY) // 单向多对多，只在发出方设置，接收方不做设置
+    /**
+     * 单向，发出端
+     * 单向多对多，只在发出方设置，接收方不做设置
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "example_ref_teacher_student1", //指定关联表名
             joinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id

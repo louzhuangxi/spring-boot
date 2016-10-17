@@ -6,7 +6,6 @@ import com.base.spring.domain.UserEntity;
 import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.UserRepository;
-import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,7 +121,8 @@ public class UserService {
             userEntity.removeGroups(deleteGroups);
 
         //重新建立关联
-        userEntity.addGroups(targetGroups);
+        // userEntity.setGroups(targetGroups);不行，会插入两条同样的记录，不知道为什么，只能用 userEntity.setGroups(targetGroups);
+        userEntity.setGroups(targetGroups);
 
         userRepository.save(userEntity);
 
@@ -168,12 +168,16 @@ public class UserService {
             listRoleId.add(Long.valueOf(id.trim()));
         }
 
+        if (roleIds != null)
+            logger.info("after change role id to long ={}", roleIds);
 
         /**
          * 重新建立关联，原来的关联关系会被替代
          * */
         // 被选中的节点
         List<RoleEntity> targetRoles = roleRepository.findByIdIn(listRoleId);
+        //  logger.info("targetRoles size ={} ", targetRoles.size());
+
         // user 已经关联的 role
         List<RoleEntity> sourceRoles = userEntity.getRoles();
         // 需要删除的节点
@@ -190,14 +194,15 @@ public class UserService {
         if (!deleteRoles.isEmpty())
             userEntity.removeRoles(deleteRoles);
 
+        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
+        filter.addExcludes(RoleEntity.class, "groups", "users", "treeNodes");
+
         //重新建立关联
-        userEntity.addRoles(targetRoles);
+        // userEntity.addRoles(targetRoles);不行，会插入两条同样的记录，不知道为什么，只能用 userEntity.setRoles(targetRoles);
+        userEntity.setRoles(targetRoles);
 
         userRepository.save(userEntity);
 
-        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
-        filter.addExcludes(RoleEntity.class, "groups", "users", "treeNodes");
-        MyJsonUtils.prettyPrint(roleRepository.findByIdIn(listRoleId), filter);
 
     }
 

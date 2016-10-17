@@ -28,7 +28,7 @@ import java.util.List;
 public class GroupEntity extends BaseEntity {
 
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class)// 如果是单向多对多，只在发出方设置，接收方不做设置
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class)// 双向多对多，发出方、接收方都设置
     @JoinTable(name = "base_ref_user_group", //指定关联表名
             joinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
@@ -85,8 +85,7 @@ public class GroupEntity extends BaseEntity {
 
     public void addRoles(List<RoleEntity> roles) {
 
-        for (RoleEntity entity : roles)
-            addRole(entity);
+        this.setRoles(roles);
 
     }
 
@@ -130,8 +129,7 @@ public class GroupEntity extends BaseEntity {
 
     public void addUsers(List<UserEntity> users) {
 
-        for (UserEntity userEntity : users)
-            addUser(userEntity);
+      this.setUsers(users);
 
     }
 

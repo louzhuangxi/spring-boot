@@ -34,11 +34,19 @@ import java.util.List;
 public class RoleEntity extends BaseEntity {
 
 
-    @ManyToMany(mappedBy = "roles", targetEntity = GroupEntity.class)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = GroupEntity.class)// 如果是单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_group_roles", //指定关联表名
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "group_id"})}) // 唯一性约束，是从表的联合字段
     private List<GroupEntity> groups = new ArrayList<>();
 
 
-    @ManyToMany(mappedBy = "roles", targetEntity = UserEntity.class)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_users_roles", //指定关联表名
+            joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
     private List<UserEntity> users = new ArrayList<>();
 
 //    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
@@ -100,8 +108,7 @@ public class RoleEntity extends BaseEntity {
      * @param treeNodes
      */
     public void addTreeNodes(List<TreeNodeEntity> treeNodes) {
-        for (TreeNodeEntity entity : treeNodes)
-            addTreeNode(entity);
+        this.setTreeNodes(treeNodes);
     }
 
     /**
@@ -151,6 +158,12 @@ public class RoleEntity extends BaseEntity {
 
     }
 
+    public void addUsers(List<UserEntity> users) {
+
+        this.setUsers(users);
+
+    }
+
     /**
      * 自定义方法，删除用户
      * 注意删除关联的方法(单向的不需要)
@@ -179,6 +192,12 @@ public class RoleEntity extends BaseEntity {
             this.groups.add(group);
             group.getRoles().add(this);
         }
+
+    }
+
+    public void addGroups(List<GroupEntity> groups) {
+
+        this.setGroups(groups);
 
     }
 

@@ -18,17 +18,23 @@ import java.util.Set;
 //        attributeNodes = {@NamedAttributeNode("teachers")})
 public class StudentEntity2 {
 
+
     /**
-     * 第二种写法：
+     * 双向第一种写法：teacher 作为发出端，student 作为接收端，只有 teache 删除，才会删除关系表
+     *
+     * @ManyToMany(mappedBy = "students", targetEntity = TeacherEntity2.class)
+     *  public Set<TeacherEntity2> teachers = Sets.newHashSet(); //set 可以过滤重复元素
      */
-    //此方法，二者均做为发出端，双方级联删除时，都会删除关系表
+
+    /**
+     *双向第二种写法： 二者均做为发出端，双方级联删除时，都会删除关系表
+     */
     // 注意主从表，和 teacher 端设置正好相反
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,targetEntity = TeacherEntity2.class)
     @JoinTable(name = "example_ref_teacher_student2", //指定关联表名，和发出方 teacher 指定的表名相同
             joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id 。（和 teacher 方相反）
             inverseJoinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id。（和 teacher 方相反）
             uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
-
 
     public Set<TeacherEntity2> teachers = Sets.newHashSet(); //set 可以过滤重复元素
     @Id

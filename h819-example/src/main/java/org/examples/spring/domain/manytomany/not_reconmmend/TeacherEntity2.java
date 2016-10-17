@@ -28,18 +28,24 @@ import java.util.Set;
 public class TeacherEntity2 {
 
 
-    @ManyToMany(fetch = FetchType.LAZY) // 双向向多对多，发出方设置，接收方均做设置
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+
+    /**
+     * 双向，发出端
+     */
+    @ManyToMany(fetch = FetchType.LAZY,targetEntity = StudentEntity2.class) // 双向向多对多，发出方设置，接收方均做设置，双方级联删除时，都会删除关系表
     @JoinTable(name = "example_ref_teacher_student2", //指定关联表名
             joinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
     public Set<StudentEntity2> students = Sets.newHashSet(); //set 可以过滤重复元素
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "name")
-    private String name;
 
 
     public TeacherEntity2() {

@@ -355,7 +355,8 @@ public class UserAjaxController {
 
         logger.info("user id ={}", userId);
         if (roleIds != null)
-            logger.info("role id ={}", roleIds);
+            for (String id : roleIds)
+                logger.info("role id ={}", id);
         userService.associateRoles(roleIds, userId);
 
     }

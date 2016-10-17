@@ -36,9 +36,25 @@ public class UserEntity extends BaseEntity {
     //有效期，24 小时
     private static final int EXPIRE_DAY_AMOUNT = 24;
 
+
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = GroupEntity.class)// 双向多对多，发出方、接收方都设置
+    @JoinTable(name = "base_ref_user_group", //指定关联表名
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"group_id", "user_id"})}) // 唯一性约束，是从表的联合字段
+    private List<GroupEntity> groups = new ArrayList<>();
+
+
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_users_roles", //指定关联表名
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 100)//roles 过多的情况下应用。
+    private List<RoleEntity> roles = new ArrayList<RoleEntity>(); //set 可以过滤重复元素
+
     //昵称
-
-
     @Column(name = "nick_name")
     private String nickName;
 
@@ -144,19 +160,6 @@ public class UserEntity extends BaseEntity {
     private String token;
 
 
-    @ManyToMany(mappedBy = "users", targetEntity = GroupEntity.class)
-    private List<GroupEntity> groups = new ArrayList<>();
-
-
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
-    @JoinTable(name = "base_ref_users_roles", //指定关联表名
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
-    @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<RoleEntity> roles = new ArrayList<RoleEntity>(); //set 可以过滤重复元素
-
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
      * 如果想要生成 Entity ，用其他有参数的构造方法。
@@ -201,8 +204,8 @@ public class UserEntity extends BaseEntity {
     }
 
     public void addRoles(List<RoleEntity> roles) {
-        for (RoleEntity entity : roles)
-            addRole(entity);
+        for (RoleEntity role : roles)
+            this.addRole(role);
     }
 
     /**
@@ -243,8 +246,8 @@ public class UserEntity extends BaseEntity {
     }
 
     public void addGroups(List<GroupEntity> groups) {
-        for (GroupEntity entity : groups)
-            addGroup(entity);
+        this.setGroups(groups);
+
     }
 
     /**
@@ -270,6 +273,7 @@ public class UserEntity extends BaseEntity {
             removeGroup(entity);
 
     }
+
 
     public void clearGroups() {
         this.groups.clear();

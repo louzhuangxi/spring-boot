@@ -41,6 +41,43 @@ import java.util.List;
 public class TreeNodeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
+
+
+    /**
+     * 子组织
+     * jpa 中，orphanRemoval = true ，才可以删除子.
+     */
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
+    //如果不用此句，默认是 FetchMode.SELECT ,查询每个被关联 child ，会发送一个查询语句，供发送 n+1个。FetchMode.SUBSELECT 通过子查询一次完成，对于 child 过多的情况下，应用。
+    //n+1问题，需要根据实际情况调试
+    @BatchSize(size = 100)//child 过多的情况下应用。
+    @OrderBy("index ASC")
+    private List<TreeNodeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
+
+
+//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+//    @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
+//            joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+//            uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
+//    @Fetch(FetchMode.SUBSELECT)
+//    @BatchSize(size = 100)//roles 过多的情况下应用。
+//    private List<PrivilegeEntity> privileges = new ArrayList<>();
+    /**
+     * 多个节点，可以拥有同一种权限，如 节点编辑  ...
+     * 一个节点，也可以又有多种权限
+     */
+
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
+    @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 100)//roles 过多的情况下应用。
+    private List<RoleEntity> roles = new ArrayList<>();
+
+
+
+
     /**
      * 组织名称
      */
@@ -96,38 +133,6 @@ public class TreeNodeEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private TreeNodeEntity parent;
-    /**
-     * 子组织
-     * jpa 中，orphanRemoval = true ，才可以删除子.
-     */
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
-    @Fetch(FetchMode.SUBSELECT)
-    //如果不用此句，默认是 FetchMode.SELECT ,查询每个被关联 child ，会发送一个查询语句，供发送 n+1个。FetchMode.SUBSELECT 通过子查询一次完成，对于 child 过多的情况下，应用。
-    //n+1问题，需要根据实际情况调试
-    @BatchSize(size = 100)//child 过多的情况下应用。
-    @OrderBy("index ASC")
-    private List<TreeNodeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
-
-
-//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-//    @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
-//            joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-//            uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
-//    @Fetch(FetchMode.SUBSELECT)
-//    @BatchSize(size = 100)//roles 过多的情况下应用。
-//    private List<PrivilegeEntity> privileges = new ArrayList<>();
-    /**
-     * 多个节点，可以拥有同一种权限，如 节点编辑  ...
-     * 一个节点，也可以又有多种权限
-     */
-
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
-    @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<RoleEntity> roles = new ArrayList<>();
-
 
     /**
      * 树状结构的层级,根节点 level = 0，依次递增
