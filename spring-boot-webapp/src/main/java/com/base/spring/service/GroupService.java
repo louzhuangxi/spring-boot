@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Description : TODO()
@@ -77,7 +78,7 @@ public class GroupService {
         // 被选中的节点
         List<UserEntity> targetTreeNodes = userRepository.findByIdIn(listUserId);
         // group 已经关联的 user
-        List<UserEntity> sourceTreeNodes = groupEntity.getUsers();
+        Set<UserEntity> sourceTreeNodes = groupEntity.getUsers();
         // 需要删除的节点
         List<UserEntity> deleteTreeNodes = new ArrayList<>();
 
@@ -144,25 +145,25 @@ public class GroupService {
          * 重新建立关联，原来的关联关系会被替代
          * */
         // 被选中的节点
-        List<RoleEntity> targetTreeNodes = roleRepository.findByIdIn(listRoleId);
+        List<RoleEntity> targetRoles = roleRepository.findByIdIn(listRoleId);
         // group 已经关联的 role
-        List<RoleEntity> sourceTreeNodes = groupEntity.getRoles();
+        Set<RoleEntity> sourceRoles = groupEntity.getRoles();
         // 需要删除的节点
-        List<RoleEntity> deleteTreeNodes = new ArrayList<>();
+        List<RoleEntity> deleteRolse = new ArrayList<>();
 
 
         //找到被取消关联关系的节点
-        for (RoleEntity entity : sourceTreeNodes) {
-            if (!targetTreeNodes.contains(entity))
-                deleteTreeNodes.add(entity);
+        for (RoleEntity entity : sourceRoles) {
+            if (!targetRoles.contains(entity))
+                deleteRolse.add(entity);
         }
 
         //取消关联
-        if (!deleteTreeNodes.isEmpty())
-            groupEntity.removeRoles(deleteTreeNodes);
+        if (!deleteRolse.isEmpty())
+            groupEntity.removeRoles(deleteRolse);
 
         //重新建立关联
-        groupEntity.addRoles(targetTreeNodes);
+        groupEntity.addRoles(targetRoles);
 
         groupRepository.save(groupEntity);
 

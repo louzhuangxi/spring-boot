@@ -30,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -220,7 +221,7 @@ public class UserAjaxController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bootstrap_modal_load_groups.html")
+    @RequestMapping(value = "/bootstrap-modal-load-groups.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadGroups(
             @RequestParam(value = "user_id", required = true) String userId,
@@ -256,10 +257,10 @@ public class UserAjaxController {
 //        System.out.println("=============");
 //        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
 
-        model.addAttribute("groupsChecked", utils.createDTOcopy(groupsChecked));
-        model.addAttribute("groupsUnChecked", utils.createDTOcopy(groupsUnChecked));
+        model.addAttribute("checkedbox", utils.createDTOcopy(groupsChecked));
+        model.addAttribute("uncheckedbox", utils.createDTOcopy(groupsUnChecked));
 
-        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-groups";
+        return "admin/ace/html/ajax/content/bootstrap-modal-load-groups";
     }
 
 
@@ -270,16 +271,17 @@ public class UserAjaxController {
      * @param userId
      * @param groupIds
      */
-    @RequestMapping(value = "/get_checked_checkbox_groups.html")
+    @RequestMapping(value = "/get-checked-checkbox-groups-by-user.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    @ResponseBody
     public void bootsTrapModalAssociateGroups(
             @RequestParam(value = "user_id", required = true) String userId,
             @RequestParam(value = "checkbox[]", required = false) String[] groupIds) {
 
 
-        logger.info("group id ={}", userId);
+        logger.info("user id ={}", userId);
         if (groupIds != null)
-            logger.info("user id ={}", groupIds);
+            logger.info("groupIds id ={}", Arrays.asList(groupIds));
         userService.associateGroups(groupIds, userId);
     }
 
@@ -296,7 +298,7 @@ public class UserAjaxController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bootstrap_modal_load_roles.html")
+    @RequestMapping(value = "/bootstrap-modal-load-roles.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadRoles(
             @RequestParam(value = "user_id", required = true) String userId,
@@ -306,7 +308,7 @@ public class UserAjaxController {
 
         logger.info("user id={}", userId);
 
-        Assert.notNull(userId, "groupId is null");
+        Assert.notNull(userId, "userId is null");
 
         List<RoleEntity> rolesChecked = new ArrayList<>();
         List<RoleEntity> rolesUnChecked = new ArrayList<>();
@@ -332,10 +334,9 @@ public class UserAjaxController {
 //        System.out.println("=============");
 //        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
 
-        model.addAttribute("rolesChecked", utils.createDTOcopy(rolesChecked));
-        model.addAttribute("rolesUnChecked", utils.createDTOcopy(rolesUnChecked));
-
-        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-roles";
+        model.addAttribute("checkedbox", utils.createDTOcopy(rolesChecked));
+        model.addAttribute("uncheckedbox", utils.createDTOcopy(rolesUnChecked));
+        return "admin/ace/html/ajax/content/bootstrap-modal-load-roles";
     }
 
 
@@ -346,8 +347,9 @@ public class UserAjaxController {
      * @param userId
      * @param roleIds
      */
-    @RequestMapping(value = "/get_checked_checkbox_roles.html")
+    @RequestMapping(value = "/get-checked-checkbox-roles-by-user.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    @ResponseBody
     public void bootsTrapModalAssociateRoles(
             @RequestParam(value = "group_id", required = true) String userId,
             @RequestParam(value = "checkbox[]", required = false) String[] roleIds) // 前端的参数为 checkbox , array 类型
@@ -355,8 +357,7 @@ public class UserAjaxController {
 
         logger.info("user id ={}", userId);
         if (roleIds != null)
-            for (String id : roleIds)
-                logger.info("role id ={}", id);
+            logger.info("role id ={}", Arrays.asList(roleIds));
         userService.associateRoles(roleIds, userId);
 
     }

@@ -40,4 +40,14 @@ public class MyArrayUtils {
         return new ArrayList<>(Arrays.asList(ts));
     }
 
+    /**
+     * Int[]{1,2,3}
+     * [1,2,3] 格式 , list 的输出格式
+     *
+     * @param array
+     */
+    public static void prettyPrint(Object[] array) {
+        System.out.print(Arrays.asList(array));
+    }
+
 }

@@ -10,8 +10,9 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Description : TODO(角色表)
@@ -39,7 +40,7 @@ public class RoleEntity extends BaseEntity {
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "group_id"})}) // 唯一性约束，是从表的联合字段
-    private List<GroupEntity> groups = new ArrayList<>();
+    private Set<GroupEntity> groups = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
@@ -47,7 +48,7 @@ public class RoleEntity extends BaseEntity {
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
-    private List<UserEntity> users = new ArrayList<>();
+    private Set<UserEntity> users = new HashSet<>();
 
 //    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
 //    @JoinTable(name = "base_ref_roles_privileges", //指定关联表名
@@ -66,7 +67,7 @@ public class RoleEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "treenode_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<TreeNodeEntity> treeNodes = new ArrayList<>();
+    private Set<TreeNodeEntity> treeNodes = new HashSet<>();
 
     //昵称
 
@@ -89,17 +90,14 @@ public class RoleEntity extends BaseEntity {
 
 
     /**
-     * 自定义方法，添加
-     * 注意建立两个对象关联的方法(单向的不需要)
+     * 添加单个
      *
      * @param treeNode
      */
     public void addTreeNode(TreeNodeEntity treeNode) {
-
-        if (!this.treeNodes.contains(treeNode)) {
+        if (treeNode != null)
             this.treeNodes.add(treeNode);
-            treeNode.getRoles().add(this);
-        }
+
     }
 
     /**
@@ -107,23 +105,19 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNodes
      */
-    public void addTreeNodes(List<TreeNodeEntity> treeNodes) {
-        this.setTreeNodes(treeNodes);
+    public void addTreeNodes(Collection<TreeNodeEntity> treeNodes) {
+        if (treeNodes != null && !treeNodes.isEmpty())
+            this.treeNodes.addAll(treeNodes);
     }
 
     /**
      * 自定义方法，删除
-     * 注意解除关联的方法(单向的不需要)
      *
      * @param treeNode
      */
     public void removeTreeNode(TreeNodeEntity treeNode) {
-
-        if (this.treeNodes.contains(treeNode)) {
+        if (treeNode != null)
             this.treeNodes.remove(treeNode);
-            treeNode.getRoles().remove(this);
-
-        }
     }
 
     /**
@@ -131,9 +125,9 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNodes
      */
-    public void removeTreeNodes(List<TreeNodeEntity> treeNodes) {
-        for (TreeNodeEntity entity : treeNodes)
-            removeTreeNode(entity);
+    public void removeTreeNodes(Collection<TreeNodeEntity> treeNodes) {
+        if (treeNodes != null && !treeNodes.isEmpty())
+            this.treeNodes.removeAll(treeNodes);
     }
 
     /**
@@ -143,76 +137,54 @@ public class RoleEntity extends BaseEntity {
         this.treeNodes.clear();
     }
 
-    /**
-     * 自定义方法，添加用户
-     * 注意建立两个对象关联的方法(单向的不需要)
-     *
-     * @param user
-     */
     public void addUser(UserEntity user) {
-
-        if (!this.users.contains(user)) {
+        if (user != null)
             this.users.add(user);
-            user.getRoles().add(this);
-        }
+    }
+
+    public void addUsers(Collection<UserEntity> users) {
+        if (users != null && !users.isEmpty())
+            this.users.addAll(users);
 
     }
 
-    public void addUsers(List<UserEntity> users) {
-
-        this.setUsers(users);
-
-    }
-
-    /**
-     * 自定义方法，删除用户
-     * 注意删除关联的方法(单向的不需要)
-     *
-     * @param user
-     */
     public void removeUser(UserEntity user) {
-
-        if (this.users.contains(user)) {
+        if (user != null)
             this.users.remove(user);
-            user.getRoles().remove(this);
-
-        }
-
     }
 
-    /**
-     * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
-     *
-     * @param group
-     */
+    public void removeUsers(Collection<UserEntity> users) {
+        if (users != null && !users.isEmpty())
+            this.users.removeAll(users);
+    }
+
+    public void clearUsers() {
+        this.users.clear();
+    }
+
     public void addGroup(GroupEntity group) {
-
-        if (!this.groups.contains(group)) {
+        if (group != null)
             this.groups.add(group);
-            group.getRoles().add(this);
-        }
+    }
+
+    public void addGroups(Collection<GroupEntity> groups) {
+        if (groups != null && !groups.isEmpty())
+            this.getGroups().addAll(groups);
 
     }
 
-    public void addGroups(List<GroupEntity> groups) {
 
-        this.setGroups(groups);
-
-    }
-
-    /**
-     * 自定义方法，删除学生
-     * 注意删除关联的方法(单向的不需要)
-     *
-     * @param group
-     */
     public void removeGroup(GroupEntity group) {
-
-        if (this.groups.contains(group)) {
+        if (group != null)
             this.groups.remove(group);
-            group.getRoles().remove(this);
+    }
 
-        }
+    public void removeGroups(Collection<GroupEntity> groups) {
+        if (groups != null && !groups.isEmpty())
+            this.groups.removeAll(groups);
+    }
+
+    public void clearGroups() {
+        this.groups.clear();
     }
 }

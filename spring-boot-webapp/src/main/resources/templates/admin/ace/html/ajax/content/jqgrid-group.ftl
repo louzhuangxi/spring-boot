@@ -152,12 +152,19 @@
     function refreshBootstrapModalUsers() {
         console.log("refreshBootstrapModalUsers , group id =" + $("#groupId").val());
         //传递 group id 到后台，更新 model 中的 users
+
+        /**
+         * 每次清空节点下面的信息，否则多次 load 不同的内容，会累加 load 的内容。
+         */
+        $("#custom_modal_users").empty();
+        $("#custom_modal_roles").empty();
+
         /**
          * 动态加载 bootstrap model
          * .load( url [, data ] [, complete ] )
          * */
         $("#custom_modal_users").load(
-                "${ctx}/grid/group/bootstrap_modal_load_users.html",
+                "${ctx}/grid/group/bootstrap-modal-load-users.html",
                 {
                     group_id: $("#groupId").val()
                 }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
@@ -190,7 +197,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/grid/group/get_checked_checkbox_users.html",
+            url: "${ctx}/grid/group/get-checked-checkbox-users-by-group.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 group_id: $("#groupId").val()
@@ -214,12 +221,21 @@
     function refreshBootstrapModalRoles() {
         console.log("refreshBootstrapModalRoles , group id =" + $("#groupId").val());
         //传递 group id 到后台，更新 model 中的 users
+
+
+        /**
+         * 每次清空节点下面的信息，否则多次 load 不同的内容，会累加 load 的内容。
+         */
+        $("#custom_modal_users").empty();
+        $("#custom_modal_roles").empty();
+
+
         /**
          * 动态加载 bootstrap model
          * .load( url [, data ] [, complete ] )
          * */
         $("#custom_modal_roles").load(
-                "${ctx}/grid/group/bootstrap_modal_load_roles.html",
+                "${ctx}/grid/group/bootstrap-modal-load-roles.html",
                 {
                     group_id: $("#groupId").val()
                 }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
@@ -252,7 +268,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/grid/group/get_checked_checkbox_roles.html",
+            url: "${ctx}/grid/group/get-checked-checkbox-roles-by-group.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 group_id: $("#groupId").val()

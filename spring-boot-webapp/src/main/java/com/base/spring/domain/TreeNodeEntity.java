@@ -13,10 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Description : TODO(树状结构, type 不同，就代表不同类型的树)
@@ -54,28 +51,23 @@ public class TreeNodeEntity extends BaseEntity {
     //n+1问题，需要根据实际情况调试
     @BatchSize(size = 100)//child 过多的情况下应用。
     @OrderBy("index ASC")
+    //用到了可以调整排序，所以不用 set ，用 list。
     private List<TreeNodeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
 
 
-//    @ManyToMany(fetch = FetchType.LAZY, targetEntity = PrivilegeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-//    @JoinTable(name = "base_ref_treenodes_privileges", //指定关联表名
-//            joinColumns = {@JoinColumn(name = "treenodes_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-//            inverseJoinColumns = {@JoinColumn(name = "privilege_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-//            uniqueConstraints = {@UniqueConstraint(columnNames = {"treenodes_id", "privilege_id"})}) // 唯一性约束，是从表的联合字段
-//    @Fetch(FetchMode.SUBSELECT)
-//    @BatchSize(size = 100)//roles 过多的情况下应用。
-//    private List<PrivilegeEntity> privileges = new ArrayList<>();
     /**
      * 多个节点，可以拥有同一种权限，如 节点编辑  ...
      * 一个节点，也可以又有多种权限
      */
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "treeNodes", targetEntity = RoleEntity.class)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_roles_treenode", //指定关联表名
+            joinColumns = {@JoinColumn(name = "treenode_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "treenode_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<RoleEntity> roles = new ArrayList<>();
-
-
+    private Set<RoleEntity> roles = new HashSet<>();
 
 
     /**
@@ -186,7 +178,8 @@ public class TreeNodeEntity extends BaseEntity {
      */
     public void addChildToLastIndex(TreeNodeEntity child) {
 
-        if (child == null) return;
+        if (child == null || children.contains(child))
+            return;
         child.setIndex(children.size()); // list 的 index 从 0 开始
         children.add(child);
         child.setParent(this);
@@ -202,22 +195,26 @@ public class TreeNodeEntity extends BaseEntity {
      */
     public void addChildToIndex(TreeNodeEntity child, int index) {
 
-        if (child == null) return;
+        if (child == null || children.contains(child))
+            return;
 
         if (index < 0 || index > children.size()) {             //加在第一位
             throw new IllegalArgumentException(index + " 小于 0 或者大于子节点总数");
         }
 
-//        System.out.println(MyStringUtils.center(" original ", 80, "*"));
-//        for (TreeNodeEntity entity : children)
-//            System.out.println(String.format("%s  |  %s | %d", entity.getName(), entity.getIndex(), children.indexOf(entity)));
+
+//        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
+//        filter.addExcludes(TreeNodeEntity.class, "children", "roles");
+
+        //测试排序
+//        System.out.println(StringUtils.center(" original ", 80, "*"));
+//        MyJsonUtils.prettyPrint(children, filter);
 
         sortChildren(children); //按照元素在 list 的位置信息，并设置 index 属性
 
-//        System.out.println(MyStringUtils.center(" modify by sort ", 80, "*"));
-//        for (TreeNodeEntity entity : children)
-//            System.out.println(String.format("%s  |  %s | %d", entity.getName(), entity.getIndex(), children.indexOf(entity)));
-
+        //测试排序
+//        System.out.println(StringUtils.center(" modify by sort ", 80, "*"));
+//        MyJsonUtils.prettyPrint(children, filter);
 
         if (!children.contains(child)) { // 不同父节点下添加后，只变换位置
             children.add(index, child);
@@ -240,11 +237,8 @@ public class TreeNodeEntity extends BaseEntity {
             }
         }
 
-//        System.out.println(MyStringUtils.center(" modify by sort1 ", 80, "*"));
-//
-//        for (TreeNodeEntity entity : children)
-//            System.out.println(String.format("%s  |  %s | %d", entity.getName(), entity.getIndex(), children.indexOf(entity)));
-
+//        System.out.println(StringUtils.center(" modify by sort1 ", 80, "*"));
+//        MyJsonUtils.prettyPrint(children, filter);
 
     }
 
@@ -252,8 +246,7 @@ public class TreeNodeEntity extends BaseEntity {
      * 清空子
      */
     public void clearChildren() {
-        if (!children.isEmpty())
-            children.clear();
+        children.clear();
     }
 
 
@@ -270,6 +263,7 @@ public class TreeNodeEntity extends BaseEntity {
                 return Integer.compare(child1.getIndex(), child2.getIndex());
             }
         });
+
 
         for (TreeNodeEntity entity : children)
             entity.setIndex(children.indexOf(entity));
@@ -352,4 +346,6 @@ public class TreeNodeEntity extends BaseEntity {
             getLevelInit(entity.getParent());
         }
     }
+
+
 }

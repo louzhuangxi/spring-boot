@@ -314,6 +314,7 @@ public class JqgridController {
     public String jqgridCustomButton(@RequestParam(value = "oper", required = true) String oper, @RequestParam(value = "id", required = true) String[] ids,
                                      RedirectAttributes redirectAttrs, Model model, HttpServletRequest request) {
 
+
         //获取 Session
         // request.getSession();
 

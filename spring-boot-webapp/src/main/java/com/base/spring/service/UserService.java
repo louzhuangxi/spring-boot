@@ -14,10 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Description : TODO()
@@ -86,10 +83,6 @@ public class UserService {
             return;
         }
 
-//        for (String userId : userIds) {
-//            logger.info("userId ={}", userId);
-//        }
-
         //构造 id 集合
         List<Long> listGroupId = new ArrayList<>(groupIds.length);
         for (String id : groupIds) {
@@ -105,7 +98,7 @@ public class UserService {
         // 被选中的节点
         List<GroupEntity> targetGroups = groupRepository.findByIdIn(listGroupId);
         // group 已经关联的 user
-        List<GroupEntity> sourceTreeGroups = userEntity.getGroups();
+        Set<GroupEntity> sourceTreeGroups = userEntity.getGroups();
         // 需要删除的节点
         List<GroupEntity> deleteGroups = new ArrayList<>();
 
@@ -121,8 +114,7 @@ public class UserService {
             userEntity.removeGroups(deleteGroups);
 
         //重新建立关联
-        // userEntity.setGroups(targetGroups);不行，会插入两条同样的记录，不知道为什么，只能用 userEntity.setGroups(targetGroups);
-        userEntity.setGroups(targetGroups);
+        userEntity.addGroups(targetGroups);
 
         userRepository.save(userEntity);
 
@@ -168,9 +160,6 @@ public class UserService {
             listRoleId.add(Long.valueOf(id.trim()));
         }
 
-        if (roleIds != null)
-            logger.info("after change role id to long ={}", roleIds);
-
         /**
          * 重新建立关联，原来的关联关系会被替代
          * */
@@ -179,7 +168,7 @@ public class UserService {
         //  logger.info("targetRoles size ={} ", targetRoles.size());
 
         // user 已经关联的 role
-        List<RoleEntity> sourceRoles = userEntity.getRoles();
+        Set<RoleEntity> sourceRoles = userEntity.getRoles();
         // 需要删除的节点
         List<RoleEntity> deleteRoles = new ArrayList<>();
 
@@ -198,8 +187,7 @@ public class UserService {
         filter.addExcludes(RoleEntity.class, "groups", "users", "treeNodes");
 
         //重新建立关联
-        // userEntity.addRoles(targetRoles);不行，会插入两条同样的记录，不知道为什么，只能用 userEntity.setRoles(targetRoles);
-        userEntity.setRoles(targetRoles);
+        userEntity.addRoles(targetRoles);//不行，会插入两条同样的记录，不知道为什么，只能用 userEntity.setRoles(targetRoles);
 
         userRepository.save(userEntity);
 

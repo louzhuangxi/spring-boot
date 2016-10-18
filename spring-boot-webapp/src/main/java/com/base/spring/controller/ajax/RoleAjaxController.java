@@ -154,7 +154,7 @@ public class RoleAjaxController {
 
     @RequestMapping(value = "/get_checked_nodes.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
-
+    @ResponseBody
     public void getCheckedNodes(@RequestParam(value = "ids_str", required = true) String ids,
                                 @RequestParam(value = "role_id", required = true) String roleId,
                                 RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {

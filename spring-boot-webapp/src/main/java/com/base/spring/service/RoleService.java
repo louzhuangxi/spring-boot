@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Description : TODO()
@@ -66,7 +67,7 @@ public class RoleService {
         // 被选中的节点
         List<TreeNodeEntity> targetTreeNodes = treeNodeRepository.findByIdIn(listTreeId);
         // role 已经关联的节点
-        List<TreeNodeEntity> sourceTreeNodes = roleEntity.getTreeNodes();
+        Set<TreeNodeEntity> sourceTreeNodes = roleEntity.getTreeNodes();
         // 需要删除的节点
         List<TreeNodeEntity> deleteTreeNodes = new ArrayList<>();
 

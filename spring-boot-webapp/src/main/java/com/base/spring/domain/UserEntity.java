@@ -10,8 +10,7 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Description : TODO(用户信息)
@@ -42,7 +41,7 @@ public class UserEntity extends BaseEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "group_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"group_id", "user_id"})}) // 唯一性约束，是从表的联合字段
-    private List<GroupEntity> groups = new ArrayList<>();
+    private Set<GroupEntity> groups = new HashSet<>();
 
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class) // 单向多对多，只在发出方设置，接收方不做设置
@@ -52,7 +51,7 @@ public class UserEntity extends BaseEntity {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private List<RoleEntity> roles = new ArrayList<RoleEntity>(); //set 可以过滤重复元素
+    private Set<RoleEntity> roles = new HashSet<RoleEntity>(); //set 可以过滤重复元素
 
     //昵称
     @Column(name = "nick_name")
@@ -188,48 +187,29 @@ public class UserEntity extends BaseEntity {
 
 
     /**
-     * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的不需要)
-     * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ????
-     *
      * @param role
      */
     public void addRole(RoleEntity role) {
-
-        if (!this.roles.contains(role)) {
+        if (role != null)
             this.roles.add(role);
-            role.getUsers().add(this);
-        }
-
     }
 
-    public void addRoles(List<RoleEntity> roles) {
-        for (RoleEntity role : roles)
-            this.addRole(role);
+    public void addRoles(Collection<RoleEntity> roles) {
+        if (roles != null && !roles.isEmpty())
+            this.roles.addAll(roles);
     }
 
     /**
-     * 自定义方法，删除学生
-     * 注意删除关联的方法(单向的不需要)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
-     *
-     * @param student
+     * @param role
      */
-    public void removeRole(RoleEntity student) {
-
-        if (this.roles.contains(student)) {
-            this.roles.remove(student);
-            student.getUsers().remove(this);
-
-        }
-
+    public void removeRole(RoleEntity role) {
+        if (role != null)
+            this.roles.remove(role);
     }
 
-    public void removeRoles(List<RoleEntity> roles) {
-
-        for (RoleEntity entity : roles)
-            removeRole(entity);
-
+    public void removeRoles(Collection<RoleEntity> roles) {
+        if (roles != null && !roles.isEmpty())
+            this.roles.removeAll(roles);
     }
 
     public void clearRoles() {
@@ -237,40 +217,27 @@ public class UserEntity extends BaseEntity {
     }
 
     public void addGroup(GroupEntity group) {
-
-        if (!this.groups.contains(group)) {
+        if (group != null)
             this.groups.add(group);
-            group.getUsers().add(this);
-        }
-
     }
 
-    public void addGroups(List<GroupEntity> groups) {
-        this.setGroups(groups);
+    public void addGroups(Collection<GroupEntity> groups) {
+        if (groups != null && !groups.isEmpty())
+            this.groups.addAll(groups);
 
     }
 
     /**
-     * 自定义方法，删除学生
-     * 注意删除关联的方法(单向的不需要)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作 ???/
-     *
      * @param group
      */
     public void removeGroup(GroupEntity group) {
-
-        if (this.groups.contains(group)) {
+        if (group != null)
             this.groups.remove(group);
-            group.getUsers().remove(this);
-
-        }
-
     }
 
-    public void removeGroups(List<GroupEntity> groups) {
-
-        for (GroupEntity entity : groups)
-            removeGroup(entity);
+    public void removeGroups(Collection<GroupEntity> groups) {
+        if (groups != null && !groups.isEmpty())
+            this.groups.removeAll(groups);
 
     }
 

@@ -33,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -184,14 +185,14 @@ public class GroupAjaxController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bootstrap_modal_load_users.html")
+    @RequestMapping(value = "/bootstrap-modal-load-users.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadUsers(
             @RequestParam(value = "group_id", required = true) String groupId,
             RedirectAttributes redirectAttrs, @ModelAttribute("model") ModelMap model,//传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型
             HttpServletRequest request, HttpServletResponse response) {
 
-        logger.info("ids={}", groupId);
+        logger.info("groupId={}", groupId);
 
         Assert.notNull(groupId, "groupId is null");
 
@@ -220,10 +221,10 @@ public class GroupAjaxController {
 //        System.out.println("=============");
 //        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
 
-        model.addAttribute("usersChecked", utils.createDTOcopy(usersChecked));
-        model.addAttribute("usersUnChecked", utils.createDTOcopy(usersUnChecked));
+        model.addAttribute("checkedbox", utils.createDTOcopy(usersChecked));
+        model.addAttribute("uncheckedbox", utils.createDTOcopy(usersUnChecked));
 
-        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-users";
+        return "admin/ace/html/ajax/content/bootstrap-modal-load-users";
     }
 
 
@@ -234,8 +235,9 @@ public class GroupAjaxController {
      * @param groupId
      * @param userIds
      */
-    @RequestMapping(value = "/get_checked_checkbox_users.html")
+    @RequestMapping(value = "/get-checked-checkbox-users-by-group.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    @ResponseBody
     public void bootsTrapModalAssociateUsers(
             @RequestParam(value = "group_id", required = true) String groupId,
             @RequestParam(value = "checkbox[]", required = false) String[] userIds) {
@@ -243,7 +245,7 @@ public class GroupAjaxController {
 
         logger.info("group id ={}", groupId);
         if (userIds != null)
-            logger.info("user id ={}", userIds);
+            logger.info("user id ={}", Arrays.asList(userIds));
         groupService.associateUsers(userIds, groupId);
     }
 
@@ -259,7 +261,7 @@ public class GroupAjaxController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/bootstrap_modal_load_roles.html")
+    @RequestMapping(value = "/bootstrap-modal-load-roles.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadRoles(
             @RequestParam(value = "group_id", required = true) String groupId,
@@ -277,14 +279,14 @@ public class GroupAjaxController {
         List<RoleEntity> rolesChecked = new ArrayList<>();
         List<RoleEntity> rolesUnChecked = new ArrayList<>();
 
-        //获取所有用户
+        //获取所有角色
         List<RoleEntity> roleEntityList = roleRepository.findAll();
         GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
 
         //分为两组 : 已经和 group 关联的/未关联的
         if (groupEntity != null) {
             for (RoleEntity role : roleEntityList) {
-                if (role.getUsers().contains(groupEntity))
+                if (role.getGroups().contains(groupEntity))
                     rolesChecked.add(role);
                 else rolesUnChecked.add(role);
             }
@@ -298,10 +300,11 @@ public class GroupAjaxController {
 //        System.out.println("=============");
 //        MyJsonUtils.prettyPrint(utils.createDTOcopy(usersUnChecked));
 
-        model.addAttribute("rolesChecked", utils.createDTOcopy(rolesChecked));
-        model.addAttribute("rolesUnChecked", utils.createDTOcopy(rolesUnChecked));
+        model.addAttribute("checkedbox", utils.createDTOcopy(rolesChecked));
+        model.addAttribute("uncheckedbox", utils.createDTOcopy(rolesUnChecked));
 
-        return "admin/ace/html/ajax/content/jqgrid-group-bootstrap-modal-roles";
+        //和 jqgrid-user get roles 用一个页面
+        return "admin/ace/html/ajax/content/bootstrap-modal-load-roles";
     }
 
 
@@ -312,8 +315,9 @@ public class GroupAjaxController {
      * @param groupId
      * @param roleIds
      */
-    @RequestMapping(value = "/get_checked_checkbox_roles.html")
+    @RequestMapping(value = "/get-checked-checkbox-roles-by-group.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
+    @ResponseBody
     public void bootsTrapModalAssociateRoles(
             @RequestParam(value = "group_id", required = true) String groupId,
             @RequestParam(value = "checkbox[]", required = false) String[] roleIds) // 前端的参数为 checkbox , array 类型
@@ -321,9 +325,8 @@ public class GroupAjaxController {
 
         logger.info("group id ={}", groupId);
         if (roleIds != null)
-            logger.info("role id ={}", roleIds);
-        userService.associateRoles(roleIds, groupId);
-
+            logger.info("role id ={}", Arrays.asList(roleIds));
+        groupService.associateRoles(roleIds, groupId);
     }
 
 }
