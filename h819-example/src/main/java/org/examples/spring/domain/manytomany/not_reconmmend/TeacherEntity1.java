@@ -1,6 +1,9 @@
 package org.examples.spring.domain.manytomany.not_reconmmend;
 
 import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,6 +19,9 @@ import java.util.Set;
 //@Table(name = "example_teacher1")
 //@NamedEntityGraph(name = "examples.entity.manytomany.TeacherEntity1",//唯一id ,jpa 2.1属性
 //        attributeNodes = {@NamedAttributeNode("students")})
+@Getter
+@Setter
+@AllArgsConstructor
 public class TeacherEntity1 {
 
     @Id
@@ -28,7 +34,7 @@ public class TeacherEntity1 {
 
     /**
      * 单向，发出端
-     * 单向多对多，只在发出方设置，接收方不做设置
+     * 单向多对多，只在发出方设置，接收方不做设置，接收端不能操作关系表
      */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "example_ref_teacher_student1", //指定关联表名
@@ -49,60 +55,7 @@ public class TeacherEntity1 {
 
 
     /**
-     * 自定义方法，添加学生
-     * 注意建立关联的方法(单向的只要在主动方添加)
-     *
-     * @param student
+     * add , remove , clear 方法同 TeacherEntity2
      */
-    public void addStudent(StudentEntity1 student) {
 
-        if (!this.students.contains(student))
-            this.students.add(student);
-
-    }
-
-    /**
-     * 自定义方法，删除学生
-     * 注意建立关联的方法(单向的只要在主动方删除)
-     *
-     * @param student
-     */
-    public void removeStudent(StudentEntity1 student) {
-
-        if (this.students.contains(student)) {
-            this.students.remove(student);
-        }
-
-    }
-
-    /**
-     * 可以直接清除关联关系
-     */
-    public void clearStudent() {
-        this.students.clear();
-    }
-
-    public Set<StudentEntity1> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<StudentEntity1> students) {
-        this.students = students;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

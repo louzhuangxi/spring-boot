@@ -1,8 +1,11 @@
 package org.examples.spring.domain.manytomany.not_reconmmend;
 
-import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +28,9 @@ import java.util.Set;
 //@Table(name = "example_teacher2")
 //@NamedEntityGraph(name = "examples.entity.manytomany.TeacherEntity2",//唯一id ,jpa 2.1属性
 //        attributeNodes = {@NamedAttributeNode("students")})
+@Getter
+@Setter
+@AllArgsConstructor
 public class TeacherEntity2 {
 
 
@@ -38,14 +44,14 @@ public class TeacherEntity2 {
 
 
     /**
-     * 双向，发出端
+     * 双向，发出端 ，接收端有两种方式，见 StudentEntity2
      */
-    @ManyToMany(fetch = FetchType.LAZY,targetEntity = StudentEntity2.class) // 双向向多对多，发出方设置，接收方均做设置，双方级联删除时，都会删除关系表
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = StudentEntity2.class) // 双向向多对多，发出方设置，接收方均做设置，双方级联删除时，都会删除关系表
     @JoinTable(name = "example_ref_teacher_student2", //指定关联表名
             joinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
-    public Set<StudentEntity2> students = Sets.newHashSet(); //set 可以过滤重复元素
+    public Set<StudentEntity2> students = new HashSet<>(); //set 可以过滤重复元素
 
 
     public TeacherEntity2() {
@@ -57,48 +63,40 @@ public class TeacherEntity2 {
     }
 
     /**
-     * 自定义方法，添加学生
-     * 注意添加关联的方法(双向关联的，需要双方都要添加)
-     * 属性 student.teachers设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作
+     * 自定义方法，添加和学生的关系，会在关系表中添加一条记录
      *
      * @param student
      */
     public void addStudent(StudentEntity2 student) {
 
-        if (!this.students.contains(student)) {
+        if (student != null)
             this.students.add(student);
-            student.teachers.add(this);
-        }
 
     }
 
     public void addStudents(List<StudentEntity2> students) {
-        for (StudentEntity2 entity : students)
-            addStudent(entity);
+
+        if (students != null && !students.isEmpty())
+            this.students.addAll(students);
 
     }
 
     /**
-     * 自定义方法，删除学生
-     * 注意添加关联的方法(双向关联的，需要双方都要删除)
-     * 属性 student.teachers 设置为 public ，否则无法直接获取。直接设置其属性，get 方法不方便直接操作
+     * 自定义方法，删除和学生的关系，会删除关系表中的一条记录
      *
      * @param student
      */
     public void removeStudent(StudentEntity2 student) {
 
-        if (this.students.contains(student)) {
+        if (student != null)
             this.students.remove(student);
-            student.teachers.remove(this);
-
-        }
 
     }
 
     public void removeStudents(List<StudentEntity2> students) {
 
-        for (StudentEntity2 entity : students)
-            removeStudent(entity);
+        if (students != null && !students.isEmpty())
+            this.students.removeAll(students);
 
     }
 
@@ -107,29 +105,5 @@ public class TeacherEntity2 {
      */
     public void clearStudent() {
         this.students.clear();
-    }
-
-    public Set<StudentEntity2> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<StudentEntity2> students) {
-        this.students = students;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

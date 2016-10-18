@@ -1,5 +1,9 @@
 package org.examples.spring.domain.manytomany.not_reconmmend;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 /**
@@ -11,6 +15,9 @@ import javax.persistence.*;
  */
 //@Entity
 //@Table(name = "example_student1")
+@Getter
+@Setter
+@AllArgsConstructor
 public class StudentEntity1 {
 
     @Id
@@ -26,24 +33,6 @@ public class StudentEntity1 {
     }
 
     public StudentEntity1(String name) {
-
-        this.name = name;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 }

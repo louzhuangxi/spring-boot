@@ -1,7 +1,7 @@
 package org.examples.spring.domain.manytomany.onetomany;
 
 /**
- * Description : TODO( many to many 实际中不使用，用 one to many 和关系表的方式实现)
+ * Description : TODO()
  * User: h819
  * Date: 14-5-3
  * Time: 下午9:14                                  s
@@ -14,12 +14,12 @@ package org.examples.spring.domain.manytomany.onetomany;
 abstract class note {
 //=========
 /**
- 使用 one to many 和 关系表的方式实现 ，关系表中科院增加其他需要的附加属性
+ 使用 one to many 和 关系表的方式实现 ，关系表中可以增加其他需要的附加属性
  如果不需要添加属性，则不需要添加中间表，和 双向 one to many 一样了 ： parent6,child6
  *
  */
 
-/*
+/**
  * ============================ 对关系增加属性 ===========================================
  *
  * 参考 ：http://en.wikibooks.org/wiki/Java_Persistence/ManyToMany#Mapping_a_Join_Table_with_Additional_Columns

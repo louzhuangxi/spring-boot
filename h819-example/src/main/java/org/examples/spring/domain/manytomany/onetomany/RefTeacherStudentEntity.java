@@ -1,5 +1,9 @@
 package org.examples.spring.domain.manytomany.onetomany;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 /**
@@ -13,6 +17,9 @@ import javax.persistence.*;
 @Table(name = "example_ref_teacher_student", uniqueConstraints = {@UniqueConstraint
         (columnNames = {"teacher_id", "student_id"})
 })  //做唯一性约束
+@Getter
+@Setter
+@AllArgsConstructor
 public class RefTeacherStudentEntity {
 
     @Id
@@ -31,7 +38,7 @@ public class RefTeacherStudentEntity {
     @Column(name = "isRead", columnDefinition = "boolean default false")
     private boolean isRead;
 
-    //关系属性：关系是否收藏
+    //关系属性：关系是否已收藏
     @Column(name = "isMark", columnDefinition = "boolean default false")
     private boolean isMark;
 
@@ -55,67 +62,5 @@ public class RefTeacherStudentEntity {
     public RefTeacherStudentEntity() {
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
-    }
-
-    public TeacherEntity getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(TeacherEntity teacher) {
-        this.teacher = teacher;
-    }
-
-    public StudentEntity getStudent() {
-        return student;
-    }
-
-    public void setStudent(StudentEntity student) {
-        this.student = student;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    private void setId(Long id) {
-        this.id = id;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
-    }
-
-    public boolean isMark() {
-        return isMark;
-    }
-
-    public void setIsMark(boolean isMark) {
-        this.isMark = isMark;
-    }
-
-    public boolean isMail() {
-        return isMail;
-    }
-
-    public void setIsMail(boolean isMail) {
-        this.isMail = isMail;
-    }
 }

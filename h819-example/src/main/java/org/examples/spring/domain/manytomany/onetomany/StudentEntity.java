@@ -1,6 +1,9 @@
 package org.examples.spring.domain.manytomany.onetomany;
 
 import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -19,6 +22,9 @@ import java.util.Set;
 @Table(name = "example_student")
 @NamedEntityGraph(name = "examples.entity.manytomany.onetomany.StudentEntity",//唯一id ,jpa 2.1属性
         attributeNodes = {@NamedAttributeNode("refTeacherStudent")})
+@Getter
+@Setter
+@AllArgsConstructor
 public class StudentEntity {
 
     @Id
@@ -49,28 +55,4 @@ public class StudentEntity {
      * 增加，删除一个 TeacherEntity，由于用到了 Repository ,在 Service 层实现，这里无法实现，见 RefTeacherStudentEntityService
      */
 
-
-    private Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<RefTeacherStudentEntity> getRefTeacherStudent() {
-        return refTeacherStudent;
-    }
-
-    public void setRefTeacherStudent(Set<RefTeacherStudentEntity> refTeacherStudent) {
-        this.refTeacherStudent = refTeacherStudent;
-    }
 }
