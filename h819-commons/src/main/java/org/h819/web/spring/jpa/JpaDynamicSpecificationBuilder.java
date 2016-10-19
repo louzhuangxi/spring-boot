@@ -24,21 +24,29 @@ import java.util.Collection;
  * querydsl 用自己的实现方式
  * -
  * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
- * jpql 通过 Specification 也可以拼出动态查询语句 ，已经总结出通用的类 （本类）
+ * jpql 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
  * -
  * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
- * 但 QueryDslPredicateExecutor 接口 值实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
  * -
  * 总结：
  * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
  * 所以就用 jpa 吧，不在尝试 querydsl
  * -
  * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * ...
+ * ---
+ * <p>
  * Specification specification = new JpaDynamicSpecificationBuilder()
- * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外"))
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
  * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
  * -
  * -
+ * 另外一个：
  * org.springframework.data.domain.Example
  * Support for query by example (QBE).
  * -
@@ -212,7 +220,8 @@ public class JpaDynamicSpecificationBuilder {
              */
             @Override
             public Predicate toPredicate(final Root<T> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
-                //即被查询的属性代表的对象类型，可以是对象，也可以是字符串。不同的比较方法，要求的对象类型不同
+                //即被查询的属性代表的对象类型，可以是对象，也可以是字符串。
+                // 不同的比较方法，要求的对象类型不同
                 //此处为自动获取
                 Class<?> javaType = getPathJavaType(root, searchFilter.getFieldName());
 
