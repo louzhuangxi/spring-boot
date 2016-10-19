@@ -33,24 +33,23 @@ import java.util.Collection;
  * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
  * 所以就用 jpa 吧，不在尝试 querydsl
  * -
- * 使用方式:
- * TreeEntity
- * private Long id;
- * private String name;
- * private TreeEntity parent
- * ...
- * ---
- * <p>
- * Specification specification = new JpaDynamicSpecificationBuilder()
- * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
- * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
- * -
- * -
  * 另外一个：
  * org.springframework.data.domain.Example
  * Support for query by example (QBE).
  * -
  * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
  * -
  */
 public class JpaDynamicSpecificationBuilder {
@@ -126,7 +125,7 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder and(Specification customSpecification) {
+    public JpaDynamicSpecificationBuilder and(final Specification customSpecification) {
         this.specification = Specifications.where(this.specification).and(customSpecification);
         return this;
     }
@@ -167,7 +166,7 @@ public class JpaDynamicSpecificationBuilder {
         return this;
     }
 
-    public JpaDynamicSpecificationBuilder or(Specification customSpecification) {
+    public JpaDynamicSpecificationBuilder or(final Specification customSpecification) {
         this.specification = Specifications.where(this.specification).or(customSpecification);
         return this;
     }
