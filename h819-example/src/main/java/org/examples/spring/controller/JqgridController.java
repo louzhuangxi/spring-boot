@@ -6,7 +6,7 @@ import org.examples.spring.domain.TreeEntity;
 import org.examples.spring.repository.TreeEntityRepository;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
-import org.h819.web.spring.jpa.JpaDynamicSpecificationUtils;
+import org.h819.web.spring.jpa.JpaDynamicSpecificationBuilder;
 import org.h819.web.spring.jpa.JpaUtils;
 import org.h819.web.spring.jpa.SearchFilter;
 import org.slf4j.Logger;
@@ -123,30 +123,26 @@ public class JqgridController {
 
 
         /**
-         * 可以用在 jqgrid 和 非 jqgrid 条件下
+         * jqgrid 查询参数不固定，所有用动态查询方式
          */
 
         /**
          * 除了 jqgrid 传递过来的查询条件外, 自己又附加查询条件，构造一个自定义查询条件
-         * 多个查询条件时，可以用 DynamicSpecificationUtils 合并
+         * 多个查询条件时，JpaDynamicSpecificationBuilder and
          */
-        Specification customSpecification = JpaDynamicSpecificationUtils.bySearchFilter(
-                new SearchFilter("level", SearchFilter.Operator.EQ, "1"));
+        Specification customSpecification = new JpaDynamicSpecificationBuilder().
+                and(new SearchFilter("level", SearchFilter.Operator.EQ, "1")).
+                build();
 
 
-        /**
-         * 查询结果:
-         *
-         * ---
-         * 1. 仅有 jqgird 的 filter 查询条件时:
-         * Page list1 = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters);
-         * -
-         * 2. 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件时写法 (customSpecification):
-         * Page list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
-         *  -
-         * 3. 用在非 jqgrid 的条件下，没有 filter 查询条件 ,仅有自己附加查询条件时写法 (customSpecification):
-         *Page list = JqgridJPAUtils.getJqgridResponse(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
-         */
+        //查询结果:
+        //1. 仅有 jqgird 的 filter 查询条件时:
+        // Page list1 = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters);
+        //2. 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件时写法 (customSpecification):
+        //  Page list = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        // 3. 用在非 jqgrid 的条件下，没有 filter 查询条件 ,仅有自己附加查询条件时写法 (customSpecification):
+       // Page list = JpaUtils.getPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
+
 
         Page<TreeEntity> pages = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (pages.getTotalElements() == 0)
@@ -171,7 +167,6 @@ public class JqgridController {
         // 非 Jqgrid 情况下，JqgridPage 换成 PageBean 即可
 //        PageBean<StStandardEntity> response = new PageBean
 //                (page.getSize(), page.getNumber(), (int)page.getTotalElements(), dtoUtils.createDTOcopy(page.getContent()));
-
 
 
         /**

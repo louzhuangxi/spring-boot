@@ -14,19 +14,36 @@ package org.examples.spring.domain.manytomany;
 abstract class note {
 
 /**
- * 此处仅为演示 :
+ * jointable 包: 为 many to many 方式
+ * onetomany 包: 把 many to many 拆分为 one to many 方式，并加上中间关系表，可以对关系添加属性
  *
- * 不用 many to many ，如果必须要用，用两个 one to many 代替。(hibernate reference : Chapter 24. Best Practices)
- * 多对多连接用得好的例子实际上相当少见。
- * 大多数时候你在“连接表”中需要保存额外的信息(对关系增加属性)。这种情况下，用两个指向中介类的一对多的连接比较好。
- *
- * 实际上，我们认为绝大多数的连接是一对多和多对一的。因此，你应该谨慎使用其它连接风格。
  */
 
+
 /**
- * 注意事项
- * 1. 集合用 set ，可以自动过滤重复元素
- * 2. 单发出端和双发出端的区别
- * */
+ * ==============
+ *  many to many
+ * - 通过两个双向的 one to many + 中间表的方式进行，中间表上还可以附带其他属性。见 onetomany 文件夹
+ *   注意事项， many to many 级联关系，不推荐使用，此处仅为演示
+ * ==============
+ */
+
+// 多对多关联关系中只能通过中间表的方式进行映射。
+
+/*
+ * 单向 many -> many
+ */
+// == 仅在 teacher  类(发出端)中设置关系表的属性，student 不做任何标记， 因为 student  中没有 teacher  的属性，所以无法 从 student  中获得 teacher  的信息，只能单向
+// Teacher1,Student1
+
+/*
+ * 双向 many <-> many
+ */
+// == 在 teacher、和 student 中均需要设置，student 中设置方法有两种，略有不同。
+// Teacher2,Student2
+
+/*
+ * ============================ many to many end ===========================================
+ */
 
 }

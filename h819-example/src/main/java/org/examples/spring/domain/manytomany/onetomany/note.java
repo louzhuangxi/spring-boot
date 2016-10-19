@@ -3,19 +3,17 @@ package org.examples.spring.domain.manytomany.onetomany;
 /**
  * Description : TODO()
  * User: h819
- * Date: 14-5-3
+ * Date: 2016-10-19
  * Time: 下午9:14                                  s
- * To change this template use File | Settings | File Templates.
- * 使用 one to many 和 关系表的方式实现
  */
 
 // 需要用 真正的 Class 文件做注释，否则自动格式化的时候，会合并所有 /** */ 的内容
 @Deprecated
 abstract class note {
-//=========
+
 /**
- 使用 one to many 和 关系表的方式实现 ，关系表中可以增加其他需要的附加属性
- 如果不需要添加属性，则不需要添加中间表，和 双向 one to many 一样了 ： parent6,child6
+ 使用 one to many 和 关系表的方式实现 many to many ，关系表中可以增加其他需要的附加属性
+ 如果不需要添加属性，则不需要添加中间表，和 双向 one to many 一样了
  *
  */
 

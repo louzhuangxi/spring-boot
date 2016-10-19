@@ -1,8 +1,8 @@
 package org.examples.spring.service;
 
 import org.examples.spring.domain.manytomany.onetomany.RefTeacherStudentEntity;
-import org.examples.spring.domain.manytomany.onetomany.StudentEntity;
-import org.examples.spring.domain.manytomany.onetomany.TeacherEntity;
+import org.examples.spring.domain.manytomany.onetomany.StudentEntity3;
+import org.examples.spring.domain.manytomany.onetomany.TeacherEntity3;
 import org.examples.spring.repository.RefTeacherStudentEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * 演示对及联关系的操作
  * 有中间表的 one to many ，无法在双方删除对方，只能在 service 层实现。
  */
 
@@ -31,7 +32,7 @@ public class RefTeacherStudentEntityService {
      * @param studentEntity
      */
     @Transactional(readOnly = false)
-    public void removeRefTeacherStudent(TeacherEntity teacherEntity, StudentEntity studentEntity) {
+    public void removeRefTeacherStudent(TeacherEntity3 teacherEntity, StudentEntity3 studentEntity) {
         RefTeacherStudentEntity refTeacherStudentEntity = refTeacherStudentEntityRepository.findByTeacherAndStudent(teacherEntity, studentEntity);
         //解除关联，在事物状态下，会自动更新 teacherEntity 和 studentEntity ，没有经过验证！！！！
 //        teacherEntity.getRefTeacherStudent().remove(studentEntity);
@@ -51,20 +52,20 @@ public class RefTeacherStudentEntityService {
      * @param mail
      */
     @Transactional(readOnly = false)
-    public void addRefTeacherStudent(TeacherEntity teacherEntity, StudentEntity studentEntity, Boolean read, Boolean mark, Boolean mail) {
+    public void addRefTeacherStudent(TeacherEntity3 teacherEntity, StudentEntity3 studentEntity, Boolean read, Boolean mark, Boolean mail) {
 
         RefTeacherStudentEntity entity = refTeacherStudentEntityRepository.findByTeacherAndStudent(teacherEntity, studentEntity);
         //已经建立关联
         if (entity != null) {
 
             if (read != null)
-                entity.setIsRead(read);
+                entity.setRead(read);
 
             if (mark != null)
-                entity.setIsMark(mark);
+                entity.setMark(mark);
 
             if (mail != null)
-                entity.setIsMail(mail);
+                entity.setMail(mail);
 
             refTeacherStudentEntityRepository.save(entity);
             return;
@@ -75,12 +76,12 @@ public class RefTeacherStudentEntityService {
         entity_new.setTeacher(teacherEntity);
         entity_new.setStudent(studentEntity);
         if (read != null)
-            entity_new.setIsRead(read);
+            entity_new.setRead(read);
         if (mark != null)
-            entity_new.setIsMark(mark);
+            entity_new.setMark(mark);
 
         if (mail != null)
-            entity_new.setIsMail(mail);
+            entity_new.setMail(mail);
 
         refTeacherStudentEntityRepository.save(entity_new);
 

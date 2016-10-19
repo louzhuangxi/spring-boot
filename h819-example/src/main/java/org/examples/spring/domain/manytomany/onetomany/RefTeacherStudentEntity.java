@@ -32,7 +32,7 @@ public class RefTeacherStudentEntity {
 
     //增加的属性
     @Column(name = "mark")
-    private String mark;
+    private boolean mark;
 
     //关系属性：关系是否已读
     @Column(name = "isRead", columnDefinition = "boolean default false")
@@ -51,12 +51,12 @@ public class RefTeacherStudentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id", nullable = false)
     // 在多的一方 RefTeacherStudentEntity  表增加 teacher_id 字段，数值是 TeacherEntity 的 id，一的一方 TeacherEntity 表无变化
-    private TeacherEntity teacher;
+    private TeacherEntity3 teacher;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     // 在多的一方 RefTeacherStudentEntity 表增加 student_id 字段，数值是 StudentEntity 的 id ，一的一方 StudentEntity 表无变化
-    private StudentEntity student;
+    private StudentEntity3 student;
 
 
     public RefTeacherStudentEntity() {
