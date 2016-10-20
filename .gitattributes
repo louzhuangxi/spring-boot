@@ -1,3 +1,3 @@
 # https://help.github.com/articles/my-repository-is-marked-as-the-wrong-language/
 # github repository is marked as the wrong language , config in
-*.rb linguist-language=Java
+*.* linguist-language=Java
