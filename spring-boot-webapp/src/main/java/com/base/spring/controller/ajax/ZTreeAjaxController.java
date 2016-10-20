@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@RequestMapping("/tree/ztree/ajax")
+@RequestMapping("/ajax/tree/ztree")
 public class ZTreeAjaxController {
 
     private static Logger logger = LoggerFactory.getLogger(ZTreeAjaxController.class);

@@ -164,7 +164,7 @@
          * .load( url [, data ] [, complete ] )
          * */
         $("#custom_modal_groups").load(
-                "${ctx}/grid/user/bootstrap-modal-load-groups.html",
+                "${ctx}/ajax/grid/user/bootstrap-modal-load-groups.html",
                 {
                     user_id: $("#userId").val()
                 }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
@@ -196,7 +196,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/grid/user/get-checked-checkbox-groups-by-user.html",
+            url: "${ctx}/ajax/grid/user/get-checked-checkbox-groups-by-user.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 user_id: $("#userId").val()
@@ -232,7 +232,7 @@
          * */
 
         $("#custom_modal_roles").load(
-                "${ctx}/grid/user/bootstrap-modal-load-roles.html",
+                "${ctx}/ajax/grid/user/bootstrap-modal-load-roles.html",
                 {
                     user_id: $("#userId").val()
                 }, // { "choices[]": [ "Jon", "Susan" ] }  or {groupId: 25; ip : 26}
@@ -265,7 +265,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/grid/user/get-checked-checkbox-roles-by-user.html",
+            url: "${ctx}/ajax/grid/user/get-checked-checkbox-roles-by-user.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 group_id: $("#userId").val()
@@ -337,7 +337,7 @@
                 $.ajax({
                     async: false, //同步请求，ajax 返回
                     type: "POST",
-                    url: "${ctx}/validate/ajax/role/name/exist.html",
+                    url: "${ctx}/ajax/validate/role/name/exist.html",
                     data: { //传递的参数和值
                         //oper: "unsubscribe",
                         // 在jqgrid 中提交，必须包含 oper 变量，名称 "oper" 不能改变
@@ -410,8 +410,8 @@
 
 
                 //配置,参见 http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
-                url: "${ctx}/grid/user/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
-                editurl: "${ctx}/grid/user/jqgrid-edit",//nothing is saved
+                url: "${ctx}/ajax/grid/user/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
+                editurl: "${ctx}/ajax/grid/user/jqgrid-edit",//nothing is saved
 
                 datatype: "json", // 返回的数据类型
                 mtype: "post", // 提交方式

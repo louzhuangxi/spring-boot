@@ -92,6 +92,42 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/signup", "/about", "/policies").permitAll() // Allow anyone (including unauthenticated users) to access to the URLs 登陆和登陆用户都可以访问
                 .antMatchers("/admin/**", "/users/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
+                /**
+                 * ajax 请求的处理
+                 * -
+                 * ajax 请求，不需要点击，浏览器自动异步执行，所以不能通过控制是否在页面显示菜单或者按钮，来控制用户是否点击执行。
+                 * 恶意用户假如知道了该 ajax 请求地址之后，会直接发送该 ajax 请求
+                 * -
+                 * 如何通过 url 来控制 ajax 请求？
+                 * 假设系统中，有一个页面通过列表展示所有文章，点击菜单导航到该展示页面之后，该页面会发送 ajax 请求，返回所有文章后显示在页面上
+                 * -
+                 * 1. 这个列表内容，如果开放给系统管理员、注册用户和不需要验证的互联网的所有用户，此时该 ajax 请求不需要控制。
+                 * -
+                 * 2. 如果不能开放给不需要验证的用户，只能开放给系统管理员和注册用户，此时该 ajax 需要控制只给系统管理员和注册用户
+                 * -
+                 * 3. 如果只能开放给系统管理员和注册用户，但系统管理员和注册用户看到的内容还有区别，怎么办？有两种方式
+                 * -
+                 * 3.1 建立两个页面 list-admin.flt , list-user.flt ，两个页面只是 ajax 请求路径不一样，如
+                 *     list-admin.flt 中 ajax 路径是 /ajax/admin/list/** ，通过路径控制，只给 admin 用户访问，
+                 *     list-user.flt 中 ajax 路径是 /ajax/user/list/** ，通过路径控制，只给 user 用户访问
+                 *     其他的页面代码内容完全一致。
+                 *     这种方式不好，一样的页面有两个文件，冗余，可维护性不好
+                 * 3.2 开发一个页面 list.flt ，ajax 访问路径就是 /ajax/list/** ，此路径开放给系统管理员和注册用户
+                 *     在处理 /ajax/list/** 请求的方法中，区分 admin , user ，从而返回不同的结果。
+                 * -
+                 * 总结：
+                 * 0. 所有的 ajax 请求，controller 路径统一为 /ajax/... 开始，便于用 url 控制
+                 * -
+                 * 1. ajax 所有的请求，只开放给 系统管理员和注册用户，如果系统管理员和注册用户权限有区别，在 ajax 的执行方法里进行区别
+                 * -
+                 * 2. 不需要权限的 ajax 请求，做例外处理 security.ignoring().antMatchers("")
+                 *
+                 *
+                 */
+                .antMatchers("/ajax/**").authenticated() // 所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
+                /**
+                 *
+                 */
                 .anyRequest().authenticated() //所有资源，均需要过认证，不需要权限  All remaining URLs require that the user be successfully authenticated
                 .and().formLogin()
 
@@ -117,6 +153,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 不经过 spring security 处理，直接忽略，可以提升系统性能
+     * 如果和 configure(HttpSecurity http) 配置冲突，本方法的优先级高
      */
     @Override
 
@@ -130,6 +167,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //
         security.ignoring()
                 .antMatchers("/resource/**", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
+
+        /**
+         * 单独处理的 ajax 例外
+         */
+        security.ignoring().antMatchers("/ajax/tree/ztree/asyncByTreeType.html");
 
         /**
          *

@@ -11,7 +11,6 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.service.GroupService;
-import com.base.spring.service.UserService;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -37,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/grid/group")
+@RequestMapping("/ajax/grid/group")
 public class GroupAjaxController {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupAjaxController.class);
@@ -51,13 +50,9 @@ public class GroupAjaxController {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private UserService userService;
 
 
     /**
-     * 查看菜单
-     *
      * @param search        是否是搜索请求
      * @param filters       通过 jqgrid search 查询，多个查询条件时，包含查询条件为 json 格式数据。_search = false 时，jqgrid 传递过来的参数没有 filters , 此时 filters 的值为 null
      * @param currentPageNo 当前页码

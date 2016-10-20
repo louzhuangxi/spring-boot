@@ -24,7 +24,7 @@
  * $.ajax({ //ajax 提交到controller的delApplication方法处理
  * type: "post",
  * async: false,
- * url: "${ctx}/grid/group/get_checked_checkbox.html",
+ * url: "${ctx}/ajax/grid/group/get_checked_checkbox.html",
  * data: { //传递的参数和值
  * checkbox: values, //传递 array(values 为 array), spring mvc controller 用 checkbox[] 参数接收
  * group_id: $("#groupId").val()

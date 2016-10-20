@@ -59,7 +59,7 @@ jQuery(function ($) {
 					// 所以可以返回自定义的字符串，来代表不同的信息。下文的 messages : {} 不必再定义出错信息。
 					remote : {
 						type : "POST",
-						url : context + "/validate/ajax/login/email/validate.html" ,
+						url : context + "/ajax/validate/login/email.html" ,
 						data : { //传递的参数和值
 							email : function () {
 								return $("#register_email").val();
@@ -88,7 +88,7 @@ jQuery(function ($) {
 					email : true,
 					remote : { //远程验证，登陆名是否存在，以下同理
 						type : "POST",
-						url : context + "/validate/ajax/login/email/validate.html" ,
+						url : context + "/ajax/validate/login/email.html" ,
 						data : { //传递的参数和值
 							email : function () {
 								return $("#login_email").val();
@@ -104,7 +104,7 @@ jQuery(function ($) {
 					required : true,
 					remote : {
 						type : "POST",
-						url :  context + "/validate/ajax/login/password/validate.html" ,
+						url :  context + "/ajax/validate/login/password.html" ,
 						data : { //传递的参数和值
 							email : function () {
 								return $("#login_email").val();
@@ -124,7 +124,7 @@ jQuery(function ($) {
 					email : true,
 					remote : {
 						type : "POST",
-						url : context + "/validate/ajax/login/email/validate.html" ,
+						url : context + "/ajax/validate/login/email.html" ,
 						data : { //传递的参数和值
 							email : function () {
 								return $("#find_back_email").val();

@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/grid/role")
+@RequestMapping("/ajax/grid/role")
 public class RoleAjaxController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleAjaxController.class);

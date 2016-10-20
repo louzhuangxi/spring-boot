@@ -132,7 +132,7 @@
                 $.ajax({ //ajax 提交到controller的delApplication方法处理
                     type: "post",
                     async: false,
-                    url: "${ctx}/grid/role/get_checked_nodes.html",
+                    url: "${ctx}/ajax/grid/role/get_checked_nodes.html",
                     data: { //传递的参数和值
                         ids_str: ids_str,
                         role_id: $("#roleId").val()
@@ -196,7 +196,7 @@
                 $.ajax({
                     async: false, //同步请求，ajax 返回
                     type: "POST",
-                    url: "${ctx}/validate/ajax/role/name/exist.html",
+                    url: "${ctx}/ajax/validate/role/name/exist.html",
                     data: { //传递的参数和值
                         //oper: "unsubscribe",
                         // 在jqgrid 中提交，必须包含 oper 变量，名称 "oper" 不能改变
@@ -259,8 +259,8 @@
 
 
                 //配置,参见 http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options
-                url: "${ctx}/grid/role/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
-                editurl: "${ctx}/grid/role/jqgrid-edit",//nothing is saved
+                url: "${ctx}/ajax/grid/role/jqgrid-search", // 查询提交的 remote 地址，该地址返回要求的展示数据
+                editurl: "${ctx}/ajax/grid/role/jqgrid-edit",//nothing is saved
 
                 datatype: "json", // 返回的数据类型
                 mtype: "post", // 提交方式
@@ -730,7 +730,7 @@
 
                 async: {
                     enable: true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
-                    url: "${ctx}/tree/ztree/ajax/asyncByTreeTypeAndRole.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+                    url: "${ctx}/ajax/tree/ztree/asyncByTreeTypeAndRole.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
                     autoParam: ["id"], //异步加载子节点时，需要自动提交父节点属性的参数 。参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
                     otherParam: {
                         "treeType": "${treeType}",

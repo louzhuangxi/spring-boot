@@ -5,4 +5,4 @@
  * Time: 14:31
  * To change this template use File | Settings | File Templates.
  */
-package com.base.spring.controller.validate;
+package com.base.spring.controller.ajax.validate;

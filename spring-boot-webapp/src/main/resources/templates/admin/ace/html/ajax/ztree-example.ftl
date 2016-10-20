@@ -255,7 +255,7 @@
 
 				async : {
 					enable : true, //开启异步加载模式.如果设置为 true，请务必设置 setting.asyncByTreeType 内的其它参数。
-					url : "${ctx}/tree/ztree/ajax/asyncByTreeType.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
+					url : "${ctx}/ajax/tree/ztree/asyncByTreeType.html", //Ajax 获取数据的 URL 地址。第一次加载页面(此时后台确定第一次加载页面需要展示到树的第几级)和点击关闭的父节点时激发此 url。
 					autoParam : ["id"], //异步加载时需要自动提交父节点属性的参数 。这些参数应该是：当点击关闭的父节点时，获取的该父节点的数据中存在的参数，他们和 url 一同传递到后台的参数，用于区分点击了哪个关闭的父节点。
 					otherParam : {
 						"menu_type" : "${menu_type}"
@@ -434,7 +434,7 @@
 				$.ajax({ //ajax 提交到controller的delApplication方法处理
 					type : "post",
 					async : false,
-					url : "${ctx}/tree/ztree/ajax/add.html",
+					url : "${ctx}/ajax/tree/ztree/add.html",
 					data : { //传递的参数和值
 						menu_type : "${menu_type}",
 						name : treeNode[0].name, //
@@ -515,7 +515,7 @@
 				$.ajax({ //ajax 提交到controller的delApplication方法处理
 					type : "post",
 					async : false,
-					url : "${ctx}/tree/ztree/ajax/edit.html",
+					url : "${ctx}/ajax/tree/ztree/edit.html",
 					data : { //传递的参数和值
 						id : treeNode.id,
 						name : treeNode.name
@@ -579,7 +579,7 @@
 						$.ajax({ //ajax 提交到controller的delApplication方法处理
 							type : "post",
 							async : false,
-							url : "${ctx}/tree/ztree/ajax/del.html",
+							url : "${ctx}/ajax/tree/ztree/del.html",
 							data : { //传递的参数和值
 								id : treeNode.id
 							},
@@ -638,7 +638,7 @@
 						$.ajax({ //ajax 提交到controller的delApplication方法处理
 							type : "post",
 							async : false,
-							url : "${ctx}/tree/ztree/ajax/clear.html",
+							url : "${ctx}/ajax/tree/ztree/clear.html",
 							data : { //传递的参数和值
 								id : treeNode.id
 							},
@@ -770,7 +770,7 @@
 				$.ajax({ //ajax 提交到controller的delApplication方法处理
 					type : "post",
 					async : false,
-					url : "${ctx}/tree/ztree/ajax/paste.html",
+					url : "${ctx}/ajax/tree/ztree/paste.html",
 					data : { //传递的参数和值
 						id : targetNode.id, //
 						//index : targetNode.getIndex(), //无论是那种类型的粘帖，ztree 默认添加到子节点的尾部
@@ -851,7 +851,7 @@
 				$.ajax({
 					type : "post",
 					async : false,
-					url : "${ctx}/tree/ztree/ajax/move.html",
+					url : "${ctx}/ajax/tree/ztree/move.html",
 					data : { //传递的参数和值
 						id : treeNode.id, //
 						index : treeNode.getIndex(),
@@ -926,7 +926,7 @@
 							$.ajax({
 								type : "post",
 								async : false,
-								url : "${ctx}/tree/ztree/ajax/node/edit/css.html",
+								url : "${ctx}/ajax/tree/ztree/node/edit/css.html",
 								data : { //传递的参数和值
 									id : treeNode.id, //
 									css : input_css.val()
@@ -990,7 +990,7 @@
 							$.ajax({
 								type : "post",
 								async : false,
-								url : "${ctx}/tree/ztree/ajax/node/edit/url.html",
+								url : "${ctx}/ajax/tree/ztree/node/edit/url.html",
 								data : { //传递的参数和值
 									id : treeNode.id, //
 									url : input_url.val()
@@ -1056,7 +1056,7 @@
 							$.ajax({
 								type : "post",
 								async : false,
-								url : "${ctx}/tree/ztree/ajax/node/link/standard.html",
+								url : "${ctx}/ajax/tree/ztree/node/link/standard.html",
 								data : { //传递的参数和值
 									id : treeNode.id, //
 									standard : input_standard.val()

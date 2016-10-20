@@ -1,4 +1,4 @@
-package com.base.spring.controller.validate;
+package com.base.spring.controller.ajax.validate;
 
 import com.base.spring.domain.UserEntity;
 import com.base.spring.repository.UserRepository;
@@ -21,10 +21,10 @@ import java.util.Optional;
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/validate/ajax/login")
-public class AjaxLoginValidationController {
+@RequestMapping("/ajax/validate/login")
+public class LoginAjaxValidateController {
 
-    private static Logger logger = LoggerFactory.getLogger(AjaxLoginValidationController.class);
+    private static Logger logger = LoggerFactory.getLogger(LoginAjaxValidateController.class);
 
     @Autowired
     UserRepository userEntityRepository;
@@ -42,7 +42,7 @@ public class AjaxLoginValidationController {
      * @param email     email
      * @return
      */
-    @RequestMapping(value = "/email/validate.html")
+    @RequestMapping(value = "/email.html")
     @ResponseBody
     public String validateEmail(@RequestParam(value = "email", required = false) Optional<String> email, @RequestParam(value = "checktype", required = false) Optional<String> checkType) {
 
@@ -103,7 +103,7 @@ public class AjaxLoginValidationController {
      * @param email         email
      * @return
      */
-    @RequestMapping(value = "/password/validate.html")
+    @RequestMapping(value = "/password.html")
     @ResponseBody
     public String validateLoginPassword(@RequestParam(value = "email", required = false) Optional<String> email, @RequestParam(value = "loginpasword", required = false) Optional<String> loginPassword) {
 

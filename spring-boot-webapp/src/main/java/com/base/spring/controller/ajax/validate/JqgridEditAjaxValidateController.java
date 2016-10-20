@@ -1,4 +1,4 @@
-package com.base.spring.controller.validate;
+package com.base.spring.controller.ajax.validate;
 
 import com.base.spring.repository.RoleRepository;
 import org.slf4j.Logger;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Description : TODO(验证 Menu 编辑。用户管理在 JqgridUserContorlloer 中)
+ * Description : TODO(jqgrid 编辑中用到)
  * User: h819
  * Date: 14-1-17
  * Time: 下午4:47
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/validate/ajax/role")
-public class JqgridRoleEditValidationController {
+@RequestMapping("/ajax/validate/")
+public class JqgridEditAjaxValidateController {
 
-    private static Logger logger = LoggerFactory.getLogger(JqgridRoleEditValidationController.class);
+    private static Logger logger = LoggerFactory.getLogger(JqgridEditAjaxValidateController.class);
 
     @Autowired
     RoleRepository roleRepository;
@@ -33,7 +33,7 @@ public class JqgridRoleEditValidationController {
      * @param name
      * @return
      */
-    @RequestMapping(value = "/name/exist.html")
+    @RequestMapping(value = "/role/name/exist.html")
     @ResponseBody
     public String validateCode(@RequestParam(value = "ids", required = true) String[] ids, //多选时，如果为单选，数组只有一个值
                                @RequestParam(value = "name", required = false) String name) {

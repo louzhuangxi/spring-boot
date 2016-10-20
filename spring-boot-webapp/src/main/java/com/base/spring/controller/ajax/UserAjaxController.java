@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/grid/user")
+@RequestMapping("/ajax/grid/user")
 public class UserAjaxController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserAjaxController.class);
