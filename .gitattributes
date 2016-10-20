@@ -1,3 +1,4 @@
 # https://help.github.com/articles/my-repository-is-marked-as-the-wrong-language/
-# github repository is marked as the wrong language , config in
+# github 通过 https://github.com/github/linguist#troubleshooting 自动探测 repository 中所有的文件类型，文件类型最多的就设为 repository 类型
+# 强制设所有的文件类型为 Java
 *.* linguist-language=Java
