@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * 参见 AceAdminAjaxMenuExampleController 说明
  * spring mvc , freeMarker : 传递 非字符串变量到页面，必须用  @ModelAttribute("model") ModelMap model
  */
-         //      http://stackoverflow.com/questions/18490026/refresh-reload-the-content-in-div-using-jquery-ajax
+//      http://stackoverflow.com/questions/18490026/refresh-reload-the-content-in-div-using-jquery-ajax
 
 
 @Controller
@@ -100,7 +100,7 @@ public class NavigateController {
      * @return
      */
     @RequestMapping(value = "/content/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String menuTree2(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
+    public String ztree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
         logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
@@ -116,7 +116,7 @@ public class NavigateController {
      *
      * @return
      */
-    @Deprecated // 用 zTree 代替
+    @Deprecated // 用 zTree 代替，不能全选，不能自动选择所有子节点s
     @RequestMapping(value = "/content/fuelux-tree.html", method = RequestMethod.GET)    // 必须有 /content/
     public String fueluxTree(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
         logger.info("request path={} , type={},  will go to /html/ajax/content/fuelux-tree.ftl", MyServletUtils.getFullPath(request), type);

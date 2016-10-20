@@ -13,10 +13,10 @@ import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.*;
 
@@ -42,14 +42,16 @@ public class Test {
 
         // File from = new File("E:\\123");
 
+
         //由于是递归，所以防止图片的根目录放在类变量
         File to = new File("d:\\01\\");
         File to1 = new File("d:\\01\\zb_main.jsp");
 
 
         Test t = new Test();
+        t.test2("a","b");
 
-      //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
+        //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
 //        String rename = to.getAbsoluteFile() + File.separator +
 //                FilenameUtils.getBaseName(to1.getAbsolutePath()) + "_rename." + FilenameUtils.getExtension(to1.getAbsolutePath());
@@ -60,21 +62,39 @@ public class Test {
 //        System.out.println(FilenameUtils.getFullPath(to1.getAbsolutePath()));
 //        System.out.println("rename : " + rename);
 
-       // Assert.noNullElements(new Object[] {null,null},"不能为空");
-        Assert.hasText("s","has text");
+        // Assert.noNullElements(new Object[] {null,null},"不能为空");
+        //Assert.hasText("s", "has text");
 
     }
 
 
+    private void test2(String... s) {
 
 
 
-    private void test2() {
+        boolean found = false;
+        try {
+            Class<?> cls = Class.forName(s[0]);
+            Field[] flds = cls.getDeclaredFields();
+            for (Field f : flds) {
+                Class<?> c = f.getType();
+                if (c.isArray()) {
+                    found = true;
+                    System.out.format("%s%n"
+                                    + "           Field: %s%n"
+                                    + "            Type: %s%n"
+                                    + "  Component Type: %s%n",
+                            f, f.getName(), c, c.getComponentType());
+                }
+            }
+            if (!found) {
+                System.out.format("No array fields%n");
+            }
 
-        String[] strings = {"1", "2", "3", "4"};
-
-        System.out.println(Arrays.asList(strings).subList(0, strings.length));
-        System.out.println(Arrays.asList(strings).subList(1, strings.length));
+            // production code should handle this exception more gracefully
+        } catch (ClassNotFoundException x) {
+            x.printStackTrace();
+        }
 
     }
 

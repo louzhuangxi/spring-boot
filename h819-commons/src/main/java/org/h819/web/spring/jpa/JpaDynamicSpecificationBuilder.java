@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
+import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -33,10 +34,9 @@ import java.util.Collection;
  * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
  * 所以就用 jpa 吧，不在尝试 querydsl
  * -
- * 另外一个：
+ * 另外一种查询方式 QBE ：
  * org.springframework.data.domain.Example
  * Support for query by example (QBE).
- * -
  * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
  * -
  * -
@@ -73,7 +73,7 @@ public class JpaDynamicSpecificationBuilder {
      * root.get("tree").get("parent").get("name") 的返回值，即被查询的属性 name 代表的对象类型，可以是对象，也可以是字符串
      *
      * @param root
-     * @param filterFieldName 属性名称
+     * @param filterFieldName 属性名称 , 可以是级联格式
      * @param <T>
      * @return
      * @see "http://stackoverflow.com/questions/13246959/jpa-specification-with-onetoone-relation"
@@ -94,7 +94,7 @@ public class JpaDynamicSpecificationBuilder {
      * 取得属性代表的对象的类型
      *
      * @param root
-     * @param filterFieldName
+     * @param filterFieldName 属性名称 , 可以是级联格式
      * @param <T>
      * @return
      */
@@ -104,6 +104,8 @@ public class JpaDynamicSpecificationBuilder {
 
     /**
      * 条件 and
+     * <p>
+     * 为了避免方法名称重复，分别用了 Iterable 和 Collection
      *
      * @param searchFilter
      * @return
@@ -114,9 +116,7 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     public JpaDynamicSpecificationBuilder and(final SearchFilter... searchFilters) {
-        for (SearchFilter filter : searchFilters)
-            this.specification = Specifications.where(this.specification).and(bySearchFilter(filter));
-        return this;
+        return and(Arrays.asList(searchFilters));
     }
 
     public JpaDynamicSpecificationBuilder and(final Iterable<SearchFilter> searchFilters) {
@@ -131,9 +131,7 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     public JpaDynamicSpecificationBuilder and(final Specification... customSpecifications) {
-        for (Specification specification : customSpecifications)
-            this.specification = Specifications.where(this.specification).and(specification);
-        return this;
+        return and(Arrays.asList(customSpecifications));
 
     }
 
@@ -155,9 +153,7 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     public JpaDynamicSpecificationBuilder or(final SearchFilter... searchFilters) {
-        for (SearchFilter filter : searchFilters)
-            this.specification = Specifications.where(this.specification).or(bySearchFilter(filter));
-        return this;
+        return or(Arrays.asList(searchFilters));
     }
 
     public JpaDynamicSpecificationBuilder or(final Iterable<SearchFilter> searchFilters) {
@@ -172,9 +168,7 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     public JpaDynamicSpecificationBuilder or(final Specification... customSpecifications) {
-        for (Specification specification : customSpecifications)
-            this.specification = Specifications.where(this.specification).or(specification);
-        return this;
+        return or(Arrays.asList(customSpecifications));
     }
 
     public JpaDynamicSpecificationBuilder or(final Collection<Specification> customSpecifications) {
@@ -219,41 +213,40 @@ public class JpaDynamicSpecificationBuilder {
              */
             @Override
             public Predicate toPredicate(final Root<T> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
-                //即被查询的属性代表的对象类型，可以是对象，也可以是字符串。
-                // 不同的比较方法，要求的对象类型不同
-                //此处为自动获取
-                Class<?> javaType = getPathJavaType(root, searchFilter.getFieldName());
 
-                // 不行，不会递归找到 tree.parent.name 对象中的对象的属性
-                // 只对找到第一层
-                //  Class<?> javaType = root.get(searchFilter.getFieldName()).getJavaType();
+                //  Class<?> javaType = root.get(searchFilter.getFieldName()).getJavaType();   // 只对找到第一层，不会递归找到 tree.parent.name 对象中的对象的属性
+                Path path = getNestedPath(root, searchFilter.getFieldName()); // 可以递归查找
+                // 被查询的属性代表的对象类型，可以是对象，也可以是字符串。
+                // 不同的比较方法，要求的对象类型不同
+                // 此处为自动获取
+                Class<?> javaType = path.getJavaType();
 
                 switch (searchFilter.getOperator()) {
 
                     case EQ:
-                        return builder.equal(getNestedPath(root, searchFilter.getFieldName()), searchFilter.getValue());
+                        return builder.equal(path, searchFilter.getValue());
 
                     case NE:
-                        return builder.notEqual(getNestedPath(root, searchFilter.getFieldName()), searchFilter.getValue());
+                        return builder.notEqual(path, searchFilter.getValue());
 
                     case LIKE: // like,notlike 操作要求：属性代表的对象， String 类型，才可以比较 。(只有字符串才可以 like)
                     {
                         if (javaType == String.class)
-                            return builder.like(getNestedPath(root, searchFilter.getFieldName()), "%" + searchFilter.getValue() + "%");
+                            return builder.like(path, "%" + searchFilter.getValue() + "%");
                         else
                             throw new IllegalArgumentException("like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
 
                     case NLIKE: {
                         if (javaType == String.class)
-                            return builder.notLike(getNestedPath(root, searchFilter.getFieldName()), "%" + searchFilter.getValue() + "%");
+                            return builder.notLike(path, "%" + searchFilter.getValue() + "%");
                         else
                             throw new IllegalArgumentException("not like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
 
                     case STARTS_WITH: {
                         if (javaType == String.class)
-                            return builder.like(getNestedPath(root, searchFilter.getFieldName()), searchFilter.getValue() + "%");
+                            return builder.like(path, searchFilter.getValue() + "%");
                         else
                             throw new IllegalArgumentException("STARTS_WITH 操作 ,是 like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
@@ -261,45 +254,43 @@ public class JpaDynamicSpecificationBuilder {
 
                     case ENDS_WITH: {
                         if (javaType.equals(String.class))
-                            return builder.like(getNestedPath(root, searchFilter.getFieldName()), "%" + searchFilter.getValue());
+                            return builder.like(path, "%" + searchFilter.getValue());
                         else
                             throw new IllegalArgumentException("ENDS_WITH 操作 ,是 like 操作，属性代表的对象只能为 String.class 类型 !");
                     }
                     case GT: //great,less 操作要求：属性代表的对象，应该可以进行比较，即实现了 Comparable 才可以，这符合 java 对象比较的原则
                     {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.greaterThan((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
+                            return builder.greaterThan((Expression<? extends Comparable>) path, (Comparable) searchFilter.getValue());
                         else
                             throw new IllegalArgumentException("不能比较! greaterThan 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
                     case GTE: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.greaterThanOrEqualTo((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
+                            return builder.greaterThanOrEqualTo((Expression<? extends Comparable>) path, (Comparable) searchFilter.getValue());
                         else
                             throw new IllegalArgumentException("不能比较! greaterThanOrEqualTo 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
 
                     case LT: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.lessThan((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
+                            return builder.lessThan((Expression<? extends Comparable>) path, (Comparable) searchFilter.getValue());
                         else
                             throw new IllegalArgumentException("不能比较! lessThan 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
                     case LTE: {
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.lessThanOrEqualTo((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getValue());
+                            return builder.lessThanOrEqualTo((Expression<? extends Comparable>) path, (Comparable) searchFilter.getValue());
                         else
                             throw new IllegalArgumentException("不能比较! lessThanOrEqualTo 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
                     case NN:  // 此时只需要 searchFilter.getFieldName() ，searchFilter.getValue() 用不到
-                        return builder.isNotNull(getNestedPath(root, searchFilter.getFieldName()));
+                        return builder.isNotNull(path);
                     case IN://IN , NIN  操作要求：属性代表的对象，在集合中，对象应该可以比较
 
                         /**
-                         * 构造单个属性的 IN 查询 ，相当于  @Query("select e from InfoEntity e where e.province in ?1")
-                         * 此时： attribute 为 "province" ,  values 为 e.province 对象的集合
-                         * 多个属性在不同集合中的 IN 查询，用 join 方法连接
-                         *
+                         * 构造单个属性的 IN 查询 ，相当于  @Query("select e from InfoEntity e where e.name in ?1")
+                         * 此时： attribute 为 "name" ,  values 为 e.name 对象的集合
                          * @param searchFilter.getFieldName() 实体中的属性名称。对应上述列子，应是 InfoEntity 中的 province  属性。
                          *                  如果集合为空，会抛出异常
                          *                  处理办法是：在集合中放入一个不会影响程序运行结果的元素，进行比较。
@@ -311,16 +302,21 @@ public class JpaDynamicSpecificationBuilder {
                          * @param <T>
                          * @return
                          */
-
-                        return getNestedPath(root, searchFilter.getFieldName()).in(searchFilter.getValue());
+                        if (Collection.class.isAssignableFrom(searchFilter.getValue().getClass()))
+                            return path.in(searchFilter.getValue());
+                        else
+                            throw new IllegalArgumentException("不能比较! in 操作 ,被比较的对象必须是集合");
                     case NIN:
-                        return getNestedPath(root, searchFilter.getFieldName()).in(searchFilter.getValue()).not();
+                        if (Collection.class.isAssignableFrom(searchFilter.getValue().getClass()))
+                            return path.in(searchFilter.getValue()).not();
+                        else
+                            throw new IllegalArgumentException("不能比较! not in 操作 ,被比较的对象必须是集合");
 
                     case BETWEEN:
                         //BETWEEN 操作要求：属性代表的对象，应该可以进行比较，即实现了 Comparable 才可以，这符合 java 对象比较的原则
                         //包含两个边界 : betweenFrom <= object <= betweenTo
                         if (Comparable.class.isAssignableFrom(javaType))
-                            return builder.between((Expression<? extends Comparable>) getNestedPath(root, searchFilter.getFieldName()), (Comparable) searchFilter.getBetweenFrom(), (Comparable) searchFilter.getBetweenTo());
+                            return builder.between((Expression<? extends Comparable>) path, (Comparable) searchFilter.getBetweenFrom(), (Comparable) searchFilter.getBetweenTo());
                         else
                             throw new IllegalArgumentException("不能比较! between 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     default:

@@ -449,24 +449,6 @@
 
         <ul class="nav nav-list">
             <li class="">
-                <a data-url="page/index" href="#page/index">
-                    <i class="menu-icon fa fa-tachometer"></i>
-                    <span class="menu-text"> Dashboard </span>
-                </a>
-
-                <b class="arrow"></b>
-            </li>
-
-            <li class="">
-                <a data-url="page/menu" href="#page/jqgrid-menu">
-                    <i class="menu-icon fa fa-tachometer"></i>
-                    <span class="menu-text"> tree example </span>
-                </a>
-
-                <b class="arrow"></b>
-            </li>
-
-            <li class="">
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-sitemap"></i>
                     <span class="menu-text"> 树结构管理 </span>
@@ -517,7 +499,7 @@
 
             <li class="">
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-list"></i>
+                    <i class="menu-icon fa fa-user-plus"></i>
                     <span class="menu-text"> 用户管理 </span>
 
                     <b class="arrow fa fa-angle-down"></b>
@@ -548,7 +530,7 @@
 
             <li class="">
                 <a href="#" class="dropdown-toggle">
-                    <i class="menu-icon fa fa-desktop"></i>
+                    <i class="menu-icon fa fa-object-group"></i>
                     <span class="menu-text">
 								角色管理
 							</span>
@@ -581,6 +563,14 @@
                 </ul>
             </li>
 
+            <li class="">
+                <a data-url="page/widgets" href="#page/widgets">
+                    <i class="menu-icon fa fa-list-alt"></i>
+                    <span class="menu-text"> 权限控制演示 </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
 
             <li class="">
                 <a href="#" class="dropdown-toggle">
@@ -640,14 +630,7 @@
                 </ul>
             </li>
 
-            <li class="">
-                <a data-url="page/widgets" href="#page/widgets">
-                    <i class="menu-icon fa fa-list-alt"></i>
-                    <span class="menu-text"> Widgets </span>
-                </a>
 
-                <b class="arrow"></b>
-            </li>
 
             <li class="">
                 <a data-url="page/calendar" href="#page/calendar">
