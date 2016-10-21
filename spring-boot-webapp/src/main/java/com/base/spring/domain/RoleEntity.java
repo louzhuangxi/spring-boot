@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -31,7 +30,6 @@ import java.util.Set;
 @Setter
 @ToString
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class RoleEntity extends BaseEntity {
 
 

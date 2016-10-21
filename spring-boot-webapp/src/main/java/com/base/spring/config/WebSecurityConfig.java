@@ -89,42 +89,80 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         // 1. 会返回默认的错误提示 "This session has been expired (possibly due to multiple concurrent logins being attempted as the same user)."
         // 2. 可以自定义个页面
+
+        /**
+         * spring security url 设计原则
+         *
+         * ===== ajax 请求的处理 ====
+         * -
+         * ajax 请求，不需要点击，浏览器自动异步执行，所以不能通过控制是否在页面显示菜单或者按钮，来控制用户是否点击执行。
+         * 恶意用户假如知道了该 ajax 请求地址之后，会直接发送该 ajax 请求
+         * -
+         * 如何通过 url 来控制 ajax 请求？
+         * （ajax 的 url 参数，只能设置一个 url 地址）
+         * 假设系统中，有一个页面通过列表展示所有文章，点击菜单导航到该展示页面之后，该页面会发送 ajax 请求，返回所有文章后显示在页面上
+         * -
+         * 1. 这个列表内容，如果开放给系统管理员、注册用户和不需要验证的互联网的所有用户，此时该 ajax 请求不需要控制。
+         *    (方法 ：   security.ignoring().antMatchers("/ajax/tree/ztree/asyncByTreeType.html");)
+         * -
+         * 2. 如果不能开放给不需要验证的用户，只能开放给系统管理员和注册用户，此时该 ajax 需要控制只给系统管理员和注册用户
+         *    (因为只能有一个 url 参数，所以无法在 controller 的 访问路径上用两个 url 来代表两种身份，如 @RequestMapping(value = {"/admin","user"})
+         *    只能是开发给注册用户  antMatchers("/ajax/**").authenticated()
+         *
+         * -
+         * 3. 如果只能开放给系统管理员和注册用户，但系统管理员和注册用户看到的内容还有区别，怎么办？有两种方式
+         * -
+         * 3.1 建立两个页面 list-admin.flt , list-user.flt ，两个页面只是 ajax 请求路径不一样，如
+         *     list-admin.flt 中 ajax 路径是 /ajax/admin/list/** ，通过路径控制，只给 admin 用户访问，
+         *     list-user.flt 中 ajax 路径是 /ajax/user/list/** ，通过路径控制，只给 user 用户访问
+         *     其他的页面代码内容完全一致。
+         *     这种方式不好，一样的页面有两个文件，冗余，可维护性不好
+         * 3.2 开发一个页面 list.flt ，ajax 访问路径就是 /ajax/list/** ，此路径开放给系统管理员和注册用户
+         *     在处理 /ajax/list/** 请求的方法中，区分 admin , user ，从而返回不同的结果。
+         *     .antMatchers("/ajax/**").authenticated()
+         * -
+         * -
+         * ===== 其他请求的处理 ====
+         *
+         * 1 只开放给 admin : 只有 admin 使用
+         *   1)  .antMatchers("/admin/**").hasAuthority("ADMIN")
+         *   2.  @RequestMapping(value = {"/admin"})
+         * -
+         * 2 只开放给 user  : 只有 user 使用
+         *   1)  .antMatchers("/user/**").hasAuthority("USER")
+         *   2.  @RequestMapping(value = {"/user"})
+         * -
+         * 3 开放给 admin 和 user ： 通用的访问数据的方法，admin/user 操作过程一样，只是根据身份不同返回的数据不同
+         *   1)  .antMatchers("/admin/**","/user/**").authenticated()
+         *   2)  @RequestMapping(value = {"/admin","user"})
+         *   3)  如果需要区分身份，在处理的方法中进行区分
+         *
+         * ===== 总结 ====
+         *
+         * 1. url 设计
+         * -
+         *  1) 所有的 ajax 请求，controller 路径统一为 /ajax/... 开始，便于用 url 控制
+         *  2) 只开放给 admin , ，controller 路径统一为 /admin/... 开始，便于用 url 控制
+         *  3) 只开放给 user , ，controller 路径统一为 /user/... 开始，便于用 url 控制
+         *  4) 只开放给 admin 和 user ，controller 路径统一为 /admin/... , /user/.. 开始，便于用 url 控制 (ajax 不适用, 因为只能有一个 url)
+         * -
+         * 2. /ajax/** 所有的请求，只开放给系统管理员和注册用户，如果系统管理员和注册用户权限有区别，在 ajax 的执行方法里进行区别
+         * -
+         * 2. 不需要权限的 ajax 请求，做例外处理 security.ignoring().antMatchers("/ajax/tree/ztree/asyncByTreeType.html")
+         * -
+         * 3. 非 ajax 请求，参考 ajax 规则
+         * -
+         *
+         *
+         *
+         */
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/about", "/policies").permitAll() // Allow anyone (including unauthenticated users) to access to the URLs 登陆和登陆用户都可以访问
-                .antMatchers("/admin/**", "/users/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
+                .antMatchers("/", "/signup", "/about", "/policies").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
+                .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
-                 * ajax 请求的处理
-                 * -
-                 * ajax 请求，不需要点击，浏览器自动异步执行，所以不能通过控制是否在页面显示菜单或者按钮，来控制用户是否点击执行。
-                 * 恶意用户假如知道了该 ajax 请求地址之后，会直接发送该 ajax 请求
-                 * -
-                 * 如何通过 url 来控制 ajax 请求？
-                 * 假设系统中，有一个页面通过列表展示所有文章，点击菜单导航到该展示页面之后，该页面会发送 ajax 请求，返回所有文章后显示在页面上
-                 * -
-                 * 1. 这个列表内容，如果开放给系统管理员、注册用户和不需要验证的互联网的所有用户，此时该 ajax 请求不需要控制。
-                 * -
-                 * 2. 如果不能开放给不需要验证的用户，只能开放给系统管理员和注册用户，此时该 ajax 需要控制只给系统管理员和注册用户
-                 * -
-                 * 3. 如果只能开放给系统管理员和注册用户，但系统管理员和注册用户看到的内容还有区别，怎么办？有两种方式
-                 * -
-                 * 3.1 建立两个页面 list-admin.flt , list-user.flt ，两个页面只是 ajax 请求路径不一样，如
-                 *     list-admin.flt 中 ajax 路径是 /ajax/admin/list/** ，通过路径控制，只给 admin 用户访问，
-                 *     list-user.flt 中 ajax 路径是 /ajax/user/list/** ，通过路径控制，只给 user 用户访问
-                 *     其他的页面代码内容完全一致。
-                 *     这种方式不好，一样的页面有两个文件，冗余，可维护性不好
-                 * 3.2 开发一个页面 list.flt ，ajax 访问路径就是 /ajax/list/** ，此路径开放给系统管理员和注册用户
-                 *     在处理 /ajax/list/** 请求的方法中，区分 admin , user ，从而返回不同的结果。
-                 * -
-                 * 总结：
-                 * 0. 所有的 ajax 请求，controller 路径统一为 /ajax/... 开始，便于用 url 控制
-                 * -
-                 * 1. ajax 所有的请求，只开放给 系统管理员和注册用户，如果系统管理员和注册用户权限有区别，在 ajax 的执行方法里进行区别
-                 * -
-                 * 2. 不需要权限的 ajax 请求，做例外处理 security.ignoring().antMatchers("")
-                 *
-                 *
+                 *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
                  */
-                .antMatchers("/ajax/**").authenticated() // 所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
+                .antMatchers("/ajax/**", "").authenticated()
                 /**
                  *
                  */
@@ -161,7 +199,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // All of Spring Security will ignore the requests
 
         /**
-         * "/**"  : 测试是此开关打开
+         * "/**"  : 测试时打开此开关
          */
         security.ignoring().antMatchers("/**"); //测试时，不加安全验证
         //

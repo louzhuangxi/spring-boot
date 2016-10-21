@@ -24,7 +24,7 @@ import java.util.*;
 @Table(name = "base_user")
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
+//@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class UserEntity extends BaseEntity {
 
     /**

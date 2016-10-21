@@ -9,7 +9,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -34,7 +33,6 @@ import java.util.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class TreeNodeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);

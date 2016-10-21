@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -25,7 +24,6 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class GroupEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class)// 双向多对多，发出方、接收方都设置

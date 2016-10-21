@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -44,6 +45,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing ，在 @CreatedDate 等标记的类上设置
 public abstract class AbstractMySQLEntity implements Serializable {
 
 
