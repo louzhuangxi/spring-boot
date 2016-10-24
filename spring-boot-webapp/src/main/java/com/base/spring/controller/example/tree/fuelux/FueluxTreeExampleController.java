@@ -1,4 +1,4 @@
-package com.base.spring.controller.tree.fuelux;
+package com.base.spring.controller.example.tree.fuelux;
 
 import com.base.spring.domain.TreeNodeType;
 import com.base.spring.repository.TreeNodeRepository;
@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * FueluxTree 仅进行展示，不做 tree 编辑
  * 每次点击，仅获取被点击节点的子节点
+ *
  */
 
 @Controller
 @RequestMapping("/tree/fuelux/ajax")
-public class FueluxTreeAjaxController {
+@Deprecated //弃用 . 多选的时候很麻烦，没有全选功能，选择父节点，不能自动选择其子节点
+public class FueluxTreeExampleController {
 
-    private static Logger logger = LoggerFactory.getLogger(FueluxTreeAjaxController.class);
+    private static Logger logger = LoggerFactory.getLogger(FueluxTreeExampleController.class);
 
     @Autowired
     TreeNodeRepository treeNodeRepository;

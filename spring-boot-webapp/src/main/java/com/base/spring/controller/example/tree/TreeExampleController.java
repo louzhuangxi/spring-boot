@@ -1,4 +1,4 @@
-package com.base.spring.controller.tree;
+package com.base.spring.controller.example.tree;
 
 import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;

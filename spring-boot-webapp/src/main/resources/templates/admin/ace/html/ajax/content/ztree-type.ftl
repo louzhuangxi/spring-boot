@@ -74,11 +74,14 @@
                                             <button class="btn btn-white btn-success btn-round"><i
                                                     class="ace-icon fa fa-pencil-square-o bigger-120"></i> 编辑名称
                                             </button>
-                                        </a> <a id="remove" href="###" title="删除节点" onClick="return false;">
-                                            <button class="btn btn-white btn-inverse btn-round"><i
-                                                    class="ace-icon fa fa-trash-o fa-lg bigger-120 red2"></i> 删除节点
-                                            </button>
-                                        </a> <a id="clearChildren" href="#" title="清空子节点" onClick="return false;">
+                                        </a>
+                                        </p>
+                                        <p>
+                                            <a id="remove" href="###" title="删除节点" onClick="return false;">
+                                                <button class="btn btn-white btn-inverse btn-round"><i
+                                                        class="ace-icon fa fa-trash-o fa-lg bigger-120 red2"></i> 删除节点
+                                                </button>
+                                            </a> <a id="clearChildren" href="#" title="清空子节点" onClick="return false;">
                                             <button class="btn btn-white btn-inverse btn-round"><i
                                                     class="ace-icon fa fa-ban bigger-120 red2"></i> 清空子节点
                                             </button>
@@ -147,8 +150,26 @@
     var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/utils.js", null]
     //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
 
+
+    /*================================ contant para ================================================*/
+
     //放置 ztree 的元素 id，参见上文。
     var ztree_root = "treeDemo";
+    var log;
+    var className = "dark";
+    var curDragNodes;
+    var autoExpandNode;
+    var logIocn_del = "ace-icon fa fa-trash-o fa-lg bigger-110 red";
+    var logIocn_clear = "ace-icon fa fa-trash-o fa-lg bigger-110 red";
+    var logIocn_add_parent = "ace-icon fa fa-folder bigger-110";
+    var logIocn_add_leaf = "ace-icon fa fa-leaf bigger-110";
+    var logIocn_edit = "ace-icon fa fa-pencil-square-o bigger-120";
+    var logIocn_copy = "ace-icon fa fa-files-o bigger-110 green";
+    var logIocn_cut = "ace-icon fa fa-scissors bigger-110 green";
+    var logIocn_move = "ace-icon fa fa-exchange bigger-110";
+    var logIocn_warning = "ace-icon fa fa-exclamation-triangle bigger-110 red";
+
+    /*================================ contant para ================================================*/
 
     /*================================ tools begin ================================================*/
 
@@ -318,24 +339,6 @@
 
 
             /*================================ tools end ================================================*/
-
-            /*================================ contant para ================================================*/
-
-            var log,
-                    className = "dark",
-                    curDragNodes,
-                    autoExpandNode;
-            var logIocn_del = "ace-icon fa fa-trash-o fa-lg bigger-110 red";
-            var logIocn_clear = "ace-icon fa fa-trash-o fa-lg bigger-110 red";
-            var logIocn_add_parent = "ace-icon fa fa-folder bigger-110";
-            var logIocn_add_leaf = "ace-icon fa fa-leaf bigger-110";
-            var logIocn_edit = "ace-icon fa fa-pencil-square-o bigger-120";
-            var logIocn_copy = "ace-icon fa fa-files-o bigger-110 green";
-            var logIocn_cut = "ace-icon fa fa-scissors bigger-110 green";
-            var logIocn_move = "ace-icon fa fa-exchange bigger-110";
-            var logIocn_warning = "ace-icon fa fa-exclamation-triangle bigger-110 red";
-
-            /*================================ contant para ================================================*/
 
             /*
             var parent = treeNode[0].getParentNode();

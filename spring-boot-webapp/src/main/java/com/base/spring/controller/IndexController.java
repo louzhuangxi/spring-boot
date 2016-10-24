@@ -1,13 +1,10 @@
 package com.base.spring.controller;
 
-import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Description : TODO()
@@ -31,18 +28,5 @@ public class IndexController {
         logger.info("redirect to other controller");
        // return "redirect:http://canhelp.cn";
          return "redirect:/menu/ajax/index.html";  // 跳转到 AceAdminAjaxMenuController 中的 url
-    }
-
-
-    /**
-     * 不用 ajax 方式，直接演示 ztree 用法
-     * 跳转到 AceAdminAjaxMenuController 中的 url
-     * @return
-     */
-    @RequestMapping(value = "/ztree/example", method = RequestMethod.GET)
-    public String ztree(HttpServletRequest request) {
-        logger.info("非 ajax 方式，演示 ztree 用法");
-        logger.info("request path={} ,  will go to /html/ajax/content/menu-tree.ftl", MyServletUtils.getFullPath(request));
-        return "admin/ace/html/ajax/ztree-example";
     }
 }

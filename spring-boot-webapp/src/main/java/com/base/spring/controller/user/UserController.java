@@ -1,4 +1,4 @@
-package com.base.spring.controller;
+package com.base.spring.controller.user;
 
 import com.base.spring.domain.validator.UserCreateFormValidator;
 import com.base.spring.service.UserService;

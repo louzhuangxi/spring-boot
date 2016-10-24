@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
  * 参见 AceAdminAjaxMenuExampleController 说明
  * spring mvc , freeMarker : 传递 非字符串变量到页面，必须用  @ModelAttribute("model") ModelMap model
  */
-//      http://stackoverflow.com/questions/18490026/refresh-reload-the-content-in-div-using-jquery-ajax
 
-
+//方法级别权限控制
+// @PreAuthorize("hasRole('ADMIN') AND hasRole('DBA')")
 @Controller
 @RequestMapping("/menu/ajax")
 //重要: 必须以 ajax 结尾，以符合 ace.js 中 content_url 的要求，menu 为前缀，可以为任意值或者没有，解释见 AceAdminAjaxMenuExampleController
@@ -46,13 +46,19 @@ public class NavigateController {
 
 
     /**
+     * 角色
+     * -
      * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-roles
      * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-roles.html
      * 跳转到真正的页面 :  html/ajax/content/jqgrid-roles.ftl
      *
      * @return
      */
+
     @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
+    // PreAuthorize 支持 spring el
+    // 加在 service 层，好像粒度更细，如区分 add,del,eidt 等
+
     public String role(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
 
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
@@ -63,6 +69,8 @@ public class NavigateController {
     }
 
     /**
+     * 用户
+     * -
      * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-user
      * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-user.html
      * 跳转到真正的页面 :  html/ajax/content/jqgrid-user.ftl
@@ -77,6 +85,8 @@ public class NavigateController {
     }
 
     /**
+     * 组
+     * -
      * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/jqgrid-group
      * 被解析为  :  http://localhost:8888/base/menu/ajax/content/jqgrid-group.html
      * 跳转到真正的页面 :  html/ajax/content/jqgrid-group.ftl
@@ -93,6 +103,8 @@ public class NavigateController {
 
 
     /**
+     * 根据 treeType ，获取不同类型的 ztree
+     * -
      * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/ztree-type.html
      * 被解析为  :  http://localhost:8888/base/menu/ajax/content/ztree-type.html
      * 跳转到真正的页面 :  html/ajax/content/ztree-type.ftl
