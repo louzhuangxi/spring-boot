@@ -162,7 +162,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
                  */
-                .antMatchers("/ajax/**", "").authenticated()
+                .antMatchers("/ajax/**").authenticated()
                 /**
                  *
                  */
