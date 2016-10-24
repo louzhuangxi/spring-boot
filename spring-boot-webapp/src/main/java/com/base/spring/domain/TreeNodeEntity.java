@@ -185,9 +185,13 @@ public class TreeNodeEntity extends BaseEntity {
     }
 
     /**
-     * 当前节点增加子节点到指定位置
+     * 可以用于：
+     * 0. 增加子节点作为当前节点的子节点，并设置子节点的顺位 index
      * -
-     * 当前节点可以是任意节点
+     * 还可以用于：
+     * 子节点
+     * 1. 在当前父节点下，子节点间同级移动；
+     * 2. 移动到新的父节点下
      *
      * @param child
      * @param index
@@ -205,7 +209,7 @@ public class TreeNodeEntity extends BaseEntity {
 //        MyJsonUtils.prettyPrint(children, filter);
 
 
-        if (children.contains(child))
+        if (children.contains(child)) // true 同级间添加 , false 为添加到新的父节点。
             children.remove(child); // 重复的，删除后重新添加，不能直接修改 index ，可能重复
 
         sortTreeByIndex(children); //按照元素在 list 的位置信息，重新设置原来子节点的 index 属性，便于重新排序  ，否则 while 逻辑不对
