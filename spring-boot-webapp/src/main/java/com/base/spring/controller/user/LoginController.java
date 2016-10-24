@@ -1,4 +1,4 @@
-package com.base.spring.controller;
+package com.base.spring.controller.user;
 
 import com.base.spring.vo.Message;
 import org.slf4j.Logger;

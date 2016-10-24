@@ -100,7 +100,7 @@ public class ZTreeService {
      * @param level
      * @param index
      * @param isParent
-     * @param pId      被选择的子节点，在该节点下创建子节点。
+     * @param pId      被选择的父节点，在该节点下创建子节点。
      * @param menuType 菜单类型
      */
     @Transactional(readOnly = false)
@@ -109,8 +109,8 @@ public class ZTreeService {
         logger.info("Getting name={} ,   pId={}", name, pId);
 
         TreeNodeEntity parent = treeNodeRepository.findOne(pId);
-        TreeNodeEntity current = new TreeNodeEntity(menuType, name, index, isParent, parent);
-        parent.addChildToLastIndex(current);
+        TreeNodeEntity child = new TreeNodeEntity(menuType, name, index, isParent, parent);
+        parent.addChildToLastIndex(child);
 
 //        for(TreeNodeEntity entity :parent.getChildren())
 //            System.out.println(String.format("%s,%d,%s",entity.getName(),entity.getIndex(),entity.getParent().getName()));
@@ -139,9 +139,9 @@ public class ZTreeService {
     /**
      * 粘帖
      *
-     * @param id      保存的节点
+     * @param id      被保存的节点
      * @param pId     id 的父节点
-     * @param curType
+     * @param curType 粘帖类型
      */
     @Transactional(readOnly = false)
     public void paste(long id, long pId, String curType) {
@@ -172,6 +172,8 @@ public class ZTreeService {
 
     /**
      * 移动节点到指定父节点下
+     * 可也是同一父节点，子节点变换位置
+     * 也可以是移动到其他的父节点下
      *
      * @param id    被移动节点
      * @param pId   移动到此父节点下
@@ -180,17 +182,20 @@ public class ZTreeService {
     @Transactional(readOnly = false)
     public void move(Long id, Long pId, int index) {
 
+        TreeNodeEntity child = treeNodeRepository.findOne(id);
+        TreeNodeEntity parent = treeNodeRepository.findOne(pId);
 
-        TreeNodeEntity childNode = treeNodeRepository.findOne(id);
-        TreeNodeEntity parentNode = treeNodeRepository.findOne(pId);
+        parent.addChildToIndex(child, index);
 
-        parentNode.addChildToIndex(childNode, index);
-        parentNode.setParentNode(true);
-        treeNodeRepository.save(parentNode);
+        //  moveChildToIndex(parentNode, childNode, index);
 
-        if (childNode.getParent().getChildren().size() == 0)
-            childNode.getParent().setParentNode(false);
-        treeNodeRepository.save(childNode);
+        parent.setParentNode(true);
+
+        if (child.getParent().getChildren().size() == 0)
+            child.getParent().setParentNode(false);
+
+        treeNodeRepository.save(child);
+        treeNodeRepository.save(parent);
 
     }
 

@@ -1,13 +1,14 @@
 package com.base.Test;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
-import org.springframework.util.Assert;
 
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +26,16 @@ public class Test {
 
         Test test = new Test();
 
-       // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
+        String[] ss ={"on","1","2"};
+        String[] ss1 ={"1","2"};
+        System.out.print(Arrays.asList(ArrayUtils.removeElement(ss1,"on")));
 
         System.out.print("中文");
-        Assert.state("assc".equalsIgnoreCase("asc")|| "DESCs".equalsIgnoreCase("desc") , " 排序 direction 只能为 asc or desc");
+
+       // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
+
+     //   System.out.print("中文");
+       // Assert.state("assc".equalsIgnoreCase("asc")|| "DESCs".equalsIgnoreCase("desc") , " 排序 direction 只能为 asc or desc");
     }
 
 

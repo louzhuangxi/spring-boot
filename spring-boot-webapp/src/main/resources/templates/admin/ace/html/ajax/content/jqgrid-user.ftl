@@ -196,7 +196,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/ajax/grid/user/get-checked-checkbox-groups-by-user.html",
+            url: "${ctx}/ajax/grid/user/bootstrap-modal-associate-groups.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 user_id: $("#userId").val()
@@ -265,7 +265,7 @@
         $.ajax({ //ajax 提交到controller的delApplication方法处理
             type: "post",
             async: false,
-            url: "${ctx}/ajax/grid/user/get-checked-checkbox-roles-by-user.html",
+            url: "${ctx}/ajax/grid/user/bootstrap-modal-associate-roles.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
                 group_id: $("#userId").val()

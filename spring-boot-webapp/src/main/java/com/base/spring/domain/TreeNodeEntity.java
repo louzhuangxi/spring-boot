@@ -178,65 +178,50 @@ public class TreeNodeEntity extends BaseEntity {
 
         if (child == null || children.contains(child))
             return;
-        child.setIndex(children.size()); // list 的 index 从 0 开始
+        child.setIndex(children.size()); // list 的 index 从 0 开始 , children.size() 为最后的序号 +1
         children.add(child);
         child.setParent(this);
 
     }
 
     /**
-     * 添加指定节点到当前节点的 index 位置
-     * 每次添加或者删除了子元素，都需要重新标注其 index 属性
+     * 当前节点增加子节点到指定位置
+     * -
+     * 当前节点可以是任意节点
      *
-     * @param child the node to add to the tree as a child of <code>this</code>
-     * @param index the position within the children list to add the child.
+     * @param child
+     * @param index
      */
     public void addChildToIndex(TreeNodeEntity child, int index) {
 
-        if (child == null || children.contains(child))
+        if (child == null)
             return;
 
-        if (index < 0 || index > children.size()) {             //加在第一位
-            throw new IllegalArgumentException(index + " 小于 0 或者大于子节点总数");
-        }
-
-
-//        FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
+        // FastJsonPropertyPreFilter filter = new FastJsonPropertyPreFilter();
 //        filter.addExcludes(TreeNodeEntity.class, "children", "roles");
 
-        //测试排序
+        //排序前
 //        System.out.println(StringUtils.center(" original ", 80, "*"));
 //        MyJsonUtils.prettyPrint(children, filter);
 
-        sortChildren(children); //按照元素在 list 的位置信息，并设置 index 属性
 
-        //测试排序
+        if (children.contains(child))
+            children.remove(child); // 重复的，删除后重新添加，不能直接修改 index ，可能重复
+
+        sortTreeByIndex(children); //按照元素在 list 的位置信息，重新设置原来子节点的 index 属性，便于重新排序  ，否则 while 逻辑不对
+
+        //排序后
 //        System.out.println(StringUtils.center(" modify by sort ", 80, "*"));
 //        MyJsonUtils.prettyPrint(children, filter);
 
-        if (!children.contains(child)) { // 不同父节点下添加后，只变换位置
-            children.add(index, child);
-            while (index + 1 < children.size()) {//只变换 index 后面的元素位置
-                children.get(index + 1).setIndex(index + 1);
-                index++;
-            }
 
-            child.setParent(this);
-
-        } else { // 同一个父节点下移动，不添加，只变换位置
-
-            children.remove(child);
-            sortChildren(children);
-            children.add(index, child);
-            while (index < children.size()) { //只变换 index 后面的元素位置
-                children.get(index).setIndex(index);
-                index++;
-
-            }
+        children.add(index, child);
+        while (index < children.size()) { //只变换 index 后面的元素位置，index 之前，是排序好的
+            children.get(index).setIndex(index);
+            index++;
         }
 
-//        System.out.println(StringUtils.center(" modify by sort1 ", 80, "*"));
-//        MyJsonUtils.prettyPrint(children, filter);
+        child.setParent(this);
 
     }
 
@@ -247,63 +232,6 @@ public class TreeNodeEntity extends BaseEntity {
         children.clear();
     }
 
-
-    /**
-     * list 中的 TreeNodeEntity 按照 index 属性排序后，重新设置 TreeNodeEntity 的 index 的值为 TreeNodeEntity 在 list 中的位置。
-     *
-     * @param children
-     */
-    private void sortChildren(List<TreeNodeEntity> children) {
-        // Sorting 便于利用 list 的 indexOf 方法
-        Collections.sort(children, new Comparator<TreeNodeEntity>() {
-            @Override
-            public int compare(TreeNodeEntity child1, TreeNodeEntity child2) {
-                return Integer.compare(child1.getIndex(), child2.getIndex());
-            }
-        });
-
-
-        for (TreeNodeEntity entity : children)
-            entity.setIndex(children.indexOf(entity));
-
-    }
-
-    /**
-     * 添加单个元素到指定位置，并按照元素在 list 中的位置，重新设置元素的 index 属性
-     *
-     * @param children
-     * @param child    待添加的元素
-     * @param index    添加元素到 list 的 index 位置
-     */
-    private void addSortChildren(List<TreeNodeEntity> children, TreeNodeEntity child, int index) {
-
-
-        if (index < 0) {             //加在第一位
-            index = 0;
-            child.setIndex(index);
-        }
-        if (index > children.size()) {      //加在最后
-            index = children.size();
-            child.setIndex(index);
-        }
-
-        if (!children.contains(child)) { // 不同父节点下添加后，只变换位置
-            children.add(index, child);
-            while (index + 1 < children.size()) {
-                children.get(index + 1).setIndex(index + 1);
-                index++;
-
-            }
-        } else { // 同一个父节点下移动，不添加，只变换位置
-
-            child.setIndex(index);
-            while (index < children.size()) { //只变换 index 后面的元素位置
-                children.get(index).setIndex(index);
-                index++;
-
-            }
-        }
-    }
 
     /**
      * Returns if this node is the root node in the tree or not.
@@ -345,5 +273,25 @@ public class TreeNodeEntity extends BaseEntity {
         }
     }
 
+
+    /**
+     * list 中的 TreeNodeEntity 按照 index 属性排序后，重新设置 TreeNodeEntity 的 index 的值为 TreeNodeEntity 在 list 中的位置。
+     *
+     * @param children
+     */
+
+    private void sortTreeByIndex(List<TreeNodeEntity> children) {
+        // Sorting 便于利用 list 的 indexOf 方法
+        Collections.sort(children, new Comparator<TreeNodeEntity>() {
+            @Override
+            public int compare(TreeNodeEntity child1, TreeNodeEntity child2) {
+                return Integer.compare(child1.getIndex(), child2.getIndex());
+            }
+        });
+
+        for (TreeNodeEntity entity : children)
+            entity.setIndex(children.indexOf(entity));
+
+    }
 
 }

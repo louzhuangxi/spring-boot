@@ -11,6 +11,7 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.service.GroupService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -230,7 +231,7 @@ public class GroupAjaxController {
      * @param groupId
      * @param userIds
      */
-    @RequestMapping(value = "/get-checked-checkbox-users-by-group.html")
+    @RequestMapping(value = "/bootstrap-modal-associate-users.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     @ResponseBody
     public void bootsTrapModalAssociateUsers(
@@ -241,7 +242,9 @@ public class GroupAjaxController {
         logger.info("group id ={}", groupId);
         if (userIds != null)
             logger.info("user id ={}", Arrays.asList(userIds));
-        groupService.associateUsers(userIds, groupId);
+        //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
+        //去掉 ： ArrayUtils.removeElement(userIds, "on")
+        groupService.associateUsers(ArrayUtils.removeElement(userIds, "on"), groupId);
     }
 
     /**
@@ -310,7 +313,7 @@ public class GroupAjaxController {
      * @param groupId
      * @param roleIds
      */
-    @RequestMapping(value = "/get-checked-checkbox-roles-by-group.html")
+    @RequestMapping(value = "/bootstrap-modal-associate-roles.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     @ResponseBody
     public void bootsTrapModalAssociateRoles(
@@ -321,7 +324,10 @@ public class GroupAjaxController {
         logger.info("group id ={}", groupId);
         if (roleIds != null)
             logger.info("role id ={}", Arrays.asList(roleIds));
-        groupService.associateRoles(roleIds, groupId);
+
+        //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
+        //去掉 ： ArrayUtils.removeElement(roleIds, "on")
+        groupService.associateRoles(ArrayUtils.removeElement(roleIds, "on"), groupId);
     }
 
 }

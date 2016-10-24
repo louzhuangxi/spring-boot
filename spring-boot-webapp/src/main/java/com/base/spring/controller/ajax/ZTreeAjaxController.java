@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 树操作 : add, copy ,delete  ajax request
+ * 树操作 : add, copy ,delete and ajax request
  */
 
 @Controller
@@ -121,6 +121,7 @@ public class ZTreeAjaxController {
         TreeNodeEntity tree = treeNodeRepository.findOne(id);
         if (tree.isRoot())
             return "root node can not be delete";
+
         treeNodeRepository.delete(id);
 
         return "del succeed.";
@@ -164,6 +165,9 @@ public class ZTreeAjaxController {
      * move
      * 移动节点到指定位置
      *
+     * @param id    被移动 节点
+     * @param index 移动到位置
+     * @param pId   被移动节点的父节点
      * @return
      */
     @RequestMapping(value = {"/move.html"}, method = RequestMethod.POST)
@@ -173,7 +177,6 @@ public class ZTreeAjaxController {
                        @RequestParam(value = "pId", required = true) Long pId) {
 
         logger.info("move treeNode : id={},pId={},index={}", id, pId, index);
-
         treeNodeService.move(id, pId, index);
         return "move succeed.";
     }

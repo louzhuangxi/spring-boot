@@ -9,6 +9,7 @@ import com.base.spring.repository.UserRepository;
 import com.base.spring.service.GroupService;
 import com.base.spring.service.UserService;
 import com.base.spring.utils.BCryptPassWordUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.h819.web.jqgird.JqgridPage;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
@@ -271,7 +272,7 @@ public class UserAjaxController {
      * @param userId
      * @param groupIds
      */
-    @RequestMapping(value = "/get-checked-checkbox-groups-by-user.html")
+    @RequestMapping(value = "/bootstrap-modal-associate-groups.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     @ResponseBody
     public void bootsTrapModalAssociateGroups(
@@ -282,7 +283,10 @@ public class UserAjaxController {
         logger.info("user id ={}", userId);
         if (groupIds != null)
             logger.info("groupIds id ={}", Arrays.asList(groupIds));
-        userService.associateGroups(groupIds, userId);
+
+        //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
+        //去掉 ： ArrayUtils.removeElement(groupIds, "on")
+        userService.associateGroups(ArrayUtils.removeElement(groupIds, "on"), userId);
     }
 
 
@@ -347,7 +351,7 @@ public class UserAjaxController {
      * @param userId
      * @param roleIds
      */
-    @RequestMapping(value = "/get-checked-checkbox-roles-by-user.html")
+    @RequestMapping(value = "/bootstrap-modal-associate-roles.html")
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     @ResponseBody
     public void bootsTrapModalAssociateRoles(
@@ -358,7 +362,10 @@ public class UserAjaxController {
         logger.info("user id ={}", userId);
         if (roleIds != null)
             logger.info("role id ={}", Arrays.asList(roleIds));
-        userService.associateRoles(roleIds, userId);
+
+        //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
+        //去掉 ： ArrayUtils.removeElement(roleIds, "on")
+        userService.associateRoles(ArrayUtils.removeElement(roleIds, "on"), userId);
 
     }
 }

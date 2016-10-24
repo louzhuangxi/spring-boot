@@ -4,6 +4,8 @@ import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeNodeEntity;
 import com.base.spring.vo.ZTreeNodeBean;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -111,5 +113,6 @@ public class ZTreeUtils {
                 convertTreeNodeToZTreeNode(child, zTreeNode, roleEntity);
 
     }
+
 
 }
