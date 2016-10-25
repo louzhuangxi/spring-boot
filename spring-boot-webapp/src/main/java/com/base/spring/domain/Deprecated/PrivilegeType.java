@@ -5,12 +5,12 @@
  * <p/>
  * 参考 springside 4 项目，改动并做了扩展.  SearchFilter 类做了简化
  *******************************************************************************/
-package com.base.spring.domain;
+package com.base.spring.domain.Deprecated;
 
 /**
  * 定义权限类别
- *z
  */
+@Deprecated
 public enum PrivilegeType {
     TreeNode,  // 表示树状节点的访问权限
     PageElement //表示页面元素的可见性控制 ，可以是一个按钮，一个图片或者其他的内容

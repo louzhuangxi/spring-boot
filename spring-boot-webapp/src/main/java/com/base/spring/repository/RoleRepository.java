@@ -1,7 +1,6 @@
 package com.base.spring.repository;
 
 import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.UserEntity;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;

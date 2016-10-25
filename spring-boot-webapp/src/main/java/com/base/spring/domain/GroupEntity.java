@@ -1,6 +1,5 @@
 package com.base.spring.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
@@ -19,11 +18,10 @@ import java.util.Set;
  * Time: 15:15
  * To change this template use File | Settings | File Templates.
  */
-@Entity
-@Table(name = "base_group") //group 为 mysql 关键字，不能用作字段名
 @Getter
 @Setter
-@AllArgsConstructor
+@Entity
+@Table(name = "base_group") //group 为 mysql 关键字，不能用作字段名
 public class GroupEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = UserEntity.class)// 双向多对多，发出方、接收方都设置

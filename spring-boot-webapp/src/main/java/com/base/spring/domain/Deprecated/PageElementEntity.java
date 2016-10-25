@@ -1,4 +1,6 @@
-package com.base.spring.domain;
+package com.base.spring.domain.Deprecated;
+
+import com.base.spring.domain.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.FetchType;

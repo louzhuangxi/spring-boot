@@ -1,7 +1,7 @@
 package com.base.spring.controller.example.tree.fuelux;
 
-import com.base.spring.domain.TreeNodeType;
-import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.domain.TreeType;
+import com.base.spring.repository.TreeRepository;
 import com.base.spring.service.FueluxTreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class FueluxTreeExampleController {
     private static Logger logger = LoggerFactory.getLogger(FueluxTreeExampleController.class);
 
     @Autowired
-    TreeNodeRepository treeNodeRepository;
+    TreeRepository treeNodeRepository;
     @Autowired
     FueluxTreeService treeNodeService;
 
@@ -38,7 +38,7 @@ public class FueluxTreeExampleController {
      */
     @RequestMapping(value = "/async.html", produces = "application/json")
     @ResponseBody
-    public String async(@RequestParam(value = "pId", required = true) Long pId, @RequestParam(value = "menu_type", required = true) TreeNodeType menuType) {
+    public String async(@RequestParam(value = "pId", required = true) Long pId, @RequestParam(value = "menu_type", required = true) TreeType menuType) {
 
         logger.info("pId={} , type={}", pId, menuType);
         String fueluxJsonData = treeNodeService.async(pId, menuType);

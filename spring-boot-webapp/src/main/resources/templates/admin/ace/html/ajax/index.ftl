@@ -467,7 +467,7 @@
 
                         <b class="arrow"></b>
                     </li>
-
+                    <!--
                     <li class="">
                         <a data-url="page/ztree" href="#page/ztree-type?treeType=Group">
                             <i class="menu-icon fa fa-caret-right"></i>
@@ -475,7 +475,7 @@
                         </a>
                         <b class="arrow"></b>
                     </li>
-
+                    -->
                     <li class="">
                         <a data-url="page/ztree" href="#page/ztree-type?treeType=DepartMent">
                             <i class="menu-icon fa fa-caret-right"></i>

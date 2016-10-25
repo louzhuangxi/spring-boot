@@ -1,6 +1,5 @@
 package com.base.spring.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,12 +23,11 @@ import java.util.Set;
 
 //定义一个角色：对哪些树节点有哪些权限，这些节点的权限相同；
 // 如果出现不同的节点不同的权限，那么定义为不同的角色。
-@Entity
-@Table(name = "base_role")
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
+@Entity
+@Table(name = "base_role")
 public class RoleEntity extends BaseEntity {
 
 
@@ -58,16 +56,17 @@ public class RoleEntity extends BaseEntity {
 //    private List<PrivilegeEntity> privileges = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TreeNodeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-    @JoinTable(name = "base_ref_roles_treenode", //指定关联表名
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TreeEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
+    @JoinTable(name = "base_ref_roles_tree", //指定关联表名
             joinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
-            inverseJoinColumns = {@JoinColumn(name = "treenode_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "treenode_id"})}) // 唯一性约束，是从表的联合字段
+            inverseJoinColumns = {@JoinColumn(name = "tree_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "tree_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
-    private Set<TreeNodeEntity> treeNodes = new HashSet<>();
+    private Set<TreeEntity> treeNodes = new HashSet<>();
 
     //昵称
+
 
     @Column(name = "name", unique = true)
     private String name;
@@ -92,7 +91,7 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNode
      */
-    public void addTreeNode(TreeNodeEntity treeNode) {
+    public void addTreeNode(TreeEntity treeNode) {
         if (treeNode != null)
             this.treeNodes.add(treeNode);
 
@@ -103,7 +102,7 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNodes
      */
-    public void addTreeNodes(Collection<TreeNodeEntity> treeNodes) {
+    public void addTreeNodes(Collection<TreeEntity> treeNodes) {
         if (treeNodes != null && !treeNodes.isEmpty())
             this.treeNodes.addAll(treeNodes);
     }
@@ -113,7 +112,7 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNode
      */
-    public void removeTreeNode(TreeNodeEntity treeNode) {
+    public void removeTreeNode(TreeEntity treeNode) {
         if (treeNode != null)
             this.treeNodes.remove(treeNode);
     }
@@ -123,7 +122,7 @@ public class RoleEntity extends BaseEntity {
      *
      * @param treeNodes
      */
-    public void removeTreeNodes(Collection<TreeNodeEntity> treeNodes) {
+    public void removeTreeNodes(Collection<TreeEntity> treeNodes) {
         if (treeNodes != null && !treeNodes.isEmpty())
             this.treeNodes.removeAll(treeNodes);
     }

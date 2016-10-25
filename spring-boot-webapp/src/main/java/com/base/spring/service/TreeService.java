@@ -2,9 +2,9 @@ package com.base.spring.service;
 
 import com.alibaba.fastjson.JSON;
 import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.domain.TreeNodeType;
-import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.domain.TreeEntity;
+import com.base.spring.domain.TreeType;
+import com.base.spring.repository.TreeRepository;
 import com.base.spring.utils.ZTreeUtils;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.slf4j.Logger;
@@ -17,12 +17,12 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
-public class ZTreeService {
+public class TreeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ZTreeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TreeService.class);
 
     @Autowired
-    private TreeNodeRepository treeNodeRepository;
+    private TreeRepository treeRepository;
 
     /**
      * 异步加载原始树
@@ -31,8 +31,8 @@ public class ZTreeService {
      * @param menuType
      * @return
      */
-    public String asyncTree(Long id, TreeNodeType menuType) {
-        return async(id, menuType, 1, null);
+    public String asyncTree(Long id, TreeType menuType) {
+        return async(id, menuType, 2, null);
     }
 
 
@@ -45,7 +45,7 @@ public class ZTreeService {
      * @param menuType
      * @return
      */
-    public String asyncRoleTree(Long id, TreeNodeType menuType, RoleEntity roleEntity) {
+    public String asyncRoleTree(Long id, TreeType menuType, RoleEntity roleEntity) {
         return async(id, menuType, 100, roleEntity);
     }
 
@@ -62,32 +62,32 @@ public class ZTreeService {
      * @param show_Level 页面显示树状结构到第 n 级
      * @return
      */
-    private String async(Long id, TreeNodeType menuType, int show_Level, RoleEntity roleEntity) {
+    private String async(Long id, TreeType menuType, int show_Level, RoleEntity roleEntity) {
 
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();
         if (roleEntity == null)
-            dtoUtils.addExcludes(TreeNodeEntity.class, "parent", "roles");
+            dtoUtils.addExcludes(TreeEntity.class, "parent", "roles");
         else
-            dtoUtils.addExcludes(TreeNodeEntity.class, "parent");
+            dtoUtils.addExcludes(TreeEntity.class, "parent");
 
         if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
-            Optional<TreeNodeEntity> rootNode = treeNodeRepository.getRoot(menuType);
+            Optional<TreeEntity> rootNode = treeRepository.getRoot(menuType);
 
             if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
                 return "";
             }
 
-            TreeNodeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
+            TreeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
 
             return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode, roleEntity));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
             logger.info("initialize ztree asyncByTreeType from db by id={}", id);
-            TreeNodeEntity rootNode = treeNodeRepository.findOne(id);
-            TreeNodeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
+            TreeEntity rootNode = treeRepository.findOne(id);
+            TreeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
             return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点
         }
     }
@@ -104,18 +104,18 @@ public class ZTreeService {
      * @param menuType 菜单类型
      */
     @Transactional(readOnly = false)
-    public void add(String name, int level, int index, boolean isParent, long pId, TreeNodeType menuType) {
+    public void add(String name, int level, int index, boolean isParent, long pId, TreeType menuType) {
 
         logger.info("Getting name={} ,   pId={}", name, pId);
 
-        TreeNodeEntity parent = treeNodeRepository.findOne(pId);
-        TreeNodeEntity child = new TreeNodeEntity(menuType, name, index, isParent, parent);
+        TreeEntity parent = treeRepository.findOne(pId);
+        TreeEntity child = new TreeEntity(menuType, name, index, isParent, parent);
         parent.addChildToLastIndex(child);
 
 //        for(TreeNodeEntity entity :parent.getChildren())
 //            System.out.println(String.format("%s,%d,%s",entity.getName(),entity.getIndex(),entity.getParent().getName()));
         parent.setParentNode(true); //如果原来为叶节点，需要设置为父节点
-        treeNodeRepository.save(parent);
+        treeRepository.save(parent);
 
     }
 
@@ -128,10 +128,10 @@ public class ZTreeService {
     public void clearChildren(long id) {
 
         logger.info("Getting id={}", id);
-        TreeNodeEntity parent = treeNodeRepository.findOne(id);
+        TreeEntity parent = treeRepository.findOne(id);
         parent.clearChildren();
         parent.setParentNode(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
-        treeNodeRepository.save(parent);
+        treeRepository.save(parent);
 
     }
 
@@ -146,8 +146,8 @@ public class ZTreeService {
     @Transactional(readOnly = false)
     public void paste(long id, long pId, String curType) {
 
-        TreeNodeEntity selectNode = treeNodeRepository.findOne(id); //被操作的对象
-        TreeNodeEntity parentNode = treeNodeRepository.findOne(pId); //参考对象
+        TreeEntity selectNode = treeRepository.findOne(id); //被操作的对象
+        TreeEntity parentNode = treeRepository.findOne(pId); //参考对象
         // parentNode.setIsParent(true);
 
         if (curType.equals("copy")) {
@@ -161,11 +161,11 @@ public class ZTreeService {
             parentNode.setParentNode(true); // 修改参考对象为父节点
         }
 
-        treeNodeRepository.save(parentNode);
+        treeRepository.save(parentNode);
 
         if (selectNode.getParent().getChildren().size() == 0) // 移动完成，如果没有子节点了，则标记为叶节点
             selectNode.getParent().setParentNode(false);
-        treeNodeRepository.save(selectNode);
+        treeRepository.save(selectNode);
 
     }
 
@@ -182,29 +182,28 @@ public class ZTreeService {
     @Transactional(readOnly = false)
     public void move(Long id, Long pId, int index) {
 
-        TreeNodeEntity child = treeNodeRepository.findOne(id);
-        TreeNodeEntity parent = treeNodeRepository.findOne(pId);
+        TreeEntity child = treeRepository.findOne(id);
+        TreeEntity parent = treeRepository.findOne(pId);
 
+        //可以用于移动
         parent.addChildToIndex(child, index);
-
-        //  moveChildToIndex(parentNode, childNode, index);
 
         parent.setParentNode(true);
 
         if (child.getParent().getChildren().size() == 0)
             child.getParent().setParentNode(false);
 
-        treeNodeRepository.save(child);
-        treeNodeRepository.save(parent);
+        treeRepository.save(child);
+        treeRepository.save(parent);
 
     }
 
     @Transactional(readOnly = false)
     public void editCss(Long id, String css) {
 
-        TreeNodeEntity treeNodeEntity = treeNodeRepository.findOne(id);
+        TreeEntity treeNodeEntity = treeRepository.findOne(id);
         treeNodeEntity.setCss(css);
-        treeNodeRepository.save(treeNodeEntity);
+        treeRepository.save(treeNodeEntity);
 
     }
 
@@ -212,9 +211,9 @@ public class ZTreeService {
     public void editUrl(Long id, String url) {
 
 
-        TreeNodeEntity treeNodeEntity = treeNodeRepository.findOne(id);
+        TreeEntity treeNodeEntity = treeRepository.findOne(id);
         treeNodeEntity.setUrl(url);
-        treeNodeRepository.save(treeNodeEntity);
+        treeRepository.save(treeNodeEntity);
 
     }
 

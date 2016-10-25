@@ -19,8 +19,8 @@
 </style>
 <!-- ajax layout which only needs content area -->
 <div class="page-header">
-    <h1> Treeview - ${treeType}
-        <small><i class="ace-icon fa fa-angle-double-right"></i> with selectable elements and custom icons</small>
+    <h1> Tree Type - ${treeType}
+        <small><i class="ace-icon fa fa-angle-double-right"></i> 树结构编辑</small>
     </h1>
 </div>
 <!-- /.page-header -->
@@ -58,7 +58,7 @@
                                             <li><i class="ace-icon fa fa-bell-o bigger-110 purple"></i>
                                                 树结构，有一个默认的根节点。创建的树状结构，从此根节点开始。增加节点，只能从父节点开始。
                                             </li>
-                                            <li><i class="ace-icon fa fa-check bigger-110 green"></i> 树结构编辑，编辑树的结构</li>
+                                            <li><i class="ace-icon fa fa-check bigger-110 green"></i> 节点可以随意拖动，变换位置；也可以复制粘帖。</li>
                                             <li><i class="ace-icon fa fa-times bigger-110 red"></i>
                                                 如果创建了父节点，想要变成叶节点，清空子节点即可。
                                             </li>

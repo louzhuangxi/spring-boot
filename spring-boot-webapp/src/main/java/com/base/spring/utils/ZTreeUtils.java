@@ -1,11 +1,9 @@
 package com.base.spring.utils;
 
 import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.TreeNodeEntity;
+import com.base.spring.domain.TreeEntity;
 import com.base.spring.vo.ZTreeNodeBean;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ public class ZTreeUtils {
      * @param zTreeNode 待转换的对象
      * @return
      */
-    public static ZTreeNodeBean getJsonData(TreeNodeEntity zTreeNode, RoleEntity roleEntity) {
+    public static ZTreeNodeBean getJsonData(TreeEntity zTreeNode, RoleEntity roleEntity) {
 
         ZTreeNodeBean parentTemp = new ZTreeNodeBean(0, "name", "url", false, false, false); //创建一个临时的变量，用于保存转换结果。
         convertTreeNodeToZTreeNode(zTreeNode, parentTemp, roleEntity);
@@ -41,7 +39,7 @@ public class ZTreeUtils {
      * @param treeNode 待转换的对象
      * @return
      */
-    public static List<ZTreeNodeBean> getJsonDataChildren(TreeNodeEntity treeNode, RoleEntity roleEntity) {
+    public static List<ZTreeNodeBean> getJsonDataChildren(TreeEntity treeNode, RoleEntity roleEntity) {
         return getJsonData(treeNode, roleEntity).getChildren();
     }
 
@@ -56,10 +54,10 @@ public class ZTreeUtils {
      * @param copyNode 已有节点，是数据库里一条数据，可以有子节点。在数据库中创建一个新的记录，如果有子节点，可以递归创建。在事务环境中，new 操作会自动创建表记录
      * @param parent   新创建的节点的父节点
      */
-    public static void createCopyNode(TreeNodeEntity parent, TreeNodeEntity copyNode) {
+    public static void createCopyNode(TreeEntity parent, TreeEntity copyNode) {
 
         //生成 copyNode 节点本身，new 操作会在数据库中对应一条新的记录
-        TreeNodeEntity newTree = new TreeNodeEntity(copyNode.getType(), copyNode.getName(), copyNode.getIndex(), parent.isParentNode(), parent);
+        TreeEntity newTree = new TreeEntity(copyNode.getType(), copyNode.getName(), copyNode.getIndex(), parent.isParentNode(), parent);
         newTree.setUrl(copyNode.getUrl());
         newTree.setCss(copyNode.getCss());
         parent.addChildToLastIndex(newTree); // 添加到所有子节点的尾部
@@ -67,7 +65,7 @@ public class ZTreeUtils {
 
         //生成 currentNode 节点的子节点
         if (!copyNode.getChildren().isEmpty()) {
-            for (TreeNodeEntity child : copyNode.getChildren())
+            for (TreeEntity child : copyNode.getChildren())
                 createCopyNode(newTree, child); // 递归
         }
 
@@ -79,7 +77,7 @@ public class ZTreeUtils {
      * @param zTreeJsonNodeParentTemp 通过此参数，保存转换后的结果。因为利用了递归，可以通过参数传回转换后的结果
      * @param treeNodeEntity          待转换的对象
      */
-    private static void convertTreeNodeToZTreeNode(TreeNodeEntity treeNodeEntity, ZTreeNodeBean zTreeJsonNodeParentTemp, RoleEntity roleEntity) {
+    private static void convertTreeNodeToZTreeNode(TreeEntity treeNodeEntity, ZTreeNodeBean zTreeJsonNodeParentTemp, RoleEntity roleEntity) {
         if (treeNodeEntity == null || zTreeJsonNodeParentTemp == null)
             return;
 
@@ -109,7 +107,7 @@ public class ZTreeUtils {
         zTreeJsonNodeParentTemp.addChild(zTreeNode);
 
         if (!treeNodeEntity.getChildren().isEmpty())
-            for (TreeNodeEntity child : treeNodeEntity.getChildren())
+            for (TreeEntity child : treeNodeEntity.getChildren())
                 convertTreeNodeToZTreeNode(child, zTreeNode, roleEntity);
 
     }

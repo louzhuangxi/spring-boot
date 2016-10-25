@@ -1,9 +1,9 @@
 package com.base.spring.service;
 
 import com.alibaba.fastjson.JSON;
-import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.domain.TreeNodeType;
-import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.domain.TreeEntity;
+import com.base.spring.domain.TreeType;
+import com.base.spring.repository.TreeRepository;
 import com.base.spring.utils.FueluxTreeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class FueluxTreeService {
     private static final Logger logger = LoggerFactory.getLogger(FueluxTreeService.class);
 
     @Autowired
-    private TreeNodeRepository treeNodeRepository;
+    private TreeRepository treeNodeRepository;
 
     /**
      * 参照 ztree 的方法
@@ -34,11 +34,11 @@ public class FueluxTreeService {
      * @param pId
      * @return
      */
-    public String async(Long pId, TreeNodeType menuType) {
+    public String async(Long pId, TreeType menuType) {
 
         if (pId == 0) {  // 打开页面时，第一次异步加载，返回根节点的所有子节点
             logger.info("initialize FueluxTree first from db by pId={} , menuType={}", pId, menuType);
-            Optional<TreeNodeEntity> rootNode = treeNodeRepository.getRoot(menuType);
+            Optional<TreeEntity> rootNode = treeNodeRepository.getRoot(menuType);
             if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));
@@ -48,7 +48,7 @@ public class FueluxTreeService {
 
         } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
             logger.info("initialize FueluxTree asyncByTreeType from db by pId={}", pId);
-            TreeNodeEntity rootNode = treeNodeRepository.findOne(pId);
+            TreeEntity rootNode = treeNodeRepository.findOne(pId);
             if (rootNode == null) {
                 logger.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));

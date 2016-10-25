@@ -1,10 +1,10 @@
 package com.base.spring.controller.ajax;
 
-import com.base.spring.domain.TreeNodeEntity;
-import com.base.spring.domain.TreeNodeType;
+import com.base.spring.domain.TreeEntity;
+import com.base.spring.domain.TreeType;
 import com.base.spring.repository.RoleRepository;
-import com.base.spring.repository.TreeNodeRepository;
-import com.base.spring.service.ZTreeService;
+import com.base.spring.repository.TreeRepository;
+import com.base.spring.service.TreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,11 @@ public class ZTreeAjaxController {
     private static Logger logger = LoggerFactory.getLogger(ZTreeAjaxController.class);
 
     @Autowired
-    TreeNodeRepository treeNodeRepository;
+    TreeRepository treeNodeRepository;
     @Autowired
     RoleRepository roleRepository;
     @Autowired
-    ZTreeService treeNodeService;
+    TreeService treeNodeService;
 
     /**
      * 异步加载，获取数据。
@@ -44,7 +44,7 @@ public class ZTreeAjaxController {
      */
     @RequestMapping(value = "/asyncByTreeType.html", produces = "application/json")
     @ResponseBody
-    public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeNodeType menuType) {
+    public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
         return treeNodeService.asyncTree(id, menuType);  //返回初始的树
@@ -59,7 +59,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = "/asyncByTreeTypeAndRole.html", produces = "application/json")
     @ResponseBody
     public String asyncByTreeTypeAndRole(@RequestParam(value = "id", required = false) Long id,
-                                         @RequestParam(value = "treeType", required = true) TreeNodeType menuType,
+                                         @RequestParam(value = "treeType", required = true) TreeType menuType,
                                          @RequestParam(value = "role_id", required = true) String roleId) {
 
         logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
@@ -86,7 +86,7 @@ public class ZTreeAjaxController {
                       @RequestParam(value = "level", required = true) Integer level,
                       @RequestParam(value = "index", required = true) Integer index,
                       @RequestParam(value = "pId", required = true) Long pId,
-                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "treeType", required = false) TreeNodeType treeType) {
+                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "treeType", required = false) TreeType treeType) {
         logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
 
         treeNodeService.add(name, level, index, isParent, pId, treeType);
@@ -103,7 +103,7 @@ public class ZTreeAjaxController {
     public String edit(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name) {
         logger.info("edit treeNode : id={} , name={}", id, name);
         //treeNodeService.clearChildren(id);
-        TreeNodeEntity treeNode = treeNodeRepository.findOne(id);
+        TreeEntity treeNode = treeNodeRepository.findOne(id);
         treeNode.setName(name);
         treeNodeRepository.save(treeNode);
         return "edit succeed.";
@@ -118,7 +118,7 @@ public class ZTreeAjaxController {
     @ResponseBody
     public String remove(@RequestParam(value = "id", required = true) Long id) {
         logger.info("del treeNode : id={} ", id);
-        TreeNodeEntity tree = treeNodeRepository.findOne(id);
+        TreeEntity tree = treeNodeRepository.findOne(id);
         if (tree.isRoot())
             return "root node can not be delete";
 

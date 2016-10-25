@@ -28,10 +28,9 @@ import java.time.LocalDateTime;
 
 /**
  * Base class to derive entity classes from.
- * <p/>
+ * -
  * MySQL 创建 id
- * <p/>
- * <p/>
+ * -
  * 基类统一定义id的属性名称、数据类型、列名映射及生成策略.
  * Oracle需要每个Entity独立定义id的SEQUCENCE时，不继承于本类而改为实现一个Idable的接口。
  * (摘自 spring side)
@@ -42,9 +41,9 @@ import java.time.LocalDateTime;
 // @MappedSuperclass  :
 // 1. JPA 基类的标识，表示类本身不是一个完整的实体类，不会在数据库中建表。它的属性会创建在其子类所创建的表中
 // 2. 不能再标注@Entity或@Table注解
-@MappedSuperclass
 @Getter
 @Setter
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing ，在 @CreatedDate 等标记的类上设置
 public abstract class AbstractMySQLEntity implements Serializable {
 

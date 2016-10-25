@@ -21,21 +21,19 @@ import java.util.*;
  * Time: 下午3:18
  * To change this template use File | Settings | File Templates.
  */
-@Entity
-@Table(name = "base_treenode")
-@NamedEntityGraphs({
-        @NamedEntityGraph(name = "treenode.parent", attributeNodes = {@NamedAttributeNode("parent")}),//级联 parent
-        @NamedEntityGraph(name = "treenode.children", attributeNodes = {@NamedAttributeNode("children")}), // 级联 children
-        @NamedEntityGraph(name = "treenode.parent.children", attributeNodes = {@NamedAttributeNode("parent"), @NamedAttributeNode("children")})})
-// 二者都级联
-
-// 只和 role 有关系
 @Getter
 @Setter
 @AllArgsConstructor
-public class TreeNodeEntity extends BaseEntity {
+@Entity
+@Table(name = "base_tree")
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "tree.parent", attributeNodes = {@NamedAttributeNode("parent")}),//级联 parent
+        @NamedEntityGraph(name = "tree.children", attributeNodes = {@NamedAttributeNode("children")}), // 级联 children
+        @NamedEntityGraph(name = "tree.parent.children", attributeNodes = {@NamedAttributeNode("parent"), @NamedAttributeNode("children")})})
+// 二者都级联
+public class TreeEntity extends BaseEntity {
 
-    private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
+    private static final Logger logger = LoggerFactory.getLogger(TreeEntity.class);
 
 
     /**
@@ -50,7 +48,7 @@ public class TreeNodeEntity extends BaseEntity {
     @BatchSize(size = 100)//child 过多的情况下应用。
     @OrderBy("index ASC")
     //用到了可以调整排序，所以不用 set ，用 list。
-    private List<TreeNodeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
+    private List<TreeEntity> children = new ArrayList<>();  //初始化，否则在没有初始化时进行操作会发生异常。
 
 
     /**
@@ -59,10 +57,10 @@ public class TreeNodeEntity extends BaseEntity {
      */
 
     @ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleEntity.class)// 单向多对多，只在发出方设置，接收方不做设置
-    @JoinTable(name = "base_ref_roles_treenode", //指定关联表名
-            joinColumns = {@JoinColumn(name = "treenode_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
+    @JoinTable(name = "base_ref_roles_tree", //指定关联表名
+            joinColumns = {@JoinColumn(name = "tree_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "treenode_id"})}) // 唯一性约束，是从表的联合字段
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "tree_id"})}) // 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
     private Set<RoleEntity> roles = new HashSet<>();
@@ -114,7 +112,7 @@ public class TreeNodeEntity extends BaseEntity {
      */
 
     @Column(name = "type", nullable = false)
-    private TreeNodeType type;
+    private TreeType type;
     /**
      * 父组织
      * 树状结构，root 节点（根节点），没有父节点，为 null
@@ -122,7 +120,7 @@ public class TreeNodeEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private TreeNodeEntity parent;
+    private TreeEntity parent;
 
     /**
      * 树状结构的层级,根节点 level = 0，依次递增
@@ -137,7 +135,7 @@ public class TreeNodeEntity extends BaseEntity {
      * 如果想要生成 Entity ，用其他有参数的构造方法。
      * DTOUtils 中使用 public 方法生成空对象
      */
-    public TreeNodeEntity() {
+    public TreeEntity() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
@@ -156,7 +154,7 @@ public class TreeNodeEntity extends BaseEntity {
      * @param parent       父菜单
      */
 
-    public TreeNodeEntity(TreeNodeType type, String name, int index, boolean isParentNode, TreeNodeEntity parent) {
+    public TreeEntity(TreeType type, String name, int index, boolean isParentNode, TreeEntity parent) {
 
         if (!name.contains("root_")) // 初始化根节点时，需要设置 parent 为 null (InitializeService.java) ，其他情况 parent 不允许 为 null
             Assert.notNull(parent, "parent can not be null.");
@@ -174,7 +172,7 @@ public class TreeNodeEntity extends BaseEntity {
      *
      * @param child
      */
-    public void addChildToLastIndex(TreeNodeEntity child) {
+    public void addChildToLastIndex(TreeEntity child) {
 
         if (child == null || children.contains(child))
             return;
@@ -188,7 +186,7 @@ public class TreeNodeEntity extends BaseEntity {
      * 可以用于：
      * 0. 增加子节点作为当前节点的子节点，并设置子节点的顺位 index
      * -
-     * 还可以用于：
+     * 根据当前父节点不同，子节点可以用于节点移动 ：
      * 子节点
      * 1. 在当前父节点下，子节点间同级移动；
      * 2. 移动到新的父节点下
@@ -196,7 +194,7 @@ public class TreeNodeEntity extends BaseEntity {
      * @param child
      * @param index
      */
-    public void addChildToIndex(TreeNodeEntity child, int index) {
+    public void addChildToIndex(TreeEntity child, int index) {
 
         if (child == null)
             return;
@@ -267,7 +265,7 @@ public class TreeNodeEntity extends BaseEntity {
      * @param entity
      * @return
      */
-    private void getLevelInit(TreeNodeEntity entity) {
+    private void getLevelInit(TreeEntity entity) {
 
         if (entity.getParent() == null) {
             return;
@@ -284,16 +282,16 @@ public class TreeNodeEntity extends BaseEntity {
      * @param children
      */
 
-    private void sortTreeByIndex(List<TreeNodeEntity> children) {
+    private void sortTreeByIndex(List<TreeEntity> children) {
         // Sorting 便于利用 list 的 indexOf 方法
-        Collections.sort(children, new Comparator<TreeNodeEntity>() {
+        Collections.sort(children, new Comparator<TreeEntity>() {
             @Override
-            public int compare(TreeNodeEntity child1, TreeNodeEntity child2) {
+            public int compare(TreeEntity child1, TreeEntity child2) {
                 return Integer.compare(child1.getIndex(), child2.getIndex());
             }
         });
 
-        for (TreeNodeEntity entity : children)
+        for (TreeEntity entity : children)
             entity.setIndex(children.indexOf(entity));
 
     }

@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.*;
@@ -20,11 +19,10 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 // 可参考 org.springframework.security.core.userdetails.User
-@Entity
-@Table(name = "base_user")
 @Getter
 @Setter
-//@EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
+@Entity
+@Table(name = "base_user")
 public class UserEntity extends BaseEntity {
 
     /**

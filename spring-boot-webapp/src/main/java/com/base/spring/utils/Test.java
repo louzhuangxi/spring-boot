@@ -1,6 +1,6 @@
 package com.base.spring.utils;
 
-import com.base.spring.domain.TreeNodeEntity;
+import com.base.spring.domain.TreeEntity;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -120,11 +120,11 @@ public class Test {
     }
 
     public void testGetLevel() {
-        TreeNodeEntity entity = new TreeNodeEntity();
-        TreeNodeEntity entity1 = new TreeNodeEntity();
+        TreeEntity entity = new TreeEntity();
+        TreeEntity entity1 = new TreeEntity();
 
-        TreeNodeEntity entity2 = new TreeNodeEntity();
-        TreeNodeEntity entity3 = new TreeNodeEntity();
+        TreeEntity entity2 = new TreeEntity();
+        TreeEntity entity3 = new TreeEntity();
         entity.addChildToLastIndex(entity1);
         entity1.addChildToLastIndex(entity2);
         entity2.addChildToLastIndex(entity3);
@@ -136,7 +136,7 @@ public class Test {
 
     }
 
-    private void getLevell(TreeNodeEntity entity) {
+    private void getLevell(TreeEntity entity) {
 
         if (entity.getParent() == null) {
 

@@ -1,9 +1,9 @@
 package com.base.spring.service;
 
 import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.TreeNodeEntity;
+import com.base.spring.domain.TreeEntity;
 import com.base.spring.repository.RoleRepository;
-import com.base.spring.repository.TreeNodeRepository;
+import com.base.spring.repository.TreeRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private TreeNodeRepository treeNodeRepository;
+    private TreeRepository treeRepository;
 
     /**
      * 关联所有树节点到指定的 role
@@ -65,15 +65,15 @@ public class RoleService {
          * 重新建立关联，原来的关联关系会被替代
          * */
         // 被选中的节点
-        List<TreeNodeEntity> targetTreeNodes = treeNodeRepository.findByIdIn(listTreeId);
+        List<TreeEntity> targetTreeNodes = treeRepository.findByIdIn(listTreeId);
         // role 已经关联的节点
-        Set<TreeNodeEntity> sourceTreeNodes = roleEntity.getTreeNodes();
+        Set<TreeEntity> sourceTreeNodes = roleEntity.getTreeNodes();
         // 需要删除的节点
-        List<TreeNodeEntity> deleteTreeNodes = new ArrayList<>();
+        List<TreeEntity> deleteTreeNodes = new ArrayList<>();
 
 
         //找到被取消关联关系的节点
-        for (TreeNodeEntity entity : sourceTreeNodes) {
+        for (TreeEntity entity : sourceTreeNodes) {
             if (!targetTreeNodes.contains(entity))
                 deleteTreeNodes.add(entity);
         }

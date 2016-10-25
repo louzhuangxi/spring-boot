@@ -1,4 +1,7 @@
-package com.base.spring.domain;
+package com.base.spring.domain.Deprecated;
+
+import com.base.spring.domain.BaseEntity;
+import com.base.spring.domain.RoleEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
