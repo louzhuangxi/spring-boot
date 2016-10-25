@@ -25,11 +25,13 @@ public interface TreeRepository extends BaseRepository<TreeEntity, Long> {
      */
 
     /**
+     * name 不唯一
+     *
      * @param name
      * @return
      */
     @Query("select e from TreeEntity e where e.name=?1")
-    Optional<TreeEntity> findByName(String name);
+    List<TreeEntity> findByName(String name);
 
     @Query("select e from TreeEntity e where e.name like %?1%")
     List<TreeEntity> findByContainsName(String name);

@@ -42,23 +42,9 @@ public class UserEntityTest {
     }
 
     @Test
-    public void testSave() {
-
-        UserEntity admin = new UserEntity();
-        admin.setUserName("admin");
-        admin.setLoginName("admin");
-        admin.setPassword(BCryptPassWordUtils.encode("password"));
-        admin.setEmail("1@qq.com");
-
-        userRepository.save(admin);
-        //  userRepository.save(new UserEntity("user","user","123456","user@email.com"));
-
-    }
-
-    @Test
     public void testUpdate() {
 
-        UserEntity admin = userRepository.findOneByUserName("admin").get();
+        UserEntity admin = userRepository.findByLoginName("admin").get();
         admin.setEmail("1@qq.com");
         userRepository.save(admin);
         //  userRepository.save(new UserEntity("user","user","123456","user@email.com"));
@@ -69,9 +55,9 @@ public class UserEntityTest {
     public void testExample() {
 
         UserEntity admin = new UserEntity();
-        admin.setUserName("admin");
-        admin.setLoginName("admin");
-        admin.setPassword(BCryptPassWordUtils.encode("password"));
+        admin.setUserName("example");
+        admin.setLoginName("example");
+        admin.setPassword(BCryptPassWordUtils.encode("example"));
         admin.setEmail("1@qq.com");
 
         ExampleMatcher matcher = ExampleMatcher.matching()

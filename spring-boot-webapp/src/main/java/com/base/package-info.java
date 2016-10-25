@@ -11,6 +11,8 @@
  * --
  * 测试
  * http://info.michael-simons.eu/2016/10/13/spring-boot-referencing-mockbeans-by-name/
+ * --
+ * 增加日志功能
  *
  */
 package com.base;

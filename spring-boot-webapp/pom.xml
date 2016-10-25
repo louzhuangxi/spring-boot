@@ -25,13 +25,6 @@
 
     <dependencies>
 
-        <!-- h819 commons
-        <dependency>
-            <groupId>org.h819</groupId>
-            <artifactId>h819-commons</artifactId>
-            <version>publish-1.0.19</version>
-        </dependency>-->
-
         <!-- h819 commons model-->
         <dependency>
             <groupId>org.h819</groupId>

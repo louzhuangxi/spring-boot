@@ -25,6 +25,7 @@ import java.util.*;
 @Table(name = "base_user")
 public class UserEntity extends BaseEntity {
 
+
     /**
      * 用户注册后，是否激活。激活可以通过邮件
      * 1. 唯一的 token

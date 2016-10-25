@@ -112,10 +112,10 @@ public class InitializeService {
         /**
          * 包含 "菜单管理" and "按钮/资源" ，意味着已经初始化，
          */
-        Optional<TreeEntity> exist1 = treeRepository.findByName("菜单管理");
-        Optional<TreeEntity> exist2 = treeRepository.findByName("按钮/资源");
+        List<TreeEntity> exist1 = treeRepository.findByName("菜单管理");
+        List<TreeEntity> exist2 = treeRepository.findByName("按钮/资源");
 
-        if (exist1.isPresent() && exist2.isPresent()) {
+        if (!exist1.isEmpty() && !exist2.isEmpty()) {
             logger.info("menu tree has initialized , continue ");
             return;
         }

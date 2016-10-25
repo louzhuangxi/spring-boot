@@ -67,9 +67,9 @@ public class TreeEntity extends BaseEntity {
 
 
     /**
-     * 组织名称
+     * 节点名称
      */
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
     /**
      * 菜单 url ，点击叶节点的时候，导航到的 url ，这个对菜单有用处。
