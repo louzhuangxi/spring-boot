@@ -81,6 +81,8 @@ h819 是我的 id。
 - [spring boot examples](https://github.com/spring-projects/spring-boot/tree/master/spring-boot-samples)
 - [oschina ](http://www.oschina.net/)
 
+#### Test
+Chrome,Firefox, Edge, IE
 
 :recycle:
 
