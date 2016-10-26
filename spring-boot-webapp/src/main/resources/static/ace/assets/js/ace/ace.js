@@ -118,14 +118,17 @@ jQuery(function($) {
 				if (path.indexOf("/ajax/index.html") > 0) {
 					
 					var temp = path.replace(/(\/ajax\/)(index\.html)/, '/ajax/content/'+hash.replace(/^page\//, '')+'.html') ;
-					//console.log("temp=" + temp);
-					if (hash.indexOf("?") > 0) {
-						var pagename = hash.substring(hash.lastIndexOf("/")+1,hash.lastIndexOf("?"));
-						temp = path.replace(/(\/ajax\/)(index\.html)(.*)/, '/ajax/content/'+pagename+'.html') ;
-						var hash_para_name = "?" + hash.replace(/.*\?/, '');
-						temp= temp+hash_para_name;						
-						//console.log("hash_para_name=" + hash_para_name);						
+					//temp=/base/menu/ajax/content/admin/ztree-type?treeType=Menu.html
+					   // console.log("temp=" + temp);
+					if (hash.indexOf("?") > 0) { //包含 ? ，带有请求参数
 
+						//StrUtils 在 h819/MyUtils.js
+						temp =StrUtils.replaceAll(temp,".html","");
+						// console.log("temp1=" + temp);
+						//temp=/base/menu/ajax/content/admin/ztree-type?treeType=Menu
+						temp =StrUtils.replaceAll(temp,"?",".html?");
+						//temp=/base/menu/ajax/content/admin/ztree-type.html?treeType=Menu
+						//console.log("temp=2" + temp);
 					}
 
 					 //console.log("temp2=" + temp);

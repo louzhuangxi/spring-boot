@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Description : TODO(ace admin template ajax 方式导航, 本项目用到。都是点击菜单传来，所以都是 Get)
- * 参见 AceAdminAjaxMenuExampleController 说明
+ * 参见 example.AceAdminAjaxMenuExampleController 说明
  * spring mvc , freeMarker : 传递 非字符串变量到页面，必须用  @ModelAttribute("model") ModelMap model
  */
 
@@ -24,7 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 // @PreAuthorize("hasRole('ADMIN') AND hasRole('DBA')")
 @Controller
 @RequestMapping("/menu/ajax")
-//重要: 必须以 ajax 结尾，以符合 ace.js 中 content_url 的要求，menu 为前缀，可以为任意值或者没有，解释见 AceAdminAjaxMenuExampleController
+//重要: 必须是 ajax/content/xxx 形式，
+// 以符合 ace.js 中 content_url 的要求，menu 为前缀，可以为任意值或者没有
+
 public class NavigateController {
 
     private static Logger logger = LoggerFactory.getLogger(NavigateController.class);
@@ -55,7 +57,7 @@ public class NavigateController {
      * @return
      */
 
-    @RequestMapping(value = "/content/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
+    @RequestMapping(value = "/content/admin/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
     // PreAuthorize 支持 spring el
     // 加在 service 层，好像粒度更细，如区分 add,del,eidt 等
 
@@ -77,7 +79,7 @@ public class NavigateController {
      *
      * @return
      */
-    @RequestMapping(value = "/content/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
+    @RequestMapping(value = "/content/admin/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
     public String user(HttpServletRequest request, Model model) {
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
@@ -94,7 +96,7 @@ public class NavigateController {
      * @return
      * @ModelAttribute("model") ModelMap model 必须是这句
      */
-    @RequestMapping(value = "/content/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
+    @RequestMapping(value = "/content/admin/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
     public String group(HttpServletRequest request, @ModelAttribute("model") ModelMap model) { //传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型s
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
@@ -111,7 +113,7 @@ public class NavigateController {
      *
      * @return
      */
-    @RequestMapping(value = "/content/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
+    @RequestMapping(value = "/content/admin/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
     public String ztree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
         logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
 

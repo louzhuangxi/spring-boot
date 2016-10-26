@@ -57,13 +57,17 @@ var DateUtils = (function () {
 var StrUtils = (function () {
 
     /**
-     * js 中没有 replaceAll 函数, replace 只能替换第一个字符
-     * @param searchString
-     * @param replaceString
+     * js 中没有 replaceAll 函数, replace 只能替换第一个字符串，本函数可以替换指定字符串
+     * @param str 源字符串
+     * @param searchString 被替换的字符串
+     * @param replaceString 替换的字符串
      * @returns {*|string|XML|void}
      */
-    var replaceAll = function (searchString, replaceString) {
-        return searchString.replace(new RegExp(searchString, 'g'), replaceString);
+    var replaceAll = function (str, searchString, replaceString) {
+
+        //规范影响正则表达式的特殊字符
+        searchString = searchString.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        return str.replace(new RegExp(searchString, 'g'), replaceString);
     };
 
     /*

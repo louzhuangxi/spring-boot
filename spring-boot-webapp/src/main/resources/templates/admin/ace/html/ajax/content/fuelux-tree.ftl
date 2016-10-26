@@ -159,7 +159,7 @@
 
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
-	var scripts = [null, "${ctx}/ace/assets/js/fuelux/fuelux.tree.js", "${ctx}/jquery-confirm/jquery-confirm.js","${ctx}/h819/js/utils.js", null];
+	var scripts = [null, "${ctx}/ace/assets/js/fuelux/fuelux.tree.js", "${ctx}/jquery-confirm/jquery-confirm.js","${ctx}/h819/js/MyUtils.js", null];
 	$('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 		//inline scripts related to this page
 		jQuery(function ($) {

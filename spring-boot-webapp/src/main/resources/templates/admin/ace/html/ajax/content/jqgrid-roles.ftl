@@ -637,7 +637,7 @@
 <!-- ztree -->
 <script type="text/javascript">
     //引入加载的 js
-    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/utils.js", null]
+    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/MyUtils.js", null]
     //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
 
     //放置 ztree 的元素 id，参见上文。js 函数最后定义

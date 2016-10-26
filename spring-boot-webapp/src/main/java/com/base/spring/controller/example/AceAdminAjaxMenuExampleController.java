@@ -23,48 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * var hash = "page/dashboard?abc=1&bcd=2";
  * - 转换为   -> /base/menu/ajax/content/dashboard.html?abc=1&bcd=2
  * ---
- * 需要注意的是，必须有 content 而且 不能改为其他的，不知道为什么(是不是和文件夹相关？)，就严格按照下面的写法吧，尝试了很多，都不行
  */
-// ace admin 1.3.4 -> assets/js/ace/ace.js 文件改造后
-//var demo_ajax_options = {
-//        'close_active' : true,
-//
-//        'default_url' : 'page/index', //default hash
-//        'content_url' : function (hash) {
-//        //***NOTE***
-//        //this is for Ace demo only, you should change it to return a valid URL
-//        //please refer to documentation for more info
-//
-//        if (!hash.match(/^page\//))
-//        return false;
-//        var path = document.location.pathname;
-//        console.log("path=" + path);
-//        console.log("hash=" + hash);
-//
-//        //for example in Ace HTML demo version we convert /ajax/index.html#page/gallery to > /ajax/content/gallery.html and load it
-//        //if(path.match(/(\/ajax\/)(index\.html)?/)){
-//        if (path.indexOf("/ajax/index.html") > 0) {
-//
-//        var temp = path.replace(/(\/ajax\/)(index\.html)/, '/ajax/content/'+hash.replace(/^page\//, '')+'.html') ;
-//        console.log("temp=" + temp);
-//        if (hash.indexOf("?") > 0) {
-//        var pagename = hash.substring(hash.lastIndexOf("/")+1,hash.lastIndexOf("?"));
-//        temp = path.replace(/(\/ajax\/)(index\.html)(.*)/, '/ajax/content/'+pagename+'.html') ;
-//        var hash_para_name = "?" + hash.replace(/.*\?/, '');
-//        temp= temp+hash_para_name;
-//        console.log("hash_para_name=" + hash_para_name);
-//
-//        }
-//
-//        console.log("temp2=" + temp);
-//        return temp;
-//
-//        }
-//        //for example in Ace PHP demo version we convert "ajax.php#page/dashboard" to "ajax.php?page=dashboard" and load it
-//        console.log(path + "?" + hash.replace(/\//, "="));
-//        return path + "?" + hash.replace(/\//, "=");
-//        }
-//        }
 @Controller
 @RequestMapping("/ace/example/ajax") //重要: 必须以 ajax 结尾，以符合 ace.js 中 content_url 的要求，ace/example 为前缀，可以为任意值或者没有，解释如上
 public class AceAdminAjaxMenuExampleController {

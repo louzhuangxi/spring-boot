@@ -448,10 +448,18 @@
         </div><!-- /.sidebar-shortcuts -->
 
         <ul class="nav nav-list">
+
+            <li class="">
+                <a>
+                    <i class="menu-icon fa fa-cog red bigger-130 "></i>
+                    系统管理
+                </a>
+            </li>
+
             <li class="">
                 <a href="#" class="dropdown-toggle">
                     <i class="menu-icon fa fa-sitemap"></i>
-                    <span class="menu-text"> 树结构管理 </span>
+                    <span class="menu-text"> 菜单管理 </span>
 
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
@@ -460,7 +468,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a data-url="page/ztree" href="#page/ztree-type?treeType=Menu">
+                        <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=Menu">
                             <i class="menu-icon fa fa-caret-right"></i>
                             菜单树
                         </a>
@@ -469,7 +477,7 @@
                     </li>
                     <!--
                     <li class="">
-                        <a data-url="page/ztree" href="#page/ztree-type?treeType=Group">
+                        <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=Group">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户组树
                         </a>
@@ -477,7 +485,7 @@
                     </li>
                     -->
                     <li class="">
-                        <a data-url="page/ztree" href="#page/ztree-type?treeType=DepartMent">
+                        <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=DepartMent">
                             <i class="menu-icon fa fa-caret-right"></i>
                             部门树
                         </a>
@@ -486,7 +494,7 @@
                     </li>
 
                     <li class="">
-                        <a data-url="page/ztree" href="#page/ztree-type?treeType=Standard">
+                        <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=Standard">
                             <i class="menu-icon fa fa-caret-right"></i>
                             其他业务树
                         </a>
@@ -509,7 +517,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a data-url="page/fuelux-tree" href="#page/jqgrid-user">
+                        <a data-url="page/fuelux-tree" href="#page/admin/jqgrid-user">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户
                         </a>
@@ -518,7 +526,7 @@
                     </li>
 
                     <li class="">
-                        <a data-url="page/typography" href="#page/jqgrid-group">
+                        <a data-url="page/typography" href="#page/admin/jqgrid-group">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户组
                         </a>
@@ -543,7 +551,7 @@
                 <ul class="submenu">
 
                     <li class="">
-                        <a data-url="page/content-slider" href="#page/jqgrid-roles?treeType=Menu">
+                        <a data-url="page/content-slider" href="#page/admin/jqgrid-roles?treeType=Menu">
                             <i class="menu-icon fa fa-caret-right"></i>
                             菜单角色
                         </a>
@@ -552,7 +560,7 @@
                     </li>
 
                     <li class="">
-                        <a data-url="page/content-slider" href="#page/jqgrid-roles?treeType=Standard">
+                        <a data-url="page/content-slider" href="#page/admin/jqgrid-roles?treeType=Standard">
                             <i class="menu-icon fa fa-caret-right"></i>
                             标准资源角色
                         </a>
@@ -561,6 +569,13 @@
                     </li>
 
                 </ul>
+            </li>
+
+            <li class="">
+                <a>
+                    <i class="menu-icon fa fa-desktop blue bigger-130 "></i>
+                    业务系统管理
+                </a>
             </li>
 
             <li class="">
@@ -629,7 +644,6 @@
                     </li>
                 </ul>
             </li>
-
 
 
             <li class="">
@@ -800,6 +814,8 @@
                     </li>
                 </ul>
             </li>
+
+
         </ul><!-- /.nav-list -->
 
         <!-- #section:basics/sidebar.layout.minimize -->
@@ -1003,6 +1019,7 @@
 <script src="${ctx}/ace/assets/js/bootstrap.js"></script>
 
 <!-- ace scripts -->
+<script src="${ctx}/h819/js/MyUtils.js"></script>
 <script src="${ctx}/ace/assets/js/ace/elements.scroller.js"></script>
 <script src="${ctx}/ace/assets/js/ace/elements.colorpicker.js"></script>
 <script src="${ctx}/ace/assets/js/ace/elements.fileinput.js"></script>
