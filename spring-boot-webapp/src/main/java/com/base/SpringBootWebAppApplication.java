@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 // 邮箱激活 http://www.baeldung.com/registration-verify-user-by-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_47_sec
 
+// 增加反爬虫机制
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
 @EnableJpaAuditing // 开启 auditing ，使用方法见 AbstractMySQLEntity
 // jpa 2.1 不支持 java 8 LocalDate ，注册 Jsr310JpaConverters ，是 jpa 能够正确保存 jdk8 日期，否则存储到数据库后，日期是 bolb 类型

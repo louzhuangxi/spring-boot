@@ -14,7 +14,7 @@ public class SearchFilter {
     private Object betweenTo;
 
     /**
-     * 禁止无参实例化，通过构造函数赋值
+     * 禁止无参实例化，通过构造函数赋值，以区别操作类型(between)
      */
     private SearchFilter() {
     }
