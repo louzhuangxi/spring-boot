@@ -28,9 +28,18 @@ import java.util.Date;
 //        LocalDateTime : 它包含了日期及时间，不过还是没有偏移信息或者说时区。
 //        ZonedDateTime : 这是一个包含时区的完整的日期时间，偏移量是以UTC/格林威治时间为基准的。
 //        MonthDay : 这个类由月日组合，不包含年信息
-
+//https://github.com/JeffLi1993/java-core-learning-example/blob/master/src/main/java/org/javacore/time/TimeUtil.java
 public class MyDateUtilsJdk8 {
 
+
+    /**
+     * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
+     */
+    private static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = TimeFormat.LONG_DATE_PATTERN_LINE.formatter;
+
+    private MyDateUtilsJdk8() {
+        // no construct function
+    }
 
     /**
      * @param args
@@ -64,7 +73,6 @@ public class MyDateUtilsJdk8 {
 
     }
 
-
     /**
      * 转换 java.util.Date -> java.time.LocalTime ，用于老系统向新系统转换，新系统中，不用 Date
      *
@@ -94,7 +102,6 @@ public class MyDateUtilsJdk8 {
         return Date.from(instant);
     }
 
-
     /**
      * @param date
      * @return
@@ -107,6 +114,67 @@ public class MyDateUtilsJdk8 {
         Instant instant = date.atDate(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth())).atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
 
+    }
+
+    /**
+     * String 转时间
+     *
+     * @param timeStr
+     * @return
+     */
+    public static LocalDateTime parseTime(String timeStr) {
+        return LocalDateTime.parse(timeStr, DEFAULT_DATETIME_FORMATTER);
+    }
+
+    /**
+     * String 转时间
+     *
+     * @param timeStr
+     * @param format  时间格式
+     * @return
+     */
+    public static LocalDateTime parseTime(String timeStr, TimeFormat format) {
+        return LocalDateTime.parse(timeStr, format.formatter);
+    }
+
+    /**
+     * 时间转 String
+     *
+     * @param time
+     * @return
+     */
+    public static String parseTime(LocalDateTime time) {
+        return DEFAULT_DATETIME_FORMATTER.format(time);
+    }
+
+    /**
+     * 时间转 String
+     *
+     * @param time
+     * @param format 时间格式
+     * @return
+     */
+    public static String parseTime(LocalDateTime time, TimeFormat format) {
+        return format.formatter.format(time);
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return
+     */
+    public static String getCurrentDatetime() {
+        return DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now());
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @param format 时间格式
+     * @return
+     */
+    public static String getCurrentDatetime(TimeFormat format) {
+        return format.formatter.format(LocalDateTime.now());
     }
 
 
@@ -344,5 +412,40 @@ public class MyDateUtilsJdk8 {
         }
     }
 
+    /**
+     * 时间格式
+     */
+    public enum TimeFormat {
+
+        /**
+         * 短时间格式
+         */
+        SHORT_DATE_PATTERN_LINE("yyyy-MM-dd"),
+        SHORT_DATE_PATTERN_SLASH("yyyy/MM/dd"),
+        SHORT_DATE_PATTERN_DOUBLE_SLASH("yyyy\\MM\\dd"),
+        SHORT_DATE_PATTERN_NONE("yyyyMMdd"),
+
+        /**
+         * 长时间格式
+         */
+        LONG_DATE_PATTERN_LINE("yyyy-MM-dd HH:mm:ss"),
+        LONG_DATE_PATTERN_SLASH("yyyy/MM/dd HH:mm:ss"),
+        LONG_DATE_PATTERN_DOUBLE_SLASH("yyyy\\MM\\dd HH:mm:ss"),
+        LONG_DATE_PATTERN_NONE("yyyyMMdd HH:mm:ss"),
+
+        /**
+         * 长时间格式 带毫秒
+         */
+        LONG_DATE_PATTERN_WITH_MILSEC_LINE("yyyy-MM-dd HH:mm:ss.SSS"),
+        LONG_DATE_PATTERN_WITH_MILSEC_SLASH("yyyy/MM/dd HH:mm:ss.SSS"),
+        LONG_DATE_PATTERN_WITH_MILSEC_DOUBLE_SLASH("yyyy\\MM\\dd HH:mm:ss.SSS"),
+        LONG_DATE_PATTERN_WITH_MILSEC_NONE("yyyyMMdd HH:mm:ss.SSS");
+
+        private transient DateTimeFormatter formatter;
+
+        TimeFormat(String pattern) {
+            formatter = DateTimeFormatter.ofPattern(pattern);
+        }
+    }
 
 }

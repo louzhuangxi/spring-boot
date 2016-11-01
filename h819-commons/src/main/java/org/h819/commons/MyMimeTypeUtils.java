@@ -242,7 +242,7 @@ public class MyMimeTypeUtils {
         try {
             // 不加userAgent会被视为爬虫
             //网址连接时间长，防止超时，设置为 30s
-            doc = Jsoup.connect(url).timeout(30 * 1000).userAgent(JsoupContext.agent)
+            doc = Jsoup.connect(url).timeout(30 * 1000).userAgent(JsoupContext.Chrome_54)
                     .get();
         } catch (IOException e) {
             e.printStackTrace();

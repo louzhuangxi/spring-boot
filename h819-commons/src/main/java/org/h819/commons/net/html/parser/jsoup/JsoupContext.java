@@ -10,5 +10,13 @@ package org.h819.commons.net.html.parser.jsoup;
 public class JsoupContext {
 
     //jsoup userAgent 方法，不加带来会被视为爬虫被屏蔽
-    public static String agent = "Mozilla/5.0 (Windows; U; Windows NT 5.2) Gecko/2008070208 Firefox/3.0.1";
+
+    /**
+     *  dev tools 可以查看
+     */
+
+    /**
+     * chrome 54.0 User-Agent
+     */
+    public static String Chrome_54 = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
 }

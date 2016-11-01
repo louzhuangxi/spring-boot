@@ -53,7 +53,7 @@ public class JsoupExamples2 {
         try {
             //System.out.println("begin to parse url ... ");
             // 不加userAgent会被视为爬虫
-            doc = Jsoup.connect(url).timeout(10 * 1000).userAgent(JsoupContext.agent).get();
+            doc = Jsoup.connect(url).timeout(10 * 1000).userAgent(JsoupContext.Chrome_54).get();
         } catch (IOException e) {
             logger.error(" Jsoup 无法建立连接 , to be continue  ...");
             // e.printStackTrace();
