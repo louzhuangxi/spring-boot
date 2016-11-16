@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.h819.commons.entity.MimeTypeEntity;
 import org.h819.commons.net.MyUrlUtils;
-import org.h819.commons.net.html.parser.jsoup.JsoupContext;
+import org.h819.commons.net.html.parser.jsoup.JsoupContants;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -242,7 +242,7 @@ public class MyMimeTypeUtils {
         try {
             // 不加userAgent会被视为爬虫
             //网址连接时间长，防止超时，设置为 30s
-            doc = Jsoup.connect(url).timeout(30 * 1000).userAgent(JsoupContext.Chrome_54)
+            doc = Jsoup.connect(url).timeout(30 * 1000).userAgent(JsoupContants.Chrome_54)
                     .get();
         } catch (IOException e) {
             e.printStackTrace();
