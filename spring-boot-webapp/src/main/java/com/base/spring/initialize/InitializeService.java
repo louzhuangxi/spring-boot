@@ -9,7 +9,7 @@ import com.base.spring.utils.BCryptPassWordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -25,11 +25,10 @@ import java.util.Set;
  * Time: 15:38
  * To change this template use File | Settings | File Templates.
  */
-@Component
+@Service
 @Transactional(readOnly = true)
 public class InitializeService {
     private static final Logger logger = LoggerFactory.getLogger(InitializeService.class);
-
 
     @Autowired
     TreeRepository treeRepository;
@@ -141,19 +140,19 @@ public class InitializeService {
 
         /**
          * url 只适用于 ace admin 1.4 , ajax 方式
-         * 注意 url 应该和 Controller 中对应
+         * 注意 url 应该和 index.ftl , NavigateController 中 RequestMapping 对应
          * #page/admin/ztree-type?treeType=Menu
          * 只填写 #page/ 后面部分
          */
 
         /**
-         * 初始化 "菜单管理"，为系统默认菜单
+         * 初始化 "菜单管理"，为系统默认菜单，不能改动
          */
         //一级菜单
         TreeEntity menu1 = new TreeEntity(TreeType.Menu, "系统管理", 0, true, menu);
         set.addAll(Arrays.asList(menu1));
         /**
-         * 系统默认菜单
+         * 系统默认菜单，不能改动
          */
         TreeEntity menu11 = new TreeEntity(TreeType.Menu, "菜单管理", 0, true, menu1);
         menu11.setCss("menu-icon fa fa-sitemap");
@@ -167,7 +166,7 @@ public class InitializeService {
         menu15.setCss("");
         set.addAll(Arrays.asList(menu11, menu12, menu13, menu14, menu15));
 
-        // 菜单管理 (系统默认菜单)
+        // 菜单管理 (系统默认菜单，不能改动)
         TreeEntity menu111 = new TreeEntity(TreeType.Menu, "菜单树", 0, false, menu11);
         menu111.setUrl("admin/ztree-type?treeType=Menu");
         menu111.setCss("menu-icon fa fa-caret-right");
@@ -181,9 +180,10 @@ public class InitializeService {
 
 
         /**
-         * 按钮/资源菜单，可以根据业务系统需要自行设计，这里仅为演示
+         * 初始化 "按钮/资源" , 可以根据业务系统需要自行设计，这里仅为演示
          * -
-         * 初始化 "按钮/资源" . 其他非菜单的资源，如按钮等其他页面显示元素，都设计为树的叶节点，便于授权
+         * 按钮/资源菜单仅为授权使用，系统不显示
+         *
          */
         //一级菜单
         TreeEntity menu121 = new TreeEntity(TreeType.Menu, "菜单树", 0, true, menu12);  //应用中的文件资源
@@ -216,7 +216,8 @@ public class InitializeService {
         TreeEntity menu1243 = new TreeEntity(TreeType.Menu, "下载", 2, false, menu124);
         set.addAll(Arrays.asList(menu1241, menu1242, menu1243));
 
-        // 用户管理  (系统默认菜单)
+
+        // 用户管理   (系统默认菜单，不能改动)
         TreeEntity menu131 = new TreeEntity(TreeType.Menu, "用户", 0, false, menu13);
         menu131.setUrl("admin/jqgrid-user");
         menu131.setCss("menu-icon fa fa-caret-right");
@@ -225,7 +226,7 @@ public class InitializeService {
         menu132.setCss("menu-icon fa fa-caret-right");
         set.addAll(Arrays.asList(menu131, menu132));
 
-        //角色管理  (系统默认菜单)
+        //角色管理   (系统默认菜单，不能改动)
         TreeEntity menu141 = new TreeEntity(TreeType.Menu, "菜单角色", 0, false, menu14);
         menu141.setUrl("admin/jqgrid-roles?treeType=Menu");
         menu141.setCss("menu-icon fa fa-caret-right");
@@ -309,6 +310,9 @@ public class InitializeService {
     /**
      * 初始化一个超级用户 sysadmin ，作为系统保留用户，可以对系统做任何操作
      * -
+     * 信息应该做修改
+     * -
+     * 如果没有更改，登录后提示，或强制修改
      */
     private void initUser() {
 
@@ -320,12 +324,13 @@ public class InitializeService {
             return;
         }
 
-        logger.info("initialize user ...");
+        logger.info("initialize admin user ...");
 
         UserEntity user = new UserEntity();
         user.setLoginName("admin");
         user.setUserName("系统管理员");
         user.setPassword(BCryptPassWordUtils.encode("sysadmin"));
+        user.setEmail("admin@mail.com");
         user.setValid(true);
         user.setEnabled(true);
 

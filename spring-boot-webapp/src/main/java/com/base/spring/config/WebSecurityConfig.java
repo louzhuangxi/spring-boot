@@ -43,7 +43,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    private CustomAuthenticationFailureHandler failureHandler;
 
     @Autowired
-    private CustomUserDetailsService userDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     /**
      * URL-based security set up
@@ -169,11 +169,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() //所有资源，均需要过认证，不需要权限  All remaining URLs require that the user be successfully authenticated
                 .and().formLogin()
 
-                // 只接受 /login POST 方法的请求，并处理 ,/login GET 方法会被忽略.请求处理见下面 configure(AuthenticationManagerBuilder auth)  的配置
-                // loginPage : when authentication is required, redirect the browser to /login , it is GET request  : 跳转到登陆页面的 url ，只接受 GET 请求，这个 url 仅起跳转到登陆页面的作用
-                // loginProcessingUrl : 登陆页面的 from action url ，只接受 POST 请求。在 等于页面设置好即可，不必在 Controller 中设置，spring security 验证机制自动和 loginProcessingUrl 匹配，并进行验证。
-                // 如果 loginProcessingUrl 不写，默认和 loginPage 相同
-                .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/ajax/index.html").failureUrl("/login?error=abcdedf").usernameParameter("login_email").passwordParameter("login_password").permitAll()
+                // 只接受 /login POST 方法的请求并处理 , /login GET 方法会被忽略.请求处理见下面 configure(AuthenticationManagerBuilder auth) 方法的配置
+                // loginPage : when authentication is required, redirect the browser to /login , it is GET request (跳转到登陆页面的 url ，只接受 GET 请求，这个 url 仅起跳转到登陆页面的作用)
+                // loginProcessingUrl : 登陆页面的 from action url ，只接受 POST 请求。在登录页面设置好即可
+                // spring security 验证机制会自动调用下面的 configure(AuthenticationManagerBuilder auth) 方法进行验证
+                // 如果 loginProcessingUrl 不写，默认和 loginPage() 方法的参数相同
+                .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf").usernameParameter("login_email").passwordParameter("login_password").permitAll()
                 .and().rememberMe()
 
                 .rememberMeParameter("remember-me") // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
@@ -201,14 +202,15 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         /**
          * "/**"  : 测试时打开此开关
          */
-        security.ignoring().antMatchers("/**"); //测试时，不加安全验证
+        // security.ignoring().antMatchers("/**"); //测试时，不加安全验证
         //
         security.ignoring()
                 .antMatchers("/resource/**", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
 
         /**
-         * 单独处理的 ajax 例外
+         * 单独处理的的例外
          */
+        //获取树信息，所有人都可以 ？
         security.ignoring().antMatchers("/ajax/tree/ztree/asyncByTreeType.html");
 
         /**
@@ -216,12 +218,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         //css,js 等文件放在 resources/templates/static/ace 目录下，访问时 url 是 http://localhost/ace/ace.css
         security.ignoring().antMatchers("/ace/**");
-        //登陆、注册、找回密码的验证的 ajax ，需要不登陆就能访问
-        security.ignoring().antMatchers("/validate/ajax/**");
+        //登陆、注册、找回密码的验证的 ajax ，需要不登陆就能访问，否则无法进行验证
+        // 和 ajax/validate 中的 controller 中要呼应
+        security.ignoring().antMatchers("/ajax/validate/**");
     }
 
     /**
-     * /login POST 类型的 submit , 根据 login 页面传递过来的参数，进行如下处理
+     * login 页面 from action url(loginProcessingUrl 设定), POST 类型的 submit , 根据 login 页面传递过来的参数，进行处理的方法
      * auth.userDetailsService() 方法的参数为 org.springframework.security.core.userdetails.UserDetailsService 类型。
      * CustomUserDetailsService 扩展了该类型
      * 注意：保存用户信息的时候，密码也要用 BCryptPasswordEncoder 加密。
@@ -237,7 +240,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //LDAP,OpenId 等其他验证，返回其他他值即可
         //密码加密方式为 BCrypt
-        auth.userDetailsService(userDetailsService).passwordEncoder(BCryptPassWordUtils.getBCryptPasswordEncoder());
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(BCryptPassWordUtils.getBCryptPasswordEncoder());
     }
 
 }

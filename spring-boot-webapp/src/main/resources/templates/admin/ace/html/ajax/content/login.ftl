@@ -77,7 +77,7 @@
 														    <!-- email 方式登陆
 															<input type="text" class="form-control" placeholder="Username" />
 															-->
-															<input name="login_email" type="email" class="form-control" id="login_email" placeholder="Email" value="1@qq.com" />
+															<input name="login_email" type="email" class="form-control" id="login_email" placeholder="Email" value="admin@mail.com" />
 															<i class="ace-icon fa fa-envelope"></i>
 														</span>                                                        
 												  </label>
@@ -85,7 +85,7 @@
 												<div class="form-group">	
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input name="login_password" type="password" class="form-control" id="login_password" placeholder="Password" value="password" />
+															<input name="login_password" type="password" class="form-control" id="login_password" placeholder="Password" value="sysadmin" />
 															<i class="ace-icon fa fa-lock"></i>
 														</span>
 												  </label>

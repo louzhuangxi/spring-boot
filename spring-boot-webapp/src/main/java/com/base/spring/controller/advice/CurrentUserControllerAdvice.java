@@ -15,8 +15,9 @@ import java.util.NoSuchElementException;
  * @ControllerAdvice 作用
  */
 // 1. 该注解使用了@Component注解,所以会被自动注册为 spring bean
-// 2. 相当于一个拦截器, 在 @Controller 的 @RequestMapping 方法执行之前执行。相当于全局 @Controller 的拦截器
-// 2.1 @ControllerAdvice 中使用 @ExceptionHandler、@InitBinder、@ModelAttribute 的三个方法，在所有的 @Controller 中的 @RequestMapping 注解的方法执行之前执行
+// 2. 相当于一个拦截器, 在所有的 @Controller 的 @RequestMapping 方法执行之前执行。相当于全局 @Controller 的拦截器
+// 2.1 @ControllerAdvice 中使用 @ExceptionHandler、@InitBinder、@ModelAttribute 的三个方法，
+//     都在所有的 @Controller 中的 @RequestMapping 注解的方法执行之前执行
 // 2.2 被 @ControllerAdvice 注解的类，使用 @ExceptionHandler、@InitBinder、@ModelAttribute 三个注解来添加操作。
 
 // @ControllerAdvice(basePackages = {"com.concretepage.controller"} ) //指定拦截应用到哪些包的 controller 中
@@ -26,9 +27,6 @@ public class CurrentUserControllerAdvice {
 
     private static final Logger logger = LoggerFactory.getLogger(CurrentUserControllerAdvice.class);
 
-    /**
-     * 应用到所有 @RequestMapping 注解方法，在其执行之前执行下面的三个方法
-     */
 
     /**
      * 执行每个 url 时，都检查是否经过验证,把返回值放入 Model
@@ -39,7 +37,7 @@ public class CurrentUserControllerAdvice {
      * @ModelAttribute 会把键值对，放入到全局 ，所有注解 @RequstMapping 的方法，均可以获得到。
      * 本例中，把获得的用户信息，放入到全局 Model
      * ---
-     * public void getSomething(@ModelAttribute("currentUser") UserDetails user) {
+     * public void getSomething(@ModelAttribute("currentUser") SecurityUser user) {
      * user.get...
      * //此处可以获得   @ModelAttribute 放入 Model 中的信息 UserDetails
      * }
@@ -47,9 +45,10 @@ public class CurrentUserControllerAdvice {
      */
 
     // @ModelAttribute 在方法上注解 :
-    // 1. 则会在 spring context 中查找属性名为 authentication 的对象，并把该对象赋值给该方法的参数。本例中 authentication 参数会被自动赋值为 SecurityContextHolder.getContext().getAuthentication()
+    // 1. 则会在 spring context 中查找属性名为 authentication 的对象，并把该对象赋值给该方法的参数。
+    //    本例中 authentication 参数会被自动赋值为 SecurityContextHolder.getContext().getAuthentication()
     // 2. 该方法的返回值，以 @ModelAttribute 的 value 值为名字，放入 Model，可以在页面段获取。
-    // 在本项目中 : 可以通过 currentUser.username 获得用户名 (username 为 UserDetails 属性)
+    //    在本项目中 : 可以通过 currentUser.username 获得用户名 (username 为 UserDetails 属性)
     @ModelAttribute(value = "currentUser") // currentUser 在页面端用到
     public UserDetails getCurrentUser(Authentication authentication) {
 

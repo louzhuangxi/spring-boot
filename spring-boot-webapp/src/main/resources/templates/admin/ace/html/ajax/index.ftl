@@ -1,12 +1,16 @@
 <#--声明变量-->
 <#assign ctx = "${context.contextPath}">
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Welcome - Ace Admin</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <!-- ajax 请求时用到 default header name is X-CSRF-TOKEN 例子在 login.js 中 -->
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
     <!--[if !IE]> -->
     <link rel="stylesheet" href="${ctx}/ace/assets/css/pace.css" type="text/css"/>
@@ -355,9 +359,9 @@
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="${ctx}/ace/assets/avatars/user.jpg" alt="Jason's Photo"/>
                         <span class="user-info">
-									<small>Welcome,</small>
-									Jason
-								</span>
+                           <small>Welcome ,</small>
+                           ${username}
+						</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -573,8 +577,8 @@
 
             <li class="">
                 <a>
-                    <i class="menu-icon fa fa-desktop blue bigger-130 "></i>
-                    业务系统管理
+                    <i class="menu-icon fa fa-desktop red bigger-130 "></i>
+                    业务系统
                 </a>
             </li>
 

@@ -143,6 +143,23 @@
 
 
     /**
+     spring security ajax csrf
+     spring security 中使用 ajax ，必须在使用 ajax 方法的页面中做如下设置:
+
+     1. 页面中配置 (已在 index.ftl 中设置)
+     <!-- ajax 请求时用到 default header name is X-CSRF-TOKEN 例子在 login.js 中 -->
+     <meta name="_csrf" th:content="${_csrf.token}"/>
+     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+     2. ajax 如定义如下函数即可
+     */
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+
+    /**
      * Bootstrap Modals.js 是弹出框，是网页加载后，弹出指定的 div 的内容，该 div 内容是网页加载后的网页呈现内容的一部分
      * modal 只是弹出而已。
      * 所以想要刷新这部分内容，需要程序加载一次 modal div 的内容 , 用 jqury.load() 刷新指定的 div 内容

@@ -147,8 +147,30 @@
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
     //引入加载的 js
-    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/MyUtils.js", null]
+    var scripts = [null,
+        "${ctx}/zTree/js/jquery.ztree.core-3.5.js",
+        "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js",
+        "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js",
+        "${ctx}/jquery-confirm/jquery-confirm.js",
+        "${ctx}/h819/js/MyUtils.js",
+        null]
     //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
+
+    /**
+     spring security ajax csrf
+     spring security 中使用 ajax ，必须在使用 ajax 方法的页面中做如下设置:
+
+     1. 页面中配置 (已在 index.ftl 中设置)
+     <!-- ajax 请求时用到 default header name is X-CSRF-TOKEN 例子在 login.js 中 -->
+     <meta name="_csrf" th:content="${_csrf.token}"/>
+     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+     2. ajax 如定义如下函数即可
+     */
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
 
 
     /*================================ contant para ================================================*/

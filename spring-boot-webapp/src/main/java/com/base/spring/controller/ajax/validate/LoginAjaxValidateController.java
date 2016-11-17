@@ -21,7 +21,7 @@ import java.util.Optional;
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/ajax/validate/login")
+@RequestMapping("/ajax/validate/login") // 此处要和 Spring security 中 ignoring 要呼应，不能进行登录限制，否则无法进行验证
 public class LoginAjaxValidateController {
 
     private static Logger logger = LoggerFactory.getLogger(LoginAjaxValidateController.class);

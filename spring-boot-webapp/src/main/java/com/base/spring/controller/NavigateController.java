@@ -1,6 +1,7 @@
 package com.base.spring.controller;
 
 
+import com.base.spring.custom.SecurityUser;
 import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +38,19 @@ public class NavigateController {
      * 跳转到真正的页面 :  html/ajax/index.ftl
      * index.ftl 文件仅是一个导航文件，没有内容
      * index.ftl 会指向 ajax 方法，去加载 content/index.html 文件，该文件不存在，显示空白
+     * -
+     * SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
      *
      * @return
      */
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
-    public String home(HttpServletRequest request) {
+    public String home(HttpServletRequest request, @ModelAttribute("currentUser") SecurityUser user, Model model) {
         logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
+        //初始化菜单
+        logger.info("user name={}", user.getUsername());
+
+        //或 SecurityUser suser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("username", user.getUsername());
         return "admin/ace/html/ajax/index";
     }
 
@@ -60,7 +68,6 @@ public class NavigateController {
     @RequestMapping(value = "/content/admin/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
     // PreAuthorize 支持 spring el
     // 加在 service 层，好像粒度更细，如区分 add,del,eidt 等
-
     public String role(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
 
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));

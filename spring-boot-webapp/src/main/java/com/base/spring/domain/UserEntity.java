@@ -134,8 +134,8 @@ public class UserEntity extends BaseEntity {
     private String postcode;
 
 
-    //重要信息，用于找回密码，唯一
-    @Column(name = "email", unique = true)
+    //重要信息，用于找回密码，唯一，必填项
+    @Column(name = "email", unique = true,nullable = false)
     private String email;
 
 

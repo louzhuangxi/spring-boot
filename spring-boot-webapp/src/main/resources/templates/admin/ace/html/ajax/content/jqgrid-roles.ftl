@@ -92,7 +92,30 @@
 
 <!-- page specific plugin scripts -->
 <script type="text/javascript">
-    var scripts = [null, "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js", "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js", "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js", null]
+    var scripts = [null,
+        "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js",
+        "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
+        "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
+        null]
+
+
+    /**
+     spring security ajax csrf
+     spring security 中使用 ajax ，必须在使用 ajax 方法的页面中做如下设置:
+
+     1. 页面中配置 (已在 index.ftl 中设置)
+     <!-- ajax 请求时用到 default header name is X-CSRF-TOKEN 例子在 login.js 中 -->
+     <meta name="_csrf" th:content="${_csrf.token}"/>
+     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+     2. ajax 如定义如下函数即可
+     */
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function (e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+
 
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 

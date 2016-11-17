@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/ajax/validate/")
+@RequestMapping("/ajax/validate/")  // 此处要和 Spring security 中 ignoring 要呼应，不能进行登录限制，否则无法进行验证
 public class JqgridEditAjaxValidateController {
 
     private static Logger logger = LoggerFactory.getLogger(JqgridEditAjaxValidateController.class);
