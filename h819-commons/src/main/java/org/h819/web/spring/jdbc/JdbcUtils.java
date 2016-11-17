@@ -17,6 +17,8 @@ import java.util.List;
  * Time: 11:27
  * To change this template use File | Settings | File Templates.
  */
+
+// 例子见 standard-open-api-server , com.open.api.oracle.service.StStandardNativeService
 public class JdbcUtils {
 
     /**
@@ -24,57 +26,19 @@ public class JdbcUtils {
      * 所以 order by ? ,? asc 不可以
      */
 
-    //spring jdbc ，占位符方式，like 表达式的写法，固定，只有 like  特殊，其他的和普通 sql 相同
+    //spring jdbc ，占位符方式 like 表达式的写法固定，只有 like  特殊，其他的和普通 sql 相同
     //where name like '%中国%' ，转换为占位符方式，相当于
     //where name like '%'||?||'%'
     public static String BIND_LIKE_STRING = " '%'||?||'%' ";
+    private static Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
+
     //其他的例子
     //= ：  name =?
     //between :  act_time between to_date(?,'yyyy-mm-dd') and to_date(?,'yyyy-mm-dd')
 
-    private static Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
     @Autowired
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
-    /**
-     * 由于是老系统，表之间的关联是原始的，没有用 hibernate 设计，所以表之间的级联关系，无法通过 hibernate 来实现 OneToOne 等关联
-     * 无论是表关联还是主键关联，都会在原始表中新建字段，这对于老系统改造来说，是不可能的，
-     * 只有用 native query 查询来实现。
-     * -
-     * 经过测试发现， Query queryTotal = entityManager.createNativeQuery(nativeQueryCount,StStandardEntity.class);
-     * 此方法，返回的类型，只包含和数据库表对应的 StStandardEntity 中的字段，没有 join 后的其他的表的字段(如 ccsName)
-     * 需要包含其他表的字段，需要在 StStandardEntity 实体类中用  @SqlResultSetMappin 做映射处理
-     * 见  https://docs.jboss.org/hibernate/orm/5.1/userguide/html_single/chapters/query-native/Native.html
-     *  -
-     * 例如：
-     * 下面的 ccsName 等就不会返回，无法包装入 StStandardEntity ，即使是 StStandardEntity 中有 ccsName 属性和对应的 getter ,setter 方法
-     * -
-     * 很麻烦，抛弃此方法，直接拼装 sql 查询
-     * -
-     * 使用 JdbcTemplate ，也就没有了 Dto 转换问题
-     * -
-     * 构造一个关联查询的通用语句
-     * 左连接 ：left join 意思是包含左边表所有记录，右边所有的匹配的记录，如果没有则用空补齐
-     * 本例子是包含 St_Standard 所有记录，如果其他三个表没有记录，则用空白补齐
-     * -
-     */
-
-
-    // 使用例子
-    private String queryNativeSql = "select ccs.ccs_name as ccsName ,ics.ics_name as icsName,cl.class_name_cn as classNameCn, st.* from St_Standard st\n" +
-            "left join st_ccs_class ccs on st.ccs_code = ccs.ccs_code \n" +
-            "left join st_ics_class ics on st.ics_code = ics.ics_code\n" +
-            "left join st_class cl on  (st.class_three_code = cl.class_code and cl.class_layer =3) \n" +
-            "where \n";
-
-    // count 语句单独拼写，一般和查询语句不同，可以省去很多对计算总数没有用处的条件
-    private String queryNativeSqlCount = "select count(*) from St_Standard st \n " +
-            "where \n";
-
-    //  new Object[]{"中国","HB","2010-1-1","2016-12-31"}
-    private String queryNativeSql0 = this.queryNativeSql + "st.namecn like " + JdbcUtils.BIND_LIKE_STRING + " and class_two_code = ? and act_time between to_date(?,'yyyy-mm-dd') and to_date(?,'yyyy-mm-dd')";
-    private String queryNativeSqlCount0 = this.queryNativeSqlCount + "st.namecn like " + JdbcUtils.BIND_LIKE_STRING + " and class_two_code = ? and act_time between to_date(?,'yyyy-mm-dd') and to_date(?,'yyyy-mm-dd')";
-
 
     /**
      * 构造分页查询，有排序提交件
@@ -132,6 +96,7 @@ public class JdbcUtils {
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, new BeanPropertyRowMapper(resultClass));
+
         return new PageBean(pageSize, currentPageNo, totalRecordsSize, content);
     }
 
