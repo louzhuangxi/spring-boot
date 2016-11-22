@@ -17,6 +17,20 @@ public class FileUtilsBase {
     private static Map<Long, List<String>> duplicateFilesMapBySize = new HashMap();
     private static Map<String, List<String>> duplicateFilesMapByHash = new HashMap();
 
+    /**
+     * 第一步：先比较文件大小，找到所有文件大小相同的文件，结果存放到 duplicateFilesMapBySize
+     * -
+     * 之后文件大小相同，才可能相同 。文件大小相同之后，再比较文件的 hash
+     * -
+     * 1. 已经测试过(几万个文件，大小不一)，本方案和不比较文件大小，而直接比较所有文件的 hash 值的方案(仅有步骤二)，找到的相同的文件的结果一致。
+     * 2. 但两个方案效率差太多，比较所有文件的 hash 值，可能需要一个小时，而先比较文件大小，后比较文件大小相同的文件的 hash 值，仅需要几秒钟（视文件数量而定）。
+     * 3. 大文件进行 hash 计算很慢，单个2G 以上的文件可能就需要十几秒钟。
+     * -
+     *
+     * @param directory
+     * @param fileFilter
+     * @return key: 文件的 hash 值,  value: hash 值相同文件的路径集合，也就是相同文件的集合
+     */
     private static void findDuplicateFilesBySize(File directory, FileFilter fileFilter) {
 
         for (File dirChild : directory.listFiles(fileFilter)) {
@@ -41,7 +55,7 @@ public class FileUtilsBase {
     }
 
     /**
-     * 第二步：文件大小相同的文件，进行 hash 比较
+     * 第二步：文件大小相同的文件，进行 hash 比较 ，结果存放到 duplicateFilesMapByHash
      * -
      * 仅比较文件大小相同的文件，避免了所有文件都进行 hash 计算，节省了时间
      */
@@ -82,16 +96,11 @@ public class FileUtilsBase {
 
 
     /**
-     * 第一步：先比较文件大小，找到所有文件大小相同的文件，之后文件大小相同，才可能相同 。文件大小相同之后，再比较文件的 hash
-     * -
-     * 1. 已经测试过(几万个文件，大小不一)，本方案和不比较文件大小，而比较所有文件的 hash 值的方案，找到的相同的文件的结果一致。
-     * 2. 但两个方案效率差太多，比较所有文件的 hash 值，可能需要一个小时，而先比较文件大小，后比较文件大小相同的文件的 hash 值，仅需要几秒钟（视文件数量而定）。
-     * 3. 大文件进行 hash 计算很慢，单个2G 以上的文件可能就需要十几秒钟。
-     * -
+     * 找到指定文件夹中重复的文件
      *
      * @param directory
      * @param fileFilter
-     * @return key: 文件的 hash 值,  value: 相同文件的路径集合
+     * @return key: 文件的 hash 值,  value: hash 值相同文件的路径集合，也就是相同文件的集合
      */
 
     public static Map<String, List<String>> findDuplicateFiles(File directory, FileFilter fileFilter) {
@@ -109,6 +118,12 @@ public class FileUtilsBase {
         return duplicate;
     }
 
+    /**
+     * 比较所有文件
+     *
+     * @param directory
+     * @return
+     */
     public static Map<String, List<String>> findDuplicateFiles(File directory) {
         return findDuplicateFiles(directory, FileFilterUtils.trueFileFilter());
     }

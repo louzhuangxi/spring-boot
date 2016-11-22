@@ -17,7 +17,6 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +36,10 @@ public class MyFileUtils extends FileUtilsBase {
 
     private static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
-    private static ArrayList<String> fileNames = null;
-
     /**
      * 静态方法调用，不需要生成实例
      */
-    public MyFileUtils() {
+    private MyFileUtils() {
 
     }
 
@@ -326,7 +323,7 @@ public class MyFileUtils extends FileUtilsBase {
 
     public static void main(String[] args) throws Exception {
 
-        File big = new File("F:\\ghost_win7_32\\win7_32.gho");
+        File big = new File("F:\\gho\\win7_32.gho");
 
         String[] filter = {"pdf", "jpg"};
 
