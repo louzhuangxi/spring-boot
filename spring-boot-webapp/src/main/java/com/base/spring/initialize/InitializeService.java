@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Description : TODO(初始化相关数据)
@@ -39,6 +36,10 @@ public class InitializeService {
     @Autowired
     RoleRepository roleRepository;
 
+//    private boolean initMenuTree =false;
+//    private boolean initUser =false;
+//    private boolean initGroup =false;
+//    private boolean initRole =false;
 
     /**
      * 初始化 TreeNodeType 中定义的所有类型的根节点，所有节点均为该节点的子节点
@@ -71,18 +72,6 @@ public class InitializeService {
          */
 
         initUser();
-
-        /**
-         * 初始化 Group
-         */
-
-        initGroup();
-
-        /**
-         * 初始化 Role
-         */
-
-        initRole();
     }
 
     /**
@@ -126,7 +115,6 @@ public class InitializeService {
         createMenuTree();
 
     }
-
 
     private void createMenuTree() {
 
@@ -333,6 +321,33 @@ public class InitializeService {
         user.setEmail("admin@mail.com");
         user.setValid(true);
         user.setEnabled(true);
+        // user.setRoles(Sets.newHashSet(new RoleEntity("")));
+
+        /**
+         * 设置角色
+         */
+        Optional<RoleEntity> adminRole = roleRepository.findByName("系统管理员角色");
+        if (!adminRole.isPresent()) {
+            initRole();
+            adminRole = roleRepository.findByName("系统管理员角色");  // 再次查询
+        }
+
+        if (adminRole.isPresent()) {
+            user.addRole(adminRole.get());
+        }
+
+        /**
+         * 设置组
+         */
+        Optional<GroupEntity> adminGroup = groupRepository.findByName("系统管理员组");
+        if (!adminGroup.isPresent()) {
+            initGroup();
+            adminGroup = groupRepository.findByName("系统管理员组");// 再次查询
+        }
+
+        if (adminGroup.isPresent()) {
+            user.addGroup(adminGroup.get());
+        }
 
         userRepository.save(user);
 
@@ -390,6 +405,7 @@ public class InitializeService {
         admins.setName("系统管理员角色");
         admins.setValid(true);
         admins.setEnabled(true);
+
 
         RoleEntity users = new RoleEntity();
         users.setName("用户角色");

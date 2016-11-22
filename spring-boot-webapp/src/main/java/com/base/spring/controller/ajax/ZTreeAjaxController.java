@@ -86,9 +86,10 @@ public class ZTreeAjaxController {
                       @RequestParam(value = "level", required = true) Integer level,
                       @RequestParam(value = "index", required = true) Integer index,
                       @RequestParam(value = "pId", required = true) Long pId,
-                      @RequestParam(value = "isParent", required = true) boolean isParent, @RequestParam(value = "treeType", required = false) TreeType treeType) {
-        logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
+                      @RequestParam(value = "isParent", required = true) boolean isParent,
+                      @RequestParam(value = "treeType", required = false) TreeType treeType) {
 
+        logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
         treeNodeService.add(name, level, index, isParent, pId, treeType);
         return "add succeed.";
     }

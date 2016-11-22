@@ -578,7 +578,7 @@
             <li class="">
                 <a>
                     <i class="menu-icon fa fa-desktop red bigger-130 "></i>
-                    业务系统
+                    业务系统演示
                 </a>
             </li>
 

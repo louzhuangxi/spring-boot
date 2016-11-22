@@ -73,18 +73,13 @@ public class MyBeanUtils {
      * @param bean java bean 类型的值对象
      * @return
      */
-
-    //Apache Commons bean : Map<String, String> objectAsMap = BeanUtils.describe(fieldNoteBook);
-    //BeanUtils 的 describe 的方法就不可以 ，它的返回值类型为 <String, String> 。
-    // 我现在需要的是 <String, Object> ，等 BeanUtils 升级后看是否改变这个参数(目前 1.9.2 版本)
-    //但他默认包含 class 属性，这里自己实现，以加深理解
     public static Map<String, Object> beanToMap(Object bean) {
 
         if (bean == null) {
             return null;
         }
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap();
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -102,21 +97,36 @@ public class MyBeanUtils {
             System.out.println("beanToMap Error " + e);
         }
         return map;
+
+
+        /**
+         *  同 Apache Commons bean , PropertyUtils.describe
+         *  但他默认包含 class 属性,去掉
+         */
+
+//        try {
+//            Map map2 = PropertyUtils.describe(bean);
+//            map2.remove("class");
+//            return map2;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
     }
 
     /**
      * 转换单个 map to bean
      *
-     * @param map  待转换的 map
-     * @param bean 满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
+     * @param map       待转换的 map
+     * @param beanClass 满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
      * @param <T>
      * @return
      */
-    public static <T> T mapToBean(Map<String, Object> map, Class<T> bean) {
+    public static <T> T mapToBean(Map<String, Object> map, Class<T> beanClass) {
 
         T o = null;
         try {
-            o = bean.newInstance();
+            o = beanClass.newInstance();
             mapToBean(map, o);
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -132,18 +142,18 @@ public class MyBeanUtils {
     /**
      * 转换多个 map to bean
      *
-     * @param listMap 待转换的 map
-     * @param bean    满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
+     * @param listMap   待转换的 map
+     * @param beanClass 满足 bean 格式，且需要有无参的构造方法; bean 属性的名字应该和 map 的 key 相同
      * @param <T>
      * @return
      */
-    public static <T> List<T> mapToBeans(Collection<Map<String, Object>> listMap, Class<T> bean) {
+    public static <T> List<T> mapToBeans(Collection<Map<String, Object>> listMap, Class<T> beanClass) {
 
         List<T> list = new ArrayList(listMap.size());
         try {
 
             for (Map<String, Object> map : listMap) {
-                T o = bean.newInstance();
+                T o = beanClass.newInstance();
                 mapToBean(map, o);
                 list.add(o);
             }
@@ -174,7 +184,7 @@ public class MyBeanUtils {
         //注册几个转换器
         ConvertUtils.register(new SqlDateConverter(null), java.sql.Date.class);
         ConvertUtils.register(new SqlTimestampConverter(null), java.sql.Timestamp.class);
-        //注册一个类型转换器  解决 common-beanutils 为 Date 类型赋值
+        //注册一个类型转换器  解决 common-beanutils 为 Date 类型赋值问题
         ConvertUtils.register(new Converter() {
             //  @Override
             public Object convert(Class type, Object value) { // type : 目前所遇到的数据类型。  value :目前参数的值。

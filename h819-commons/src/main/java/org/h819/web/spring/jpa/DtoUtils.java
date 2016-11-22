@@ -134,21 +134,6 @@ public class DtoUtils {
             return (T) createDTOCopy(entityBeanPOJO, depth);   // 单个对象
     }
 
-    /**
-     * POJO 对象集合
-     *
-     * @param entityBeanPOJOs
-     * @param depth
-     * @param <T>
-     * @return
-     */
-    private <T> Collection<T> createDTOCopyList(Collection<T> entityBeanPOJOs, int depth) {
-        List<T> list = new ArrayList(entityBeanPOJOs.size());//按照原来的顺序
-        for (T entity : entityBeanPOJOs)
-            list.add((T) createDTOCopy(entity, depth));
-        return list;
-    }
-
 
     /**
      * @param entityBeanPOJO
@@ -174,6 +159,21 @@ public class DtoUtils {
 
     private Object createDTOCopy(Object entityBeanPOJO, int depth) {
         return createDTOCopy(entityBeanPOJO, depth, new LinkedList());
+    }
+
+    /**
+     * POJO 对象集合
+     *
+     * @param entityBeanPOJOs
+     * @param depth
+     * @param <T>
+     * @return
+     */
+    private <T> Collection<T> createDTOCopyList(Collection<T> entityBeanPOJOs, int depth) {
+        List<T> list = new ArrayList(entityBeanPOJOs.size());//按照原来的顺序
+        for (T entity : entityBeanPOJOs)
+            list.add((T) createDTOCopy(entity, depth));
+        return list;
     }
 
     /**

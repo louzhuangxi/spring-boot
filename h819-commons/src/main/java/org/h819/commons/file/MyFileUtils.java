@@ -1,11 +1,12 @@
 package org.h819.commons.file;
 
 import org.apache.commons.io.*;
-import org.apache.commons.io.filefilter.NameFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
+import org.h819.commons.MyJsonUtils;
+import org.h819.commons.file.base.FileUtilsBase;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author h819
@@ -30,7 +33,7 @@ import java.util.Collection;
 
 // org.apache.commons.io.FilenameUtils 中有一些文件名分隔符的有用的类，如separatorsToSystem 方法等
 // java.nio.file.Files ,java.nio.file.Paths 提供很多相应的工具
-public class MyFileUtils {
+public class MyFileUtils extends FileUtilsBase {
 
     private static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
@@ -148,6 +151,33 @@ public class MyFileUtils {
             return FileUtils.listFiles(directory, new NameFileFilter(fileNames, caseSensitivity), TrueFileFilter.INSTANCE);
         else return FileUtils.listFiles(directory, new NameFileFilter(fileNames, caseSensitivity), null);
 
+    }
+
+
+    /**
+     * 获取文件扩展名 FileFilter
+     *
+     * @param caseSensitivity 大小写敏感
+     * @param extension       扩展名
+     * @return
+     */
+    public static FileFilter getFileNameExtensionFilter(IOCase caseSensitivity, String... extension) {
+        if (extension.length == 0)
+            return FileFilterUtils.trueFileFilter();
+        else
+            return new SuffixFileFilter(extension, caseSensitivity);
+    }
+
+
+    /**
+     * 获取文件名满足 pattern  FileFilter
+     *
+     * @param pattern
+     * @param caseSensitivity
+     * @return
+     */
+    public static FileFilter getFileNameRegexFilter(String pattern, IOCase caseSensitivity) {
+        return new RegexFileFilter(pattern, caseSensitivity);
     }
 
 
@@ -294,4 +324,27 @@ public class MyFileUtils {
     }
 
 
+    public static void main(String[] args) throws Exception {
+
+        File big = new File("F:\\ghost_win7_32\\win7_32.gho");
+
+        String[] filter = {"pdf", "jpg"};
+
+        File dir = new File("G:\\mypic\\");
+        if (!dir.isDirectory()) {
+            System.out.println("Supplied directory does not exist.");
+            return;
+        }
+
+        Map<String, List<String>> lists = findDuplicateFiles(dir);
+        MyJsonUtils.prettyPrint(lists);
+//        long start1 = System.nanoTime();
+//        String hash1 = DigestUtils.md5Hex(new FileInputStream(big));
+//        System.out.println(hash1 + " : " + (System.nanoTime() - start1));
+//
+//        long start2 = System.nanoTime();
+//        HashCode hc = Files.hash(big, Hashing.md5());
+//        System.out.println(hc.toString() + " : " + (System.nanoTime() - start2));
+
+    }
 }

@@ -157,7 +157,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          */
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/about", "/policies").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
+                .antMatchers("/", "/signup", "/about", "/policies","error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
                 .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
@@ -174,6 +174,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // loginProcessingUrl : 登陆页面的 from action url ，只接受 POST 请求。在登录页面设置好即可
                 // spring security 验证机制会自动调用下面的 configure(AuthenticationManagerBuilder auth) 方法进行验证
                 // 如果 loginProcessingUrl 不写，默认和 loginPage() 方法的参数相同
+                // login.jsp 页面需要有 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> , 以满足 spring security 要求
                 .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf").usernameParameter("login_email").passwordParameter("login_password").permitAll()
                 .and().rememberMe()
 

@@ -33,24 +33,28 @@ public class NavigateController {
     private static Logger logger = LoggerFactory.getLogger(NavigateController.class);
 
     /**
+     * 跳转到首页，展示菜单及用户名称
+     * -
      * ajax url :  http://localhost:8888/base/menu/ajax/index.html#page/index
      * 被解析为  :  http://localhost:8888/base/menu/ajax/index.html (注意没有 content)
      * 跳转到真正的页面 :  html/ajax/index.ftl
      * index.ftl 文件仅是一个导航文件，没有内容
      * index.ftl 会指向 ajax 方法，去加载 content/index.html 文件，该文件不存在，显示空白
-     * -
-     * SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
      *
+     * @param request
+     * @param model
+     * @param user    SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
      * @return
      */
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
-    public String home(HttpServletRequest request, @ModelAttribute("currentUser") SecurityUser user, Model model) {
+    public String home(HttpServletRequest request, Model model,
+                       @ModelAttribute("currentUser") SecurityUser user) { //SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
         logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         //初始化菜单
         logger.info("user name={}", user.getUsername());
-
         //或 SecurityUser suser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("username", user.getUsername());
+        model.addAttribute("menu", "");   ??
         return "admin/ace/html/ajax/index";
     }
 

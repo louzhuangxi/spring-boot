@@ -55,6 +55,9 @@
                                 <div class="widget-main">
                                     <div class="row">
                                         <ul class="list-unstyled spaced2">
+                                            <li><i class="ace-icon fa fa-bell-o warning-110 red"></i>
+                                                系统管理及其子节点，只有系统管理员才可以修改，是系统默认菜单。
+                                            </li>
                                             <li><i class="ace-icon fa fa-bell-o bigger-110 purple"></i>
                                                 树结构，有一个默认的根节点。创建的树状结构，从此根节点开始。增加节点，只能从父节点开始。
                                             </li>
@@ -243,6 +246,7 @@
         });
     }
 
+
     /*
     弹出警示框
     jquery-confirm
@@ -282,8 +286,34 @@
     }
 
 
+
+
+    /*
+    class = btn 按钮点击之后，鼠标离开，释放焦点。
+     */
+    $(".btn").mouseup(function () {
+        $(this).blur();
+    })
+
+    /*
+    当第一次点击复制或者粘帖按钮之后，被选中的节点会自动加上 a.copy or a.cut 样式(本页中面定义)。
+    但如果不想复制或者粘帖，再接着选择其他的节点，第一次点击选择的节点的样式仍然存在，影响页面效果，这里去掉。
+    下文的 fontCss() 方法也能完成同样的功能，就用这个吧，不研究了。
+     */
+    function removeCopyCutClass() {
+        $("#treeDemo li").parent().find('li').find('a').removeClass("copy").removeClass("cut");
+    }
+
+
+    /*================================ tools end ================================================*/
+
+
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
         //inline scripts related to this page
+
+        /**
+         * ztree 配置
+         */
         jQuery(function ($) {
 
             var setting = {
@@ -342,25 +372,6 @@
                 }
             };
 
-
-            /*
-            class = btn 按钮点击之后，鼠标离开，释放焦点。
-             */
-            $(".btn").mouseup(function () {
-                $(this).blur();
-            })
-
-            /*
-            当第一次点击复制或者粘帖按钮之后，被选中的节点会自动加上 a.copy or a.cut 样式(本页中面定义)。
-            但如果不想复制或者粘帖，再接着选择其他的节点，第一次点击选择的节点的样式仍然存在，影响页面效果，这里去掉。
-            下文的 fontCss() 方法也能完成同样的功能，就用这个吧，不研究了。
-             */
-            function removeCopyCutClass() {
-                $("#treeDemo li").parent().find('li').find('a').removeClass("copy").removeClass("cut");
-            }
-
-
-            /*================================ tools end ================================================*/
 
             /*
             var parent = treeNode[0].getParentNode();

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -95,6 +96,9 @@ public class JdbcUtils {
         // 计算总数
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
+        if (totalRecordsSize == 0)
+            return new PageBean(pageSize, 0, 0, new ArrayList(0));
+
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, new BeanPropertyRowMapper(resultClass));
 
         return new PageBean(pageSize, currentPageNo, totalRecordsSize, content);

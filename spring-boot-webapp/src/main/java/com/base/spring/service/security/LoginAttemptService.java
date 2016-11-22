@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 用于验证登陆次数
+ * -
+ * 增加反爬虫机制(反暴力攻击)，限制某个 ip 在规定的时间段内的访问次数
  */
 @Service
 public class LoginAttemptService {

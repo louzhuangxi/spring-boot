@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 
 @Service
+@Transactional(readOnly = true)
 public class CustomUserDetailsService implements UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
@@ -49,11 +50,9 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @throws UsernameNotFoundException
      */
     @Override
-    @Transactional(readOnly = true)
     //必需，否则无法级联 role 对象，和 WebSecurityConfig 中 EnableGlobalMethodSecurity、EnableTransactionManagement 呼应
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         logger.info("Authenticating user with email={}", email.replaceFirst("@.*", "@***"));
-
 
         /**
          * 通过事件机制，验证登陆次数，前端显示登陆次数过多的信息，代码如下

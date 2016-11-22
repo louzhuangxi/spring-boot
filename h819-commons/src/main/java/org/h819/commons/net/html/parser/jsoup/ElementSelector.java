@@ -96,11 +96,12 @@ public class ElementSelector {
      */
     public ElementSelector removeTags(String... tags) {
         Elements temp = new Elements();
+
         for (String s : tags)   // 大小写不敏感，都能去掉
             this.currentElements.select(s).remove();   // currentElements 已经改变
-        //此时 currentElements 会包含所有的标签，逐层递减，会有多个，而不是去掉标签之后的结果，只有第一个是
+
         if (tags.length != 0) { // 避免无参数时，改变 currentElements
-            temp.add(this.currentElements.first());
+            temp.add(this.currentElements.first());     //此时 currentElements 会包含所有的标签，逐层递减，会有多个，而不是去掉标签之后的结果，只有第一个是
             this.currentElements = temp;
         }
         return this;
