@@ -2,9 +2,11 @@ package com.base.spring.controller;
 
 
 import com.base.spring.custom.SecurityUser;
+import com.base.spring.service.UserService;
 import org.h819.web.commons.MyServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -32,6 +34,9 @@ public class NavigateController {
 
     private static Logger logger = LoggerFactory.getLogger(NavigateController.class);
 
+    @Autowired
+    UserService userService;
+
     /**
      * 跳转到首页，展示菜单及用户名称
      * -
@@ -52,9 +57,10 @@ public class NavigateController {
         logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         //初始化菜单
         logger.info("user name={}", user.getUsername());
-        //或 SecurityUser suser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // 或直接获取 SecurityUser suser = SpringUtils.getSecurityUser();
+        // UserEntity uEnity = suser.getUser();
         model.addAttribute("username", user.getUsername());
-        model.addAttribute("menu", "");   ??
+        model.addAttribute("menu", userService.getAllMenuByUser(user.getUser())); ???
         return "admin/ace/html/ajax/index";
     }
 

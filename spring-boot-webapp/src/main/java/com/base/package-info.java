@@ -14,5 +14,13 @@
  * --
  * 增加日志功能
  * https://nutzwk.wizzer.cn/private/wx/msg/user
+ * --
+ * 登录
+ * ajax 验证，在 controller 中处理，在 ajax 的 succeed 方法中处理返回值，可以把 controller 的附带信息展示出来。
+ * https://github.com/eugenp/tutorials/blob/master/spring-security-login-and-registration/src/main/java/org/baeldung/web/controller/RegistrationController.java
+ * --
+ * spring security
+ * http://www.concretepage.com/spring/spring-security/
+ * --
  */
 package com.base;

@@ -307,7 +307,7 @@ public class GroupAjaxController {
 
 
     /**
-     * 关联被选中的 user 到 Group
+     * 关联被选中的 roles 到 Group
      * 注意 spring mvc controller 接收 array 类型的参数
      *
      * @param groupId

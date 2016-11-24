@@ -42,7 +42,7 @@ public interface TreeRepository extends BaseRepository<TreeEntity, Long> {
      * @return
      */
     @Query("select e from TreeEntity e where e.parent is null order by  e.index")
-    List<TreeEntity> getRoot();
+    List<TreeEntity> findRoot();
 
     /**
      * 获 type 类型的根节点
@@ -50,7 +50,7 @@ public interface TreeRepository extends BaseRepository<TreeEntity, Long> {
      * @return
      */
     @Query("select e from TreeEntity e where e.parent is null and e.type =?1 order by  e.index")
-    Optional<TreeEntity> getRoot(TreeType menuType);
+    Optional<TreeEntity> findRoot(TreeType menuType);
 
 
     @Query("select e.type from TreeEntity e")

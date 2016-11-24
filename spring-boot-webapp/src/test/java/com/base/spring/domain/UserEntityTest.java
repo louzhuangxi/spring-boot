@@ -1,9 +1,13 @@
 package com.base.spring.domain;
 
 import com.alibaba.fastjson.JSON;
+import com.base.spring.repository.RoleRepository;
+import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.utils.BCryptPassWordUtils;
+import com.base.spring.utils.TreeUtils;
 import org.h819.commons.MyJsonUtils;
+import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,9 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.endsWith;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
@@ -32,7 +39,11 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class UserEntityTest {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private TreeRepository treeRepository;
 
 
     @Test
@@ -68,6 +79,33 @@ public class UserEntityTest {
 
         MyJsonUtils.prettyPrint(userRepository.findAll(example));
         System.out.println(userRepository.count(example));
+
+    }
+
+    /**
+     * 测试  getFilterTreeInCollection
+     */
+    @Test
+    public void testGetAllUserMenus() {
+        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+        preFilter.addExcludes(TreeEntity.class, "parent","roles");
+      //  preFilter.addIncludes(TreeEntity.class, "name","level");
+
+        UserEntity admin = userRepository.findByLoginName("admin").get();
+        //去掉重复，获取所有 Menu
+        Set<TreeEntity> menuTrees = new HashSet<>();
+        for (RoleEntity role : admin.getRoles()) {
+            menuTrees.addAll(role.getTreeNodes());
+        }
+
+      //  MyJsonUtils.prettyPrint(menuTrees,preFilter);
+
+        TreeEntity rootMenu = treeRepository.findRoot(TreeType.Menu).get();
+
+        TreeEntity allMenu = TreeUtils.getFilterTreeInCollection(rootMenu, menuTrees);
+
+        MyJsonUtils.prettyPrint(allMenu, preFilter);
+
 
     }
 

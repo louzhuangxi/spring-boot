@@ -35,6 +35,15 @@ public class TreeEntity extends BaseEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeEntity.class);
 
+    /**
+     * 父组织
+     * 树状结构，root 节点（根节点），没有父节点，为 null
+     */
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private TreeEntity parent;
+
 
     /**
      * 子组织
@@ -64,8 +73,6 @@ public class TreeEntity extends BaseEntity {
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 100)//roles 过多的情况下应用。
     private Set<RoleEntity> roles = new HashSet<>();
-
-
     /**
      * 节点名称
      */
@@ -96,7 +103,6 @@ public class TreeEntity extends BaseEntity {
      */
     @Column(name = "index_", nullable = false)
     private int index;
-
     /**
      * 是否为父节点，包含子节点，即为父节点 , true 时会显示为文件夹图标。
      * 添加节点时，如果没有子节点，不会显示为文件夹图标，即使是想添加父节点，也会显示为叶节点图表。
@@ -114,22 +120,12 @@ public class TreeEntity extends BaseEntity {
     @Column(name = "type", nullable = false)
     private TreeType type;
     /**
-     * 父组织
-     * 树状结构，root 节点（根节点），没有父节点，为 null
-     */
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private TreeEntity parent;
-
-    /**
      * 树状结构的层级,根节点 level = 0，依次递增
      * 不加 @Getter , @Setter 不自动生成
      */
     @Transient  // 不在数据库中建立字段
     @Setter(AccessLevel.NONE) // 不创建 Setter  方法，反序列化会有问题么?
     private int level;
-
     /**
      * JPA spec 需要无参的构造方法，用户不能直接使用。
      * 如果想要生成 Entity ，用其他有参数的构造方法。
@@ -139,7 +135,6 @@ public class TreeEntity extends BaseEntity {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
-
 
     /**
      * 菜单创建，只提供这一个构造函数，强制要求录入必需的数据项

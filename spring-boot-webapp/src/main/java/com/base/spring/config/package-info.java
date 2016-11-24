@@ -1,5 +1,5 @@
 /**
- * Description : TODO(配置文件)
+ * Description : TODO(配置文件，修改 application.properties 中的默认设置)
  * User: h819
  * -------------------------------------------------------
  * spring security ajax csrf

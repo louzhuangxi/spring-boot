@@ -1,9 +1,13 @@
 package org.h819.web.commons;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author H819
@@ -102,5 +106,18 @@ public class MyServletUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * httpServletResponse 输出信息 ，解决中文输出问题
+     *
+     * @param httpServletResponse
+     * @param message
+     * @throws IOException
+     */
+
+    private void writeResponse(HttpServletResponse httpServletResponse, Message message) throws IOException {
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        httpServletResponse.getOutputStream().write(JSON.toJSONString(message).getBytes(StandardCharsets.UTF_8));
     }
 }

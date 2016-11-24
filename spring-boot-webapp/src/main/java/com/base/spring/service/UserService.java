@@ -1,11 +1,11 @@
 package com.base.spring.service;
 
-import com.base.spring.domain.GroupEntity;
-import com.base.spring.domain.RoleEntity;
-import com.base.spring.domain.UserEntity;
+import com.base.spring.domain.*;
 import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
+import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
+import com.base.spring.utils.TreeUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private TreeRepository treeRepository;
 
 
     public Optional<UserEntity> getUserById(long id) {
@@ -48,7 +50,6 @@ public class UserService {
 
         return userRepository.findOneByEmail(email);
     }
-
 
     public Collection<UserEntity> getAllUsers() {
         logger.debug("Getting all users");
@@ -127,6 +128,26 @@ public class UserService {
 
 
     /**
+     * 获取用户拥有权限的所有菜单
+     *
+     * @param user
+     * @return
+     */
+    public TreeEntity getAllMenuByUser(UserEntity user) {
+
+        //去掉重复，获取所有 tree
+        Set<TreeEntity> allMenu = new HashSet<>();
+        for (RoleEntity role : user.getRoles()) {
+            allMenu.addAll(role.getTreeNodes());
+        }
+        //重新组装，仅包含集合中的元素 set 中 tree 的并集
+        TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
+        return TreeUtils.getFilterTreeInCollection(menuRoot, allMenu);
+
+    }
+
+
+    /**
      * 关联所有 user 到指定的 group
      *
      * @param roleIds
@@ -140,7 +161,7 @@ public class UserService {
         if (userEntity == null)
             return;
 
-        //清空
+        //没有选择 roles，表示清空
         if (roleIds == null || roleIds.length == 0) {
             logger.info("clear roles.");
             userEntity.clearRoles();
@@ -166,7 +187,6 @@ public class UserService {
         // 被选中的节点
         List<RoleEntity> targetRoles = roleRepository.findByIdIn(listRoleId);
         //  logger.info("targetRoles size ={} ", targetRoles.size());
-
         // user 已经关联的 role
         Set<RoleEntity> sourceRoles = userEntity.getRoles();
         // 需要删除的节点
@@ -191,7 +211,7 @@ public class UserService {
 
         userRepository.save(userEntity);
 
-
     }
+
 
 }

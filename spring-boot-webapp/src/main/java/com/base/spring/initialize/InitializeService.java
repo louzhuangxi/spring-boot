@@ -119,9 +119,9 @@ public class InitializeService {
     private void createMenuTree() {
 
         //系统其他的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
-        TreeEntity menu = treeRepository.getRoot(TreeType.Menu).get(); // menu , privilege
-        TreeEntity departMent = treeRepository.getRoot(TreeType.DepartMent).get();
-        TreeEntity standard = treeRepository.getRoot(TreeType.Standard).get();
+        TreeEntity menu = treeRepository.findRoot(TreeType.Menu).get(); // menu , privilege
+        TreeEntity departMent = treeRepository.findRoot(TreeType.DepartMent).get();
+        TreeEntity standard = treeRepository.findRoot(TreeType.Standard).get();
 
 
         Set<TreeEntity> set = new HashSet<>();

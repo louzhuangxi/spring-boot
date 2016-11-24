@@ -131,8 +131,7 @@ public class JqgridController {
          * 多个查询条件时，JpaDynamicSpecificationBuilder and
          */
         Specification customSpecification = new JpaDynamicSpecificationBuilder().
-                and(new SearchFilter("level", SearchFilter.Operator.EQ, "1")).
-                build();
+                and(new SearchFilter("level", SearchFilter.Operator.EQ, "1")).build();
 
 
         //查询结果:
@@ -141,7 +140,7 @@ public class JqgridController {
         //2. 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件时写法 (customSpecification):
         //  Page list = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         // 3. 用在非 jqgrid 的条件下，没有 filter 查询条件 ,仅有自己附加查询条件时写法 (customSpecification):
-       // Page list = JpaUtils.getPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
+        // Page list = JpaUtils.getPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
 
 
         Page<TreeEntity> pages = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);

@@ -345,7 +345,7 @@ public class UserAjaxController {
 
 
     /**
-     * 关联被选中的 user 到 Group
+     * 关联被选中的 roles 到 user
      * 注意 spring mvc controller 接收 array 类型的参数
      *
      * @param userId
@@ -355,7 +355,7 @@ public class UserAjaxController {
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     @ResponseBody
     public void bootsTrapModalAssociateRoles(
-            @RequestParam(value = "group_id", required = true) String userId,
+            @RequestParam(value = "user_id", required = true) String userId,
             @RequestParam(value = "checkbox[]", required = false) String[] roleIds) // 前端的参数为 checkbox , array 类型
     {
 

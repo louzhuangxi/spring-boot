@@ -285,7 +285,7 @@
             url: "${ctx}/ajax/grid/user/bootstrap-modal-associate-roles.html",
             data: { //传递的参数和值
                 checkbox: values,  // spring mvc controller 用 checkbox[] 参数接收
-                group_id: $("#userId").val()
+                user_id: $("#userId").val()
             },
             dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
             success: function (data) { //处理成功的回调函数

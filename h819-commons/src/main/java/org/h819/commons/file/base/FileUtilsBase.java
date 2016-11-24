@@ -38,8 +38,7 @@ public class FileUtilsBase {
             if (dirChild.isDirectory()) {
                 findDuplicateFilesBySize(dirChild, fileFilter);
             } else {
-
-                System.out.println(dirChild.getAbsoluteFile());
+                System.out.println(String.format("calculate file size : %d -> %s", dirChild.length(), dirChild.getAbsolutePath()));
                 long uniqueFileLength = dirChild.length();
                 List<String> identicalList = duplicateFilesMapBySize.get(uniqueFileLength);
                 if (identicalList == null) {
@@ -69,8 +68,6 @@ public class FileUtilsBase {
 
             for (String fileStr : fileList) {
 
-                //  System.out.println(fileStr);
-
                 try {
                     /**
                      * 文件 Hash
@@ -78,6 +75,7 @@ public class FileUtilsBase {
                      * 2. md5 比 SHA-256 快 40% 以上，md5 用于文件 hash ，足够
                      */
                     String uniqueFileHash = Files.hash(new File(fileStr), Hashing.md5()).toString();
+                    System.out.println(String.format("calculate file hash : %s -> %s", uniqueFileHash, fileStr));
                     List<String> identicalList = duplicateFilesMapByHash.get(uniqueFileHash);
                     if (identicalList == null) {
                         identicalList = new LinkedList();
@@ -90,6 +88,8 @@ public class FileUtilsBase {
                     throw new RuntimeException("cannot read file " + fileStr, e);
                 }
             }
+
+
             // duplicate.put(entry.getKey(), entry.getValue());
         }
     }

@@ -120,7 +120,7 @@ public class GroupService {
         if (groupEntity == null)
             return;
 
-        //清空
+        //没有选择 roles，表示清空
         if (roleIds == null || roleIds.length == 0) {
             logger.info("clear roles.");
             groupEntity.clearRoles();

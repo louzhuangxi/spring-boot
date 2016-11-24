@@ -5,7 +5,7 @@ import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.domain.TreeType;
 import com.base.spring.repository.TreeRepository;
-import com.base.spring.utils.ZTreeUtils;
+import com.base.spring.utils.TreeUtils;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +73,7 @@ public class TreeService {
 
         if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
             logger.info("initialize ztree first from db by id={} , menuType={}", id, menuType);
-            Optional<TreeEntity> rootNode = treeRepository.getRoot(menuType);
+            Optional<TreeEntity> rootNode = treeRepository.findRoot(menuType);
 
             if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
@@ -82,13 +82,13 @@ public class TreeService {
 
             TreeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
 
-            return JSON.toJSONString(ZTreeUtils.getJsonData(dtoRootNode, roleEntity));
+            return JSON.toJSONString(TreeUtils.getZTreeJsonData(dtoRootNode, roleEntity));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
             logger.info("initialize ztree asyncByTreeType from db by id={}", id);
             TreeEntity rootNode = treeRepository.findOne(id);
             TreeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
-            return JSON.toJSONString(ZTreeUtils.getJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点
+            return JSON.toJSONString(TreeUtils.getZTreeJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点
         }
     }
 
@@ -150,9 +150,12 @@ public class TreeService {
         TreeEntity parentNode = treeRepository.findOne(pId); //参考对象
         // parentNode.setIsParent(true);
 
+
         if (curType.equals("copy")) {
             logger.info("copy nodes to a new parent node");
-            ZTreeUtils.createCopyNode(parentNode, selectNode); // 复制一份和新生成的对象，加入到 parent 的子中。
+            // 复制一份和新生成的对象，加入到 parent 的子中。
+            TreeEntity copy = TreeUtils.getCopyTree(selectNode);
+            parentNode.addChildToLastIndex(copy);
         }
 
         if (curType.equals("cut")) {    //直接移动cut : 直接修改 currentNode 的父类为新的父类，不重新创建新的对象，相当于剪切过来。
@@ -161,11 +164,13 @@ public class TreeService {
             parentNode.setParentNode(true); // 修改参考对象为父节点
         }
 
+        if (selectNode.getParent().getChildren().size() == 0) { // 移动完成，如果没有子节点了，则标记为叶节点
+            selectNode.getParent().setParentNode(false);
+            treeRepository.save(selectNode);
+        }
+
         treeRepository.save(parentNode);
 
-        if (selectNode.getParent().getChildren().size() == 0) // 移动完成，如果没有子节点了，则标记为叶节点
-            selectNode.getParent().setParentNode(false);
-        treeRepository.save(selectNode);
 
     }
 
@@ -215,7 +220,6 @@ public class TreeService {
         treeNodeEntity.setUrl(url);
         treeRepository.save(treeNodeEntity);
     }
-
 
 
 }

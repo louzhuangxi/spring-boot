@@ -38,7 +38,7 @@ public class FueluxTreeService {
 
         if (pId == 0) {  // 打开页面时，第一次异步加载，返回根节点的所有子节点
             logger.info("initialize FueluxTree first from db by pId={} , menuType={}", pId, menuType);
-            Optional<TreeEntity> rootNode = treeNodeRepository.getRoot(menuType);
+            Optional<TreeEntity> rootNode = treeNodeRepository.findRoot(menuType);
             if (!rootNode.isPresent()) {
                 logger.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));

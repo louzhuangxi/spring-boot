@@ -77,7 +77,6 @@ public class FastJsonPropertyPreFilter implements PropertyPreFilter {
         }
 
         // 需要序列的对象
-        // 找到不需要的序列化的类型
         for (Map.Entry<Class<?>, String[]> item : this.includes.entrySet()) {
             // isAssignableFrom()，用来判断类型间是否有继承关系
             if (item.getKey().isAssignableFrom(clazz)) {
