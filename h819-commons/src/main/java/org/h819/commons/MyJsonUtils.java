@@ -11,6 +11,8 @@ import org.h819.commons.json.FastJsonPropertyPreFilter;
  * Time: 下午2:00
  * To change this template use File | Settings | File Templates.
  */
+//SerializerFeature 属性
+//http://46aae4d1e2371e4aa769798941cef698.devproxy.yunshipei.com/u010246789/article/details/52539576
 public class MyJsonUtils {
 
 
@@ -46,7 +48,11 @@ public class MyJsonUtils {
      * @param bean
      */
     public static void prettyPrint(Object bean) {
-        System.out.print(JSON.toJSONString(bean, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.PrettyFormat));
+        SerializerFeature[] features = {
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.PrettyFormat};
+        System.out.print(JSON.toJSONString(bean, features));
     }
 
 
@@ -57,10 +63,14 @@ public class MyJsonUtils {
      *
      * @param bean
      */
-    //        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+    //   FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
 //        preFilter.addExcludes(InfoEntity.class, "refUserInfoEntities"); //在整个转换过程中，无论哪个级联层次，只要遇到 InfoEntity 类，那么他的 refUserInfoEntities 属性就不进行转换
 //        preFilter.addExcludes(ProvinceEntity.class, "parent", "children"); //多个属性
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
-        System.out.print(JSON.toJSONString(bean, preFilter, SerializerFeature.DisableCircularReferenceDetect, SerializerFeature.WriteDateUseDateFormat, SerializerFeature.PrettyFormat));
+        SerializerFeature[] features = {
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.PrettyFormat};
+        System.out.print(JSON.toJSONString(bean, preFilter, features));
     }
 }

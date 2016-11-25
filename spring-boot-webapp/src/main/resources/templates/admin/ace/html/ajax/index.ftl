@@ -360,7 +360,7 @@
                         <img class="nav-user-photo" src="${ctx}/ace/assets/avatars/user.jpg" alt="Jason's Photo"/>
                         <span class="user-info">
                            <small>Welcome ,</small>
-                           ${username}
+                        ${username}
 						</span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
@@ -452,6 +452,44 @@
         </div><!-- /.sidebar-shortcuts -->
 
         <ul class="nav nav-list">
+
+            <!-- menu 只有三级，循环三次即可 -->
+        <#if menus ??>
+            <#list menus.children as children1>
+
+                <li class="">
+                    <a>
+                        <i class="menu-icon fa fa-cog red bigger-130 "></i>
+                    ${children1.name}
+                    </a>
+                </li>
+                <#list children1.children as children2>
+                    <li class="">
+                        <a href="#" class="dropdown-toggle">
+                            <i class="menu-icon fa fa-sitemap"></i>
+                            <span class="menu-text">  ${children2.name} </span>
+
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+
+                        <b class="arrow"></b>
+
+                        <ul class="submenu">
+                            <#list children2.children as children3>
+                                <li class="">
+                                    <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=Menu">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                    ${children3.name}
+                                    </a>
+
+                                    <b class="arrow"></b>
+                                </li>
+                            </#list>
+                        </ul>
+                    </li>
+                </#list>
+            </#list>
+        </#if>
 
             <li class="">
                 <a>

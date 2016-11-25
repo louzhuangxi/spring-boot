@@ -1,16 +1,11 @@
 <#assign ctx = "${context.contextPath}">
 <!--
-<\#assign checktype = model["checktype"]>
-读取 spring mvc modal 中的变量，如果 checktype 不存在，则抛出异常
--->
-
-<!--
 仅是显示项目不同，不同的显示项，其属性不同，无法用同一个 modal
 -->
 
 <!-- custom begin -->
 
-<#if model["checkedbox"] ?? || model["uncheckedbox"] ??>
+<#if checkedbox ?? || uncheckedbox ??>
 <!-- usersChecked 或者 usersUnChecked 不为 null -->
 <div class="control-group">
     <!-- #section:custom/checkbox -->
@@ -28,8 +23,8 @@
 
 <!--分为两组，已经和 group 关联的/未关联的-->
 <div class="control-group">
-    <#if model["checkedbox"] ??>
-        <#list model["checkedbox"] as group>
+    <#if checkedbox ??>
+        <#list checkedbox as group>
             <div class="checkbox inline">
                 <label>
                     <input name="form-field-checkbox" type="checkbox" value="${group.id}" checked class="ace"/>
@@ -40,8 +35,8 @@
     </#if>
 </div>
 <div class="control-group">
-    <#if model["uncheckedbox"] ??>
-        <#list model["uncheckedbox"] as group>
+    <#if uncheckedbox ??>
+        <#list uncheckedbox as group>
             <div class="checkbox inline">
                 <label>
                     <input name="form-field-checkbox" type="checkbox" value="${group.id}"

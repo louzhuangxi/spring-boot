@@ -157,7 +157,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          */
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/about", "/policies","error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
+                .antMatchers("/", "/signup", "/about", "/policies", "error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
                 .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
@@ -182,7 +182,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout()
                 .logoutSuccessUrl("login?logout").logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/").permitAll()
                 .and().sessionManagement()//.sessionFixation().changeSessionId() changeSessionId 避免固定会话攻击
-                .invalidSessionUrl("/login?session=invalid") //
+                .invalidSessionUrl("/login?session=invalid") //如 session 过期，转到的网址
                 .maximumSessions(2).maxSessionsPreventsLogin(true) //限制用户只能从一个设备登陆，不同同时登陆多台设备
         ; //
 

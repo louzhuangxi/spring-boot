@@ -2,14 +2,18 @@ package com.base.spring.controller;
 
 
 import com.base.spring.custom.SecurityUser;
+import com.base.spring.domain.TreeEntity;
 import com.base.spring.service.UserService;
+import org.apache.commons.lang3.StringUtils;
+import org.h819.commons.MyJsonUtils;
+import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.commons.MyServletUtils;
+import org.h819.web.spring.jpa.DtoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,11 +60,27 @@ public class NavigateController {
                        @ModelAttribute("currentUser") SecurityUser user) { //SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
         logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         //初始化菜单
-        logger.info("user name={}", user.getUsername());
+        logger.info("user name in security={}", user.getUsername());
+        logger.info("user name in entity={}", user.getUser().getUserName());
         // 或直接获取 SecurityUser suser = SpringUtils.getSecurityUser();
         // UserEntity uEnity = suser.getUser();
         model.addAttribute("username", user.getUsername());
-        model.addAttribute("menu", userService.getAllMenuByUser(user.getUser())); ???
+        TreeEntity menu = userService.getAllMenuByUser(user.getUser());
+
+        DtoUtils utils = new DtoUtils();
+        utils.addExcludes(TreeEntity.class, "parent", "roles");
+        model.addAttribute("menus", utils.createDTOcopy(menu,3));
+
+        //test
+        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+        preFilter.addExcludes(TreeEntity.class, "parent", "roles");
+        MyJsonUtils.prettyPrint(utils.createDTOcopy(menu,3));
+        System.out.println(StringUtils.center("splite", 80, "="));
+        MyJsonUtils.prettyPrint(menu, preFilter);
+
+        //前端或加载所有的菜单，自动级联查询的，不是过滤后的
+        ???
+
         return "admin/ace/html/ajax/index";
     }
 
@@ -114,7 +134,7 @@ public class NavigateController {
      * @ModelAttribute("model") ModelMap model 必须是这句
      */
     @RequestMapping(value = "/content/admin/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
-    public String group(HttpServletRequest request, @ModelAttribute("model") ModelMap model) { //传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型s
+    public String group(HttpServletRequest request, Model model) {
         logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         return "admin/ace/html/ajax/content/jqgrid-group";

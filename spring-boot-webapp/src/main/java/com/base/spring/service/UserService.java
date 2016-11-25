@@ -28,8 +28,6 @@ import java.util.*;
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
-
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -47,7 +45,6 @@ public class UserService {
 
     public Optional<UserEntity> getUserByEmail(String email) {
         logger.debug("Getting user by email={}", email.replaceFirst("@.*", "@***"));
-
         return userRepository.findOneByEmail(email);
     }
 
@@ -134,15 +131,17 @@ public class UserService {
      * @return
      */
     public TreeEntity getAllMenuByUser(UserEntity user) {
-
         //去掉重复，获取所有 tree
         Set<TreeEntity> allMenu = new HashSet<>();
         for (RoleEntity role : user.getRoles()) {
-            allMenu.addAll(role.getTreeNodes());
+            //  allMenu.addAll(role.getTreeNodes());
+            //级联了两层 lazy 属性，第二层无法自动通过 Transactional 自动加载，只能再次查询
+            allMenu.addAll(roleRepository.findTreeEntitiesById(role.getId()));
         }
+
         //重新组装，仅包含集合中的元素 set 中 tree 的并集
         TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
-        return TreeUtils.getFilterTreeInCollection(menuRoot, allMenu);
+        return TreeUtils.getFilterCopyTreeInCollection(menuRoot, allMenu);
 
     }
 

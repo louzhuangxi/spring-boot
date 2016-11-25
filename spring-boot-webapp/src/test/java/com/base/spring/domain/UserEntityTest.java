@@ -83,7 +83,7 @@ public class UserEntityTest {
     }
 
     /**
-     * 测试  getFilterTreeInCollection
+     * 测试  getFilterCopyTreeInCollection
      */
     @Test
     public void testGetAllUserMenus() {
@@ -102,7 +102,7 @@ public class UserEntityTest {
 
         TreeEntity rootMenu = treeRepository.findRoot(TreeType.Menu).get();
 
-        TreeEntity allMenu = TreeUtils.getFilterTreeInCollection(rootMenu, menuTrees);
+        TreeEntity allMenu = TreeUtils.getFilterCopyTreeInCollection(rootMenu, menuTrees);
 
         MyJsonUtils.prettyPrint(allMenu, preFilter);
 

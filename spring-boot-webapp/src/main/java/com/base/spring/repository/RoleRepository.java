@@ -1,6 +1,7 @@
 package com.base.spring.repository;
 
 import com.base.spring.domain.RoleEntity;
+import com.base.spring.domain.TreeEntity;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
@@ -25,5 +26,14 @@ public interface RoleRepository extends BaseRepository<RoleEntity, Long> {
 
     @Query("select e from RoleEntity e where e.id in ?1")
     List<RoleEntity> findByIdIn(Collection<Long> ids);
+
+    /**
+     * 为解决三层级联查询设置
+     *
+     * @param roleId
+     * @return
+     */
+    @Query("select e.treeNodes from RoleEntity e where e.id = ?1")
+    List<TreeEntity> findTreeEntitiesById(Long roleId);
 
 }

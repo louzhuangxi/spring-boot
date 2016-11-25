@@ -53,9 +53,9 @@ public class TreeUtils {
      * @param collection 仅包含的节点的集合
      * @return
      */
-    public static TreeEntity getFilterTreeInCollection(TreeEntity sourceNode, Collection<TreeEntity> collection) {
+    public static TreeEntity getFilterCopyTreeInCollection(TreeEntity sourceNode, Collection<TreeEntity> collection) {
         TreeEntity parentTemp = new TreeEntity();  // 临时变量 , 该操作不能放在事务中进行，因为 new 操作会自动创建表记录
-        filterTreeInCollection(parentTemp, sourceNode, collection); // 临时变量赋值
+        filterCopyTreeInCollection(parentTemp, sourceNode, collection); // 临时变量赋值
         return parentTemp.getChildren().get(0); //临时 parentNew 节点，只有一个子节点
     }
 
@@ -121,7 +121,7 @@ public class TreeUtils {
      * @param sourceNode       源节点
      * @param filterCollection 过滤器，源节点及其子节点，仅包含集合中有的节点
      */
-    private static void filterTreeInCollection(TreeEntity parentTemp, TreeEntity sourceNode, Collection<TreeEntity> filterCollection) {
+    private static void filterCopyTreeInCollection(TreeEntity parentTemp, TreeEntity sourceNode, Collection<TreeEntity> filterCollection) {
         if (filterCollection.contains(sourceNode)) {
             createCopyTree(parentTemp, sourceNode);
         }

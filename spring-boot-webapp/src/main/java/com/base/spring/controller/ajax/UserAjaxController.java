@@ -20,9 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -226,8 +224,7 @@ public class UserAjaxController {
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadGroups(
             @RequestParam(value = "user_id", required = true) String userId,
-            RedirectAttributes redirectAttrs, @ModelAttribute("model") ModelMap model,//传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型
-            HttpServletRequest request, HttpServletResponse response) {
+            RedirectAttributes redirectAttrs,Model model, HttpServletRequest request, HttpServletResponse response) {
 
 
         logger.info("user id={}", userId);
@@ -306,8 +303,7 @@ public class UserAjaxController {
     //注意 value  /jqgrid-edit  ，不能为 /jqgrid-edit/ ，不能多加后面的斜线
     public String bootsTrapModalLoadRoles(
             @RequestParam(value = "user_id", required = true) String userId,
-            RedirectAttributes redirectAttrs, @ModelAttribute("model") ModelMap model,//传递非字符串对象到前端，必须通过 @ModelAttribute("model") 对 model 强制赋值，并且是 ModelMap 类型
-            HttpServletRequest request, HttpServletResponse response) {
+            RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
 
 
         logger.info("user id={}", userId);
