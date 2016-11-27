@@ -82,13 +82,13 @@ public class TreeService {
 
             TreeEntity dtoRootNode = dtoUtils.createDTOcopy(rootNode.get(), show_Level); // 通过 DTOUtils 开控制返回的层级
 
-            return JSON.toJSONString(TreeUtils.getZTreeJsonData(dtoRootNode, roleEntity));
+            return JSON.toJSONString(TreeUtils.convertToZTreeNode(dtoRootNode, roleEntity));
 
         } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
             logger.info("initialize ztree asyncByTreeType from db by id={}", id);
             TreeEntity rootNode = treeRepository.findOne(id);
             TreeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
-            return JSON.toJSONString(TreeUtils.getZTreeJsonDataChildren(dtoNode, roleEntity)); //返回节点的子节点
+            return JSON.toJSONString(TreeUtils.getZTreeNodeChildren(dtoNode, roleEntity)); //返回节点的子节点
         }
     }
 
@@ -154,7 +154,7 @@ public class TreeService {
         if (curType.equals("copy")) {
             logger.info("copy nodes to a new parent node");
             // 复制一份和新生成的对象，加入到 parent 的子中。
-            TreeEntity copy = TreeUtils.getCopyTree(selectNode);
+            TreeEntity copy = TreeUtils.getCopyTreeEntity(selectNode);
             parentNode.addChildToLastIndex(copy);
         }
 

@@ -15,7 +15,6 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -88,8 +87,7 @@ public class MyBeanUtils {
                 // 过滤class属性，否则输出结果会有 class 属性
                 if (!key.equals("class")) {
                     // 得到property对应的getter方法
-                    Method getter = property.getReadMethod();
-                    Object value = getter.invoke(bean);
+                    Object value = property.getReadMethod().invoke(bean);
                     map.put(key, value);
                 }
             }

@@ -72,7 +72,7 @@ public class FileUtilsBase {
                     /**
                      * 文件 Hash
                      * 1. com.google.common.io.Files.hash 最快 (比 commons DigestUtils.md5Hex 快 50%)
-                     * 2. md5 比 SHA-256 快 40% 以上，md5 用于文件 hash ，足够
+                     * 2. md5 比 SHA-256 快 40% 以上，md5 用于文件 hash ，足够准确
                      */
                     String uniqueFileHash = Files.hash(new File(fileStr), Hashing.md5()).toString();
                     System.out.println(String.format("calculate file hash : %s -> %s", uniqueFileHash, fileStr));

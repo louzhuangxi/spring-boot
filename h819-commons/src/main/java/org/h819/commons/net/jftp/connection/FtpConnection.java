@@ -223,7 +223,7 @@ public class FtpConnection implements Connection {
                 localFilePath = localDirectoryPath + File.separator + localFileName;
 
 
-            logger.info("localFilePath={}",localFilePath);
+            logger.info("localFilePath={}", localFilePath);
 
             File localFile = Paths.get(localFilePath).toFile();
             long localSize = localFile.length();
@@ -696,6 +696,12 @@ public class FtpConnection implements Connection {
 
     /**
      * 有时间时，参考作者的新项目 https://github.com/JAGFin1/auto-ftp
+     * http://stackoverflow.com/questions/29909233/calculate-file-checksum-in-ftp-server-using-apache-ftpclient
+     * -
+     * 检查文件的的 file checksum 是最准确的方式，但 ftp server 上的文件信息，是通过 ftp 命令得到的
+     * 所以只能看 ftp server 是否支持查看 checksum 的命令（发送 XCRC 命令）
+     * few FTP servers support server side CRC generation.
+     * If the server doesn't support XCRC, BC will download the entire file and calulate the CRC locally.
      */
     @Override
     public boolean isSync(String remoteFilePath, String localFilePath) {

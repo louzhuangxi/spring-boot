@@ -48,6 +48,7 @@ public class MyJsonUtils {
      * @param bean
      */
     public static void prettyPrint(Object bean) {
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
         SerializerFeature[] features = {
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.WriteDateUseDateFormat,
@@ -67,6 +68,7 @@ public class MyJsonUtils {
 //        preFilter.addExcludes(InfoEntity.class, "refUserInfoEntities"); //在整个转换过程中，无论哪个级联层次，只要遇到 InfoEntity 类，那么他的 refUserInfoEntities 属性就不进行转换
 //        preFilter.addExcludes(ProvinceEntity.class, "parent", "children"); //多个属性
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
+        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
         SerializerFeature[] features = {
                 SerializerFeature.DisableCircularReferenceDetect,
                 SerializerFeature.WriteDateUseDateFormat,

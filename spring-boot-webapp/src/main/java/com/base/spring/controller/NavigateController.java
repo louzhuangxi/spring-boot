@@ -4,11 +4,10 @@ package com.base.spring.controller;
 import com.base.spring.custom.SecurityUser;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.service.UserService;
-import org.apache.commons.lang3.StringUtils;
+import com.base.spring.utils.DtoUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.commons.MyServletUtils;
-import org.h819.web.spring.jpa.DtoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,19 +66,23 @@ public class NavigateController {
         model.addAttribute("username", user.getUsername());
         TreeEntity menu = userService.getAllMenuByUser(user.getUser());
 
+
         DtoUtils utils = new DtoUtils();
         utils.addExcludes(TreeEntity.class, "parent", "roles");
-        model.addAttribute("menus", utils.createDTOcopy(menu,3));
+        model.addAttribute("menus", menu);
 
         //test
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeEntity.class, "parent", "roles");
-        MyJsonUtils.prettyPrint(utils.createDTOcopy(menu,3));
-        System.out.println(StringUtils.center("splite", 80, "="));
-        MyJsonUtils.prettyPrint(menu, preFilter);
+
+        TreeEntity tree = utils.createDTOcopy(menu);
+
+        MyJsonUtils.prettyPrint(menu,preFilter);
+//        System.out.println("\n"+StringUtils.center("splite", 80, "="));
+//        MyJsonUtils.prettyPrint(menu, preFilter);
 
         //前端或加载所有的菜单，自动级联查询的，不是过滤后的
-        ???
+
 
         return "admin/ace/html/ajax/index";
     }

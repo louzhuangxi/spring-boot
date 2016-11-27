@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
+import com.base.spring.service.UserService;
 import com.base.spring.utils.BCryptPassWordUtils;
-import com.base.spring.utils.TreeUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.junit.Test;
@@ -17,9 +17,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.endsWith;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
@@ -40,6 +37,8 @@ public class UserEntityTest {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -83,28 +82,29 @@ public class UserEntityTest {
     }
 
     /**
-     * 测试  getFilterCopyTreeInCollection
+     * 测试  getFilterCopyTreeEntityInCollection
      */
     @Test
     public void testGetAllUserMenus() {
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeEntity.class, "parent","roles");
       //  preFilter.addIncludes(TreeEntity.class, "name","level");
-
         UserEntity admin = userRepository.findByLoginName("admin").get();
-        //去掉重复，获取所有 Menu
-        Set<TreeEntity> menuTrees = new HashSet<>();
-        for (RoleEntity role : admin.getRoles()) {
-            menuTrees.addAll(role.getTreeNodes());
-        }
+//        //去掉重复，获取所有 Menu
+//        Set<TreeEntity> menuTrees = new HashSet<>();
+//        for (RoleEntity role : admin.getRoles()) {
+//            menuTrees.addAll(role.getTreeNodes());
+//        }
+//
+//      //  MyJsonUtils.prettyPrint(menuTrees,preFilter);
+//
+//        TreeEntity rootMenu = treeRepository.findRoot(TreeType.Menu).get();
+//
+//        TreeEntity allMenu = TreeUtils.getFilterCopyTreeEntityInCollection(rootMenu, menuTrees);
 
-      //  MyJsonUtils.prettyPrint(menuTrees,preFilter);
+        TreeEntity treeEntity = userService.getAllMenuByUser(admin);
 
-        TreeEntity rootMenu = treeRepository.findRoot(TreeType.Menu).get();
-
-        TreeEntity allMenu = TreeUtils.getFilterCopyTreeInCollection(rootMenu, menuTrees);
-
-        MyJsonUtils.prettyPrint(allMenu, preFilter);
+      //  MyJsonUtils.prettyPrint(treeEntity, preFilter);
 
 
     }

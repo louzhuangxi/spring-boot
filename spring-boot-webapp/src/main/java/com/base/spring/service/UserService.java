@@ -5,7 +5,9 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
+import com.base.spring.utils.DtoUtils;
 import com.base.spring.utils.TreeUtils;
+import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,16 +134,27 @@ public class UserService {
      */
     public TreeEntity getAllMenuByUser(UserEntity user) {
         //去掉重复，获取所有 tree
+        DtoUtils utils = new DtoUtils();
+        utils.addExcludes(TreeEntity.class, "parent", "roles", "children");
         Set<TreeEntity> allMenu = new HashSet<>();
         for (RoleEntity role : user.getRoles()) {
             //  allMenu.addAll(role.getTreeNodes());
             //级联了两层 lazy 属性，第二层无法自动通过 Transactional 自动加载，只能再次查询
-            allMenu.addAll(roleRepository.findTreeEntitiesById(role.getId()));
+            allMenu.addAll(utils.createDTOcopy(roleRepository.findTreeEntitiesById(role.getId())));
         }
+
+        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+        preFilter.addExcludes(TreeEntity.class, "parent", "roles");
+        System.out.println(org.apache.commons.lang3.StringUtils.center("splite",80,"="));
+        MyJsonUtils.prettyPrint(allMenu);
 
         //重新组装，仅包含集合中的元素 set 中 tree 的并集
         TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
-        return TreeUtils.getFilterCopyTreeInCollection(menuRoot, allMenu);
+
+        TreeEntity menuFilter = TreeUtils.getFilterCopyTreeEntityInCollection(menuRoot, allMenu);  ??
+        MyJsonUtils.prettyPrint(menuFilter,preFilter);
+
+        return TreeUtils.getFilterCopyTreeEntityInCollection(menuRoot, allMenu);
 
     }
 
