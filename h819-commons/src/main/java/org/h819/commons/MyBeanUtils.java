@@ -68,6 +68,8 @@ public class MyBeanUtils {
 
     /**
      * bean to map
+     * -
+     * 如果涉及到bean属性是复杂属性，看参考 DtoUtils 转换为 map 的方法
      *
      * @param bean java bean 类型的值对象
      * @return

@@ -86,6 +86,39 @@ public class MyFileUtils extends FileUtilsBase {
 
     }
 
+    public static Charset getEncoding(String string) throws IOException {
+
+        byte[] buf = new byte[4096];
+        ByteArrayInputStream bufferedInputStream = new ByteArrayInputStream(string.getBytes());;
+        final UniversalDetector universalDetector = new UniversalDetector(null);
+        int numberOfBytesRead;
+        while ((numberOfBytesRead = bufferedInputStream.read(buf)) > 0 && !universalDetector.isDone()) {
+            universalDetector.handleData(buf, 0, numberOfBytesRead);
+        }
+        universalDetector.dataEnd();
+        String encoding = universalDetector.getDetectedCharset();
+        universalDetector.reset();
+        bufferedInputStream.close();
+
+        if (encoding != null) {  //解析不出来，默认为 ISO_8859_1
+            logger.debug("Detected encoding for {} is {}.", string, encoding);
+            try {
+                return Charset.forName(encoding);
+            } catch (IllegalCharsetNameException err) {
+                logger.debug("Invalid detected charset name '" + encoding + "': " + err);
+                return StandardCharsets.ISO_8859_1;
+            } catch (UnsupportedCharsetException err) {
+                logger.error("Detected charset '" + encoding + "' not supported: " + err);
+                return StandardCharsets.ISO_8859_1;
+            }
+        } else {
+            logger.info("encodeing is null, will use 'ISO_8859_1'  : " + string + " , " + encoding);
+            return StandardCharsets.ISO_8859_1;
+
+        }
+
+    }
+
     /**
      * 拷贝 classpath 中依赖库 jar 资源中的文件到系统临时目录下
      * jar 文件是必须用 java 命令打包的。

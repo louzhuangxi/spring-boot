@@ -1,12 +1,11 @@
 package org.h819.web.spring.jpa;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.h819.commons.MyBeanUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.BeanUtils;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -109,41 +108,58 @@ public class DtoUtils {
     /**
      * 默认只生成对象的基本属性
      *
-     * @param entityBeanPOJO
+     * @param entityPO
      * @param <T>
      * @return
      */
-    public <T> T createDTOcopy(T entityBeanPOJO) {
-        return createDTOcopy(entityBeanPOJO, 0);
+    public <T> T createDTOcopy(T entityPO) {
+        return createDTOcopy(entityPO, 0);
+    }
+
+    public <T> Object createMapcopy(T entityPO) {
+        return createMapcopy(entityPO, 0);
     }
 
 
     /**
      * 由 POJO 生成为 DTO 工具，如果不清楚深度在那一层，可以从小到大逐个尝试，以满足结果和最少查询数据库为最佳。
+     * -
+     * map 方式无法合并为此写法，返回值一个为 Map, 另一个为 List<Map>
      *
-     * @param entityBeanPOJO 接受容器管理的 POJO，可以是一个 POJO 对象，也可以是 POJO 对象集合
-     * @param depth          拷贝深度
+     * @param entityPO 接受容器管理的 POJO，可以是一个 POJO 对象，也可以是 POJO 对象集合
+     * @param depth    拷贝深度
      * @param <T>
      * @return 不受容器管理的 DTO 对象
      */
-    public <T> T createDTOcopy(T entityBeanPOJO, int depth) {
+    public <T> T createDTOcopy(T entityPO, int depth) {
 
-        if (entityBeanPOJO == null)
+        if (entityPO == null)
             return null;
 
-        if (Collection.class.isAssignableFrom(entityBeanPOJO.getClass()))  // 集合
-            return (T) createDTOCopyList((Collection) entityBeanPOJO, depth);
+        if (Collection.class.isAssignableFrom(entityPO.getClass()))  // 集合
+            return (T) createDTOCopyList((Collection) entityPO, depth);
         else
-            return (T) createDTOCopy(entityBeanPOJO, depth);   // 单个对象
+            return (T) createDTOCopy(entityPO, depth);   // 单个对象
     }
 
 
     /**
-     * @param entityBeanPOJO
+     * 返回值为 Map 或  List
+     *
+     * @param entityPO
+     * @param depth
+     * @param <T>
      * @return
      */
-    public Map<String, Object> createDTOMapCopy(Object entityBeanPOJO) {
-        return MyBeanUtils.beanToMap(createDTOCopy(entityBeanPOJO, 0));
+    public <T> Object createMapcopy(T entityPO, int depth) {
+
+        if (entityPO == null)
+            return null;
+
+        if (Collection.class.isAssignableFrom(entityPO.getClass()))  // 集合
+            return (T) createMapCopyList((Collection) entityPO, depth);
+        else
+            return (T) createMapCopy(entityPO, depth);   // 单个对象
     }
 
     /**
@@ -152,35 +168,42 @@ public class DtoUtils {
      * 增加的属性变量，在具体实现代码中可以灵活实现，不包装成工具类。
      * 如果想对集合中的所有对象增加属性，遍历集合，逐个添加即可。
      *
-     * @param entityBeanPOJO 接受容器管理的 POJO
-     * @param entityBeanPOJO
+     * @param entityPO 接受容器管理的 POJO
+     * @param entityPO
      * @return
      */
-    public Map<String, Object> createDTOMapCopy(Object entityBeanPOJO, int depth) {
-        return MyBeanUtils.beanToMap(createDTOCopy(entityBeanPOJO, depth));
+    public Map<String, Object> createMapCopy(Object entityPO, int depth) {
+        return createMapCopy(entityPO, depth, new LinkedList());
     }
 
-    public Map<String, Object> createDTOMapCopyss(Object entityBeanPOJO, int depth) {
-       // return createMapCopy(entityBeanPOJO, depth, new LinkedList());
-       // return MyBeanUtils.beanToMap(createDTOCopy(entityBeanPOJO, depth));
-        return new HashedMap();
+    public <T> List<Map<String, Object>> createMapCopyList(Collection<T> entityPOs, int depth) {
+        List<Map<String, Object>> list = new ArrayList(entityPOs.size());//按照原来的顺序
+        for (T entity : entityPOs)
+            list.add(createMapCopy(entity, depth));
+        return list;
     }
 
-    private Object createDTOCopy(Object entityBeanPOJO, int depth) {
-        return createDTOCopy(entityBeanPOJO, depth, new LinkedList());
+
+    /**
+     * @param entityPO
+     * @param depth
+     * @return
+     */
+    private Object createDTOCopy(Object entityPO, int depth) {
+        return createDTOCopy(entityPO, depth, new LinkedList());
     }
 
     /**
      * POJO 对象集合
      *
-     * @param entityBeanPOJOs
+     * @param entityPOs
      * @param depth
      * @param <T>
      * @return
      */
-    private <T> Collection<T> createDTOCopyList(Collection<T> entityBeanPOJOs, int depth) {
-        List<T> list = new ArrayList(entityBeanPOJOs.size());//按照原来的顺序
-        for (T entity : entityBeanPOJOs)
+    private <T> List<T> createDTOCopyList(Collection<T> entityPOs, int depth) {
+        List<T> list = new ArrayList(entityPOs.size());//按照原来的顺序
+        for (T entity : entityPOs)
             list.add((T) createDTOCopy(entity, depth));
         return list;
     }
@@ -219,7 +242,7 @@ public class DtoUtils {
             //Convenience method to instantiate a class using its no-arg constructor.
             entityVO = BeanUtils.instantiate(entityPO.getClass());
             List<String> nonSimplePropertyNames = getNonSimplePropertyNames(entityPO.getClass());
-            // copy entityBeanPOJO to entityBeanVO , ignore nonSimplePropertyNames properties , 不拷贝非简单属性
+            // copy entityPO to entityBeanVO , ignore nonSimplePropertyNames properties , 不拷贝非简单属性
             //Copy the property values of the given source bean into the given target bean, ignoring the given "ignoreProperties".
             BeanUtils.copyProperties(entityPO, entityVO, nonSimplePropertyNames.toArray(new String[]{}));
             if (depth > 0) {
@@ -231,7 +254,7 @@ public class DtoUtils {
 
                 //本身放入
                 ancestors.add(entityPO);
-                //entityBeanPOJOs 的所有属性
+                //entityPOs 的所有属性
                 PropertyDescriptor[] properties = BeanUtils.getPropertyDescriptors(entityPO.getClass());
 
 
@@ -265,10 +288,10 @@ public class DtoUtils {
                         Collection sourceCollection = (Collection) property.getReadMethod().invoke(entityPO);
                         Collection targetCollection = (Collection) property.getReadMethod().invoke(entityVO);
                         targetCollection.clear();
-
-                        for (Object j : sourceCollection) { //对集合的每一个对象，执行复制上一层操作，拷贝动作在下文
-                            targetCollection.add(createDTOCopy(j, depth - 1, ancestors));
-                        }
+                        if (sourceCollection != null)
+                            for (Object j : sourceCollection) { //对集合的每一个对象，执行复制上一层操作，拷贝动作在下文
+                                targetCollection.add(createDTOCopy(j, depth - 1, ancestors));
+                            }
 
                         continue;
                     }
@@ -300,6 +323,14 @@ public class DtoUtils {
         return entityVO;
     }
 
+    /**
+     * 生成 map ，而不是 Bean
+     *
+     * @param entityPO
+     * @param depth
+     * @param ancestors
+     * @return
+     */
     private Map<String, Object> createMapCopy(Object entityPO, int depth, List ancestors) {
 
         if (entityPO == null) {
@@ -325,6 +356,7 @@ public class DtoUtils {
             BeanInfo beanInfo = Introspector.getBeanInfo(entityPO.getClass());
             List<String> nonSimplePropertyNames = getNonSimplePropertyNames(entityPO.getClass());
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+
             for (PropertyDescriptor property : propertyDescriptors) {
                 String key = property.getName();
                 // 过滤class属性，否则输出结果会有 class 属性
@@ -345,13 +377,12 @@ public class DtoUtils {
 
                 //本身放入
                 ancestors.add(entityPO);
-                //entityBeanPOJOs 的所有属性
+                //entityPOs 的所有属性
                 PropertyDescriptor[] properties = BeanUtils.getPropertyDescriptors(entityPO.getClass());
-
 
                 continueTag:
                 for (PropertyDescriptor property : properties) {//循环当前对象的所有属性，进行加载
-                    // System.out.println(pd.getName());
+                    //   System.out.println("property name0 : " + property.getName());
 
                     /**
                      * 逐一比当前对象的每个属性，找到不需要的序列化的对象的属性，跳过。
@@ -369,6 +400,7 @@ public class DtoUtils {
                         }
                     }
 
+                    //  System.out.println("property name1 : " + property.getName());
 
                     /**
                      * 集合则进行递归
@@ -378,12 +410,15 @@ public class DtoUtils {
                     if (Collection.class.isAssignableFrom(property.getPropertyType())) { // 判断属性名称，是否为 Collection 类型
                         Collection sourceCollection = (Collection) property.getReadMethod().invoke(entityPO);
                         Collection targetCollection = new ArrayList(sourceCollection.size());
+                        // Collection targetCollection = (Collection) property.getReadMethod().invoke(entityVO);
                         targetCollection.clear();
+                        if (sourceCollection != null)
+                            for (Object j : sourceCollection) { //对集合的每一个对象，执行复制上一层操作，拷贝动作在下文
+                                targetCollection.add(createMapCopy(j, depth - 1, ancestors));
+                            }
+                        map.put(property.getName(), targetCollection);
 
-                        for (Object j : sourceCollection) { //对集合的每一个对象，执行复制上一层操作，拷贝动作在下文
-                            targetCollection.add(createMapCopy(j, depth - 1, ancestors));
-                        }
-
+                        //  System.out.println("property name11 : " + property.getName());
                         continue;
                     }
 
@@ -391,14 +426,11 @@ public class DtoUtils {
                      * 拷贝非简单属性
                      */
 
-                    //     System.out.println("pd name : "+pd.getName());
+                    //  System.out.println("property name2 : " + property.getName());
                     if (nonSimplePropertyNames.contains(property.getName())) {
                         Object propertyToCopy = property.getReadMethod().invoke(entityPO);
                         Object propertyCopy = createMapCopy(propertyToCopy, depth - 1, ancestors);
-                        //       System.out.println(" propertyToCopy:  " + propertyToCopy.toString());
-                        //      System.out.println(" propertyCopy:  " + propertyCopy.toString());
-
-                        map.put(property.getName(),propertyCopy);
+                        map.put(property.getName(), propertyCopy);
                         // property.getWriteMethod().invoke(entityVO, propertyCopy);
 
                         continue;
@@ -412,8 +444,8 @@ public class DtoUtils {
             throw new UnsupportedOperationException(entityPO.getClass() + " cannot be handled", ex);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("beanToMap Error " + e);
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
         }
 
         return map;

@@ -4,7 +4,6 @@ package com.base.spring.controller;
 import com.base.spring.custom.SecurityUser;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.service.UserService;
-import com.base.spring.utils.DtoUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.commons.MyServletUtils;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Description : TODO(ace admin template ajax 方式导航, 本项目用到。都是点击菜单传来，所以都是 Get)
@@ -65,25 +65,10 @@ public class NavigateController {
         // UserEntity uEnity = suser.getUser();
         model.addAttribute("username", user.getUsername());
         TreeEntity menu = userService.getAllMenuByUser(user.getUser());
-
-
-        DtoUtils utils = new DtoUtils();
-        utils.addExcludes(TreeEntity.class, "parent", "roles");
-        model.addAttribute("menus", menu);
-
-        //test
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
-        preFilter.addExcludes(TreeEntity.class, "parent", "roles");
-
-        TreeEntity tree = utils.createDTOcopy(menu);
-
-        MyJsonUtils.prettyPrint(menu,preFilter);
-//        System.out.println("\n"+StringUtils.center("splite", 80, "="));
-//        MyJsonUtils.prettyPrint(menu, preFilter);
-
-        //前端或加载所有的菜单，自动级联查询的，不是过滤后的
-
-
+        preFilter.addExcludes(TreeEntity.class,"parent","roles");
+        MyJsonUtils.prettyPrint(menu,preFilter, StandardCharsets.UTF_8);
+        model.addAttribute("menus", menu);
         return "admin/ace/html/ajax/index";
     }
 

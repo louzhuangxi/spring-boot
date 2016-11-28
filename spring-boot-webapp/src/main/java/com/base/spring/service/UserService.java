@@ -5,9 +5,8 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
-import com.base.spring.utils.DtoUtils;
+import org.h819.web.spring.jpa.DtoUtils;
 import com.base.spring.utils.TreeUtils;
-import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +38,6 @@ public class UserService {
     @Autowired
     private TreeRepository treeRepository;
 
-
     public Optional<UserEntity> getUserById(long id) {
         logger.debug("Getting user={}", id);
         return Optional.ofNullable(userRepository.findOne(id));
@@ -55,12 +53,10 @@ public class UserService {
         return userRepository.findAll(new Sort("email"));
     }
 
-
     @Transactional(readOnly = false)
     public UserEntity createUser(String loginName, String password, String email) {
         return userRepository.save(new UserEntity(loginName, password, email));
     }
-
 
     /**
      * 关联所有 user 到指定的 group
@@ -125,7 +121,6 @@ public class UserService {
 
     }
 
-
     /**
      * 获取用户拥有权限的所有菜单
      *
@@ -143,21 +138,12 @@ public class UserService {
             allMenu.addAll(utils.createDTOcopy(roleRepository.findTreeEntitiesById(role.getId())));
         }
 
-        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
-        preFilter.addExcludes(TreeEntity.class, "parent", "roles");
-        System.out.println(org.apache.commons.lang3.StringUtils.center("splite",80,"="));
-        MyJsonUtils.prettyPrint(allMenu);
-
         //重新组装，仅包含集合中的元素 set 中 tree 的并集
         TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
-
-        TreeEntity menuFilter = TreeUtils.getFilterCopyTreeEntityInCollection(menuRoot, allMenu);  ??
-        MyJsonUtils.prettyPrint(menuFilter,preFilter);
 
         return TreeUtils.getFilterCopyTreeEntityInCollection(menuRoot, allMenu);
 
     }
-
 
     /**
      * 关联所有 user 到指定的 group
@@ -224,6 +210,5 @@ public class UserService {
         userRepository.save(userEntity);
 
     }
-
 
 }
