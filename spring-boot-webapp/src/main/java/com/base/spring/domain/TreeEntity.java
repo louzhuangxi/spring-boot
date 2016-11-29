@@ -290,5 +290,4 @@ public class TreeEntity extends BaseEntity {
             entity.setIndex(children.indexOf(entity));
 
     }
-
 }

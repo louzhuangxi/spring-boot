@@ -52,6 +52,9 @@ public interface TreeRepository extends BaseRepository<TreeEntity, Long> {
     @Query("select e from TreeEntity e where e.parent is null and e.type =?1 order by  e.index")
     Optional<TreeEntity> findRoot(TreeType menuType);
 
+    @Query("select e from TreeEntity e where e.parent is null and e.type in ?1 order by  e.index")
+    List<TreeEntity> findRoot(Collection<TreeType> menuTypes);
+
 
     @Query("select e.type from TreeEntity e")
     List<TreeType> findTreeTypes();

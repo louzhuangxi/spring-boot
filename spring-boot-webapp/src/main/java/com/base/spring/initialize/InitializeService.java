@@ -52,7 +52,7 @@ public class InitializeService {
     public void initBaseData() {
 
         /**
-         * 初始化 Tree
+         * 初始化 Tree ，保证根节点存在
          */
 
         List<TreeType> rootTreeType = treeRepository.findTreeTypes();
@@ -65,7 +65,12 @@ public class InitializeService {
             }
         }
 
+        /**
+         * 初始化 Tree
+         */
         initMenuTree();
+        initPageResourceTree();
+        initStandardTree();
 
         /**
          * 初始化 User
@@ -91,22 +96,17 @@ public class InitializeService {
      * 1.3.1 菜单角色
      * 1.3.2 标准资源角色
      * -
-     * 2. 按钮/资源
-     * 2.1 菜单树
-     * 2.1.1 树结构编辑
-     * 2.1.2 节点 URL
-     * -
+     * <p>
      * 其他菜单只作为示例，可根据实际需要修改
      */
     private void initMenuTree() {
 
         /**
-         * 包含 "菜单管理" and "按钮/资源" ，意味着已经初始化，
+         * 包含 "菜单管理"，意味着已经初始化，
          */
-        List<TreeEntity> exist1 = treeRepository.findByName("菜单管理");
-        List<TreeEntity> exist2 = treeRepository.findByName("按钮/资源");
+        List<TreeEntity> exist = treeRepository.findByName("菜单管理");
 
-        if (!exist1.isEmpty() && !exist2.isEmpty()) {
+        if (!exist.isEmpty()) {
             logger.info("menu tree has initialized , continue ");
             return;
         }
@@ -116,14 +116,50 @@ public class InitializeService {
 
     }
 
-    private void createMenuTree() {
+    /**
+     * 1. 按钮/资源
+     * 1.1 菜单树
+     * 1.1.1 树结构编辑
+     * 1.1.2 节点 URL
+     * -
+     */
+    private void initPageResourceTree() {
 
-        //系统其他的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
-        TreeEntity menu = treeRepository.findRoot(TreeType.Menu).get(); // menu , privilege
-        TreeEntity departMent = treeRepository.findRoot(TreeType.DepartMent).get();
-        TreeEntity standard = treeRepository.findRoot(TreeType.Standard).get();
+        /**
+         * 包含 "按钮/资源" ，意味着已经初始化，
+         */
+        List<TreeEntity> exist = treeRepository.findByName("按钮/资源");
 
+        if (!exist.isEmpty()) {
+            logger.info("menu tree has initialized , continue ");
+            return;
+        }
 
+        logger.info("initialize pageResource tree ... ");
+        createPageResourceTree();
+
+    }
+
+    private void initStandardTree() {
+
+        /**
+         * 包含 "按钮/资源" ，意味着已经初始化，
+         */
+        List<TreeEntity> exist = treeRepository.findByName("国家标准");
+
+        if (!exist.isEmpty()) {
+            logger.info("menu tree has initialized , continue ");
+            return;
+        }
+
+        logger.info("initialize standard tree ... ");
+        createStandardTree();
+
+    }
+
+    private void createPageResourceTree() {
+        //系统启动的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
+        TreeEntity pageResource = treeRepository.findRoot(TreeType.PageResource).get(); // PageResource
         Set<TreeEntity> set = new HashSet<>();
 
         /**
@@ -134,38 +170,11 @@ public class InitializeService {
          */
 
         /**
-         * 初始化 "菜单管理"，为系统默认菜单，不能改动
+         * 初始化 "按钮/资源"，为系统默认菜单，不能改动
          */
         //一级菜单
-        TreeEntity menu1 = new TreeEntity(TreeType.Menu, "系统管理", 0, true, menu);
-        set.addAll(Arrays.asList(menu1));
-        /**
-         * 系统默认菜单，不能改动
-         */
-        TreeEntity menu11 = new TreeEntity(TreeType.Menu, "菜单管理", 0, true, menu1);
-        menu11.setCss("menu-icon fa fa-sitemap");
-        TreeEntity menu12 = new TreeEntity(TreeType.Menu, "按钮/资源", 1, true, menu1);
-        menu12.setCss("");
-        TreeEntity menu13 = new TreeEntity(TreeType.Menu, "用户管理", 2, true, menu1);
-        menu13.setCss("menu-icon fa fa-user-plus");
-        TreeEntity menu14 = new TreeEntity(TreeType.Menu, "角色管理", 3, true, menu1);
-        menu14.setCss("menu-icon fa fa-object-group");
-        TreeEntity menu15 = new TreeEntity(TreeType.Menu, "系统设置", 4, true, menu1);
-        menu15.setCss("");
-        set.addAll(Arrays.asList(menu11, menu12, menu13, menu14, menu15));
-
-        // 菜单管理 (系统默认菜单，不能改动)
-        TreeEntity menu111 = new TreeEntity(TreeType.Menu, "菜单树", 0, false, menu11);
-        menu111.setUrl("admin/ztree-type?treeType=Menu");
-        menu111.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu112 = new TreeEntity(TreeType.Menu, "部门树", 1, false, menu11);
-        menu112.setUrl("admin/ztree-type?treeType=DepartMent");
-        menu112.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu113 = new TreeEntity(TreeType.Menu, "标准结构树", 2, false, menu11);
-        menu113.setUrl("admin/ztree-type?treeType=Standard");
-        menu113.setCss("menu-icon fa fa-caret-right");
-        set.addAll(Arrays.asList(menu111, menu112, menu113));
-
+        TreeEntity menu = new TreeEntity(TreeType.Menu, "按钮/资源", 0, true, pageResource);
+        set.addAll(Arrays.asList(menu));
 
         /**
          * 初始化 "按钮/资源" , 可以根据业务系统需要自行设计，这里仅为演示
@@ -174,85 +183,46 @@ public class InitializeService {
          *
          */
         //一级菜单
-        TreeEntity menu121 = new TreeEntity(TreeType.Menu, "菜单树", 0, true, menu12);  //应用中的文件资源
-        TreeEntity menu122 = new TreeEntity(TreeType.Menu, "文件资源", 1, true, menu12);
-        TreeEntity menu123 = new TreeEntity(TreeType.Menu, "其他资源", 2, true, menu12);
-        TreeEntity menu124 = new TreeEntity(TreeType.Menu, "PDF 文件", 3, true, menu12);  //单独对 pdf 的操作
-        set.addAll(Arrays.asList(menu121, menu122, menu123, menu124));
+        TreeEntity menu1 = new TreeEntity(TreeType.Menu, "菜单树", 0, true, menu);  //应用中的文件资源
+        TreeEntity menu2 = new TreeEntity(TreeType.Menu, "文件资源", 1, true, menu);
+        TreeEntity menu3 = new TreeEntity(TreeType.Menu, "其他资源", 2, true, menu);
+        TreeEntity menu4 = new TreeEntity(TreeType.Menu, "PDF 文件", 3, true, menu);  //单独对 pdf 的操作
+        set.addAll(Arrays.asList(menu1, menu2, menu3, menu4));
 
 
         //菜单树
-        TreeEntity menu1211 = new TreeEntity(TreeType.Menu, "树结构编辑", 0, false, menu121);
-        TreeEntity menu1212 = new TreeEntity(TreeType.Menu, "节点 URL", 0, false, menu121);
-        TreeEntity menu1213 = new TreeEntity(TreeType.Menu, "节点关联标准", 0, false, menu121);
-        set.addAll(Arrays.asList(menu1211, menu1212, menu1213));
+        TreeEntity menu11 = new TreeEntity(TreeType.Menu, "树结构编辑", 0, false, menu1);
+        TreeEntity menu12 = new TreeEntity(TreeType.Menu, "节点 URL", 0, false, menu1);
+        TreeEntity menu13 = new TreeEntity(TreeType.Menu, "节点关联标准", 0, false, menu1);
+        set.addAll(Arrays.asList(menu11, menu12, menu13));
 
         //文件资源
-        TreeEntity menu1221 = new TreeEntity(TreeType.Menu, "查看文件", 0, false, menu122);
-        TreeEntity menu1222 = new TreeEntity(TreeType.Menu, "下载附件", 0, false, menu122);
-        TreeEntity menu1223 = new TreeEntity(TreeType.Menu, "查看列表", 0, false, menu122);
-        set.addAll(Arrays.asList(menu1221, menu1222, menu1223));
+        TreeEntity menu21 = new TreeEntity(TreeType.Menu, "查看文件", 0, false, menu2);
+        TreeEntity menu22 = new TreeEntity(TreeType.Menu, "下载附件", 0, false, menu2);
+        TreeEntity menu23 = new TreeEntity(TreeType.Menu, "查看列表", 0, false, menu2);
+        set.addAll(Arrays.asList(menu21, menu22, menu23));
 
         //其他资源
-        TreeEntity menu1231 = new TreeEntity(TreeType.Menu, "显示图片", 0, false, menu123);
-        TreeEntity menu1232 = new TreeEntity(TreeType.Menu, "资源列表", 0, false, menu123);
-        set.addAll(Arrays.asList(menu1231, menu1232));
+        TreeEntity menu31 = new TreeEntity(TreeType.Menu, "显示图片", 0, false, menu3);
+        TreeEntity menu32 = new TreeEntity(TreeType.Menu, "资源列表", 0, false, menu3);
+        set.addAll(Arrays.asList(menu31, menu32));
 
         //PDF 的操作
-        TreeEntity menu1241 = new TreeEntity(TreeType.Menu, "查看", 0, false, menu124);
-        TreeEntity menu1242 = new TreeEntity(TreeType.Menu, "打印", 1, false, menu124);
-        TreeEntity menu1243 = new TreeEntity(TreeType.Menu, "下载", 2, false, menu124);
-        set.addAll(Arrays.asList(menu1241, menu1242, menu1243));
+        TreeEntity menu41 = new TreeEntity(TreeType.Menu, "查看", 0, false, menu4);
+        TreeEntity menu42 = new TreeEntity(TreeType.Menu, "打印", 1, false, menu4);
+        TreeEntity menu43 = new TreeEntity(TreeType.Menu, "下载", 2, false, menu4);
+        set.addAll(Arrays.asList(menu41, menu42, menu43));
+
+        treeRepository.save(set);
+
+    }
 
 
-        // 用户管理   (系统默认菜单，不能改动)
-        TreeEntity menu131 = new TreeEntity(TreeType.Menu, "用户", 0, false, menu13);
-        menu131.setUrl("admin/jqgrid-user");
-        menu131.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu132 = new TreeEntity(TreeType.Menu, "用户组", 1, false, menu13);
-        menu132.setUrl("admin/jqgrid-group");
-        menu132.setCss("menu-icon fa fa-caret-right");
-        set.addAll(Arrays.asList(menu131, menu132));
+    private void createStandardTree() {
 
-        //角色管理   (系统默认菜单，不能改动)
-        TreeEntity menu141 = new TreeEntity(TreeType.Menu, "菜单角色", 0, false, menu14);
-        menu141.setUrl("admin/jqgrid-roles?treeType=Menu");
-        menu141.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu142 = new TreeEntity(TreeType.Menu, "标准资源角色", 1, false, menu14);
-        menu142.setUrl("admin/jqgrid-roles?treeType=Standard");
-        menu142.setCss("menu-icon fa fa-caret-right");
-        set.addAll(Arrays.asList(menu141, menu142));
-
-        //系统设置  (菜单示例，可根据需要修改)
-        TreeEntity menu151 = new TreeEntity(TreeType.Menu, "参数配置", 0, false, menu15);
-        TreeEntity menu152 = new TreeEntity(TreeType.Menu, "定时任务", 1, false, menu15);
-        TreeEntity menu153 = new TreeEntity(TreeType.Menu, "系统日志", 2, false, menu15);
-        set.addAll(Arrays.asList(menu151, menu152, menu153));
-
-        /**
-         * 初始化 "业务系统管理"，根据具体的应用修改。
-         */
-        //一级菜单
-        TreeEntity menu2 = new TreeEntity(TreeType.Menu, "业务系统管理", 0, true, menu);
-        set.addAll(Arrays.asList(menu2));
-
-        //用户菜单 (菜单示例，可根据需要修改)
-        TreeEntity menu21 = new TreeEntity(TreeType.Menu, "站点维护", 0, false, menu2);
-        TreeEntity menu22 = new TreeEntity(TreeType.Menu, "高级检索", 1, false, menu2);
-        TreeEntity menu23 = new TreeEntity(TreeType.Menu, "用户管理", 2, false, menu2);
-        TreeEntity menu24 = new TreeEntity(TreeType.Menu, "缴费管理", 3, false, menu2);
-        TreeEntity menu25 = new TreeEntity(TreeType.Menu, "模版设置", 4, false, menu2);
-        TreeEntity menu26 = new TreeEntity(TreeType.Menu, "消息管理", 5, false, menu2);
-        TreeEntity menu27 = new TreeEntity(TreeType.Menu, "个人设置", 6, false, menu2);
-        TreeEntity menu28 = new TreeEntity(TreeType.Menu, "其他菜单", 7, true, menu2);
-        set.addAll(Arrays.asList(menu21, menu22, menu23, menu24, menu25, menu26, menu27, menu28));
-
-
-        // 其他菜单
-        TreeEntity menu281 = new TreeEntity(TreeType.Menu, "菜单1", 0, false, menu28);
-        TreeEntity menu282 = new TreeEntity(TreeType.Menu, "菜单2", 1, false, menu28);
-        set.addAll(Arrays.asList(menu281, menu282));
-
+        //系统启动的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
+        TreeEntity standard = treeRepository.findRoot(TreeType.Standard).get();
+        Set<TreeEntity> set = new HashSet<>();
 
         /**
          * 初始化 Standard
@@ -291,6 +261,102 @@ public class InitializeService {
         TreeEntity standard22 = new TreeEntity(TreeType.Standard, "iec标准", 1, false, standard2);
         TreeEntity standard23 = new TreeEntity(TreeType.Standard, "itu标准", 2, false, standard2);
         set.addAll(Arrays.asList(standard21, standard22, standard23));
+
+        treeRepository.save(set);
+    }
+
+    private void createMenuTree() {
+
+        //系统启动的时候，这几种类型的父节点已经创建完毕，在下面添加子节点即可
+        TreeEntity menu = treeRepository.findRoot(TreeType.Menu).get(); // menu
+        Set<TreeEntity> set = new HashSet<>();
+
+        /**
+         * url 只适用于 ace admin 1.4 , ajax 方式
+         * 注意 url 应该和 index.ftl , NavigateController 中 RequestMapping 对应
+         * #page/admin/ztree-type?treeType=Menu
+         * 只填写 #page/ 后面部分
+         */
+
+        /**
+         * 初始化 "菜单管理"，为系统默认菜单，不能改动
+         */
+        //一级菜单
+        TreeEntity menu1 = new TreeEntity(TreeType.Menu, "系统管理", 0, true, menu);
+        set.addAll(Arrays.asList(menu1));
+        /**
+         * 系统默认菜单，不能改动
+         */
+        TreeEntity menu11 = new TreeEntity(TreeType.Menu, "菜单管理", 0, true, menu1);
+        menu11.setCss("menu-icon fa fa-sitemap");
+        TreeEntity menu13 = new TreeEntity(TreeType.Menu, "用户管理", 2, true, menu1);
+        menu13.setCss("menu-icon fa fa-user-plus");
+        TreeEntity menu14 = new TreeEntity(TreeType.Menu, "角色管理", 3, true, menu1);
+        menu14.setCss("menu-icon fa fa-object-group");
+        TreeEntity menu15 = new TreeEntity(TreeType.Menu, "系统设置", 4, true, menu1);
+        menu15.setCss("");
+        set.addAll(Arrays.asList(menu11, menu13, menu14, menu15));
+
+        // 菜单管理 (系统默认菜单，不能改动)
+        TreeEntity menu111 = new TreeEntity(TreeType.Menu, "菜单树", 0, false, menu11);
+        menu111.setUrl("admin/ztree-type?treeType=Menu");
+        menu111.setCss("menu-icon fa fa-caret-right");
+        TreeEntity menu112 = new TreeEntity(TreeType.Menu, "部门树", 1, false, menu11);
+        menu112.setUrl("admin/ztree-type?treeType=DepartMent");
+        menu112.setCss("menu-icon fa fa-caret-right");
+        TreeEntity menu113 = new TreeEntity(TreeType.Menu, "标准结构树", 2, false, menu11);
+        menu113.setUrl("admin/ztree-type?treeType=Standard");
+        menu113.setCss("menu-icon fa fa-caret-right");
+        set.addAll(Arrays.asList(menu111, menu112, menu113));
+
+
+        // 用户管理   (系统默认菜单，不能改动)
+        TreeEntity menu131 = new TreeEntity(TreeType.Menu, "用户", 0, false, menu13);
+        menu131.setUrl("admin/jqgrid-user");
+        menu131.setCss("menu-icon fa fa-caret-right");
+        TreeEntity menu132 = new TreeEntity(TreeType.Menu, "用户组", 1, false, menu13);
+        menu132.setUrl("admin/jqgrid-group");
+        menu132.setCss("menu-icon fa fa-caret-right");
+        set.addAll(Arrays.asList(menu131, menu132));
+
+        //角色管理   (系统默认菜单，不能改动)
+        TreeEntity menu141 = new TreeEntity(TreeType.Menu, "菜单角色", 0, false, menu14);
+        menu141.setUrl("admin/jqgrid-roles?treeType=Menu");
+        menu141.setCss("menu-icon fa fa-caret-right");
+        TreeEntity menu142 = new TreeEntity(TreeType.Menu, "标准资源角色", 1, false, menu14);
+        menu142.setUrl("admin/jqgrid-roles?treeType=Standard");
+        menu142.setCss("menu-icon fa fa-caret-right");
+        set.addAll(Arrays.asList(menu141, menu142));
+
+        //系统设置  (菜单示例，可根据需要修改)
+        TreeEntity menu151 = new TreeEntity(TreeType.Menu, "参数配置", 0, false, menu15);
+        TreeEntity menu152 = new TreeEntity(TreeType.Menu, "定时任务", 1, false, menu15);
+        TreeEntity menu153 = new TreeEntity(TreeType.Menu, "系统日志", 2, false, menu15);
+        set.addAll(Arrays.asList(menu151, menu152, menu153));
+
+        /**
+         * 初始化 "业务系统管理"菜单，根据具体的应用修改。
+         */
+        //一级菜单
+        TreeEntity menu2 = new TreeEntity(TreeType.Menu, "业务系统管理", 0, true, menu);
+        set.addAll(Arrays.asList(menu2));
+
+        //用户菜单 (菜单示例，可根据需要修改)
+        TreeEntity menu21 = new TreeEntity(TreeType.Menu, "站点维护", 0, false, menu2);
+        TreeEntity menu22 = new TreeEntity(TreeType.Menu, "高级检索", 1, false, menu2);
+        TreeEntity menu23 = new TreeEntity(TreeType.Menu, "用户管理", 2, false, menu2);
+        TreeEntity menu24 = new TreeEntity(TreeType.Menu, "缴费管理", 3, false, menu2);
+        TreeEntity menu25 = new TreeEntity(TreeType.Menu, "模版设置", 4, false, menu2);
+        TreeEntity menu26 = new TreeEntity(TreeType.Menu, "消息管理", 5, false, menu2);
+        TreeEntity menu27 = new TreeEntity(TreeType.Menu, "个人设置", 6, false, menu2);
+        TreeEntity menu28 = new TreeEntity(TreeType.Menu, "其他菜单", 7, true, menu2);
+        set.addAll(Arrays.asList(menu21, menu22, menu23, menu24, menu25, menu26, menu27, menu28));
+
+
+        // 其他菜单
+        TreeEntity menu281 = new TreeEntity(TreeType.Menu, "菜单1", 0, false, menu28);
+        TreeEntity menu282 = new TreeEntity(TreeType.Menu, "菜单2", 1, false, menu28);
+        set.addAll(Arrays.asList(menu281, menu282));
 
         treeRepository.save(set);
     }
@@ -414,7 +480,6 @@ public class InitializeService {
 
         roleRepository.save(admins);
         roleRepository.save(users);
-
     }
 
 }

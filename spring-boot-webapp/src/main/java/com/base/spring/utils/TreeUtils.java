@@ -19,6 +19,15 @@ import java.util.List;
 public class TreeUtils {
 
 
+    /**
+     * 应用包含和不包含的时候需要注意：
+     * 1.
+     * includes 和 excludes 不能同时应用
+     * includes 和 excludes 都是返回的新的 TreeEntity 无法连续进行 contains 计算，后一次判断无法进行
+     * 2.
+     * 可以判断其他的元素是否包含，此时可以 includes 和 excludes 可以同时应用
+     */
+
     private TreeUtils() {
     }
 
@@ -36,6 +45,23 @@ public class TreeUtils {
     }
 
     /**
+     * 把 TreeNodeEntity 集合类型转换为 ZTreeJsonNode 类型，并用一个临时的节点返回
+     *
+     * @param zTreeNodeName 临时节点的名字
+     * @param treeEntity
+     * @param roleEntity
+     * @return
+     */
+    public static ZTreeNode convertToZTreeNode(String zTreeNodeName, List<TreeEntity> treeEntity, RoleEntity roleEntity) {
+        ZTreeNode parentTemp = new ZTreeNode(0, zTreeNodeName, "url", true, true, false); //创建一个临时的变量，用于保存转换结果。
+        for (TreeEntity tree : treeEntity) {
+            parentTemp.addChild(convertToZTreeNode(tree, roleEntity));
+        }
+        return parentTemp; // parentTemp 只有一个子元素，为待转换的 treeNode
+    }
+
+
+    /**
      * 把 TreeNodeEntity 类型转换为 ZTreeJsonNode 类型，并返回其子节点
      *
      * @param treeNode 待转换的对象
@@ -50,12 +76,43 @@ public class TreeUtils {
      * 创建已有节点的拷贝，生成新的节点，该节点及其子节点，仅包含集合中有的节点
      *
      * @param sourceTreeEntity 待重新组装的节点
-     * @param filterCollection 过滤器，源节点及其子节点，仅包含集合中有的节点
+     * @param filterIncludes   过滤器，源节点及其子节点，仅包含集合中有的节点
      * @return
      */
-    public static TreeEntity getFilterCopyTreeEntityInCollection(TreeEntity sourceTreeEntity, Collection<TreeEntity> filterCollection) {
+    public static TreeEntity createCopyTreeEntityByFilterIncludes(TreeEntity sourceTreeEntity, Collection<TreeEntity> filterIncludes) {
         TreeEntity parentTemp = new TreeEntity();  // 临时变量 , 该操作不能放在事务中进行，因为 new 操作会自动创建表记录
-        createCopyTreeEntity(parentTemp, sourceTreeEntity, filterCollection); // 临时变量赋值
+        createCopyTreeEntityByFilterIncludes(parentTemp, sourceTreeEntity, filterIncludes); // 临时变量赋值
+        if (!parentTemp.getChildren().isEmpty())
+            return parentTemp.getChildren().get(0); //临时 parentNew 节点，只有一个子节点
+        return null;
+    }
+
+    /**
+     * 不包含
+     *
+     * @param sourceTreeEntity 待重新组装的节点
+     * @param filterExcludes   过滤器，源节点及其子节点，不包含集合中有的节点
+     * @return
+     */
+    public static TreeEntity createCopyTreeEntityByFilterExcludes(TreeEntity sourceTreeEntity, Collection<TreeEntity> filterExcludes) {
+        TreeEntity parentTemp = new TreeEntity();  // 临时变量 , 该操作不能放在事务中进行，因为 new 操作会自动创建表记录
+        createCopyTreeEntityByFilterExcludes(parentTemp, sourceTreeEntity, filterExcludes); // 临时变量赋值
+        if (!parentTemp.getChildren().isEmpty())
+            return parentTemp.getChildren().get(0); //临时 parentNew 节点，只有一个子节点
+        return null;
+    }
+
+    /**
+     * 不包含
+     * 仅为了和 createCopyTreeEntityByFilterIncludes 一起应用时，createCopyTreeEntityByFilterIncludes 生成了新的对象，而无法判断时使用
+     *
+     * @param sourceTreeEntity   待重新组装的节点
+     * @param filterNameExcludes 过滤器，源节点及其子节点的 name 属性，不包含集合中有的节点
+     * @return
+     */
+    public static TreeEntity createCopyTreeEntityByFilterNameExcludes(TreeEntity sourceTreeEntity, Collection<String> filterNameExcludes) {
+        TreeEntity parentTemp = new TreeEntity();  // 临时变量 , 该操作不能放在事务中进行，因为 new 操作会自动创建表记录
+        createCopyTreeEntityByFilterNameExcludes(parentTemp, sourceTreeEntity, filterNameExcludes); // 临时变量赋值
         if (!parentTemp.getChildren().isEmpty())
             return parentTemp.getChildren().get(0); //临时 parentNew 节点，只有一个子节点
         return null;
@@ -67,19 +124,20 @@ public class TreeUtils {
      * @param sourceTreeEntity
      * @return
      */
-    public static TreeEntity getCopyTreeEntity(TreeEntity sourceTreeEntity) {
-        return getFilterCopyTreeEntityInCollection(sourceTreeEntity, null);
+    public static TreeEntity createCopyTreeEntity(TreeEntity sourceTreeEntity) {
+        return createCopyTreeEntityByFilterIncludes(sourceTreeEntity, null);
     }
 
 
     /**
      * 把 TreeNodeEntity 类型转换为 ZTreeNode 类型，把其值用 parent 带回
      *
-     * @param zTreeJsonNodeParentTemp 通过此参数，保存转换后的结果。因为利用了递归，可以通过参数传回转换后的结果
-     * @param treeEntity              待转换的对象
+     * @param zTreeNodeParentTemp 通过此参数，保存转换后的结果。因为利用了递归，可以通过参数传回转换后的结果
+     * @param treeEntity          待转换的对象
+     * @param roleEntity          如果拥有此权限，树节点设置为选中状态
      */
-    private static void convertToZTreeNode(TreeEntity treeEntity, ZTreeNode zTreeJsonNodeParentTemp, RoleEntity roleEntity) {
-        if (treeEntity == null || zTreeJsonNodeParentTemp == null)
+    private static void convertToZTreeNode(TreeEntity treeEntity, ZTreeNode zTreeNodeParentTemp, RoleEntity roleEntity) {
+        if (treeEntity == null || zTreeNodeParentTemp == null)
             return;
 
         long id = treeEntity.getId();
@@ -105,7 +163,7 @@ public class TreeUtils {
 
         ZTreeNode zTreeNode = new ZTreeNode(id, name, url, open, treeEntity.isParentNode(), checked);
 
-        zTreeJsonNodeParentTemp.addChild(zTreeNode);
+        zTreeNodeParentTemp.addChild(zTreeNode);
 
         if (!treeEntity.getChildren().isEmpty())
             for (TreeEntity child : treeEntity.getChildren())
@@ -123,13 +181,17 @@ public class TreeUtils {
      *
      * @param parentTemp       临时变量 parentTemp ，他的子节点就是需要创建的已有节点的拷贝，仅作为递归时携带变量的临时变量
      * @param sourceTreeEntity 已有节点，是数据库里一条数据，可以有子节点。
-     * @param filterCollection 仅包含的节点的集合     * @param filterCollection 过滤器，源节点及其子节点，仅包含集合中有的节点
+     * @param filterIncludes   过滤掉源节点及其子节点中，不包含在集合中的节点
      */
-    private static void createCopyTreeEntity(TreeEntity parentTemp, TreeEntity sourceTreeEntity, Collection<TreeEntity> filterCollection) {
+    private static void createCopyTreeEntityByFilterIncludes(TreeEntity parentTemp, TreeEntity sourceTreeEntity, Collection<TreeEntity> filterIncludes) {
         //生成 copyNode 节点本身
 
-        if (filterCollection != null && !filterCollection.isEmpty())
-            if (!filterCollection.contains(sourceTreeEntity))
+        if (sourceTreeEntity == null)
+            return;
+
+
+        if (filterIncludes != null)
+            if (!filterIncludes.contains(sourceTreeEntity))
                 return;
 
         TreeEntity copy = new TreeEntity(sourceTreeEntity.getType(), sourceTreeEntity.getName(), sourceTreeEntity.getIndex(), sourceTreeEntity.isParentNode(), parentTemp);
@@ -141,9 +203,72 @@ public class TreeUtils {
         //生成 currentNode 节点的子节点
         if (!sourceTreeEntity.getChildren().isEmpty()) {
             for (TreeEntity child : sourceTreeEntity.getChildren())
-                createCopyTreeEntity(copy, child, filterCollection); // 递归
+                createCopyTreeEntityByFilterIncludes(copy, child, filterIncludes); // 递归
         }
 
+    }
+
+    /**
+     * 不包含，和 createCopyTreeEntityByFilterIncludes 相反
+     *
+     * @param parentTemp
+     * @param sourceTreeEntity
+     * @param filterExcludes   节点本身（含子节点）去除
+     */
+    private static void createCopyTreeEntityByFilterExcludes(TreeEntity parentTemp, TreeEntity sourceTreeEntity, Collection<TreeEntity> filterExcludes) {
+        //生成 copyNode 节点本身
+        if (sourceTreeEntity == null)
+            return;
+
+        if (filterExcludes != null)
+            if (filterExcludes.contains(sourceTreeEntity)) {
+                //System.out.println("contains excludes");
+                return;
+            }
+
+        TreeEntity copy = new TreeEntity(sourceTreeEntity.getType(), sourceTreeEntity.getName(), sourceTreeEntity.getIndex(), sourceTreeEntity.isParentNode(), parentTemp);
+        copy.setUrl(sourceTreeEntity.getUrl());
+        copy.setCss(sourceTreeEntity.getCss());
+        parentTemp.addChildToLastIndex(copy); // 添加到所有子节点的尾
+        parentTemp.setParentNode(true); // 包含子节点，是父节点
+
+        //生成 currentNode 节点的子节点
+        if (!sourceTreeEntity.getChildren().isEmpty()) {
+            for (TreeEntity child : sourceTreeEntity.getChildren())
+                createCopyTreeEntityByFilterExcludes(copy, child, filterExcludes); // 递归
+        }
+    }
+
+    /**
+     * 不包含
+     * 仅为了和 createCopyTreeEntityByFilterIncludes 一起应用时，createCopyTreeEntityByFilterIncludes 生成了新的对象，而无法判断时使用
+     *
+     * @param parentTemp
+     * @param sourceTreeEntity
+     * @param filterNameExcludes
+     */
+    private static void createCopyTreeEntityByFilterNameExcludes(TreeEntity parentTemp, TreeEntity sourceTreeEntity, Collection<String> filterNameExcludes) {
+        //生成 copyNode 节点本身
+        if (sourceTreeEntity == null)
+            return;
+
+        if (filterNameExcludes != null)
+            if (filterNameExcludes.contains(sourceTreeEntity.getName())) {
+                //System.out.println("contains excludes");
+                return;
+            }
+
+        TreeEntity copy = new TreeEntity(sourceTreeEntity.getType(), sourceTreeEntity.getName(), sourceTreeEntity.getIndex(), sourceTreeEntity.isParentNode(), parentTemp);
+        copy.setUrl(sourceTreeEntity.getUrl());
+        copy.setCss(sourceTreeEntity.getCss());
+        parentTemp.addChildToLastIndex(copy); // 添加到所有子节点的尾
+        parentTemp.setParentNode(true); // 包含子节点，是父节点
+
+        //生成 currentNode 节点的子节点
+        if (!sourceTreeEntity.getChildren().isEmpty()) {
+            for (TreeEntity child : sourceTreeEntity.getChildren())
+                createCopyTreeEntityByFilterNameExcludes(copy, child, filterNameExcludes); // 递归
+        }
     }
 
 }

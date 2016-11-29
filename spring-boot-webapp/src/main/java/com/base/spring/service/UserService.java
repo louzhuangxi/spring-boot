@@ -5,7 +5,6 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
-import org.h819.web.spring.jpa.DtoUtils;
 import com.base.spring.utils.TreeUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.slf4j.Logger;
@@ -129,19 +128,25 @@ public class UserService {
      */
     public TreeEntity getAllMenuByUser(UserEntity user) {
         //去掉重复，获取所有 tree
-        DtoUtils utils = new DtoUtils();
-        utils.addExcludes(TreeEntity.class, "parent", "roles", "children");
-        Set<TreeEntity> allMenu = new HashSet<>();
+//        DtoUtils utils = new DtoUtils();
+//        utils.addExcludes(TreeEntity.class, "parent", "roles", "children"); //只需要 TreeEntity 的基本属性，故去掉 children
+        Set<TreeEntity> allMenuSet = new HashSet<>();
         for (RoleEntity role : user.getRoles()) {
             //  allMenu.addAll(role.getTreeNodes());
             //级联了两层 lazy 属性，第二层无法自动通过 Transactional 自动加载，只能再次查询
-            allMenu.addAll(utils.createDTOcopy(roleRepository.findTreeEntitiesById(role.getId())));
+            allMenuSet.addAll(roleRepository.findTreeEntitiesById(role.getId()));
         }
 
         //重新组装，仅包含集合中的元素 set 中 tree 的并集
         TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
+        TreeEntity includes = TreeUtils.createCopyTreeEntityByFilterIncludes(menuRoot, allMenuSet);
 
-        return TreeUtils.getFilterCopyTreeEntityInCollection(menuRoot, allMenu);
+//        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
+//        preFilter.addExcludes(TreeEntity.class,"parent","roles");
+//
+//        MyJsonUtils.prettyPrint(treeRepository.findByName("按钮/资源"),preFilter, StandardCharsets.UTF_8);
+        //"按钮/资源"，不需要在菜单中展现，该节点唯一
+        return TreeUtils.createCopyTreeEntityByFilterNameExcludes(includes, Arrays.asList("按钮/资源"));
 
     }
 

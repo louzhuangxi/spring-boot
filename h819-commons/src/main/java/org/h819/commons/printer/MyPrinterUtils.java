@@ -1,6 +1,5 @@
 package org.h819.commons.printer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,24 +95,6 @@ public class MyPrinterUtils {
     }
 
 
-    /**
-     * 利用 jack json ObjectMapper ，格式化输出输出任何对象
-     *
-     * @param object
-     */
-    public static void prettyPrint(Object object) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param args
-     * @throws java.io.IOException
-     */
     public static void main(String[] args) throws IOException {
         // TODO Auto-generated method stub
 

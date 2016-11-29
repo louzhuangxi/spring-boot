@@ -83,7 +83,7 @@ public class UserEntityTest {
     }
 
     /**
-     * 测试  getFilterCopyTreeEntityInCollection
+     * 测试  createCopyTreeEntityByFilterIncludes
      */
     @Test
     public void testGetAllUserMenus() {
@@ -101,7 +101,7 @@ public class UserEntityTest {
 //
 //        TreeEntity rootMenu = treeRepository.findRoot(TreeType.Menu).get();
 
-//        TreeEntity allMenu = TreeUtils.getFilterCopyTreeEntityInCollection(rootMenu, menuTrees);
+//        TreeEntity allMenu = TreeUtils.createCopyTreeEntityByFilterIncludes(rootMenu, menuTrees);
 
         TreeEntity treeEntity = userService.getAllMenuByUser(admin);
         DtoUtils utils = new DtoUtils();

@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 树操作 : add, copy ,delete and ajax request
  */
@@ -47,7 +51,13 @@ public class ZTreeAjaxController {
     public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeType menuType) {
 
         logger.info("id={} , menuType={}", id, menuType);
-        return treeNodeService.asyncTree(id, menuType);  //返回初始的树
+
+        List<TreeType> list = new ArrayList(2);
+        if (menuType.equals(TreeType.Menu))      //菜单时，同时显示 PageResource
+            list.addAll(Arrays.asList(TreeType.Menu, TreeType.PageResource));
+        else list.add(menuType);
+
+        return treeNodeService.asyncTree(id, list);
 
     }
 
@@ -64,10 +74,16 @@ public class ZTreeAjaxController {
 
         logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
 
+        List<TreeType> list = new ArrayList(2);
+        if (menuType.equals(TreeType.Menu))      //菜单时，同时显示 PageResource
+            list.addAll(Arrays.asList(TreeType.Menu, TreeType.PageResource));
+        else list.add(menuType);
+
+
         if (roleId.isEmpty())    // 还没有选择 role，返回初始的树
-            return treeNodeService.asyncTree(id, menuType);
+            return treeNodeService.asyncTree(id, list);
         else
-            return treeNodeService.asyncRoleTree(id, menuType, roleRepository.findOne(Long.valueOf(roleId))); //和 role 关联的树节点会自动选中
+            return treeNodeService.asyncRoleTree(id, list, roleRepository.findOne(Long.valueOf(roleId))); //和 role 关联的树节点会自动选中
     }
 
     /**
