@@ -128,26 +128,30 @@ public class UserService {
      */
     public TreeEntity getAllMenuByUser(UserEntity user) {
         //去掉重复，获取所有 tree
-//        DtoUtils utils = new DtoUtils();
-//        utils.addExcludes(TreeEntity.class, "parent", "roles", "children"); //只需要 TreeEntity 的基本属性，故去掉 children
-        Set<TreeEntity> allMenuSet = new HashSet<>();
+        // 各种角色的并集
+//        FastJsonPropertyPreFilter preFilter1 = new FastJsonPropertyPreFilter();
+//        preFilter1.addExcludes(TreeEntity.class, "parent", "roles", "children"); //只需要 TreeEntity 的基本属性，故去掉 children
+//
+//        FastJsonPropertyPreFilter preFilter2 = new FastJsonPropertyPreFilter();
+//        preFilter2.addExcludes(TreeEntity.class, "parent", "roles");
+
+        Set<TreeEntity> userMenus = new HashSet<>();
         for (RoleEntity role : user.getRoles()) {
             //  allMenu.addAll(role.getTreeNodes());
             //级联了两层 lazy 属性，第二层无法自动通过 Transactional 自动加载，只能再次查询
-            allMenuSet.addAll(roleRepository.findTreeEntitiesById(role.getId()));
+            userMenus.addAll(roleRepository.findTreeEntitiesById(role.getId()));
         }
 
-        //重新组装，仅包含集合中的元素 set 中 tree 的并集
+        System.out.println();
+
+        //  MyJsonUtils.prettyPrint(allMenuSet, preFilter1, StandardCharsets.UTF_8);
+
+        //重新组装，仅包含 set 中的元素。
         TreeEntity menuRoot = treeRepository.findRoot(TreeType.Menu).get();
-        TreeEntity includes = TreeUtils.createCopyTreeEntityByFilterIncludes(menuRoot, allMenuSet);
+        TreeEntity filterMenus = TreeUtils.createCopyTreeEntityByFilterIncludes(menuRoot, userMenus);
+        // MyJsonUtils.prettyPrint(filterMenus, preFilter2, StandardCharsets.UTF_8);
 
-//        FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
-//        preFilter.addExcludes(TreeEntity.class,"parent","roles");
-//
-//        MyJsonUtils.prettyPrint(treeRepository.findByName("按钮/资源"),preFilter, StandardCharsets.UTF_8);
-        //"按钮/资源"，不需要在菜单中展现，该节点唯一
-        return TreeUtils.createCopyTreeEntityByFilterNameExcludes(includes, Arrays.asList("按钮/资源"));
-
+        return filterMenus;
     }
 
     /**

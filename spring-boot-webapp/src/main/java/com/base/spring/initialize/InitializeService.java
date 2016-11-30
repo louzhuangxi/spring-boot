@@ -283,19 +283,25 @@ public class InitializeService {
          */
         //一级菜单
         TreeEntity menu1 = new TreeEntity(TreeType.Menu, "系统管理", 0, true, menu);
+        menu1.setCss("menu-icon fa fa-cogs red bigger-130");
+        menu1.setUrl("#");
         set.addAll(Arrays.asList(menu1));
         /**
          * 系统默认菜单，不能改动
          */
         TreeEntity menu11 = new TreeEntity(TreeType.Menu, "菜单管理", 0, true, menu1);
         menu11.setCss("menu-icon fa fa-sitemap");
-        TreeEntity menu13 = new TreeEntity(TreeType.Menu, "用户管理", 2, true, menu1);
-        menu13.setCss("menu-icon fa fa-user-plus");
-        TreeEntity menu14 = new TreeEntity(TreeType.Menu, "角色管理", 3, true, menu1);
-        menu14.setCss("menu-icon fa fa-object-group");
-        TreeEntity menu15 = new TreeEntity(TreeType.Menu, "系统设置", 4, true, menu1);
-        menu15.setCss("");
-        set.addAll(Arrays.asList(menu11, menu13, menu14, menu15));
+        menu11.setUrl("#");
+        TreeEntity menu12 = new TreeEntity(TreeType.Menu, "用户管理", 1, true, menu1);
+        menu12.setCss("menu-icon fa fa-user-plus");
+        menu12.setUrl("#");
+        TreeEntity menu13 = new TreeEntity(TreeType.Menu, "角色管理", 2, true, menu1);
+        menu13.setCss("menu-icon fa fa-object-group");
+        menu13.setUrl("#");
+        TreeEntity menu14 = new TreeEntity(TreeType.Menu, "系统设置", 3, true, menu1);
+        menu14.setCss("menu-icon fa fa-gear");
+        menu14.setUrl("#");
+        set.addAll(Arrays.asList(menu11, menu12, menu13, menu14));
 
         // 菜单管理 (系统默认菜单，不能改动)
         TreeEntity menu111 = new TreeEntity(TreeType.Menu, "菜单树", 0, false, menu11);
@@ -311,27 +317,33 @@ public class InitializeService {
 
 
         // 用户管理   (系统默认菜单，不能改动)
-        TreeEntity menu131 = new TreeEntity(TreeType.Menu, "用户", 0, false, menu13);
+        TreeEntity menu131 = new TreeEntity(TreeType.Menu, "用户", 0, false, menu12);
         menu131.setUrl("admin/jqgrid-user");
         menu131.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu132 = new TreeEntity(TreeType.Menu, "用户组", 1, false, menu13);
+        TreeEntity menu132 = new TreeEntity(TreeType.Menu, "用户组", 1, false, menu12);
         menu132.setUrl("admin/jqgrid-group");
         menu132.setCss("menu-icon fa fa-caret-right");
         set.addAll(Arrays.asList(menu131, menu132));
 
         //角色管理   (系统默认菜单，不能改动)
-        TreeEntity menu141 = new TreeEntity(TreeType.Menu, "菜单角色", 0, false, menu14);
+        TreeEntity menu141 = new TreeEntity(TreeType.Menu, "菜单角色", 0, false, menu13);
         menu141.setUrl("admin/jqgrid-roles?treeType=Menu");
         menu141.setCss("menu-icon fa fa-caret-right");
-        TreeEntity menu142 = new TreeEntity(TreeType.Menu, "标准资源角色", 1, false, menu14);
+        TreeEntity menu142 = new TreeEntity(TreeType.Menu, "标准资源角色", 1, false, menu13);
         menu142.setUrl("admin/jqgrid-roles?treeType=Standard");
         menu142.setCss("menu-icon fa fa-caret-right");
         set.addAll(Arrays.asList(menu141, menu142));
 
         //系统设置  (菜单示例，可根据需要修改)
-        TreeEntity menu151 = new TreeEntity(TreeType.Menu, "参数配置", 0, false, menu15);
-        TreeEntity menu152 = new TreeEntity(TreeType.Menu, "定时任务", 1, false, menu15);
-        TreeEntity menu153 = new TreeEntity(TreeType.Menu, "系统日志", 2, false, menu15);
+        TreeEntity menu151 = new TreeEntity(TreeType.Menu, "参数配置", 0, false, menu14);
+        menu151.setCss("menu-icon fa fa-caret-right");
+        menu151.setUrl("");
+        TreeEntity menu152 = new TreeEntity(TreeType.Menu, "定时任务", 1, false, menu14);
+        menu152.setCss("menu-icon fa fa-caret-right");
+        menu152.setUrl("");
+        TreeEntity menu153 = new TreeEntity(TreeType.Menu, "系统日志", 2, false, menu14);
+        menu153.setCss("menu-icon fa fa-caret-right");
+        menu153.setUrl("");
         set.addAll(Arrays.asList(menu151, menu152, menu153));
 
         /**
@@ -339,23 +351,45 @@ public class InitializeService {
          */
         //一级菜单
         TreeEntity menu2 = new TreeEntity(TreeType.Menu, "业务系统管理", 0, true, menu);
+        menu2.setCss("menu-icon fa fa-desktop red bigger-130");
+        menu2.setUrl("");
         set.addAll(Arrays.asList(menu2));
 
         //用户菜单 (菜单示例，可根据需要修改)
         TreeEntity menu21 = new TreeEntity(TreeType.Menu, "站点维护", 0, false, menu2);
+        menu21.setCss("menu-icon fa fa-circle-o");
+        menu21.setUrl("");
         TreeEntity menu22 = new TreeEntity(TreeType.Menu, "高级检索", 1, false, menu2);
+        menu22.setCss("menu-icon fa fa-circle-o");
+        menu22.setUrl("");
         TreeEntity menu23 = new TreeEntity(TreeType.Menu, "用户管理", 2, false, menu2);
+        menu23.setCss("menu-icon fa fa-circle-o");
+        menu23.setUrl("");
         TreeEntity menu24 = new TreeEntity(TreeType.Menu, "缴费管理", 3, false, menu2);
+        menu24.setCss("menu-icon fa fa-circle-o");
+        menu24.setUrl("");
         TreeEntity menu25 = new TreeEntity(TreeType.Menu, "模版设置", 4, false, menu2);
+        menu25.setCss("menu-icon fa fa-circle-o");
+        menu25.setUrl("");
         TreeEntity menu26 = new TreeEntity(TreeType.Menu, "消息管理", 5, false, menu2);
+        menu26.setCss("menu-icon fa fa-circle-o");
+        menu26.setUrl("");
         TreeEntity menu27 = new TreeEntity(TreeType.Menu, "个人设置", 6, false, menu2);
+        menu27.setCss("menu-icon fa fa-circle-o");
+        menu27.setUrl("");
         TreeEntity menu28 = new TreeEntity(TreeType.Menu, "其他菜单", 7, true, menu2);
+        menu28.setCss("menu-icon fa fa-circle-o");
+        menu28.setUrl("");
         set.addAll(Arrays.asList(menu21, menu22, menu23, menu24, menu25, menu26, menu27, menu28));
 
 
         // 其他菜单
         TreeEntity menu281 = new TreeEntity(TreeType.Menu, "菜单1", 0, false, menu28);
+        menu281.setCss("menu-icon fa fa-caret-right");
+        menu281.setUrl("");
         TreeEntity menu282 = new TreeEntity(TreeType.Menu, "菜单2", 1, false, menu28);
+        menu282.setCss("menu-icon fa fa-caret-right");
+        menu282.setUrl("");
         set.addAll(Arrays.asList(menu281, menu282));
 
         treeRepository.save(set);

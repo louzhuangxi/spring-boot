@@ -453,39 +453,78 @@
 
         <ul class="nav nav-list">
 
-            <!-- menu 只有三级，循环三次即可 -->
+            <!-- menu 菜单可以递归到四级，或者更多级别 -->
         <#if menus ??>
             <#list menus.children as children1>
 
                 <li class="">
                     <a>
-                        <i class="menu-icon fa fa-cog red bigger-130 "></i>
+                        <i class="${children1.css}"></i>
                     ${children1.name}
                     </a>
                 </li>
                 <#list children1.children as children2>
                     <li class="">
                         <a href="#" class="dropdown-toggle">
-                            <i class="menu-icon fa fa-sitemap"></i>
+                            <i class="${children2.css}"></i>
                             <span class="menu-text">  ${children2.name} </span>
-
-                            <b class="arrow fa fa-angle-down"></b>
+                            <#if children2.children?size!=0>  <!--下拉框按钮-->
+                                <b class="arrow fa fa-angle-down"></b>
+                            </#if>
                         </a>
 
                         <b class="arrow"></b>
-
-                        <ul class="submenu">
-                            <#list children2.children as children3>
+                        <#list children2.children as children3>
+                            <ul class="submenu">
                                 <li class="">
-                                    <a data-url="page/ztree" href="#page/admin/ztree-type?treeType=Menu">
-                                        <i class="menu-icon fa fa-caret-right"></i>
+                                    <a data-url="page/ztree" href="#page/${children3.url}">
+                                        <i class="${children3.css}"></i>
                                     ${children3.name}
+                                        <#if children3.children?size!=0>  <!--下拉框按钮-->
+                                            <b class="arrow fa fa-angle-down"></b>
+                                        </#if>
                                     </a>
-
                                     <b class="arrow"></b>
+                                    <#list children3.children as children4>
+                                        <ul class="submenu">
+                                            <li class="">
+                                                <a href="#">
+                                                    <i class="menu-icon fa fa-leaf green"></i>
+                                                    Item #1
+                                                </a>
+
+                                                <b class="arrow"></b>
+                                            </li>
+
+                                            <li class="">
+                                                <a href="#" class="dropdown-toggle">
+                                                    <i class="menu-icon fa fa-pencil orange"></i>
+
+                                                    4th level
+                                                    <#if children4.children?size!=0>  <!--下拉框按钮-->
+                                                        <b class="arrow fa fa-angle-down"></b>
+                                                    </#if>
+                                                </a>
+
+                                                <b class="arrow"></b>
+                                                <#list children4.children as children4>
+                                                    <ul class="submenu">
+                                                        <li class="">
+                                                            <a href="#">
+                                                                <i class="menu-icon fa fa-plus purple"></i>
+                                                                Add Product
+                                                            </a>
+
+                                                            <b class="arrow"></b>
+                                                        </li>
+                                                    </ul>
+                                                </#list>
+                                            </li>
+                                        </ul>
+                                    </#list>
                                 </li>
-                            </#list>
-                        </ul>
+                            </ul>
+                        </#list>
                     </li>
                 </#list>
             </#list>
@@ -493,7 +532,7 @@
 
             <li class="">
                 <a>
-                    <i class="menu-icon fa fa-cog red bigger-130 "></i>
+                    <i class="menu-icon fa fa-cogs red bigger-130 "></i>
                     系统管理
                 </a>
             </li>

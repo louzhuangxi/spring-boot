@@ -28,11 +28,11 @@ public class TreeService {
      * 异步加载原始树
      *
      * @param id
-     * @param menuTypes
+     * @param treeTypes
      * @return
      */
-    public String asyncTree(Long id, List<TreeType> menuTypes) {
-        return async(id, menuTypes, 2, null);
+    public String asyncTree(Long id, List<TreeType> treeTypes) {
+        return async(id, treeTypes, 2, null);
     }
 
 
@@ -42,11 +42,11 @@ public class TreeService {
      * 层级设置为 100 (100 足够大)。
      *
      * @param id
-     * @param menuTypes
+     * @param treeTypes
      * @return
      */
-    public String asyncRoleTree(Long id, List<TreeType> menuTypes, RoleEntity roleEntity) {
-        return async(id, menuTypes, 100, roleEntity);
+    public String asyncRoleTree(Long id, List<TreeType> treeTypes, RoleEntity roleEntity) {
+        return async(id, treeTypes, 100, roleEntity);
     }
 
 
@@ -58,7 +58,7 @@ public class TreeService {
      * 所以返回值用 String , 不用 ZTreeJsonNode 对象
      *
      * @param id
-     * @param menuTypes
+     * @param treeTypes
      * @param show_Level 页面显示树状结构到第 n 级
      * @return
      */
@@ -72,14 +72,14 @@ public class TreeService {
      * 所以返回值用 String , 不用 ZTreeJsonNode 对象
      *
      * @param id
-     * @param menuTypes  TreeEntity 类型。只有两种情况：
+     * @param treeTypes  TreeEntity 类型。只有两种情况：
      *                   1. 为 TreeType.Menu, TreeType.PageResource 是，返回可以授权的 Menu 和 PageResource  ，此时需要构造一个临时的父节点
      *                   2. 为 DepartMent 或 Standard 时，仅有一个元素
      * @param show_Level
      * @param roleEntity
      * @return
      */
-    private String async(Long id, List<TreeType> menuTypes, int show_Level, RoleEntity roleEntity) {
+    private String async(Long id, List<TreeType> treeTypes, int show_Level, RoleEntity roleEntity) {
 
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();
@@ -88,9 +88,13 @@ public class TreeService {
         else
             dtoUtils.addExcludes(TreeEntity.class, "parent");
 
-        if (id == null) {  // 第一次打开页面时，异步加载，不是点击了关闭的父节点，所以此时没有 id 参数， id=null . 返回节点本身
-            logger.info("initialize ztree first from db by id={} , menuType={}", id, menuTypes);
-            List<TreeEntity> rootList = treeRepository.findRoot(menuTypes);
+        /**
+         * 初始化树，第一次加载，返回整个树 :
+         * 第一次打开页面时，异步加载，而不是点击了某个关闭的父节点，所以此时没有 id 参数， id=null
+         */
+        if (id == null) {
+            logger.info("initialize ztree first from db by id={} , treeType={}", id, treeTypes);
+            List<TreeEntity> rootList = treeRepository.findRoot(treeTypes);
             if (rootList == null || rootList.isEmpty()) {
                 logger.info("not exist any tree node !");
                 return "";
@@ -99,17 +103,33 @@ public class TreeService {
 
             List<TreeEntity> dtoRootNode = dtoUtils.createDTOcopy(rootList, show_Level); // 通过 DTOUtils 开控制返回的层级
 
-            if (menuTypes.contains(TreeType.Menu)) { // 返回可以授权的 Menu 和 PageResource 两个 root menu ，此时需要构造一个临时的父节点
-                return JSON.toJSONString(TreeUtils.convertToZTreeNode("菜单授权", dtoRootNode, roleEntity));
+            if (treeTypes.contains(TreeType.Menu)) { // 返回可以授权的 Menu 和 PageResource 两个 root menu ，此时需要构造一个临时的父节点
+                return JSON.toJSONString(TreeUtils.convertToZTreeNode("菜单+资源", dtoRootNode, roleEntity));
             } else // 返回一个 root menu , get(0) 合理
                 return JSON.toJSONString(TreeUtils.convertToZTreeNode(dtoRootNode.get(0), roleEntity));
 
-        } else {  // 点击了某个节点，展开该节点的子节点。 此时有父节点了，已经知道就指定菜单类型了，不必再传入
-            logger.info("initialize ztree asyncByTreeType from db by id={}", id);
+        }
+        /**
+         *  点击了某个节点，展开该节点的子节点。
+         *  此时有父节点了，已经知道就指定菜单类型了，不必再传入
+         */
+        else {
+            logger.info("Load ztree async from db by id={} and type={}", id, treeTypes);
+
+            //数据库中 TreeEntity 的 id 从 1 开始，如果得到 TreeEntity id =0 ，一定是构造的临时节点的 id ，TreeUtils.convertToZTreeNode ，此时返回临时节点的子节点。
+            if (id == 0) {
+                List<TreeEntity> rootList = treeRepository.findRoot(treeTypes);
+                List<TreeEntity> dtoRootNode = dtoUtils.createDTOcopy(rootList, show_Level); // 通过 DTOUtils 开控制返回的层级
+                return JSON.toJSONString(TreeUtils.convertToZTreeNode("菜单授权", dtoRootNode, roleEntity).getChildren());
+            }
+
             TreeEntity rootNode = treeRepository.findOne(id);
             TreeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
             return JSON.toJSONString(TreeUtils.getZTreeNodeChildren(dtoNode, roleEntity)); //返回节点的子节点 List
+
+
         }
+
     }
 
 
@@ -121,15 +141,15 @@ public class TreeService {
      * @param index
      * @param isParent
      * @param pId      被选择的父节点，在该节点下创建子节点。
-     * @param menuType 菜单类型
+     * @param treeType 菜单类型
      */
     @Transactional(readOnly = false)
-    public void add(String name, int level, int index, boolean isParent, long pId, TreeType menuType) {
+    public void add(String name, int level, int index, boolean isParent, long pId, TreeType treeType) {
 
         logger.info("Getting name={} ,   pId={}", name, pId);
 
         TreeEntity parent = treeRepository.findOne(pId);
-        TreeEntity child = new TreeEntity(menuType, name, index, isParent, parent);
+        TreeEntity child = new TreeEntity(treeType, name, index, isParent, parent);
         parent.addChildToLastIndex(child);
 
 //        for(TreeNodeEntity entity :parent.getChildren())

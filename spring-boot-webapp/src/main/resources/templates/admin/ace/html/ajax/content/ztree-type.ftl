@@ -61,7 +61,9 @@
                                             <li><i class="ace-icon fa fa-bell-o bigger-110 purple"></i>
                                                 树结构，有一个默认的根节点。创建的树状结构，从此根节点开始。增加节点，只能从父节点开始。
                                             </li>
-                                            <li><i class="ace-icon fa fa-check bigger-110 green"></i> 节点可以随意拖动，变换位置；也可以复制粘帖。</li>
+                                            <li><i class="ace-icon fa fa-check bigger-110 green"></i>
+                                                节点可以随意拖动，变换位置；也可以复制粘帖。
+                                            </li>
                                             <li><i class="ace-icon fa fa-times bigger-110 red"></i>
                                                 如果创建了父节点，想要变成叶节点，清空子节点即可。
                                             </li>
@@ -239,40 +241,14 @@
             icon: 'fa fa-warning red2',
             content: alart_message,
             animation: 'zoom',
-            confirmButton: "确定",
-            confirmButtonClass: "btn btn-primary btn-round",
-            confirm: function () {
+            buttons: {
+                submit: {
+                    text: '确定',
+                    btnClass: 'btn btn-primary btn-round'
+                }
             }
         });
     }
-
-
-    /*
-    弹出警示框
-    jquery-confirm
-    处理代码应该写在 confirm 函数体里面，不能包装成方法
-    //浏览器会顺序执行，而不等待 confirm 执行完成
-    应该是 confirm 方法异步执行造成的
-
-    $.confirm({
-    title: '',
-    icon: 'fa fa-warning red2',
-    content: confirm_message,
-    animation: 'zoom',
-    confirmButton: "确定",
-    cancelButton:"取消",
-    confirmButtonClass:"btn btn-primary btn-round",
-    cancelButtonClass: 'btn-danger',
-    confirm: function(){
-    //
-    },
-
-    cancel: function(){
-    //
-    }
-
-    });
-
 
     /*
     调用浏览器调试日志, 打印字符串
@@ -284,8 +260,6 @@
     function logger(message) {
         console.log(message);
     }
-
-
 
 
     /*
@@ -556,34 +530,35 @@
                     cancelButton: "取消",
                     confirmButtonClass: "btn btn-primary btn-round",
                     cancelButtonClass: 'btn-danger',
-                    confirm: function () {
-                        /**/
-                        $.ajax({ //ajax 提交到controller的delApplication方法处理
-                            type: "post",
-                            async: false,
-                            url: "${ctx}/ajax/tree/ztree/del.html",
-                            data: { //传递的参数和值
-                                id: treeNode.id
-                            },
-                            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                            success: function (data) { //处理成功的回调函数
-                                zTree.removeNode(treeNode);
-                                printLog(confirm_message, logIocn_del);
-                                //	var parent = treeNode.getParentNode();
-                                //zTree.reAsyncChildNodes(parent, "refresh"); // 关闭刷新，需要时打开
-                                logger(data);
-                            },
-                            error: function () {
-                                printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
-                            }
-                            //处理失败的回到函数
-                        });
+                    buttons: {
+                        confirm: function () {
+                            /**/
+                            $.ajax({ //ajax 提交到controller的delApplication方法处理
+                                type: "post",
+                                async: false,
+                                url: "${ctx}/ajax/tree/ztree/del.html",
+                                data: { //传递的参数和值
+                                    id: treeNode.id
+                                },
+                                dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                                success: function (data) { //处理成功的回调函数
+                                    zTree.removeNode(treeNode);
+                                    printLog(confirm_message, logIocn_del);
+                                    //	var parent = treeNode.getParentNode();
+                                    //zTree.reAsyncChildNodes(parent, "refresh"); // 关闭刷新，需要时打开
+                                    logger(data);
+                                },
+                                error: function () {
+                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
+                                }
+                                //处理失败的回到函数
+                            });
 
-                    },
+                        },
 
-                    cancel: function () {
+                        cancel: function () {
+                        }
                     }
-
                 });
             };
 
@@ -616,30 +591,32 @@
                     cancelButton: "取消",
                     confirmButtonClass: "btn btn-primary btn-round",
                     cancelButtonClass: 'btn-danger',
-                    confirm: function () {
-                        /**/
-                        $.ajax({ //ajax 提交到controller的delApplication方法处理
-                            type: "post",
-                            async: false,
-                            url: "${ctx}/ajax/tree/ztree/clear.html",
-                            data: { //传递的参数和值
-                                id: treeNode.id
-                            },
-                            dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                            success: function (data) { //处理成功的回调函数
-                                printLog(confirm_message, logIocn_del);
-                                zTree.removeChildNodes(treeNode);
-                                logger(data);
-                            },
-                            error: function () {
-                                printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
-                            }
+                    buttons: {
+                        confirm: function () {
+                            /**/
+                            $.ajax({ //ajax 提交到controller的delApplication方法处理
+                                type: "post",
+                                async: false,
+                                url: "${ctx}/ajax/tree/ztree/clear.html",
+                                data: { //传递的参数和值
+                                    id: treeNode.id
+                                },
+                                dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                                success: function (data) { //处理成功的回调函数
+                                    printLog(confirm_message, logIocn_del);
+                                    zTree.removeChildNodes(treeNode);
+                                    logger(data);
+                                },
+                                error: function () {
+                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
+                                }
 
-                        });
+                            });
 
-                    },
+                        },
 
-                    cancel: function () {
+                        cancel: function () {
+                        }
                     }
                 });
 
@@ -880,52 +857,68 @@
                     title: '菜单 CSS 设置',
                     icon: 'fa fa-warning red2',
                     content: "url:${app_path}/h819/ztree/menu_css.txt",
-                    confirmButton: "确定",
-                    cancelButton: "取消",
-                    confirmButtonClass: "btn btn-primary btn-round",
-                    cancelButtonClass: 'btn-danger',
-                    confirm: function () {
-                        var input_css = this.$b.find('input#input-css');
-                        var errorText_css = this.$b.find('p#css-error');
-                        var errorText_css2 = this.$b.find('p#css-error2');
-                        //logger(treeNode);
-                        //logger(treeNode.getParentNode());
-                        //logger(treeNode.getParentNode().name);
-                        //logger(treeNode.getParentNode().name.indexOf("root_"));
+                    contentLoaded: function (data, status, xhr) {
+                        // data is already set in content
+                        // ul 不能显示，等做着修复了这个问题，在加上原 css 值
 
-                        //treeNode.getParentNode() ==null 选择了根节点
-                        // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
-                        if (treeNode.getParentNode() == null || treeNode.getParentNode().name.indexOf("root_") < 0) {
-                            errorText_css.show();
-                            return false;
-                        }
+                        this.setContentAppend('<br>Status: ' + status);
+                    },
+                    buttons: {
+                        submit: {
+                            text: '确定',
+                            btnClass: 'btn btn-primary btn-round',
+                            action: function () {
+                                var input_css = this.$b.find('input#input-css');
+                                var errorText_css = this.$b.find('p#css-error');
+                                var errorText_css2 = this.$b.find('p#css-error2');
+                                //logger(treeNode);
+                                //logger(treeNode.getParentNode());
+                                //logger(treeNode.getParentNode().name);
+                                //logger(treeNode.getParentNode().name.indexOf("root_"));
 
-                        errorText_css.hide();
-
-                        if (input_css.val() == '') {
-                            errorText_css2.show();
-                            return false;
-                        } else {
-
-                            $.ajax({
-                                type: "post",
-                                async: false,
-                                url: "${ctx}/ajax/tree/ztree/node/edit/css.html",
-                                data: { //传递的参数和值
-                                    id: treeNode.id, //
-                                    css: input_css.val()
-                                },
-                                dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                                success: function (data) { //处理成功的回调函数
-                                    //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
-                                    // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;CSS 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_css.val() + " </code>", logIocn_move);
-                                },
-                                error: function () {
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;CSS 修改失败 ", logIocn_warning);
+                                //treeNode.getParentNode() ==null 选择了根节点
+                                // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
+                                /*
+                                if (treeNode.getParentNode() == null || treeNode.getParentNode().name.indexOf("root_") < 0) {
+                                    errorText_css.show();
+                                    return false;
                                 }
-                            });
 
+                                errorText_css.hide();
+                                */
+                                if (input_css.val() == '') {
+                                    errorText_css2.show();
+                                    return false;
+                                } else {
+
+                                    $.ajax({
+                                        type: "post",
+                                        async: false,
+                                        url: "${ctx}/ajax/tree/ztree/node/edit/css.html",
+                                        data: { //传递的参数和值
+                                            id: treeNode.id, //
+                                            css: input_css.val()
+                                        },
+                                        dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                                        success: function (data) { //处理成功的回调函数
+                                            //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
+                                            // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;CSS 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_css.val() + " </code>", logIocn_move);
+                                        },
+                                        error: function () {
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;CSS 修改失败 ", logIocn_warning);
+                                        }
+                                    });
+
+                                }
+
+                            }
+                        },
+                        cancel: {
+                            text: '取消',
+                            btnClass: 'btn btn-danger btn-round',
+                            action: function () {
+                            }
                         }
 
                     }

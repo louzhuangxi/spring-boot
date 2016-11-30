@@ -116,7 +116,6 @@
     });
 
 
-
     $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
 
         jQuery(function ($) {
@@ -413,6 +412,7 @@
              *
              */
             function authorityFormatterMenu(cellvalue, options, cell) {
+                // alert(cell.id);
                 var template = "<button data-toggle='modal' onclick='$(\"#modal-table\").modal(\"toggle\");$(\"#roleId\").val(\"" + cell.id + "\");refreshNode()' class='btn btn-white btn-default btn-round'><i class='ace-icon fa fa-lock bigger-120 red'></i></button>";
                 return template;
             }
@@ -660,7 +660,7 @@
 <!-- ztree -->
 <script type="text/javascript">
     //引入加载的 js
-    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/jquery-confirm/jquery-confirm.js", "${ctx}/h819/js/MyUtils.js", null]
+    var scripts = [null, "${ctx}/zTree/js/jquery.ztree.core-3.5.js", "${ctx}/zTree/js/jquery.ztree.excheck-3.5.js", "${ctx}/zTree/js/jquery.ztree.exedit-3.5.js", "${ctx}/h819/js/MyUtils.js", null]
     //var scripts = [null,"../../assets/js/fuelux/fuelux.tree.js", null]
 
     //放置 ztree 的元素 id，参见上文。js 函数最后定义
@@ -671,23 +671,6 @@
         return $.fn.zTree.getZTreeObj(root);
     }
 
-
-    /*
-    弹出警示框
-    jquery-confirm
-     */
-    function showAlart(alart_message) {
-        $.alert({
-            title: '',
-            icon: 'fa fa-warning red2',
-            content: alart_message,
-            animation: 'zoom',
-            confirmButton: "确定",
-            confirmButtonClass: "btn btn-primary btn-round",
-            confirm: function () {
-            }
-        });
-    }
 
     /*
    调用浏览器调试日志, 打印字符串

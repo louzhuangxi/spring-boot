@@ -1,11 +1,10 @@
+<p id="css-error" class="text-danger" style="display:none">只需要给一级菜单添加样式。</p>
+<p id="css-error2" class="text-danger" style="display:none">CSS 没有填写。</p>
 <ul class="list-unstyled spaced2">
     <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 本功能只适用于 ace admin 模版。 </li>
-    <li> <i class="ace-icon fa fa-check bigger-110 green"></i> 菜单 CSS 属性设置在一级。 </li>
     <li> <i class="ace-icon fa fa-check bigger-110 green"></i>例子： <code> menu-icon fa fa-sitemap </code></li>
 </ul>
 <div class="form-group">
-    <label>CSS</label>
+    <label>原 CSS 是 : </label>
     <input autofocus type="text" id="input-css" placeholder="CSS" class="form-control">
 </div>
-<p id="css-error" class="text-danger" style="display:none">只需要给一级菜单添加样式。</p>
-<p id="css-error2" class="text-danger" style="display:none">CSS 没有填写。</p>
