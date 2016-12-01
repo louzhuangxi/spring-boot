@@ -83,12 +83,12 @@
             <artifactId>spring-security-test</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-        <!-- 使用 spring data jpa querydsl  -->
+        <!-- 使用 spring data jpa querydsl
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
             <version>${querydsl.version}</version>
-        </dependency>
+        </dependency> -->
 
         <!--启用 h2
         <dependency>

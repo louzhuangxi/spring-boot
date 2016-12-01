@@ -8,7 +8,7 @@
     (参考 spring boot 官方文档设置)
     -->
 
-    <include resource="log/console-appender.xml" />
+    <include resource="log/console-appender.xml"/>
     <!--
     <include resource="log/db-appender.xml" />
     <include resource="log/file-appender.xml" />
@@ -25,9 +25,11 @@
 
     <!-- 公共 jar 定义输出级别，调试期可以设置低一些，便于查看输出信息-->
     <logger name="org.springframework" level="WARN"/>
-    <logger name="org.springframework.transaction" level="WARN" />
+    <logger name="org.springframework.transaction" level="WARN"/>
     <!-- in order to debug some marshalling issues, this needs to be TRACE -->
-    <logger name="org.springframework.web.servlet.mvc" level="WARN" />
+    <logger name="org.springframework.web.servlet.mvc" level="WARN"/>
+    <!-- 展示 session 信息  -->
+    <logger name="org.springframework.security.web.session" level="debug"/>
     <logger name="org.hibernate" level="WARN"/>
 
     <logger name="org.h819" level="DEBUG"/>

@@ -868,9 +868,9 @@
                             text: '确定',
                             btnClass: 'btn btn-primary btn-round',
                             action: function () {
-                                var input_css = this.$b.find('input#input-css');
-                                var errorText_css = this.$b.find('p#css-error');
-                                var errorText_css2 = this.$b.find('p#css-error2');
+                                var input_css = $('input#input-css');
+                                var errorText_css = $('p#css-error');
+                                var errorText_css2 = $('p#css-error2');
                                 //logger(treeNode);
                                 //logger(treeNode.getParentNode());
                                 //logger(treeNode.getParentNode().name);
@@ -937,54 +937,68 @@
                     title: '菜单 URL 设置',
                     icon: 'fa fa-warning red2',
                     content: "url:${app_path}/h819/ztree/menu_url.txt",
-                    confirmButton: "确定",
-                    cancelButton: "取消",
-                    confirmButtonClass: "btn btn-primary btn-round",
-                    cancelButtonClass: 'btn-danger',
-                    confirm: function () {
-                        var input_url = this.$b.find('input#input-url');
-                        var errorText_url1 = this.$b.find('p#url-error1');
-                        var errorText_url2 = this.$b.find('p#url-error2');
-                        //logger(treeNode);
-                        //logger(treeNode.getParentNode());
-                        //logger(treeNode.getParentNode().name);
-                        //logger(treeNode.getParentNode().name.indexOf("root_"));
+                    contentLoaded: function (data, status, xhr) {
+                        // data is already set in content
+                        // ul 不能显示，等做着修复了这个问题，在加上原 css 值
 
-                        //treeNode.getParentNode() ==null 选择了根节点
-                        // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
-                        if (treeNode.children != null && treeNode.children.length != 0) {
-                            errorText_url1.show();
-                            return false;
-                        }
+                        this.setContentAppend('<br>Status: ' + status);
+                    },
+                    buttons: {
+                        submit: {
+                            text: '确定',
+                            btnClass: 'btn btn-primary btn-round',
+                            action: function () {
+                                var input_url = $('input#input-url');
+                                var errorText_url1 = $('p#url-error1');
+                                var errorText_url2 = $('p#url-error2');
+                                //logger(treeNode);
+                                //logger(treeNode.getParentNode());
+                                //logger(treeNode.getParentNode().name);
+                                //logger(treeNode.getParentNode().name.indexOf("root_"));
 
-                        errorText_url1.hide();
-
-                        if (input_url.val() == '') {
-                            errorText_url2.show();
-                            return false;
-                        } else {
-
-                            $.ajax({
-                                type: "post",
-                                async: false,
-                                url: "${ctx}/ajax/tree/ztree/node/edit/url.html",
-                                data: { //传递的参数和值
-                                    id: treeNode.id, //
-                                    url: input_url.val()
-                                },
-                                dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                                success: function (data) { //处理成功的回调函数
-                                    //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
-                                    // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_url.val() + " </code>", logIocn_move);
-                                },
-                                error: function () {
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 修改失败 ", logIocn_warning);
+                                //treeNode.getParentNode() ==null 选择了根节点
+                                // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
+                                if (treeNode.children != null && treeNode.children.length != 0) {
+                                    errorText_url1.show();
+                                    return false;
                                 }
-                            });
 
+                                errorText_url1.hide();
+
+                                if (input_url.val() == '') {
+                                    errorText_url2.show();
+                                    return false;
+                                } else {
+
+                                    $.ajax({
+                                        type: "post",
+                                        async: false,
+                                        url: "${ctx}/ajax/tree/ztree/node/edit/url.html",
+                                        data: { //传递的参数和值
+                                            id: treeNode.id, //
+                                            url: input_url.val()
+                                        },
+                                        dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                                        success: function (data) { //处理成功的回调函数
+                                            //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
+                                            // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_url.val() + " </code>", logIocn_move);
+                                        },
+                                        error: function () {
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 修改失败 ", logIocn_warning);
+                                        }
+                                    });
+
+                                }
+
+                            }
+                        },
+                        cancel: {
+                            text: '取消',
+                            btnClass: 'btn btn-danger btn-round',
+                            action: function () {
+                            }
                         }
-
                     }
                 });
             });
@@ -1003,54 +1017,68 @@
                     title: '叶节点关联对象',
                     icon: 'fa fa-warning red2',
                     content: "url:${app_path}/h819/ztree/standard_link.txt",
-                    confirmButton: "确定",
-                    cancelButton: "取消",
-                    confirmButtonClass: "btn btn-primary btn-round",
-                    cancelButtonClass: 'btn-danger',
-                    confirm: function () {
-                        var input_standard = this.$b.find('input#input-standard');
-                        var errorText_standard1 = this.$b.find('p#standard-error1');
-                        var errorText_standard2 = this.$b.find('p#standard-error2');
-                        //logger(treeNode);
-                        //logger(treeNode.getParentNode());
-                        //logger(treeNode.getParentNode().name);
-                        //logger(treeNode.getParentNode().name.indexOf("root_"));
+                    contentLoaded: function (data, status, xhr) {
+                        // data is already set in content
+                        // ul 不能显示，等做着修复了这个问题，在加上原 css 值
 
-                        //treeNode.getParentNode() ==null 选择了根节点
-                        // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
-                        if (treeNode.children != null && treeNode.children.length != 0) {
-                            errorText_standard1.show();
-                            return false;
-                        }
+                        this.setContentAppend('<br>Status: ' + status);
+                    },
+                    buttons: {
+                        submit: {
+                            text: '确定',
+                            btnClass: 'btn btn-primary btn-round',
+                            action: function () {
+                                var input_standard = this.$b.find('input#input-standard');
+                                var errorText_standard1 = this.$b.find('p#standard-error1');
+                                var errorText_standard2 = this.$b.find('p#standard-error2');
+                                //logger(treeNode);
+                                //logger(treeNode.getParentNode());
+                                //logger(treeNode.getParentNode().name);
+                                //logger(treeNode.getParentNode().name.indexOf("root_"));
 
-                        errorText_standard1.hide();
-
-                        if (input_standard.val() == '') {
-                            errorText_standard2.show();
-                            return false;
-                        } else {
-
-                            $.ajax({
-                                type: "post",
-                                async: false,
-                                url: "${ctx}/ajax/tree/ztree/node/link/standard.html",
-                                data: { //传递的参数和值
-                                    id: treeNode.id, //
-                                    standard: input_standard.val()
-                                },
-                                dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
-                                success: function (data) { //处理成功的回调函数
-                                    //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
-                                    // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_standard.val() + " </code>", logIocn_move);
-                                },
-                                error: function () {
-                                    printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 修改失败 ", logIocn_warning);
+                                //treeNode.getParentNode() ==null 选择了根节点
+                                // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
+                                if (treeNode.children != null && treeNode.children.length != 0) {
+                                    errorText_standard1.show();
+                                    return false;
                                 }
-                            });
 
+                                errorText_standard1.hide();
+
+                                if (input_standard.val() == '') {
+                                    errorText_standard2.show();
+                                    return false;
+                                } else {
+
+                                    $.ajax({
+                                        type: "post",
+                                        async: false,
+                                        url: "${ctx}/ajax/tree/ztree/node/link/standard.html",
+                                        data: { //传递的参数和值
+                                            id: treeNode.id, //
+                                            standard: input_standard.val()
+                                        },
+                                        dataType: "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
+                                        success: function (data) { //处理成功的回调函数
+                                            //添加了子节点之后，刷新其父节点，会从数据库重新读取其父节，这样可以显示添加到数据库的真实子节点。启用了 asyncByTreeType 才可以执行
+                                            // zTree.reAsyncChildNodes(targetNode.getParentNode(), "refresh");
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 已经修改为&nbsp;&nbsp;&nbsp;  <code> " + input_standard.val() + " </code>", logIocn_move);
+                                        },
+                                        error: function () {
+                                            printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;URL 修改失败 ", logIocn_warning);
+                                        }
+                                    });
+
+                                }
+
+                            }
+                        },
+                        cancel: {
+                            text: '取消',
+                            btnClass: 'btn btn-danger btn-round',
+                            action: function () {
+                            }
                         }
-
                     }
                 });
             });

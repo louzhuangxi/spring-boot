@@ -46,7 +46,7 @@ public class LoginAjaxValidateController {
     @ResponseBody
     public String validateEmail(@RequestParam(value = "email", required = false) Optional<String> email, @RequestParam(value = "checktype", required = false) Optional<String> checkType) {
 
-        logger.info("check type : {}, email : {} ", checkType.get(), email.get());
+       // logger.info("check type : {}, email : {} ", checkType.get(), email.get());
 
         if (!email.isPresent()) {
        //     logger.info("email 没有填写 ");
@@ -77,7 +77,7 @@ public class LoginAjaxValidateController {
 
             Optional<UserEntity> userEntity = userEntityRepository.findOneByEmail(email.get());
 
-            logger.info(" user.isPresent {}", userEntity.isPresent());
+        //    logger.info(" user.isPresent {}", userEntity.isPresent());
 
             if (userEntity.isPresent()) {
                 logger.info("email : {} 存在，验证通过 ", email.get());

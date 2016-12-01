@@ -157,7 +157,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          */
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/about", "/policies", "error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
+                .antMatchers("/", "/signup", "/about", "/policies", "/error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
                 .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
@@ -166,9 +166,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 /**
                  *
                  */
-                .anyRequest().authenticated() //所有资源，均需要过认证，不需要权限  All remaining URLs require that the user be successfully authenticated
-                .and().formLogin()
+                .anyRequest().authenticated(); //所有资源，均需要过认证，不需要权限  All remaining URLs require that the user be successfully authenticated
 
+        /**
+         * login, logout
+         */
+        http.formLogin()
                 // 只接受 /login POST 方法的请求并处理 , /login GET 方法会被忽略.请求处理见下面 configure(AuthenticationManagerBuilder auth) 方法的配置
                 // loginPage : when authentication is required, redirect the browser to /login , it is GET request (跳转到登陆页面的 url ，只接受 GET 请求，这个 url 仅起跳转到登陆页面的作用)
                 // loginProcessingUrl : 登陆页面的 from action url ，只接受 POST 请求。在登录页面设置好即可
@@ -176,17 +179,39 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 如果 loginProcessingUrl 不写，默认和 loginPage() 方法的参数相同
                 // login.jsp 页面需要有 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> , 以满足 spring security 要求
                 .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf").usernameParameter("login_email").passwordParameter("login_password").permitAll()
-                .and().rememberMe()
+                .and()
+                .rememberMe().rememberMeParameter("remember-me") // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
+                .and()
+                .logout().logoutSuccessUrl("/login?logout").logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 
-                .rememberMeParameter("remember-me") // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
-                .and().logout()
-                .logoutSuccessUrl("login?logout").logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/").permitAll()
-                .and().sessionManagement()//.sessionFixation().changeSessionId() changeSessionId 避免固定会话攻击
-                .invalidSessionUrl("/login?session=invalid") //如 session 过期，转到的网址
-                .maximumSessions(2).maxSessionsPreventsLogin(true) //限制用户只能从一个设备登陆，不同同时登陆多台设备
-        ; //
 
-        http.headers().xssProtection(); //
+        /**
+         *session config
+         * sessionFixation().changeSessionId() changeSessionId 避免固定会话攻击
+         */
+        http.sessionManagement()
+                .sessionAuthenticationErrorUrl("/login?session=AuthenticationError")//session 验证错误
+                .invalidSessionUrl("/login?session=invalid") //如 session 无效，转到的网址
+                //1. 限制每个用户只能从两个设备登陆(两个 session)，不同同时登陆多台设备
+                //2. session 过期 expired 转到 url
+                //3.maxSessionsPreventsLogin(false) :
+                //3.1 false ：  超过 maximumSessions ，踢出上一个会话，登录新的会话。
+                //3.2 注意不能设为 true ，会不提示信息"会话过多信息"，直接阻止登录 , 定位到 failureUrl 定义的地址，无法判断问题所在。
+                //    只有把 log 设为  <logger name="org.springframework.security" level="debug"/> 时才可以看到。
+
+                // http://stackoverflow.com/questions/36708580/how-to-get-session-time-out-message-using-spring-security
+                // http://stackoverflow.com/questions/26586345/cannot-override-spring-security-error-messages
+                //https://github.com/spring-projects/spring-security/blob/master/web/src/main/java/org/springframework/security/web/authentication/session/ConcurrentSessionControlAuthenticationStrategy.java
+                .maximumSessions(2).expiredUrl("/login?session=timeout").maxSessionsPreventsLogin(false);
+
+        /**
+         * xxs
+         */
+        http.headers().xssProtection();
+
+        /**
+         * csrf
+         */
         http.csrf();
     }
 
