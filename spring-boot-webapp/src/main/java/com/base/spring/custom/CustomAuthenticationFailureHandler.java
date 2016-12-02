@@ -48,7 +48,5 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             // System.out.println("UsernameNotFoundException");
             // httpServletResponse.sendRedirect("/login?error=用户名不存在");
         }
-
-
     }
 }

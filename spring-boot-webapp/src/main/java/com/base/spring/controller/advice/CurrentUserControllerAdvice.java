@@ -90,7 +90,6 @@ public class CurrentUserControllerAdvice {
     }
 
     // 应用到所有 @RequestMapping 注解的方法，在该方法抛出 NoSuchElementException 异常时执行此方法
-
     /**
      * @param e
      * @return
@@ -102,5 +101,4 @@ public class CurrentUserControllerAdvice {
         return e.getMessage();
         // return "viewName"; // 返回一个逻辑视图名
     }
-
 }
