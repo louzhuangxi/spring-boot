@@ -164,19 +164,30 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          *
          */
+
+        /**
+         * 任何用户都可以访问
+         */
+        http.authorizeRequests().antMatchers("/", "/about", "/policies", "/errors").permitAll();
+        http://stackoverflow.com/questions/38747548/spring-boot-disable-error-mapping
+        http://stackoverflow.com/questions/25356781/spring-boot-remove-whitelabel-error-page
+        http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#boot-features-error-handling
+        /**
+         *
+         */
         http.authorizeRequests()
                 .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
                  */
-                .antMatchers("/ajax/**").authenticated()
-                /**
-                 *
-                 */
-                .anyRequest().authenticated(); //所有资源，均需要过认证，不需要权限  All remaining URLs require that the user be successfully authenticated
+                .antMatchers("/ajax/**").authenticated();
+        /**
+         *其他未匹配的任何 URL 要求用户进行身份验证后才可以访问
+         */
+        http.authorizeRequests().anyRequest().authenticated();
 
         /**
-         * login, logout
+         * login
          */
         http.formLogin()
                 // 只接受 /login POST 方法的请求并处理 , /login GET 方法会被忽略.请求处理见下面 configure(AuthenticationManagerBuilder auth) 方法的配置
@@ -187,11 +198,15 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // login.jsp 页面需要有 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> , 以满足 spring security 要求
                 .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf")
                 .usernameParameter("login_email").passwordParameter("login_password")
-                .failureHandler(failureHandler).successHandler(successHandler).permitAll()
-                .and()
-                .rememberMe().rememberMeParameter("remember-me") // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
-                .and()
-                .logout().logoutSuccessUrl("/login?logout").logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
+                .failureHandler(failureHandler).successHandler(successHandler).permitAll();
+        /**
+         * rememberMe
+         */
+        http.rememberMe().rememberMeParameter("remember-me"); // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
+        /**
+         * logout
+         */
+        http.logout().logoutSuccessUrl("/login?logout").logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 
 
         /**
@@ -207,7 +222,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //3.1 false ：  超过 maximumSessions ，踢出上一个会话，重新开始新的会话。
                 //3.2 注意不能设为 true ，否则登录多个帐号，会不提示信息"会话过多信息"，而直接阻止登录并定位到 failureUrl 定义的地址，从而无法判断问题所在。
                 //    只有把 log 设为  <logger name="org.springframework.security.web" level="debug"/> 时才可以看到。
-                //自定义 failureHandler 3.2 问题已经解决
+                //自定义 failureHandler 后,  3.2 问题已经解决
                 .maximumSessions(1).expiredUrl("/login?session=timeout").maxSessionsPreventsLogin(false);
 
         /**
@@ -224,8 +239,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     /**
-     * 不经过 spring security 处理，直接忽略，可以提升系统性能
+     * 用于设置不经过 spring controller 和 spring security 拦截的静态资源，直接返回指定的页面.可以提升系统性能
      * 如果和 configure(HttpSecurity http) 配置冲突，本方法的优先级高
+     * 此处设置的 url ，spring controller 和 spring security 都不拦截
      */
     @Override
 
@@ -243,13 +259,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         security.ignoring()
                 .antMatchers("/resource/**", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
-        security.ignoring()
-                .antMatchers("/", "/about", "/policies", "/sferrorsfsf");
+
         /**
          * 单独处理的的例外
          */
         //获取树信息，所有人都可以 ？
-        security.ignoring().antMatchers("/ajax/tree/ztree/asyncByTreeType.html");
+        security.ignoring()
+                .antMatchers("/ajax/tree/ztree/asyncByTreeType.html");
 
         /**
          *

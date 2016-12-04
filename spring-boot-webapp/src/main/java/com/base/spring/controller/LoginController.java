@@ -53,7 +53,7 @@ public class LoginController {
 
     //不知道为什么，http://localhost:/base/error 始终无法访问，只有登录成功后，才可以访问，是哪里设置的问题么？
     //其他的地址有的能访问，有的不能，奇怪
-    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    @RequestMapping(value = "/errors", method = RequestMethod.GET)
     @ResponseBody
     public Message error(@RequestParam(value = "error", required = false) String error) {
         logger.info("error page login page, error={}", error);
