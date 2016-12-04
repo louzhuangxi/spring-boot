@@ -41,9 +41,9 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(HttpServletRequest request, HttpServletResponse response) {
-        // 好像是，只有请求过一次之后，error 才有值，不值得为什么
-        // 本方法只用来跳转，所以无限传递参数，此处仅为演示
+    public String login(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "error", required = false) String error) {
+        // 好像是，只有请求过一次之后，error 才有值，不值得为什么，现象同下面的 error 方法
+        // 本方法只用来跳转，所以无法传递参数，此处仅为演示
 //        String param = SpringUtils.parseSpringSecurityLoginUrlWithExtraParameters(request, response).get("error");
 //        logger.info("Getting login page, error={}", param);
         logger.info("go to login page");
@@ -51,10 +51,12 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/about", method = RequestMethod.GET)
-    @ResponseBody  // 返回 json ，供提交的 ajax 处理
-    public Message getAboutPage(@RequestParam(value = "error", required = false) String error) {
-        logger.info("Getting login page, error={}", error);
+    //不知道为什么，http://localhost:/base/error 始终无法访问，只有登录成功后，才可以访问，是哪里设置的问题么？
+    //其他的地址有的能访问，有的不能，奇怪
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    @ResponseBody
+    public Message error(@RequestParam(value = "error", required = false) String error) {
+        logger.info("error page login page, error={}", error);
         return new Message("error", error);
     }
 

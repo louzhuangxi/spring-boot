@@ -163,11 +163,6 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.vsersion}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
-        </dependency>
 
         <!-- xss 防御
         <dependency>

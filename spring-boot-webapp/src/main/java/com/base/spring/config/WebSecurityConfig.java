@@ -1,6 +1,7 @@
 package com.base.spring.config;
 
-import com.base.spring.custom.CustomAuthenticationFailureHandler2;
+import com.base.spring.custom.CustomAuthenticationFailureHandler;
+import com.base.spring.custom.CustomAuthenticationSuccessHandler;
 import com.base.spring.service.security.CustomUserDetailsService;
 import com.base.spring.utils.BCryptPassWordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    CustomAuthenticationFailureHandler2 failureHandler2;
+    CustomAuthenticationFailureHandler failureHandler;
+
+    @Autowired
+    CustomAuthenticationSuccessHandler successHandler;
 
     /**
      * URL-based security set up
@@ -161,7 +165,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          */
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/about", "/policies", "/error").permitAll() // Allow anyone (including unauthenticated user) to access to the URLs 登陆和登陆用户都可以访问
                 .antMatchers("/admin/**", "/user/**").hasAuthority("ADMIN") //  .hasAnyRole("ADMIN","USER")
                 /**
                  *所有的 ajax 请求，都需要是认证用户, 避免用户通过 ajax 路径读写信息。Controller 中，ajax 操作，都需要在 /ajax/** 下
@@ -182,7 +185,9 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // spring security 验证机制会自动调用下面的 configure(AuthenticationManagerBuilder auth) 方法进行验证
                 // 如果 loginProcessingUrl 不写，默认和 loginPage() 方法的参数相同
                 // login.jsp 页面需要有 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> , 以满足 spring security 要求
-                .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf").usernameParameter("login_email").passwordParameter("login_password").failureHandler(failureHandler2).permitAll()
+                .loginPage("/login").loginProcessingUrl("/login_process").defaultSuccessUrl("/menu/ajax/index.html").failureUrl("/login?error=abcdedf")
+                .usernameParameter("login_email").passwordParameter("login_password")
+                .failureHandler(failureHandler).successHandler(successHandler).permitAll()
                 .and()
                 .rememberMe().rememberMeParameter("remember-me") // remember me 不安全，其 cookies 容易被劫持。有更安全的方案，待查。
                 .and()
@@ -202,10 +207,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //3.1 false ：  超过 maximumSessions ，踢出上一个会话，重新开始新的会话。
                 //3.2 注意不能设为 true ，否则登录多个帐号，会不提示信息"会话过多信息"，而直接阻止登录并定位到 failureUrl 定义的地址，从而无法判断问题所在。
                 //    只有把 log 设为  <logger name="org.springframework.security.web" level="debug"/> 时才可以看到。
-
-                // http://stackoverflow.com/questions/36708580/how-to-get-session-time-out-message-using-spring-security
-                // http://stackoverflow.com/questions/26586345/cannot-override-spring-security-error-messages
-                //https://github.com/spring-projects/spring-security/blob/master/web/src/main/java/org/springframework/security/web/authentication/session/ConcurrentSessionControlAuthenticationStrategy.java
+                //自定义 failureHandler 3.2 问题已经解决
                 .maximumSessions(1).expiredUrl("/login?session=timeout").maxSessionsPreventsLogin(false);
 
         /**
@@ -235,9 +237,14 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         // security.ignoring().antMatchers("/**"); //测试时，不加安全验证
         //
+
+        /**
+         * 静态资源不用登录就可以访问，否则首页局无法开放给所有人
+         */
         security.ignoring()
                 .antMatchers("/resource/**", "/public/**", "/static/**", "/css/**", "/js/**", "/img/**", "**/favicon.ico");
-
+        security.ignoring()
+                .antMatchers("/", "/about", "/policies", "/sferrorsfsf");
         /**
          * 单独处理的的例外
          */
@@ -273,8 +280,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //密码加密方式为 BCrypt
         auth.userDetailsService(customUserDetailsService).passwordEncoder(BCryptPassWordUtils.getBCryptPasswordEncoder());
     }
-
-
 
 
 }
