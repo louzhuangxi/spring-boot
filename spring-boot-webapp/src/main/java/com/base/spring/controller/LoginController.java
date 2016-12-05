@@ -1,10 +1,13 @@
 package com.base.spring.controller;
 
-import com.base.spring.vo.Message;
+import com.base.spring.vo.CustomErrorResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,14 +53,18 @@ public class LoginController {
         return "admin/ace/html/ajax/content/login";
     }
 
-
-    //不知道为什么，http://localhost:/base/error 始终无法访问，只有登录成功后，才可以访问，是哪里设置的问题么？
-    //其他的地址有的能访问，有的不能，奇怪
-    @RequestMapping(value = "/errors", method = RequestMethod.GET)
+    /**
+     * 出错页面
+     *
+     * @param error
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/myerror", method = RequestMethod.GET)
     @ResponseBody
-    public Message error(@RequestParam(value = "error", required = false) String error) {
-        logger.info("error page login page, error={}", error);
-        return new Message("error", error);
+    public CustomErrorResponseMessage error(@RequestParam(value = "error", required = false) String error, HttpServletRequest request) {
+        logger.info("login error, error={}", error);
+        return new CustomErrorResponseMessage(request, error);
     }
 
 

@@ -3,6 +3,8 @@ package com.base.spring.custom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 
@@ -35,19 +37,14 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         logger.error("spring security Authentication Fail : {}", exception.getMessage());
         // spring security 不打印异常信息，无法定位错误，这里打印出来
-        exception.printStackTrace();
+        // 不打印，通过 下面的  sendRedirect 传递信息
+        // exception.printStackTrace();
 
-        // RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-        // redirectStrategy.sendRedirect(request,response,"/login?error="+ exception.getMessage());
-        setDefaultFailureUrl("/login?error" + exception.getMessage());
+        RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+        redirectStrategy.sendRedirect(request, response, "/myerror?error=" + exception.getMessage());
+        setDefaultFailureUrl("/myerror?error" + exception.getMessage());
         // setRedirectStrategy(redirectStrategy);
 
-        /**
-         * 此处无法跳转到一个指定的url，如 http://localhost:8888/base/error?error=
-         * controller 设置了也无法访问，已经在 WebSecurityConfig 设置了任何人都可以访问，不知道为什么
-         * 经过测试，只有 login 成功之后，可以访问一个 url
-         * 如果能跳到一个 url ，那么就可以在前端打印出错信息了
-         */
 //        //根据错误情况，做不同的处理
 //        //也可以设置  setDefaultFailureUrl("/url3"); 进行跳转
 //        if (exception.getClass().isAssignableFrom(UsernameNotFoundException.class)) {
@@ -68,7 +65,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 //        }
 
         //继续按照默认的流程执行，根据错误情况，进行跳转
-        super.onAuthenticationFailure(request, response, exception);
+        // super.onAuthenticationFailure(request, response, exception);
     }
 
 

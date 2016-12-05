@@ -45,13 +45,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    private CustomAuthenticationFailureHandler failureHandler;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-    @Autowired
     CustomAuthenticationFailureHandler failureHandler;
-
     @Autowired
     CustomAuthenticationSuccessHandler successHandler;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     /**
      * URL-based security set up
@@ -167,11 +165,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         /**
          * 任何用户都可以访问
+         * /error 为 spring boot 保留的全局出错 url ，不受此 spring security 控制
+         * http://localhost:8888/base/error 无法直接访问(可以在 CustomErrorController 处改写)
          */
-        http.authorizeRequests().antMatchers("/", "/about", "/policies", "/errors").permitAll();
-        http://stackoverflow.com/questions/38747548/spring-boot-disable-error-mapping
-        http://stackoverflow.com/questions/25356781/spring-boot-remove-whitelabel-error-page
-        http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#boot-features-error-handling
+        http.authorizeRequests().antMatchers("/", "/about", "/policies", "/myerror").permitAll(); // /error 不要写在这里
+//        http://stackoverflow.com/questions/38747548/spring-boot-disable-error-mapping
+//        http://stackoverflow.com/questions/25356781/spring-boot-remove-whitelabel-error-page
+//        http://docs.spring.io/spring-boot/docs/1.4.2.RELEASE/reference/htmlsingle/#boot-features-error-handling
         /**
          *
          */
@@ -242,6 +242,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * 用于设置不经过 spring controller 和 spring security 拦截的静态资源，直接返回指定的页面.可以提升系统性能
      * 如果和 configure(HttpSecurity http) 配置冲突，本方法的优先级高
      * 此处设置的 url ，spring controller 和 spring security 都不拦截
+     * -
+     * configure(HttpSecurity http)  .permitAll()
+     * configure(WebSecurity security) .ignoring()
+     * 的区别 :
+     * 前者 spring controller 和 spring security 都拦截
+     * 后者 spring controller 和 spring security 都不拦截
      */
     @Override
 

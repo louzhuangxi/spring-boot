@@ -1,14 +1,15 @@
 package com.base.spring.controller.advice;
 
+import com.base.spring.vo.CustomErrorResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.NoSuchElementException;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -89,16 +90,23 @@ public class CurrentUserControllerAdvice {
         //binder.setDisallowedFields("dis");
     }
 
-    // 应用到所有 @RequestMapping 注解的方法，在该方法抛出 NoSuchElementException 异常时执行此方法
-    /**
-     * @param e
-     * @return
-     * @ExceptionHandler 用来设置 Controller 全局异常处理
-     */
-    @ExceptionHandler(NoSuchElementException.class)   // 捕获特定异常，也可以通用为 Exception.class
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNoSuchElementException(NoSuchElementException e) {
-        return e.getMessage();
-        // return "viewName"; // 返回一个逻辑视图名
+    // 应用到所有 @RequestMapping 注解的方法，在该方法抛出 Exception 异常时执行此方法
+    // 未起作用，不知道为什么
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    CustomErrorResponseMessage defaultErrorHandler(HttpServletRequest request, Throwable ex) throws Throwable {
+
+        // If the exception is annotated with @ResponseStatus rethrow it and let
+        // the framework handle it - like the OrderNotFoundException example
+        // at the start of this post.
+        // AnnotationUtils is a Spring Framework utility class.
+        if (AnnotationUtils.findAnnotation
+                (ex.getClass(), ResponseStatus.class) != null)
+            throw ex;
+
+        // Otherwise setup and send the user to a default error-view.
+
+        return new CustomErrorResponseMessage(request, ex.getMessage());
     }
+
 }
