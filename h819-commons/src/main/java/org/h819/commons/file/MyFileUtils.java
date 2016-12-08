@@ -17,6 +17,7 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,8 @@ public class MyFileUtils extends FileUtilsBase {
     public static Charset getEncoding(String string) throws IOException {
 
         byte[] buf = new byte[4096];
-        ByteArrayInputStream bufferedInputStream = new ByteArrayInputStream(string.getBytes());;
+        ByteArrayInputStream bufferedInputStream = new ByteArrayInputStream(string.getBytes());
+        ;
         final UniversalDetector universalDetector = new UniversalDetector(null);
         int numberOfBytesRead;
         while ((numberOfBytesRead = bufferedInputStream.read(buf)) > 0 && !universalDetector.isDone()) {
@@ -361,12 +363,20 @@ public class MyFileUtils extends FileUtilsBase {
         String[] filter = {"pdf", "jpg"};
 
         File dir = new File("G:\\mypic\\");
+        File dir2 = new File("H:\\00\\");
+        File dir3 = new File("H:\\01\\");
+        File dir4 = new File("D:\\01\\00");
+        File dir5 = new File("D:\\01\\01");
+
         if (!dir.isDirectory()) {
             System.out.println("Supplied directory does not exist.");
             return;
         }
 
-        Map<String, List<String>> lists = findDuplicateFiles(dir);
+        // System.out.println(new ArrayList<>(3).size());
+
+        //  deleteDuplicateFiles("H:\\00\\", new File("d:\\duplicate.txt"), Arrays.asList(dir, dir2));
+        Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir3, dir2));
         MyJsonUtils.prettyPrint(lists);
 //        long start1 = System.nanoTime();
 //        String hash1 = DigestUtils.md5Hex(new FileInputStream(big));

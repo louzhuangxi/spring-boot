@@ -2,8 +2,11 @@ package org.h819.commons;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import org.apache.commons.io.FileUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -46,11 +49,6 @@ public class MyJsonUtils {
         prettyPrint(bean, null, charset);
     }
 
-    //   FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
-    //    preFilter.addExcludes(InfoEntity.class, "refUserInfoEntities"); //在整个转换过程中，无论哪个级联层次，只要遇到 InfoEntity 类，那么他的 refUserInfoEntities 属性就不进行转换
-//     preFilter.addExcludes(ProvinceEntity.class, "parent", "children"); //多个属性
-
-
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
         prettyPrint(bean, preFilter, Charset.defaultCharset());
     }
@@ -68,6 +66,46 @@ public class MyJsonUtils {
      *                  发现 fastjson 有此问题，用此方法修正
      */
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter, Charset charset) {
+        try {
+            PrintStream out = new PrintStream(System.out, true, charset.name());
+            out.println(getJSONString(bean, preFilter));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 输出端文件
+     *
+     * @param file
+     * @param bean
+     */
+    public static void writeJSONString(File file, Object bean) {
+
+        writeJSONString(file, bean, null, Charset.defaultCharset());
+    }
+
+    public static void writeJSONString(File file, Object bean, Charset charset) {
+
+        writeJSONString(file, bean, null, charset);
+    }
+
+    public static void writeJSONString(File file, Object bean, FastJsonPropertyPreFilter preFilter) {
+
+        writeJSONString(file, bean, preFilter, Charset.defaultCharset());
+    }
+
+    public static void writeJSONString(File file, Object bean, FastJsonPropertyPreFilter preFilter, Charset charset) {
+
+        try {
+            FileUtils.write(file, getJSONString(bean, preFilter), charset);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getJSONString(Object bean, FastJsonPropertyPreFilter preFilter) {
+
         JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
         SerializerFeature[] features = {
@@ -75,16 +113,10 @@ public class MyJsonUtils {
                 SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.PrettyFormat};
 
-        try {
-            PrintStream out = new PrintStream(System.out, true, charset.name());
-            if (preFilter == null)
-                out.println(JSON.toJSONString(bean, features));
-            else
-                out.println(JSON.toJSONString(bean, preFilter, features));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
+        if (preFilter == null)
+            return JSON.toJSONString(bean, features);
+        else
+            return JSON.toJSONString(bean, preFilter, features);
 
     }
 

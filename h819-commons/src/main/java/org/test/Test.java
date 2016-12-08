@@ -49,7 +49,8 @@ public class Test {
 
 
         Test t = new Test();
-        t.test2("a","b");
+        // t.test2("a", "b");
+        t.test7();
 
         //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
@@ -68,8 +69,32 @@ public class Test {
     }
 
 
-    private void test2(String... s) {
+    private void test6() {
 
+    }
+
+
+    private void test7() {
+
+        List list = Arrays.asList("bhello", "cjiang", "ahui");
+
+        System.out.println(list);
+
+        // Sorting
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String path1, String path2) {
+
+                return path1.length() - path2.length();
+            }
+        });
+
+        System.out.println(list);
+
+
+    }
+
+    private void test2(String... s) {
 
 
         boolean found = false;
