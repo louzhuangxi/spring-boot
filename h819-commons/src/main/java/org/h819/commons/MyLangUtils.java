@@ -1,7 +1,6 @@
 package org.h819.commons;
 
 import com.rits.cloning.Cloner;
-import org.h819.commons.file.MyFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
 /**
  * Description : TODO()
@@ -22,9 +20,7 @@ public class MyLangUtils {
     private static Logger logger = LoggerFactory.getLogger(MyLangUtils.class);
 
     //防止被初始化
-    private MyLangUtils() {
-
-    }
+    private MyLangUtils() {}
 
     /**
      * 此函数求循环次数。类似“分针开始位于12点的位置，90分钟的时间段，分针经过几次12点的位置？（起始时在12点的位置不计）”
@@ -84,8 +80,7 @@ public class MyLangUtils {
      * @return
      * @throws java.text.ParseException
      */
-    public static String converse15DigitTo18Digit(String orgIDCardNo)
-            throws ParseException {
+    public static String converse15DigitTo18Digit(String orgIDCardNo) throws ParseException {
 
         if (orgIDCardNo == null) {
             throw new IllegalArgumentException("身份证号为null");
@@ -172,7 +167,6 @@ public class MyLangUtils {
         if (numberLength == 18 && !buffer.equals(orgIDCardNo.trim())) {
             throw new ParseException("不合格的身份证号", 18);
         }
-
         return buffer;
     }
 
@@ -202,12 +196,13 @@ public class MyLangUtils {
      */
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-
-        //  MyLangUtils.throwException(" 主动抛出异常");
-
+        // MyLangUtils.throwException(" 主动抛出异常");
         try {
-            System.out.println(MyFileUtils.getEncoding(new File("D:\\01\\gntl.csv")));
+
+            System.out.println(MyCharsetUtils.detectEncoding(new File("D:\\01\\gntl.csv")));
+
         } catch (IOException e) {
+
             e.printStackTrace();
         }
 
@@ -225,7 +220,4 @@ public class MyLangUtils {
             e.printStackTrace();
         }
     }
-
-
-
 }

@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class MyExecUtils {
 
-
     //等待时间
     //大文件，pdf2swf 命令要读入，会有一段时间，所以等待时间不能太短。另外如果文件太大，jvm 会不会假死？
     private static int wait = 60;
@@ -130,6 +129,7 @@ public class MyExecUtils {
      * @param arguments
      * @return
      */
+
     private static String join(List<ExecParameter> arguments) {
         if (arguments == null || arguments.size() == 0) {
             return "";
@@ -160,6 +160,5 @@ public class MyExecUtils {
         }
         return sb.toString();
     }
-
 
 }

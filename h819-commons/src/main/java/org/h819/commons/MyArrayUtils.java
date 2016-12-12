@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class MyArrayUtils {
 
-
     /**
      * 合并两个 array，保持原先后顺序
      *
@@ -28,7 +27,6 @@ public class MyArrayUtils {
         return result;
     }
 
-
     /**
      * Arrays.asList 生成的 list 大小不可变，重新包装。
      *
@@ -39,15 +37,4 @@ public class MyArrayUtils {
     public static <T> List<T> asArrayList(T... ts) {
         return new ArrayList<>(Arrays.asList(ts));
     }
-
-    /**
-     * Int[]{1,2,3}
-     * [1,2,3] 格式 , list 的输出格式
-     *
-     * @param array
-     */
-    public static void prettyPrint(Object[] array) {
-        System.out.print(Arrays.asList(array));
-    }
-
 }

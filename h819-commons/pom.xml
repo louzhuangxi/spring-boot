@@ -304,12 +304,20 @@
         <!-- 判断文件的编码 CharSet
          https://code.google.com/p/juniversalchardet/
          that is the encoding detector library of Mozilla.
+       用 icu4j 代替 , juniversalchardet 已经不维护了
         =========================================================== -->
         <dependency>
             <groupId>com.googlecode.juniversalchardet</groupId>
             <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
         </dependency>
+        <!-- http://userguide.icu-project.org/conversion/detection -->
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
+        </dependency>
+
         <!-- 微信开发包 -公众号
           https://github.com/chanjarster/weixin-java-tools
          =========================================================== -->
