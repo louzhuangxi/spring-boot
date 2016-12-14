@@ -7,15 +7,13 @@ import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.file.base.FileUtilsBase;
-import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,83 +39,6 @@ public class MyFileUtils extends FileUtilsBase {
      * 静态方法调用，不需要生成实例
      */
     private MyFileUtils() {
-
-    }
-
-
-    /**
-     * Attempts to figure out the character set of the file using the excellent juniversalchardet library.
-     * https://code.google.com/p/juniversalchardet/
-     * that is the encoding detector library of Mozilla
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public static Charset getEncoding(File file) throws IOException {
-
-        byte[] buf = new byte[4096];
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-        final UniversalDetector universalDetector = new UniversalDetector(null);
-        int numberOfBytesRead;
-        while ((numberOfBytesRead = bufferedInputStream.read(buf)) > 0 && !universalDetector.isDone()) {
-            universalDetector.handleData(buf, 0, numberOfBytesRead);
-        }
-        universalDetector.dataEnd();
-        String encoding = universalDetector.getDetectedCharset();
-        universalDetector.reset();
-        bufferedInputStream.close();
-
-        if (encoding != null) {  //解析不出来，默认为 ISO_8859_1
-            logger.debug("Detected encoding for {} is {}.", file.getAbsolutePath(), encoding);
-            try {
-                return Charset.forName(encoding);
-            } catch (IllegalCharsetNameException err) {
-                logger.debug("Invalid detected charset name '" + encoding + "': " + err);
-                return StandardCharsets.ISO_8859_1;
-            } catch (UnsupportedCharsetException err) {
-                logger.error("Detected charset '" + encoding + "' not supported: " + err);
-                return StandardCharsets.ISO_8859_1;
-            }
-        } else {
-            logger.info("encodeing is null, will use 'ISO_8859_1'  : " + file.getAbsolutePath() + " , " + encoding);
-            return StandardCharsets.ISO_8859_1;
-
-        }
-
-    }
-
-    public static Charset getEncoding(String string) throws IOException {
-
-        byte[] buf = new byte[4096];
-        ByteArrayInputStream bufferedInputStream = new ByteArrayInputStream(string.getBytes());
-        ;
-        final UniversalDetector universalDetector = new UniversalDetector(null);
-        int numberOfBytesRead;
-        while ((numberOfBytesRead = bufferedInputStream.read(buf)) > 0 && !universalDetector.isDone()) {
-            universalDetector.handleData(buf, 0, numberOfBytesRead);
-        }
-        universalDetector.dataEnd();
-        String encoding = universalDetector.getDetectedCharset();
-        universalDetector.reset();
-        bufferedInputStream.close();
-
-        if (encoding != null) {  //解析不出来，默认为 ISO_8859_1
-            logger.debug("Detected encoding for {} is {}.", string, encoding);
-            try {
-                return Charset.forName(encoding);
-            } catch (IllegalCharsetNameException err) {
-                logger.debug("Invalid detected charset name '" + encoding + "': " + err);
-                return StandardCharsets.ISO_8859_1;
-            } catch (UnsupportedCharsetException err) {
-                logger.error("Detected charset '" + encoding + "' not supported: " + err);
-                return StandardCharsets.ISO_8859_1;
-            }
-        } else {
-            logger.info("encodeing is null, will use 'ISO_8859_1'  : " + string + " , " + encoding);
-            return StandardCharsets.ISO_8859_1;
-
-        }
 
     }
 
@@ -185,7 +106,6 @@ public class MyFileUtils extends FileUtilsBase {
 
     }
 
-
     /**
      * 获取文件扩展名 FileFilter
      *
@@ -200,7 +120,6 @@ public class MyFileUtils extends FileUtilsBase {
             return new SuffixFileFilter(extension, caseSensitivity);
     }
 
-
     /**
      * 获取文件名满足 pattern  FileFilter
      *
@@ -211,7 +130,6 @@ public class MyFileUtils extends FileUtilsBase {
     public static FileFilter getFileNameRegexFilter(String pattern, IOCase caseSensitivity) {
         return new RegexFileFilter(pattern, caseSensitivity);
     }
-
 
     /**
      * 递归移动原文件夹中的所有文件到指定文件夹，目标文件夹不存在，则创建
@@ -266,7 +184,6 @@ public class MyFileUtils extends FileUtilsBase {
         }
     }
 
-
     /**
      * 读取大文件，不能一次性读取，这样会占用大量内存，应逐条读取
      */
@@ -304,56 +221,6 @@ public class MyFileUtils extends FileUtilsBase {
 
     }
 
-    /**
-     * 为文件重新编码。
-     * 仅对文本文件进行编码。
-     *
-     * @param srcFile       源文件（也可以是文件夹）
-     * @param descDirectory 转码之后的文件夹
-     * @param charset       指定的转换完成的编码格式，如 StandardCharsets.UTF_8
-     */
-    // 该方法还不成熟，utf-8 编码变成 asc 时会乱码。
-    // gb2312 到 utf-8 不出现乱码
-
-    // 所以该方法还不能实现在 "windows 的文本编辑器"中，选择编码之后，文本“另存”的功能
-    public static void convertEncoding(File srcFile, File descDirectory, Charset charset) {
-
-        // 待编码的文本文件类型
-        String[] extension = {"java", "html", "htm", "php", "ini", "bat", "css", "txt", "js", "jsp", "xml", "sql", "properties"};
-        if (!descDirectory.exists()) {
-            descDirectory.mkdir();
-        }
-
-        if (srcFile.isFile()) {
-            if (FilenameUtils.isExtension(srcFile.getName().toLowerCase(), extension)) {
-                try {
-                    String encodingSrc = MyFileUtils.getEncoding(srcFile).name();
-                    // logger.info(encodingSrc);
-                    InputStreamReader in = new InputStreamReader(new FileInputStream(srcFile), encodingSrc);
-                    File f = new File(descDirectory + File.separator + srcFile.getName());
-                    OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(f), charset.name());
-                    IOUtils.copy(in, out);
-                    IOUtils.closeQuietly(in);
-                    IOUtils.closeQuietly(out);
-                    // logger.info(MyFileUtils.getDetectedEncoding(f).name());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (srcFile.isDirectory()) {
-
-            File fs[] = srcFile.listFiles();
-            for (File f : fs)
-                convertEncoding(f, new File(descDirectory + File.separator + srcFile.getName()), charset);
-        } else {
-            logger.info("wrong file type :" + srcFile.getAbsolutePath());
-        }
-
-    }
 
 
     public static void main(String[] args) throws Exception {

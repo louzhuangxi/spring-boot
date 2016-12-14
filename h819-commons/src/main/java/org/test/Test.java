@@ -38,19 +38,21 @@ public class Test {
     File to1 = new File("d:\\01\\zb_main.jsp");
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         // File from = new File("E:\\123");
 
 
         //由于是递归，所以防止图片的根目录放在类变量
         File to = new File("d:\\01\\");
-        File to1 = new File("d:\\01\\zb_main.jsp");
+        File to1 = new File("d:\\UKEY申请表_2016.doc");
+
+
 
 
         Test t = new Test();
         // t.test2("a", "b");
-        t.test7();
+      //  t.test7();
 
         //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
@@ -65,6 +67,10 @@ public class Test {
 
         // Assert.noNullElements(new Object[] {null,null},"不能为空");
         //Assert.hasText("s", "has text");
+
+        System.out.println(MyFileUtils.detectEncoding(to1));
+        System.out.println("");
+        System.out.println(MyFileUtils.getEncoding(to1));
 
     }
 
