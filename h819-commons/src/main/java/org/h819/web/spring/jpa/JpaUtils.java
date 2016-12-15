@@ -88,7 +88,11 @@ public class JpaUtils {
         currentPageNo = currentPageNo - 1;
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
-            return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, JpaUtils.getJqgirdSpringSort(sortParameter, sortDirection)));
+            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            if (sort == null)
+                return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize));
+            else
+                return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, sort));
 
         } else {
 
@@ -101,12 +105,17 @@ public class JpaUtils {
             if (f.getGroupRelation().equals(SearchFilter.Relation.OR))
                 specificationFilters = new JpaDynamicSpecificationBuilder().or(f.getSearchFilters()).build();
 
-
-            //  Specification specificationFilters = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
-            return rep.findAll(
-                    new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
-                    new PageRequest(currentPageNo, pageSize, JpaUtils.getJqgirdSpringSort(sortParameter, sortDirection))
-            );
+            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            if (sort == null)
+                return rep.findAll(
+                        new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
+                        new PageRequest(currentPageNo, pageSize)
+                );
+            else
+                return rep.findAll(
+                        new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
+                        new PageRequest(currentPageNo, pageSize, sort)
+                );
         }
     }
 
@@ -150,9 +159,14 @@ public class JpaUtils {
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
 
+
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
             JpaRepository rep = (JpaRepository) repository;
-            return rep.findAll(new PageRequest(currentPageNo, pageSize, getJqgirdSpringSort(sortParameter, sortDirection)));
+            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            if (sort == null)
+                return rep.findAll(new PageRequest(currentPageNo, pageSize));
+            else
+                return rep.findAll(new PageRequest(currentPageNo, pageSize, sort));
 
         } else {
 
@@ -167,18 +181,28 @@ public class JpaUtils {
 
             //  Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
 
-            return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize, getJqgirdSpringSort(sortParameter, sortDirection)));
+            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            if (sort == null)
+                return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize));
+            else
+                return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize, sort));
         }
     }
 
     /**
      * 根据 jqgrid 传过来的排序信息，构造排序所需要的 Sort
      *
-     * @param sortParameter 用于排序的列名, grouping:true 时格式特殊，需要正确解析
      * @param sortDirection 排序的方式，只能为  desc 或 asc
+     * @param sortParameter 用于排序的列名, grouping:true 时格式特殊，需要正确解析
      * @return
      */
-    private static Sort getJqgirdSpringSort(String sortParameter, String sortDirection) {
+    private static Sort getJqgirdSpringSort(String sortDirection, String sortParameter) {
+
+        if (sortParameter == null || sortParameter.isEmpty()) {
+            logger.info("排序字段为 null 或 空");
+            return null;
+        }
+
         //排序字段
         if (!sortParameter.contains(",")) { //未分组
 

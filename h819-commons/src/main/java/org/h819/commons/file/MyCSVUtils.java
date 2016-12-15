@@ -4,6 +4,7 @@ import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.h819.commons.MyCharsetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +50,7 @@ public class MyCSVUtils {
      */
     public static Collection<CSVRecord> getCSVRecords(File csvFile, boolean duplicate) throws IOException {
 
-        List<CSVRecord> collection = CSVParser.parse(csvFile, MyFileUtils.getEncoding(csvFile), CSVFormat.DEFAULT).getRecords();
+        List<CSVRecord> collection = CSVParser.parse(csvFile, MyCharsetUtils.detectEncoding(csvFile), CSVFormat.DEFAULT).getRecords();
 
         if (duplicate) {
             //    logger.info("in list");
@@ -88,7 +89,7 @@ public class MyCSVUtils {
      * @throws IOException
      */
     public static CSVRecord getCSVRecord(File csvFile, int lineNumber) throws IOException {
-        return CSVParser.parse(csvFile, MyFileUtils.getEncoding(csvFile), CSVFormat.DEFAULT).getRecords().get(lineNumber);
+        return CSVParser.parse(csvFile, MyCharsetUtils.detectEncoding(csvFile), CSVFormat.DEFAULT).getRecords().get(lineNumber);
     }
 
 

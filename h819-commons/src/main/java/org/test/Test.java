@@ -6,6 +6,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.h819.commons.MyCharsetUtils;
 import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyFileUtils;
@@ -68,9 +69,8 @@ public class Test {
         // Assert.noNullElements(new Object[] {null,null},"不能为空");
         //Assert.hasText("s", "has text");
 
-        System.out.println(MyFileUtils.detectEncoding(to1));
+        System.out.println(MyCharsetUtils.detectEncoding(to1));
         System.out.println("");
-        System.out.println(MyFileUtils.getEncoding(to1));
 
     }
 

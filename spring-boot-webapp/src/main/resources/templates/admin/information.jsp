@@ -324,7 +324,7 @@
             				},
             				complete : function(xmlRequest) {
             					$("#modal-table").modal("toggle");
-            					jQuery(grid_selector).trigger("reloadGrid");
+								JqgridUtils.reloadGrid(grid_selector) ;
             				}
             			});
     			    }

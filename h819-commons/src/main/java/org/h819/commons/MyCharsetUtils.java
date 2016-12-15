@@ -25,7 +25,6 @@ public class MyCharsetUtils {
 
     /**
      * 静态方法调用，不需要生成实例
-     *
      */
     private MyCharsetUtils() {
     }
@@ -150,13 +149,12 @@ public class MyCharsetUtils {
             logger.info("Cannot detect source charset.");
             return null;
         }
-
         //This is an integer from 0 to 100. The higher the value, the more confidence
         //探测的相似度在 1~100 之间，相似度越高结果越准确。
         int confidence = charsetMatch.getConfidence();
         final String name = charsetMatch.getName();
-        logger.info("CharsetMatch: {} ({}% 相似度)", name, confidence);
-        //该文本编码，所有可能性
+        logger.info("CharsetMatch: {} ({}% 相似度，相似度小于 50% 时，可能编码无法判断。)", name, confidence);
+        //打印该文本编码，所有可能性
 //        CharsetMatch[] matches = detector.detectAll();
 //        System.out.println("All possibilities : " + Arrays.asList(matches));
         return Charset.forName(name);

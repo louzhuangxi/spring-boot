@@ -139,6 +139,7 @@
     var scripts = [null,
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
+        "${ctx}/h819/jqgrid/JqgridUtils.js",
         null];
 
 
@@ -311,7 +312,6 @@
             var grid_selector = "#grid-table";
             var pager_selector = "#grid-pager";
 
-
             var parent_column = $(grid_selector).closest('[class*="col-"]');
             //resize to fit page size
             $(window).on('resize.jqGrid', function () {
@@ -377,14 +377,14 @@
 
                         // alert("success textStatus: "+textStatus);
                         //alert("success jqXHR: "+jqXHR.status+','+jqXHR.statusText);
-                        //jQuery(grid_selector).trigger("reloadGrid"); //ajax 函数执行成功之后，jgrid 刷新当前表格
+                        //  JqgridUtils.reloadGrid(grid_selector) ; ; //ajax 函数执行成功之后，jgrid 刷新当前表格
                     },
 
                     error: function (jqXHR, textStatus, errorThrown) { //打印出错信息，便于调试
                         alert("error jqXHR: " + jqXHR.status + ',' + jqXHR.statusText);
                         alert("error textStatus: " + textStatus); //"timeout", "error", "abort", and "parsererror" 有四种错误代码，errorThrown 是错误具体信息
                         alert("error errorThrown : " + errorThrown);
-                        jQuery(grid_selector).trigger("reloadGrid");
+                        JqgridUtils.reloadGrid(grid_selector) ;
                     }
                 });
                 return result;
@@ -544,7 +544,7 @@
 
                 //prmNames: {page:"page",rows:"rows", sort: "sidx",order: "sord", search:"_search", nd:"nd", npage:null} //修改发送到服务器端的默认参数名称
 
-
+                jsonReader: {id: "id"}, //将后台返回的 id 设置为表的主键
                 sortable: true,  //可以排序
                 sortname: 'createdDate',  //默认排序字段名，点击表头字段排序后，该变量值变为被点击的变量名称
                 sortorder: "desc", //默认排序方式：正序，点击表头字段排序后，该变量值变为 desc
@@ -559,12 +559,12 @@
                     var table = this;
                     setTimeout(function () {
                         styleCheckbox(table);
-
                         updateActionIcons(table);
                         updatePagerIcons(table);
                         enableTooltips(table);
                     }, 0);
-                    $(grid_selector).closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"}); //强制不显示横向滚动条，反之 hidden 修改为
+
+                    JqgridUtils.hideX(grid_selector); //强制不显示横向滚动条
                 }
 
                 /**

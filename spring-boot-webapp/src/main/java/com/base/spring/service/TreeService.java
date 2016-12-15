@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+//http://git.oschina.net/smallc/SpringBlade
+//可参考处理方式
+
 @Service
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
 public class TreeService {

@@ -325,5 +325,4 @@ public class GroupAjaxController {
         //去掉 ： ArrayUtils.removeElement(roleIds, "on")
         groupService.associateRoles(ArrayUtils.removeElement(roleIds, "on"), groupId);
     }
-
 }

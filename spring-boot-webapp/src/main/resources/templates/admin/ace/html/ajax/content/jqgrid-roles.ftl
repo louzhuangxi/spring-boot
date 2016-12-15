@@ -96,6 +96,7 @@
         "${ctx}/ace/assets/js/date-time/bootstrap-datepicker.js",
         "${ctx}/ace/assets/js/jqGrid/jquery.jqGrid.js",
         "${ctx}/ace/assets/js/jqGrid/i18n/grid.locale-cn.js",
+        "${ctx}/h819/jqgrid/JqgridUtils.js",
         null]
 
 
@@ -237,14 +238,15 @@
 
                         // alert("success textStatus: "+textStatus);
                         //alert("success jqXHR: "+jqXHR.status+','+jqXHR.statusText);
-                        //jQuery(grid_selector).trigger("reloadGrid"); //ajax 函数执行成功之后，jgrid 刷新当前表格
+                        // JqgridUtils.reloadGrid(grid_selector) ; //ajax 函数执行成功之后，jgrid 刷新当前表格
                     },
 
                     error: function (jqXHR, textStatus, errorThrown) { //打印出错信息，便于调试
                         alert("error jqXHR: " + jqXHR.status + ',' + jqXHR.statusText);
                         alert("error textStatus: " + textStatus); //"timeout", "error", "abort", and "parsererror" 有四种错误代码，errorThrown 是错误具体信息
                         alert("error errorThrown : " + errorThrown);
-                        jQuery(grid_selector).trigger("reloadGrid");
+                        JqgridUtils.reloadGrid(grid_selector) ;
+
                     }
                 });
                 return result;
@@ -384,7 +386,7 @@
                         updatePagerIcons(table);
                         enableTooltips(table);
                     }, 0);
-                    $(grid_selector).closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"}); //强制不显示横向滚动条，反之 hidden 修改为
+                    JqgridUtils.hideX(grid_selector); //强制不显示横向滚动条
                 }
 
                 /**
