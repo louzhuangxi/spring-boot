@@ -64,8 +64,8 @@
 
 
         <!-- 修改文件，并编译后，后自动 reload
-        该功能在 eclipse 下，修改文件后保存即可自动 reload
-        在 intelliJ IDEA 下，需要 build project 才可以
+        该功能在 eclipse 下，修改文件后保存即可自动编译，后 reload
+        在 intelliJ IDEA 下，需要手工 build class 才可以
         参见官方文档说明 https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->
 
         <dependency>
@@ -193,7 +193,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
+                <configuration>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
             <!--
             Run clean compile and you will get your Query types generated into target/generated-sources/java.

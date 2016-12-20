@@ -31,7 +31,7 @@
         <!--querydsl 不用，原因见 JpaDynamicSpecificationBuilder
         <querydsl.apt.version>1.1.3</querydsl.apt.version>
         <querydsl.version>4.1.4</querydsl.version>-->
-        <lombok.version>1.16.10</lombok.version>
+        <lombok.version>1.16.12</lombok.version>
         <ehcache.version>3.1.2</ehcache.version>
 
 

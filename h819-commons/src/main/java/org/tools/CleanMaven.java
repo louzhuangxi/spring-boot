@@ -29,7 +29,7 @@ public class CleanMaven {
         //s.removeSVNDirectory("E:\\Program\\workspace\\2760");
 
         //托管系统
-        s.clean(new File("F:\\360yun\\maven\\repository\\"));
+        s.clean(new File("F:\\baiduyun\\maven\\repository\\"));
 
 
         //单位的路径 waterq.cn
