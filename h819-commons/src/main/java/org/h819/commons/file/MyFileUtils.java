@@ -5,6 +5,7 @@ import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
+import org.h819.commons.MyJsonUtils;
 import org.h819.commons.file.base.FileUtilsBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author h819
@@ -229,22 +232,21 @@ public class MyFileUtils extends FileUtilsBase {
         File dir = new File("G:\\魏勃资料库");
         File dir2 = new File("H:\\00\\");
         File dir3 = new File("H:\\01\\");
-        File dir4 = new File("D:\\01\\00");
+        File dir4 = new File("D:\\01");
         File dir5 = new File("D:\\01\\01");
-
-        if (!dir.isDirectory()) {
-            System.out.println("Supplied directory does not exist.");
-            return;
-        }
 
       //  System.out.println(Arrays.asList(dir.listFiles()));
        // System.out.println("file name = "+dir.getName());
 
         // System.out.println(new ArrayList<>(3).size());
 
-          deleteDuplicateFiles(dir.getAbsolutePath(), Arrays.asList(dir));
-//        Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir));
-//        MyJsonUtils.prettyPrint(lists);
+
+        Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir4));
+        MyJsonUtils.prettyPrint(lists);
+
+        System.out.println(StringUtils.center("splite",80,"*"));
+
+       deleteDuplicateFiles("D:\\01\\Ace - Responsive Admin Template 1.3.4\\", Arrays.asList(dir4));
 //        long start1 = System.nanoTime();
 //        String hash1 = DigestUtils.md5Hex(new FileInputStream(big));
 //        System.out.println(hash1 + " : " + (System.nanoTime() - start1));

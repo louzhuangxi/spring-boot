@@ -17,7 +17,6 @@ public class FileUtilsBase {
     private static Map<Long, List<String>> outDuplicateFilesMapBySize = new HashMap();
     //暂存文件 hash 相同的文件
     private static Map<String, List<String>> outDuplicateFilesMapByHash = new HashMap();
-
     //操作系统文件，忽略
     private static String[] sysFiles = {"$RECYCLE.BIN"};
 
@@ -129,6 +128,16 @@ public class FileUtilsBase {
      */
 
     public static Map<String, List<String>> findDuplicateFiles(FileFilter fileFilter, List<File> directories) {
+
+        /**
+         * 静态变量在全局固定，如果多次使用，map 会积累所有的使用数据
+         * 所以每次使用时，要用一个外部方法清空
+         * - Duplicate 方法仅在此方法中进行即可
+         *
+         */
+        outDuplicateFilesMapBySize.clear();
+        outDuplicateFilesMapByHash.clear();
+
         //第一步，比较文件大小
         findDuplicateFilesBySize(fileFilter, directories); // outDuplicateFilesMapBySize 赋值
         System.out.println(StringUtils.center("begin to hash file which has same size", 80, "="));
