@@ -18,6 +18,10 @@ public class FileUtilsBase {
     //暂存文件 hash 相同的文件
     private static Map<String, List<String>> outDuplicateFilesMapByHash = new HashMap();
 
+    //操作系统文件，忽略
+    private static String[] sysFiles = {"$RECYCLE.BIN"};
+
+
     /**
      *  查找重复文件：
      *  -
@@ -48,9 +52,15 @@ public class FileUtilsBase {
         if (directories == null || directories.isEmpty())
             return;
         for (File dirChild : directories) {
+            if (!dirChild.canRead() || Arrays.asList(sysFiles).contains(dirChild.getName()))
+                continue;
             if (dirChild.isDirectory()) {
+                if (dirChild.listFiles() == null || dirChild.listFiles().length == 0)
+                    continue;
                 findDuplicateFilesBySize(fileFilter, Arrays.asList(dirChild.listFiles(fileFilter)));
             } else {
+                if (dirChild.length() == 0)
+                    continue;
                 System.out.println(String.format("calculate file size : %d -> %s", dirChild.length(), dirChild.getAbsolutePath()));
                 long uniqueFileLength = dirChild.length();
                 List<String> identicalList = outDuplicateFilesMapBySize.get(uniqueFileLength);
@@ -65,6 +75,7 @@ public class FileUtilsBase {
             }
 
         }
+
     }
 
     /**
@@ -146,55 +157,56 @@ public class FileUtilsBase {
     /**
      * 所有文件
      *
-     * @param pathStartWith
+     * @param deletePathStartWith
      * @param outDuplicateFile
      * @param directories
      */
-    public static void deleteDuplicateFiles(String pathStartWith, File outDuplicateFile, List<File> directories) {
-        deleteDuplicateFiles(pathStartWith, outDuplicateFile, directories, FileFilterUtils.trueFileFilter());
+    public static void deleteDuplicateFiles(String deletePathStartWith, File outDuplicateFile, List<File> directories) {
+        deleteDuplicateFiles(deletePathStartWith, outDuplicateFile, directories, FileFilterUtils.trueFileFilter());
     }
 
     /**
      * 所有文件，不输出重复结果
      *
-     * @param pathStartWith
+     * @param deletePathStartWith
      * @param directories
      */
-    public static void deleteDuplicateFiles(String pathStartWith, List<File> directories) {
-        deleteDuplicateFiles(pathStartWith, null, directories, FileFilterUtils.trueFileFilter());
+    public static void deleteDuplicateFiles(String deletePathStartWith, List<File> directories) {
+        deleteDuplicateFiles(deletePathStartWith, null, directories, FileFilterUtils.trueFileFilter());
     }
 
     /**
      * 不输出重复结果
      *
-     * @param pathStartWith
+     * @param deletePathStartWith
      * @param directories
      */
-    public static void deleteDuplicateFiles(String pathStartWith, List<File> directories, FileFilter fileFilter) {
-        deleteDuplicateFiles(pathStartWith, null, directories, fileFilter);
+    public static void deleteDuplicateFiles(String deletePathStartWith, List<File> directories, FileFilter fileFilter) {
+        deleteDuplicateFiles(deletePathStartWith, null, directories, fileFilter);
     }
 
     /**
      * 删除找到的重复文件
      *
-     * @param pathStartWith    删除文件路径以 pathStartWith 开始的文件；如果重复的文件都是以该字符串开始，保留文件路径层次最浅的
-     * @param outDuplicateFile 输出找到的重复文件路径到外部文件
+     * @param deletePathStartWith 删除文件路径以 deletePathStartWith 开始的重复文件，保留其他；
+     *                            如果重复的文件都是以该字符串开始，保留文件路径层次最浅的
+     * @param outDuplicateFile    输出找到的重复文件路径到外部文件
      * @param directories
      * @param fileFilter
      */
-    public static void deleteDuplicateFiles(String pathStartWith, File outDuplicateFile, List<File> directories, FileFilter fileFilter) {
+    public static void deleteDuplicateFiles(String deletePathStartWith, File outDuplicateFile, List<File> directories, FileFilter fileFilter) {
         Map<String, List<String>> duplicateFiles = findDuplicateFiles(fileFilter, directories);
         //MyJsonUtils.prettyPrint(duplicateFiles);
         if (outDuplicateFile != null)
             MyJsonUtils.writeJSONString(outDuplicateFile, duplicateFiles);
 
-        System.out.println(StringUtils.center("begin to delete duplicate file start with " + pathStartWith, 80, "="));
+        System.out.println(StringUtils.center("begin to delete duplicate file start with " + deletePathStartWith, 80, "="));
 
         for (Map.Entry<String, List<String>> entry : duplicateFiles.entrySet()) {
             List<String> duplicates = entry.getValue();
             List<String> deletes = new ArrayList<>(duplicates.size());
             for (String path : duplicates) {
-                if (path.startsWith(pathStartWith)) {
+                if (path.startsWith(deletePathStartWith)) {
                     deletes.add(path);
                 }
             }
