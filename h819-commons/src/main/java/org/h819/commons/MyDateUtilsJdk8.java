@@ -122,7 +122,7 @@ public class MyDateUtilsJdk8 {
      * @param timeStr
      * @return
      */
-    public static LocalDateTime parseTime(String timeStr) {
+    public static LocalDateTime parseDate(String timeStr) {
         return LocalDateTime.parse(timeStr, DEFAULT_DATETIME_FORMATTER);
     }
 
@@ -133,7 +133,7 @@ public class MyDateUtilsJdk8 {
      * @param format  时间格式
      * @return
      */
-    public static LocalDateTime parseTime(String timeStr, TimeFormat format) {
+    public static LocalDateTime parseDate(String timeStr, TimeFormat format) {
         return LocalDateTime.parse(timeStr, format.formatter);
     }
 
@@ -143,7 +143,7 @@ public class MyDateUtilsJdk8 {
      * @param time
      * @return
      */
-    public static String parseTime(LocalDateTime time) {
+    public static String parseDate(LocalDateTime time) {
         return DEFAULT_DATETIME_FORMATTER.format(time);
     }
 
@@ -154,7 +154,7 @@ public class MyDateUtilsJdk8 {
      * @param format 时间格式
      * @return
      */
-    public static String parseTime(LocalDateTime time, TimeFormat format) {
+    public static String parseDate(LocalDateTime time, TimeFormat format) {
         return format.formatter.format(time);
     }
 

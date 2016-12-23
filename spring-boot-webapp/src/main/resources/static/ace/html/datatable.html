@@ -3,31 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <!--
-   <link rel="stylesheet"
-         href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap.css"/>-->
-   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap3.min.css"/>
-   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.3/css/buttons.bootstrap3.min.css"/>
+    <!---->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.bootstrap.min.css"/>
 
-    <link rel="stylesheet" href="../assets/css/bootstrap.css"/>
-    <link rel="stylesheet" href="../assets/css/font-awesome.css"/>
-    <!-- page specific plugin styles -->
-    <!-- text fonts -->
+        <link rel="stylesheet" href="../assets/css/font-awesome.css"/>
+      <!--     page specific plugin styles -->
+    <!-- text fonts-->
     <link rel="stylesheet" href="../assets/css/ace-fonts.css"/>
-    <!-- ace styles -->
-    <link rel="stylesheet" href="../assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style"/>
+    <!-- ace styles
+    <link rel="stylesheet" href="../assets/css/ace.css" class="ace-main-stylesheet" id="main-ace-style"/>-->
 
     <script src="http://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.3/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
     <script src="http://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
     <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script src="http://cdn.datatables.net/buttons/1.2.3/js/buttons.html5.min.js"></script>
-    <script src="http://cdn.datatables.net/buttons/1.2.3/js/buttons.print.min.js"></script>
-    <script src="http://cdn.datatables.net/buttons/1.2.3/js/buttons.colVis.min.js"></script>
+    <script src="http://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+    <script src="http://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js"></script>
+    <script src="http://cdn.datatables.net/buttons/1.2.4/js/buttons.colVis.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             var table = $('#example').DataTable({
@@ -57,10 +55,21 @@
             });
 
             table.buttons().container()
-                    .appendTo('#example_wrapper .col-md-6:eq(0)');
+                    .appendTo('#example_wrapper .col-sm-6:eq(0)');
         });
     </script>
 
+    <style>
+        .table-header {
+            background-color: #307ecc;
+            color: #FFF;
+            font-size: 14px;
+            line-height: 38px;
+            padding-left: 12px;
+            margin-bottom: 1px;
+        }
+
+    </style>
 </head>
 <body>
 <div class="main-content">
