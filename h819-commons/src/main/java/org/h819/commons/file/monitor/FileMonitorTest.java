@@ -35,21 +35,12 @@ public class FileMonitorTest {
 
         // 创建一个文件观察器用于处理文件的格式
         // Create a FileFilter
-        IOFileFilter directories = FileFilterUtils.and(
-                FileFilterUtils.directoryFileFilter(),
-                HiddenFileFilter.VISIBLE);
-
-
-        IOFileFilter files = FileFilterUtils.and(
-                FileFilterUtils.fileFileFilter(),
-                FileFilterUtils.suffixFileFilter(".java"));
-
+        IOFileFilter directories = FileFilterUtils.and(FileFilterUtils.directoryFileFilter(), HiddenFileFilter.VISIBLE);
+        IOFileFilter files = FileFilterUtils.and(FileFilterUtils.fileFileFilter(), FileFilterUtils.suffixFileFilter(".java"));
         IOFileFilter filter = FileFilterUtils.or(directories, files);
 
         // Create the File system observer and register File Listeners
-        FileAlterationObserver observer = new FileAlterationObserver(
-                rootDir, filter, null);
-
+        FileAlterationObserver observer = new FileAlterationObserver(rootDir, filter, null);
         observer.addListener(new FileMonitorFileListener()); //设置文件变化监听器
 
         //创建文件变化监听器

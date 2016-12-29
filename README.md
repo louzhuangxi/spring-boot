@@ -42,7 +42,7 @@ Spring 现在基本上也一统江湖了，只要你想要的解决方案，Spri
 - JQuery
 - Ace Admin
 
-#### security
+#### Security
 - spring security
 - spring security oauth2
 

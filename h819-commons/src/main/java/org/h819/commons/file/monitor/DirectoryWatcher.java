@@ -1,10 +1,16 @@
 package org.h819.commons.file.monitor;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
 /**
- * 文件监控,1.7版本后，java.nio.file包提供了目录监控的api即 Watch Service API
+ * 文件监控,1.7版本后，java.nio.file包提供了目录监控的 api 即 Watch Service API
  * User: Jianghui
  * Date: 2012-6-18
  * Time: 下午2:04

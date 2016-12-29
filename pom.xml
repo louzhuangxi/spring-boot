@@ -103,6 +103,8 @@
         <!-- java mail -->
         <java.mail>1.5.2</java.mail>
 
+        <quartz.version>2.2.3</quartz.version>
+
     </properties>
 
     <modules>
