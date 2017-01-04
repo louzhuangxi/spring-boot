@@ -91,18 +91,6 @@ public class JpaDynamicSpecificationBuilder {
     }
 
     /**
-     * 取得属性代表的对象的类型
-     *
-     * @param root
-     * @param filterFieldName 属性名称 , 可以是级联格式
-     * @param <T>
-     * @return
-     */
-    private <T> Class getPathJavaType(Root<T> root, String filterFieldName) {
-        return getNestedPath(root, filterFieldName).getJavaType();
-    }
-
-    /**
      * 条件 and
      * <p>
      * 为了避免方法名称重复，分别用了 Iterable 和 Collection
@@ -214,11 +202,10 @@ public class JpaDynamicSpecificationBuilder {
             @Override
             public Predicate toPredicate(final Root<T> root, final CriteriaQuery<?> query, final CriteriaBuilder builder) {
 
-                //  Class<?> javaType = root.get(searchFilter.getFieldName()).getJavaType();   // 只对找到第一层，不会递归找到 tree.parent.name 对象中的对象的属性
                 Path path = getNestedPath(root, searchFilter.getFieldName()); // 可以递归查找
-                // 被查询的属性代表的对象类型，可以是对象，也可以是字符串。
-                // 不同的比较方法，要求的对象类型不同
-                // 此处为自动获取
+                /**
+                 * 取得属性代表的对象的类型
+                 */
                 Class<?> javaType = path.getJavaType();
 
                 switch (searchFilter.getOperator()) {

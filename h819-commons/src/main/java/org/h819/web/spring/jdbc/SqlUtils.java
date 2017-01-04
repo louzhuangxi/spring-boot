@@ -7,13 +7,13 @@ package org.h819.web.spring.jdbc;
  */
 
 import java.text.MessageFormat;
-import java.util.Arrays;
 
 public class SqlUtils {
     /**
      * 分页SQL，仅测试了 oracle
+     * 通过数据库分页，在满足条件的所有结果中截取一夜数据，所以传入的查询参数 {0} 是不分页时候的查询条件
      */
-    private static final String MYSQL_SQL = "select * from ( {0}) sel_tab00 limit {1},{2}"; // mysql
+    private static final String MYSQL_SQL = "select * from ({0}) sel_tab00 limit {1},{2}"; // mysql
     private static final String POSTGRE_SQL = "select * from ( {0}) sel_tab00 limit {2} offset {1}";// postgresql
     // oracle ，没有根据 oracle 版本进行优化
     private static final String ORACLE_SQL = "select * from (\n" +
@@ -27,11 +27,13 @@ public class SqlUtils {
 
     /**
      * 构造数据库相关的本地分页查询语句
+     * -
      * 排序条件不在这里维护
      *
      * @param dbDialect      数据库类型，数据库不同，分页语句不同
-     * @param queryNativeSql 本地查询条件，和不分页时相同，如
-     *                       select * from standard st where st.namecn like '%中国%' , select st.id,st.name from standard st where st.id ='239711'
+     * @param queryNativeSql 本地查询条件，和不分页时相同，之后在所有的数据中截取一页，如
+     *                       select * from standard st where st.namecn like '%中国%' ,
+     *                       select st.id,st.name from standard st where st.id ='239711'
      *                       需要注意的是，不要包含排序条件，如果有排序条件，作为下面的参数传入
      * @param currentPageNo  当前页码，从 1 开始
      * @param pageSize       页大小
@@ -39,8 +41,7 @@ public class SqlUtils {
      */
     public static String createNativePageSqlString(Dialect dbDialect,
                                                    String queryNativeSql,
-                                                   int currentPageNo, int pageSize
-    ) {
+                                                   int currentPageNo, int pageSize) {
 
         if (currentPageNo < 1)
             throw new IllegalArgumentException("currentPageNo : 起始页应从 1 开始。");
@@ -76,6 +77,12 @@ public class SqlUtils {
     }
 
 
+    /**
+     * 构造 sql server 分页语句时使用
+     *
+     * @param sql
+     * @return
+     */
     private static int getAfterSelectInsertPoint(String sql) {
         int selectIndex = sql.toLowerCase().indexOf("select");
         int selectDistinctIndex = sql.toLowerCase().indexOf("select distinct");
@@ -97,21 +104,12 @@ public class SqlUtils {
 
         int currentPageNo = 1;
         int pageSize = 10;
-        //  System.out.println("MYSQL : \n" + SqlUtils.createNativePageSqlString(DBDialect.MySql, searchSql, currentPageNo, pageSize, null, null));
-        //  System.out.println("ORACLE :\n" + SqlUtils.createNativePageSqlString(DBDialect.Oracle, searchSql, currentPageNo, pageSize, new String[]{"id", "namecn"}, DBSort.DESC));
-        // System.out.println("SQLSERVER : \m" + SqlUtils.createNativePageSqlString(DBDialect.SqlServer, searchSql, currentPageNo, pageSize, null, null));
-        // System.out.println("POSTGRE :\n" + SqlUtils.createNativePageSqlString(DBDialect.PostgreSQL, searchSql, currentPageNo, pageSize, null, null));
+        System.out.println("MYSQL : \n" + SqlUtils.createNativePageSqlString(Dialect.MySql, searchSql, currentPageNo, pageSize));
+        System.out.println("ORACLE :\n" + SqlUtils.createNativePageSqlString(Dialect.Oracle, searchSql, currentPageNo, pageSize));
+        System.out.println("SQLSERVER : \n" + SqlUtils.createNativePageSqlString(Dialect.SqlServer, searchSql, currentPageNo, pageSize));
+        System.out.println("POSTGRE :\n" + SqlUtils.createNativePageSqlString(Dialect.PostgreSQL, searchSql, currentPageNo, pageSize));
 
-        String[] ss = {"a"};
-        String[] cc = {"c"};
-//        System.out.println(Arrays.toString(ss));
-        //System.out.println(Arrays.toString(ss).replace("[", "").replace("]", ""));
-        System.out.println(Arrays.asList("00", ss).toArray());
-        //  System.out.println("\n" + createSqlString(searchSql, new String[]{"id", "namecn"}, DBSort.ASC));
-        Arrays.fill(ss, "?");
-        System.out.println(Arrays.toString(ss));
     }
-
 
 
     /**
