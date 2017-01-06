@@ -3,7 +3,6 @@ package org.h819.web.spring.jdbc;
 import org.h819.web.spring.vo.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -37,7 +36,7 @@ public class JdbcUtils {
     //= ：  name =?
     //between :  act_time between to_date(?,'yyyy-mm-dd') and to_date(?,'yyyy-mm-dd')
 
-    @Autowired
+    //@Autowired
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
 

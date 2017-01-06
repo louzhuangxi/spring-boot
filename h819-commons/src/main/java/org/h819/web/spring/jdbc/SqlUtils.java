@@ -1,12 +1,13 @@
 package org.h819.web.spring.jdbc;
 
+import java.text.MessageFormat;
+
+
 /**
  * Sql 工具类，标准 jdk ，不引入第三方 lib
  * 需要注意的是 MessageFormat.format 会去掉 ''
  * 所以 sql 语句需要以参数形式传入，不能直接连接，见 createSqlString 方法注释
  */
-
-import java.text.MessageFormat;
 
 public class SqlUtils {
     /**
@@ -14,7 +15,7 @@ public class SqlUtils {
      * 通过数据库分页，在满足条件的所有结果中截取一夜数据，所以传入的查询参数 {0} 是不分页时候的查询条件
      */
     private static final String MYSQL_SQL = "select * from ({0}) sel_tab00 limit {1},{2}"; // mysql
-    private static final String POSTGRE_SQL = "select * from ( {0}) sel_tab00 limit {2} offset {1}";// postgresql
+    private static final String POSTGRE_SQL = "select * from ({0}) sel_tab00 limit {2} offset {1}";// postgresql
     // oracle ，没有根据 oracle 版本进行优化
     private static final String ORACLE_SQL = "select * from (\n" +
             "  select rownum row_num, subq.* \n" +
@@ -66,9 +67,10 @@ public class SqlUtils {
             sqlParam[2] = Integer.toString(beginIndex);
             sqlParam[1] = Integer.toString(endIndex);
 
+            //oracle
             if (dbDialect.equals(Dialect.Oracle)) { // oracle
                 queryNativeSql = MessageFormat.format(ORACLE_SQL, sqlParam);
-            } else if (dbDialect.equals(Dialect.SqlServer)) {
+            } else if (dbDialect.equals(Dialect.SqlServer)) {//SqlServer
                 sqlParam[0] = queryNativeSql.substring(getAfterSelectInsertPoint(queryNativeSql));
                 queryNativeSql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
             }
@@ -101,14 +103,12 @@ public class SqlUtils {
         String countSql = "select count(*) from St_Standard st " +
                 "where st.standard_code like '%2760%'";
 
-
         int currentPageNo = 1;
         int pageSize = 10;
         System.out.println("MYSQL : \n" + SqlUtils.createNativePageSqlString(Dialect.MySql, searchSql, currentPageNo, pageSize));
         System.out.println("ORACLE :\n" + SqlUtils.createNativePageSqlString(Dialect.Oracle, searchSql, currentPageNo, pageSize));
         System.out.println("SQLSERVER : \n" + SqlUtils.createNativePageSqlString(Dialect.SqlServer, searchSql, currentPageNo, pageSize));
         System.out.println("POSTGRE :\n" + SqlUtils.createNativePageSqlString(Dialect.PostgreSQL, searchSql, currentPageNo, pageSize));
-
     }
 
 

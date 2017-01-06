@@ -81,7 +81,7 @@
 
         <!-- google  -->
         <guava.version>20.0</guava.version>
-        <truth.version>0.30</truth.version> <!--比 spring 好用点-->
+        <truth.version>0.30</truth.version> <!--比 spring Assert 好用点-->
 
         <!-- html 解析  -->
         <org.jsoup.version>1.10.1</org.jsoup.version>
