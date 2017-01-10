@@ -8,6 +8,7 @@
  * 参考资料
  * see http://spring.io/blog/2016/05/03/what-s-new-in-spring-data-hopper
  * see https://www.oschina.net/p/lyadmin
+ https://www.oschina.net/p/spring-shiro-training
  * --
  * 测试
  * http://info.michael-simons.eu/2016/10/13/spring-boot-referencing-mockbeans-by-name/
