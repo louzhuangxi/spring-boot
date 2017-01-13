@@ -53,11 +53,11 @@ public class MyExcelUtils {
      * 默认分隔符，默认日期格式
      *
      * @param excelFile
-     * @param duplicate
+     * @param isDuplicateLine
      * @return
      */
-    public static List<ExcelLine> readExcel(File excelFile, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, null, null, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, null, null, isDuplicateLine);
     }
 
 
@@ -66,11 +66,11 @@ public class MyExcelUtils {
      *
      * @param excelFile
      * @param sheetNumber
-     * @param duplicate
+     * @param isDuplicateLine
      * @return
      */
-    public static List<ExcelLine> readExcel(File excelFile, Integer sheetNumber, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, sheetNumber, null, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, Integer sheetNumber, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, sheetNumber, null, isDuplicateLine);
     }
 
 
@@ -79,11 +79,11 @@ public class MyExcelUtils {
      *
      * @param excelFile
      * @param sheetName
-     * @param duplicate
+     * @param isDuplicateLine
      * @return
      */
-    public static List<ExcelLine> readExcel(File excelFile, String sheetName, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, null, sheetName, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, String sheetName, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, null, sheetName, isDuplicateLine);
     }
 
 
@@ -95,18 +95,18 @@ public class MyExcelUtils {
      * @param excelFile   excel 文件
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
      * @param sheetNumber 指定的读取 sheet 序号，从 0 开始。null 为全部读取
-     * @param duplicate   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
+     * @param isDuplicateLine   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
      * @return 包含 excel 数据的集合
      */
 
-    public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, String sheetName, boolean duplicate) {
+    public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, String sheetName, boolean isDuplicateLine) {
 
         Workbook workbook; //<-Interface, accepts both HSSF and XSSF.
         // set 可以过滤重复元素。
 
         Collection<ExcelLine> lines;
 
-        if (duplicate) // 允许重复
+        if (isDuplicateLine) // 允许重复
             lines = new LinkedList(); //按照 add 先后排序. LinkList add,delete 快  ArrayList get 定位快
         else
             lines = new LinkedHashSet();    // 利用 LinkedHashSet 来保证元素按照添加顺序排序，默认的比较器
