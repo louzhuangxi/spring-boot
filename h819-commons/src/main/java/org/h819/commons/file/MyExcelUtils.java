@@ -53,23 +53,37 @@ public class MyExcelUtils {
      * 默认分隔符，默认日期格式
      *
      * @param excelFile
-     * @param duplicate
+     * @param isDuplicateLine
      * @return
      */
-    public static List<ExcelLine> readExcel(File excelFile, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, null, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, null, null, isDuplicateLine);
     }
+
 
     /**
      * 默认分隔符，默认日期格式，指定 sheet
      *
      * @param excelFile
      * @param sheetNumber
-     * @param duplicate
+     * @param isDuplicateLine
      * @return
      */
-    public static List<ExcelLine> readExcel(File excelFile, Integer sheetNumber, boolean duplicate) {
-        return readExcel(excelFile, defaultDatePattern, sheetNumber, duplicate);
+    public static List<ExcelLine> readExcel(File excelFile, Integer sheetNumber, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, sheetNumber, null, isDuplicateLine);
+    }
+
+
+    /**
+     * excel 中 sheet name 是唯一的
+     *
+     * @param excelFile
+     * @param sheetName
+     * @param isDuplicateLine
+     * @return
+     */
+    public static List<ExcelLine> readExcel(File excelFile, String sheetName, boolean isDuplicateLine) {
+        return readExcel(excelFile, defaultDatePattern, null, sheetName, isDuplicateLine);
     }
 
 
@@ -81,18 +95,18 @@ public class MyExcelUtils {
      * @param excelFile   excel 文件
      * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
      * @param sheetNumber 指定的读取 sheet 序号，从 0 开始。null 为全部读取
-     * @param duplicate   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
+     * @param isDuplicateLine   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
      * @return 包含 excel 数据的集合
      */
 
-    public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, boolean duplicate) {
+    public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, String sheetName, boolean isDuplicateLine) {
 
         Workbook workbook; //<-Interface, accepts both HSSF and XSSF.
         // set 可以过滤重复元素。
 
         Collection<ExcelLine> lines;
 
-        if (duplicate) // 允许重复
+        if (isDuplicateLine) // 允许重复
             lines = new LinkedList(); //按照 add 先后排序. LinkList add,delete 快  ArrayList get 定位快
         else
             lines = new LinkedHashSet();    // 利用 LinkedHashSet 来保证元素按照添加顺序排序，默认的比较器
@@ -113,6 +127,9 @@ public class MyExcelUtils {
             } else {
                 throw new IllegalArgumentException("Received file does not have a standard excel extension.");
             }
+
+            if (sheetNumber == null && sheetName != null)
+                sheetNumber = workbook.getSheetIndex(sheetName);
 
             // 循环 sheet
             for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
@@ -174,7 +191,7 @@ public class MyExcelUtils {
     }
 
     /**
-     * 写 excel , 指定 sheet 名称
+     * 写 excel , 指定 sheet 名称，如果 excel 已经存在，则追加 sheet
      *
      * @param lines
      * @param sheetName
@@ -183,18 +200,28 @@ public class MyExcelUtils {
      */
     public static void writeExcel(List<ExcelLine> lines, String sheetName, File outExcelFile) throws Exception {
 
-        if (!FilenameUtils.isExtension(outExcelFile.getName().toLowerCase(), "xlsx")) {
-            throw new Exception("输出文件必须是 xlsx 类型");
+        XSSFWorkbook workbook;
+        //Blank workbook
+        if (!outExcelFile.exists())
+            workbook = new XSSFWorkbook();
+        else {
+            if (!FilenameUtils.isExtension(outExcelFile.getName().toLowerCase(), "xlsx")) {
+                throw new Exception("输出文件必须是 xlsx 类型");
+            }
+            workbook = (XSSFWorkbook) WorkbookFactory.create(new FileInputStream(outExcelFile));
         }
 
-        //Blank workbook
-        XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet;
         //Create a blank sheet
         if (sheetName == null)
             sheet = workbook.createSheet();
-        else
-            sheet = workbook.createSheet(sheetName);
+        else {
+            if (workbook.getSheet(sheetName) != null)
+                sheet = workbook.createSheet(sheetName + "_Copy");
+            else sheet = workbook.createSheet(sheetName);
+        }
+
+
         int rowNum = 0;
         for (ExcelLine line : lines) {
             Row row = sheet.createRow(rowNum++); //第一行
@@ -206,6 +233,7 @@ public class MyExcelUtils {
                 newCell.setCellValue(value);
             }
         }
+
         try {
             //Write the workbook in file system
             FileOutputStream out = new FileOutputStream(outExcelFile);
@@ -325,9 +353,9 @@ public class MyExcelUtils {
         for (ExcelCell bean : set) {// 循环所遇列
             if (bean.getTitle().equalsIgnoreCase(columnAlphaTitleName)) {  // 找到了对应的列名
                 //System.out.println("title="+bean.getTitle()+" , "+"new title="+columnAlphaTitleName);
-               // list.set(list.indexOf(bean), new ExcelCell(bean.getTitle(), newCellValue));
+                // list.set(list.indexOf(bean), new ExcelCell(bean.getTitle(), newCellValue));
                 set.remove(bean);
-                set.add(new ExcelCell(bean.getTitle(), newCellValue)) ;
+                set.add(new ExcelCell(bean.getTitle(), newCellValue));
                 exist = true;
                 excelLine.setCellValues(set); //更新 excelLine
                 break;

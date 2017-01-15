@@ -104,28 +104,6 @@ public class MyStringUtils {
     }
 
     /**
-     * 判断给定的字符串中，是否包含字符串数组中的任意字符串。
-     * <p/>
-     * containsAnyCharSequence("")，未给出 searchCharSequences ，返回值为 false
-     *
-     * @param cs                  待判断字符串
-     * @param searchCharSequences 字符串数组  new String[]{""}
-     * @return
-     */
-    public static boolean containsAnyCharSequence(final CharSequence cs, final CharSequence... searchCharSequences) {
-        if (StringUtils.isEmpty(cs) || searchCharSequences.length == 0) {
-            return false;
-        }
-
-        for (CharSequence css : searchCharSequences) {
-            if (StringUtils.contains(cs, css))
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
      * <p>
      * 空格有两个：一个 int 值为 32,另外 int 值为 160(网页拷贝下来的居多).
      * </p>
@@ -173,7 +151,7 @@ public class MyStringUtils {
 
         if (str == null)
             return "";
-        return str.replaceAll("searchChar+", replaceChar); // replaceAll 参数为正则表达式
+        return str.replaceAll(searchChar + "+", replaceChar); // replaceAll 参数为正则表达式
     }
 
     /**
@@ -303,17 +281,133 @@ public class MyStringUtils {
 
 
     /**
-     * 删除制定分隔符内的字符串
+     * 删除指定分隔符内的字符串
      *
      * @param str
      * @param open
      * @param close
      * @return
      */
-    public static String substringRemoveBetween(String str, String open, String close) {
+    public static String removeSubstringBetween(String str, String open, String close) {
 
         return str.replaceAll(open + ".+" + close, "");  // 利用正则表达式
         //return removePattern(str, open + ".+" + close); //也可以
+    }
+
+
+    /**
+     * 找到字符串中最后一个数字的位置
+     * -
+     * String s1 = "abc1de"; 1,  -> 3
+     * String s2 = "abc1de6"; 6, -> 6
+     * String s3 = "77abc1de8";8,  -> 8
+     * String s4 = "7abc1de88"; 88,  -> 7
+     *
+     * @param seq
+     * @return
+     */
+    public static int indexOfLastNumeric(CharSequence seq) {
+
+        //(\d+)(?!.*\d)
+        Pattern p = Pattern.compile("(\\d+)(?!.*\\d)");
+        Matcher m = p.matcher(seq);
+        if (m.find())
+            return m.start();
+        else return -1;
+
+//        if(m.find()){
+//            System.out.println(m.toString());
+//            System.out.println(m.group() + " " + m.start() + " " + m.end());
+//        }
+    }
+
+    /**
+     * 字符串最后的数字(字符串形式)
+     * -
+     * String s1 = "abc1de"; -> 1
+     * String s2 = "abc1de6"; -> 6
+     * String s3 = "77abc1de8";-> 8
+     * String s4 = "7abc1de88";  -> 88
+     *
+     * @param seq
+     * @return
+     */
+    public static String substringOfLastNumeric(CharSequence seq) {
+
+        //(\d+)(?!.*\d)
+        Pattern p = Pattern.compile("(\\d+)(?!.*\\d)");
+        Matcher m = p.matcher(seq);
+        if (m.find())
+            return m.group();
+        else return null;
+
+    }
+
+    /**
+     * 找到字符串中第一个数字的位置
+     * -
+     * String s1 = "abc1de"; 1,  -> 3
+     * String s2 = "abc1de6"; 6, -> 6
+     * String s3 = "77abc1de8";8,  -> 8
+     * String s4 = "7abc1de88"; 88,  -> 7
+     *
+     * @param seq
+     * @return
+     */
+    public static int indexOfFirstNumeric(CharSequence seq) {
+
+        //(\d+)(?!.*\d)
+        Pattern p = Pattern.compile("(\\d+)");
+        Matcher m = p.matcher(seq);
+        if (m.find())
+            return m.start();
+        else return -1;
+
+//        if(m.find()){
+//            System.out.println(m.toString());
+//            System.out.println(m.group() + " " + m.start() + " " + m.end());
+//        }
+    }
+
+
+    /**
+     * 字符串中第一个的数字(字符串形式)
+     * -
+     * String s1 = "abc1de"; -> 1
+     * String s2 = "abc1de6"; -> 6
+     * String s3 = "77abc1de8";-> 8
+     * String s4 = "7abc1de88";  -> 88
+     *
+     * @param seq
+     * @return 如果不含数字，返回 null
+     */
+    public static String substringOfFirstNumeric(CharSequence seq) {
+
+        Pattern p = Pattern.compile("(\\d+)");
+        Matcher m = p.matcher(seq);
+        if (m.find())
+            return m.group();
+        else return null;
+
+    }
+
+    public static void main(String[] args) {
+
+        String s1 = "abc1de";
+        String s2 = "abc1de6";
+        String s3 = "77abc1de8";
+        String s4 = "7abc1de88";
+        String s;
+
+        //  System.out.println(m.group() + " " + m.start() + " " + m.end());
+        //Returns the start index of the previous match.
+        //Returns the offset after the last character matched.
+        //    MyStringUtils.indexOfFirstNumeric(s1);     //1 3 4
+        s = s3;
+        System.out.println(String.format("%s , %d , %s", s, MyStringUtils.indexOfLastNumeric(s), MyStringUtils.substringOfLastNumeric(s)));
+        System.out.println(String.format("%s , %d , %s", s, MyStringUtils.indexOfFirstNumeric(s), MyStringUtils.substringOfFirstNumeric(s)));  //6 6 7
+        // MyStringUtils.indexOfFirstNumeric(s3);  //8 8 9
+        // MyStringUtils.indexOfFirstNumeric(s4);  //88 7 9
     }
 
     /**

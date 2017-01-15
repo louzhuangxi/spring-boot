@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.h819.commons.MyCharsetUtils;
-import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyFileUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
@@ -248,8 +247,7 @@ public class Test {
 
     private void testStringUtils() {
         //  MyStringUtils.con
-        System.out.println(MyStringUtils.containsAnyCharSequence("安达市政府", new String[]{"政府"}));
-        System.out.println(MyStringUtils.containsAnyCharSequence("安达市政府"));
+        System.out.println(StringUtils.containsAny("安达市政府", new String[]{"政府"}));
     }
 
     private void testMimeType() {

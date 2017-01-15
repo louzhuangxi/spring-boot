@@ -3,6 +3,7 @@ package org.h819.commons.net.html.parser.jsoup;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,12 +35,17 @@ public class JsoupUtils {
      */
     public static Connection getDefaultConnectionWithCookies(String url, Connection.Method method, String indexCookiesUrl) {
         // 首先通过获取 Jsoup  cookies ，之后再进行 url 访问 ，不能先 url ，之后再 cookiesUrl
-        Map cookies = getIndexCookies(indexCookiesUrl);
-        return Jsoup.connect(url).timeout(JsoupContants.timeout_10second).userAgent(JsoupContants.Chrome_54).method(method).cookies(cookies).ignoreHttpErrors(true).ignoreContentType(true);
+        return getDefaultConnection(url, method).cookies(getIndexCookies(indexCookiesUrl));
     }
 
+    /**
+     * @param url
+     * @param method
+     * @param indexCookies
+     * @return
+     */
     public static Connection getDefaultConnectionWithCookies(String url, Connection.Method method, Map indexCookies) {
-        return Jsoup.connect(url).timeout(JsoupContants.timeout_10second).userAgent(JsoupContants.Chrome_54).method(method).cookies(indexCookies).ignoreHttpErrors(true).ignoreContentType(true);
+        return getDefaultConnection(url, method).cookies(indexCookies);
     }
 
     /**
@@ -50,7 +56,8 @@ public class JsoupUtils {
      * @return
      */
     public static Connection getDefaultConnection(String url, Connection.Method method) {
-        return Jsoup.connect(url).timeout(JsoupContants.timeout_10second).userAgent(JsoupContants.Chrome_54).method(method).ignoreHttpErrors(true).ignoreContentType(true);
+        return Jsoup.connect(url).timeout(JsoupContants.timeout_10second).userAgent(JsoupContants.Chrome_54).method(method)
+                .ignoreHttpErrors(true).ignoreContentType(true);
     }
 
     /**
@@ -63,6 +70,25 @@ public class JsoupUtils {
     public static String getValueByAttribute(Element element, String attribute) {
         return element.attr(attribute);
 
+    }
+
+    /**
+     * 获取 href值
+     *
+     * @param element
+     * @return
+     */
+    public static String getHrefValue(Element element) {
+
+        //<a href="home/store/catalogue_tc/catalogue_tc_browse.htm?commid=625645">WMO</a>
+        // String relHref = link.attr("href"); // == "/"
+
+        Elements elements = element.select("a[href]");
+        if (elements.size() != 1)
+            throw new IllegalArgumentException("多个 a 标签");
+
+        String absHref = elements.attr("abs:href"); // "http://jsoup.org/"
+        return absHref;
     }
 
     public static Map getCookies(Connection.Response response) {
@@ -78,11 +104,26 @@ public class JsoupUtils {
     private static Map getIndexCookies(String url) {
         Map map = new HashMap();
         try {
-            map = Jsoup.connect(url).timeout(JsoupContants.timeout_10second).userAgent(JsoupContants.Chrome_54).method(Connection.Method.GET).execute().cookies();
+            map = getDefaultConnection(url, Connection.Method.GET).execute().cookies();
         } catch (IOException e) {
             // e.printStackTrace();
         } finally {
             return map;
         }
+    }
+
+    public Elements getAllLinks(Element element) {
+        return element.select("a[href]");
+
+    }
+
+    public Elements getAllMedias(Element element) {
+        return element.select("[src]");
+
+    }
+
+    public Elements getAllImportss(Element element) {
+        return element.select("link[href]");
+
     }
 }
