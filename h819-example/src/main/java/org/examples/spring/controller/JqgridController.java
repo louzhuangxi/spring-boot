@@ -27,7 +27,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 
@@ -145,7 +145,7 @@ public class JqgridController {
 
         Page<TreeEntity> pages = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (pages.getTotalElements() == 0)
-            return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
+            return new JqgridPage(pageSize, 0, 0, Collections.emptyList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
 
         /**
