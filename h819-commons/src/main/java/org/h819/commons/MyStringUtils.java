@@ -275,6 +275,12 @@ public class MyStringUtils {
         return StringUtils.center("", size, padChar);
     }
 
+    /**
+     * parse html to plain text
+     *
+     * @param htmlStr
+     * @return
+     */
     public static String htmlToPlainText(String htmlStr) {
         return Jsoup.parse(htmlStr).text();
     }

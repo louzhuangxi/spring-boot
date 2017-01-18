@@ -2,10 +2,6 @@ package org.h819.commons.net.jftp;
 
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 /**
  * Description : TODO( jftp 使用方法演示)
  * User: h819
@@ -17,17 +13,19 @@ public class Test {
 
     public static void main(String[] arg) {
 
-        try {
-            Path path = Files.createTempFile("temp", ".txt");
 
-            System.out.println(path.toFile().lastModified());
+        String path = "\\folder\\subfolder";
+        String path1 = "\\\\folder\\subfolder";
+        String path2 = "\\folder//subfolder";
+        String path3 = "\\folder/subfolder.pdf";
 
-            System.out.println(FilenameUtils.getExtension(path.toFile().getName()));
+        System.out.println(FilenameUtils.separatorsToSystem(path));
+        System.out.println(FilenameUtils.separatorsToSystem(path1));
+        System.out.println(FilenameUtils.separatorsToSystem(path2));
+        System.out.println(FilenameUtils.separatorsToSystem(path3));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        System.out.println("===");
+        System.out.println(FilenameUtils.getName(path3));
     }
 
 

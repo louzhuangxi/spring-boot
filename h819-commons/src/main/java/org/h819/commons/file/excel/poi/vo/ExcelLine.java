@@ -16,7 +16,7 @@ public class ExcelLine {
     private String sheetName = "";
     private int sheetNumber = 0;
     private int lineNumber = 0;
-    private Set<ExcelCell> cellValues = new TreeSet<>() ;
+    private Set<ExcelCell> cellValues = new TreeSet<>() ;//ExcelCell :  title 和 value 相同，为重复
 
     public ExcelLine() {
 

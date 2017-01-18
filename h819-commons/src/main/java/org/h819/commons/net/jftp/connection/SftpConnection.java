@@ -551,7 +551,7 @@ public class SftpConnection implements Connection {
 
         String name = lsEntry.getFilename();
         long fileSize = lsEntry.getAttrs().getSize();
-        String fullPath = String.format("%s%s%s", filePath, FILE_SEPARATOR, lsEntry.getFilename());
+        String fullPath = String.format("%s%s%s", filePath, "/", lsEntry.getFilename());
         //   String fullPath = channel.realpath(filePath); //为何不用这个
         int mTime = lsEntry.getAttrs().getMTime();
         boolean directory = lsEntry.getAttrs().isDir();

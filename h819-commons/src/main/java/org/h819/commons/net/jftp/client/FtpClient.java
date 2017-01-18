@@ -19,8 +19,9 @@ public class FtpClient extends Client {
     private static final String UNABLE_TO_LOGIN_MESSAGE = "Unable to login for user %s";
     private static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to host %s on port %d";
     private static final String STATUS_ERROR_MESSAGE = "The host %s on port %d returned a bad status code.";
+    private static Logger logger = LoggerFactory.getLogger(FtpClient.class);
+    private static Connection connection;
     protected FTPClient ftpClient;
-    private Logger logger = LoggerFactory.getLogger(FtpClient.class);
     private ConnectionFactory connectionFactory = new ConnectionFactory();
 
     public FtpClient() {
@@ -29,7 +30,7 @@ public class FtpClient extends Client {
     }
 
 
-    public boolean isconnect() {
+    public boolean isConnect() {
 
         if (ftpClient != null)
             return ftpClient.isConnected();
@@ -49,7 +50,10 @@ public class FtpClient extends Client {
             throw new FtpException(String.format(CONNECTION_ERROR_MESSAGE, host, port), e);
         }
 
-        return connectionFactory.createFtpConnection(ftpClient);
+        if (connection != null && isConnect())
+            return connection;
+        else
+            return connectionFactory.createFtpConnection(ftpClient);
     }
 
     public void disconnect() {

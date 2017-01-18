@@ -207,7 +207,7 @@ public class FileUtilsBase {
         Map<String, List<String>> duplicateFiles = findDuplicateFiles(fileFilter, directories);
         //MyJsonUtils.prettyPrint(duplicateFiles);
         if (outDuplicateFile != null)
-            MyJsonUtils.writeJSONString(outDuplicateFile, duplicateFiles);
+            MyJsonUtils.prettyWrite(outDuplicateFile, duplicateFiles);
 
         System.out.println(StringUtils.center("begin to delete duplicate file start with " + deletePathStartWith, 80, "="));
 

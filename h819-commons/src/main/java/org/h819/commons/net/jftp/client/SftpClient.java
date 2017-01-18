@@ -18,10 +18,10 @@ public class SftpClient extends Client {
 
     private static final String SFTP = "sftp";
     private static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to host %s on port %d";
+    private static Connection connection;
     private Logger logger = LoggerFactory.getLogger(SftpClient.class);
     private JSch jsch;
     private ConnectionFactory connectionFactory;
-
     private Session session;
     private Channel channel;
 
@@ -30,7 +30,7 @@ public class SftpClient extends Client {
         this.connectionFactory = new ConnectionFactory();
     }
 
-    public boolean isconnect() {
+    public boolean isConnect() {
 
         if (channel != null) {
             return channel.isConnected();
@@ -52,7 +52,10 @@ public class SftpClient extends Client {
             throw new FtpException(String.format(CONNECTION_ERROR_MESSAGE, host, port), e);
         }
 
-        return connectionFactory.createSftpConnection(channel);
+        if (connection != null && isConnect())
+            return connection;
+        else
+            return connectionFactory.createSftpConnection(channel);
     }
 
     public void disconnect() {

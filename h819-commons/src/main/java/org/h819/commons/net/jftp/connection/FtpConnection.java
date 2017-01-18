@@ -145,6 +145,7 @@ public class FtpConnection implements Connection {
 
             if (existsDirectory(remotePath))
                 changeDirectory(remotePath);
+            else throw new FtpException(String.format(NO_SUCH_DIRECTORY_MESSAGE, remotePath));
 
             String newWorkingDirectory = getWorkingDirectory();
 
@@ -571,7 +572,7 @@ public class FtpConnection implements Connection {
                     else
                         client.deleteFile(jFTPFile.getAbsolutePath());
 
-                    client.removeDirectory(jFTPFile.getAbsolutePath());
+                    client.removeDirectory(jFTPFile.getAbsolutePath());  //Removes a directory on the FTP server (if empty).
                 }
 
                 client.removeDirectory(remoteFileOrDirectoryPath);
@@ -595,7 +596,7 @@ public class FtpConnection implements Connection {
     @Override
     public boolean existsFile(String remoteFilePath) throws FtpException {
 
-        FTPFile[] ftpFiles = new FTPFile[0];
+        FTPFile[] ftpFiles = new FTPFile[1];
         try {
             ftpFiles = client.listFiles(remoteFilePath);
         } catch (IOException e) {
@@ -622,7 +623,7 @@ public class FtpConnection implements Connection {
         try {
             changeDirectory(remoteDirectoryPath);
         } catch (FtpException e) {
-            return false;
+            e.printStackTrace();
         }
 
         replyCode = client.getReplyCode();
@@ -822,13 +823,12 @@ public class FtpConnection implements Connection {
 
         String name = ftpFile.getName();
         long fileSize = ftpFile.getSize();
-        String fullPath = remoteDirectoryPath + File.separator + ftpFile.getName();
+        String fullPath = String.format("%s%s%s", remoteDirectoryPath, "/" , ftpFile.getName()); // ftp 路径的分隔符都为 "/" ，所以 File.pathSeparator 不对
         long mTime = ftpFile.getTimestamp().getTime().getTime();
         //  logger.info(" 1.  getTimestamp : "+new DateTime(mTime).withZone(DateTimeZone.forTimeZone(TimeZone.getDefault())));
         // logger.info(" 2.  getTimestamp : "+ftpFile.getTimestamp().getTimeInMillis());
-        boolean isDirectory = ftpFile.isDirectory();
 
-        return new JFTPFile(name, fileSize, fullPath, mTime, isDirectory);
+        return new JFTPFile(name, fileSize, fullPath, mTime, ftpFile.isDirectory());
     }
 
 

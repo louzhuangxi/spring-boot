@@ -16,6 +16,6 @@
        7、abstract 不能与private、static、final或native并列修饰同一个方法。
     */
 
- //如果判断文件上传成功 ？ http://stackoverflow.com/questions/14452456/how-to-know-if-file-is-complete-on-the-server-using-ftp
+ //如何判断文件上传成功 ？ http://stackoverflow.com/questions/14452456/how-to-know-if-file-is-complete-on-the-server-using-ftp
 
 package org.h819.commons.net.jftp;

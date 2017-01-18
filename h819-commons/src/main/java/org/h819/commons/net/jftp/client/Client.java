@@ -16,6 +16,10 @@ public abstract class Client {
         this.userCredentials = userCredentials;
     }
 
+    public void setCredentials(String userName, String password) {
+        setCredentials(new UserCredentials(userName, password));
+    }
+
     public void setHost(String host) {
         this.host = host;
     }
@@ -35,9 +39,10 @@ public abstract class Client {
 
     /**
      * 连接动作比较耗时，增加判断方法，省去反复连接的动作。
+     *
      * @return
      */
-    public abstract boolean isconnect();
+    public abstract boolean isConnect();
 
     public abstract void disconnect();
 }

@@ -1,5 +1,7 @@
 package org.h819.commons;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  * Description : TODO(FilenameUtils 补充)
  * User: h819
@@ -8,7 +10,6 @@ package org.h819.commons;
  * To change this template use File | Settings | File Templates.
  */
 public class MyFilenameUtils {
-
 
 
     /**
@@ -35,12 +36,13 @@ public class MyFilenameUtils {
 
     }
 
-
-    private static String getPath(String filePath, String append) {
-
-        //  FilenameUtils.
-        //System.out.println(f.getParent()+ File.separator+ FilenameUtils.getBaseName(f.getAbsolutePath())+"_."+FilenameUtils.getExtension(f.getAbsolutePath()));
-
-       return null;
+    /**
+     * 根据操作系统类型(windows,linux)，自动替换文件路径中的分隔符为操作系统类型，windows 为 \ , linux 为 /
+     *
+     * @param path
+     * @return
+     */
+    public static String formateSeparatorsToSystem(String path) {
+        return FilenameUtils.separatorsToSystem(path);
     }
 }
