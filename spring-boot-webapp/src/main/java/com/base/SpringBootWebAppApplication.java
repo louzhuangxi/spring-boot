@@ -22,7 +22,7 @@ public class SpringBootWebAppApplication extends SpringBootServletInitializer {
      * 生成 war 步骤 （参见官方文档）
      * 1. 继承 extends SpringBootServletInitializer ，使之支持 servlet
      * 2. 修改 pom  <packaging>war</packaging>
-     * 3. 引入 spring-boot-starter-jetty 或 tomcat，为项目运行服务器, <scope>provided</scope>
+     * 3. 引入 spring-boot-starter-jetty 或 tomcat，为项目运行服务器, 依赖包不发布 <scope>provided</scope>
      */
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
