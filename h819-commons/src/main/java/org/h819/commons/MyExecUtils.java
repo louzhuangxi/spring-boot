@@ -31,7 +31,7 @@ public class MyExecUtils {
      * @param exeFile   命令一般以 exe 等文件的形式存在，本参数为该命令文件的绝对值路径
      * @param arguments 参数。
      *                  命令执行的参数不需要严格的顺序，即参数先后出现在哪个位置都可以。
-     * @param exitValue 执行成功的返回值，这只之后，如果返回该值，程序不抛出异常
+     * @param exitValue 执行成功的返回值，这只之后，如果返回该值，程序不抛出异常 ，一般为 1 或 0
      */
     public static void exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
 
@@ -124,6 +124,7 @@ public class MyExecUtils {
     }
 
     /**
+     * 构造 "key 空格 value"  形式的参数, 如 -o a.txt 中间用空格分开
      * ExecParameter 参数，如果 key 或 value 本身有空格，会被分解成多个参数，所以对有空格的参数，加单引号包围起来。
      *
      * @param arguments
