@@ -162,4 +162,16 @@ public class MyExecUtils {
         return sb.toString();
     }
 
+
+    /**
+     * java.lang.Runtime 执行 cmd 命令
+     * 可执行文件路径不能有空格，需要用引号包含起来(windows exe 如此, linux 未验证)
+     *
+     * @param cmdPath
+     * @return
+     */
+    public static String formatRuntimeCmdPath(String cmdPath) {
+        return cmdPath.replaceAll(" ", "\" \"");
+    }
+
 }
