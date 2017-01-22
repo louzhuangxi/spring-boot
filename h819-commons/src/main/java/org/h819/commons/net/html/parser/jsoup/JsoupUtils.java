@@ -78,7 +78,7 @@ public class JsoupUtils {
      * @param element
      * @return
      */
-    public static String getHrefValue(Element element) {
+    public static String getHrefValue(Elements element) {
 
         //<a href="home/store/catalogue_tc/catalogue_tc_browse.htm?commid=625645">WMO</a>
         // String relHref = link.attr("href"); // == "/"

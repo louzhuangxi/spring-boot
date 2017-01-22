@@ -111,7 +111,6 @@ public class SqlUtils {
         System.out.println("POSTGRE :\n" + SqlUtils.createNativePageSqlString(Dialect.PostgreSQL, searchSql, currentPageNo, pageSize));
     }
 
-
     /**
      * 数据库类型
      */

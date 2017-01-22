@@ -84,7 +84,7 @@
         <truth.version>0.31</truth.version> <!--比 spring Assert 好用点-->
 
         <!-- html 解析  -->
-        <org.jsoup.version>1.10.1</org.jsoup.version>
+        <org.jsoup.version>1.10.2</org.jsoup.version>
 
         <!-- xss 防御  -->
         <org.owasp.esapi.version>2.1.0.1</org.owasp.esapi.version>

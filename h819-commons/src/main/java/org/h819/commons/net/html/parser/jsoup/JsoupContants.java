@@ -19,7 +19,7 @@ public class JsoupContants {
      * chrome 54.0 User-Agent
      */
     public static String Chrome_54 = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36";
-    //连接重试时间 10 秒
-    public static int timeout_10second = 10 * 1000;
+    //连接重试时间 30 秒
+    public static int timeout_10second = 30 * 1000;
 
 }

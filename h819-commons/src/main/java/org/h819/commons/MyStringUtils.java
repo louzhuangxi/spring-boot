@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
  * To change this template use File | Settings | File Templates.
  */
 public class MyStringUtils {
-
-    public static final String linebreak = "\n\r";
+    // On UNIX systems, it returns "\n"; on Microsoft Windows systems it returns "\r\n".
+    public static final String linebreak = System.lineSeparator();
 
     public static final String SPACE = " ";
     public static final String DOT = ".";
@@ -36,7 +36,6 @@ public class MyStringUtils {
     public static final String HTML_QUOTE = "&quot;";
     public static final String HTML_LT = "&lt;";
     public static final String HTML_GT = "&gt;";
-
     public static final String EMPTY_JSON = "{}";
 
 
@@ -126,6 +125,8 @@ public class MyStringUtils {
 
     /**
      * 利用正则表达式， 去掉空格、制表符、换页符、换行符等空白字符
+     * -
+     * On UNIX systems, it returns "\n"; on Microsoft Windows systems it returns "\r\n".
      *
      * @param str
      * @return
@@ -135,7 +136,10 @@ public class MyStringUtils {
         if (str == null)
             return "";
         /* \s 比 \n\r 范围更广 */
-        return str.replaceAll("\\s", ""); // replaceAll 参数为正则表达式
+        // return str.replaceAll("\\s", ""); // replaceAll 参数为正则表达式
+        //--
+        //On UNIX systems, it returns "\n"; on Microsoft Windows systems it returns "\r\n".
+        return str.replaceAll(linebreak, "");
     }
 
     /**
@@ -252,16 +256,14 @@ public class MyStringUtils {
      * <p/>
      * "Hello' China's "  单引号转义为双引号   "Hello'' China''s "
      *
-     * @param sqlValue 原 sql 值
+     * @param str 原 sql 值
      * @return
      */
-    public static String getSQLEscapeVale(String sqlValue) {
-
-        // 转义单引号 '
-        if (sqlValue.contains("'"))
-            return sqlValue.replace("'", "''");
-        else
-            return sqlValue;
+    public static String escapeSql(String str) {
+        if (str == null) {
+            return null;
+        }
+        return StringUtils.replace(str, "'", "''");
     }
 
     /**

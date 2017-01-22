@@ -1,6 +1,8 @@
 package org.h819.commons.net.jftp.connection;
 
-import org.joda.time.DateTime;
+import org.h819.commons.MyDateUtilsJdk8;
+
+import java.time.LocalDateTime;
 
 /**
  * 奇葩的是，org.apache.commons.net.ftp.FTPFile 没有绝对路径属性，而 ftp 操作都是根据绝对路径属性进行的，造成很大不便
@@ -11,17 +13,22 @@ public class JFTPFile {
     private String name;
     private long size;
     private String absolutePath;
-    private DateTime lastModified;
+    private LocalDateTime lastModified;
     private boolean directory;
+
+    /**
+     * 必须有构造参数
+     */
+    private JFTPFile() {
+    }
 
     public JFTPFile(String name, long size, String absolutePath, long mTime, boolean isDirectory) {
 
         this.name = name;
         this.size = size;
         this.absolutePath = absolutePath;
-        this.lastModified = new DateTime(mTime);
+        this.lastModified = MyDateUtilsJdk8.getLocalDateTime(mTime);
         this.directory = isDirectory;
-        //
     }
 
     public String getName() {
@@ -36,7 +43,7 @@ public class JFTPFile {
         return absolutePath;
     }
 
-    public DateTime getLastModified() {
+    public LocalDateTime getLastModified() {
         return lastModified;
     }
 

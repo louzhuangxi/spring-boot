@@ -35,7 +35,7 @@ public class MyDateUtilsJdk8 {
     /**
      * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
      */
-    private static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = TimeFormat.LONG_DATE_PATTERN_LINE.formatter;
+    private static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = DateFormat.LONG_DATE_PATTERN_LINE.formatter;
 
     private MyDateUtilsJdk8() {
         // no construct function
@@ -133,7 +133,7 @@ public class MyDateUtilsJdk8 {
      * @param format  时间格式
      * @return
      */
-    public static LocalDateTime parseDate(String timeStr, TimeFormat format) {
+    public static LocalDateTime parseDate(String timeStr, DateFormat format) {
         return LocalDateTime.parse(timeStr, format.formatter);
     }
 
@@ -154,7 +154,7 @@ public class MyDateUtilsJdk8 {
      * @param format 时间格式
      * @return
      */
-    public static String parseDate(LocalDateTime time, TimeFormat format) {
+    public static String parseDate(LocalDateTime time, DateFormat format) {
         return format.formatter.format(time);
     }
 
@@ -167,14 +167,26 @@ public class MyDateUtilsJdk8 {
         return DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now());
     }
 
+
     /**
      * 获取当前时间
      *
      * @param format 时间格式
      * @return
      */
-    public static String getCurrentDatetime(TimeFormat format) {
+    public static String getCurrentDatetime(DateFormat format) {
         return format.formatter.format(LocalDateTime.now());
+    }
+
+
+    /**
+     * 根据毫秒
+     *
+     * @param milliseconds
+     * @return
+     */
+    public static LocalDateTime getLocalDateTime(long milliseconds) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneId.systemDefault());
     }
 
 
@@ -415,7 +427,7 @@ public class MyDateUtilsJdk8 {
     /**
      * 时间格式
      */
-    public enum TimeFormat {
+    public enum DateFormat {
 
         /**
          * 短时间格式
@@ -443,7 +455,7 @@ public class MyDateUtilsJdk8 {
 
         private transient DateTimeFormatter formatter;
 
-        TimeFormat(String pattern) {
+        DateFormat(String pattern) {
             formatter = DateTimeFormatter.ofPattern(pattern);
         }
     }

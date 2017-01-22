@@ -1,6 +1,8 @@
 package org.h819.commons.file;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -13,10 +15,7 @@ import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -92,18 +91,21 @@ public class MyExcelUtils {
      * 一次性读取所有数据，没有考虑性能问题。
      * 如果单元格为空白，则返回的行中，无此单元格，所以返回的行的单元格可能是不连续的，如 A 列，C 列 ... ，没有 B 列
      *
-     * @param excelFile   excel 文件
-     * @param datePattern 日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
-     * @param sheetNumber 指定的读取 sheet 序号，从 0 开始。null 为全部读取
-     * @param isDuplicateLine   是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
+     * @param excelFile       excel 文件
+     * @param datePattern     日期格式  yyyy-MM-dd , yyyy-MM-dd HH:mm:ss  ...
+     * @param sheetNumber     指定的读取 sheet 序号，从 0 开始。null 为全部读取
+     * @param isDuplicateLine 是否过滤重复行 。判断重复行的依据是各个单元格内容是否相同
      * @return 包含 excel 数据的集合
      */
 
     public static List<ExcelLine> readExcel(File excelFile, String datePattern, Integer sheetNumber, String sheetName, boolean isDuplicateLine) {
 
-        Workbook workbook; //<-Interface, accepts both HSSF and XSSF.
-        // set 可以过滤重复元素。
+        Optional<Workbook> workbook = getInputWorkbook(excelFile);
 
+        if (!workbook.isPresent())
+            return Collections.emptyList();
+
+        // set 可以过滤重复元素。
         Collection<ExcelLine> lines;
 
         if (isDuplicateLine) // 允许重复
@@ -116,33 +118,22 @@ public class MyExcelUtils {
         //判断文件类型
         try {
 
-            FileInputStream fileInputStream = new FileInputStream(excelFile);
-
-            if (FilenameUtils.isExtension(excelFile.getName().toLowerCase(), "xls")) {
-                logger.info(excelFile.getName() + " extension is  xls");
-                workbook = new HSSFWorkbook(fileInputStream);
-            } else if (FilenameUtils.isExtension(excelFile.getName().toLowerCase(), "xlsx")) {
-                logger.info(excelFile.getName() + " extension is  xlsx");
-                workbook = new XSSFWorkbook(fileInputStream);
-            } else {
-                throw new IllegalArgumentException("Received file does not have a standard excel extension.");
-            }
 
             if (sheetNumber == null && sheetName != null)
-                sheetNumber = workbook.getSheetIndex(sheetName);
+                sheetNumber = workbook.get().getSheetIndex(sheetName);
 
             // 循环 sheet
-            for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            for (int i = 0; i < workbook.get().getNumberOfSheets(); i++) {
 
                 if (sheetNumber != null && i != sheetNumber.intValue())
                     continue;
 
                 // 循环行
-                for (Row row : workbook.getSheetAt(i)) {
+                for (Row row : workbook.get().getSheetAt(i)) {
 
                     ExcelLine excelLine = new ExcelLine();
                     excelLine.setFileName(excelFile.getName());
-                    excelLine.setSheetName(workbook.getSheetName(i));
+                    excelLine.setSheetName(workbook.get().getSheetName(i));
                     excelLine.setSheetNumber(i);
                     excelLine.setLineNumber(row.getRowNum());
                     //For each row, iterate through each columns
@@ -164,10 +155,7 @@ public class MyExcelUtils {
 
             } //所有行完成
 
-            workbook.close();
-            fileInputStream.close();
-
-
+            workbook.get().close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -378,7 +366,7 @@ public class MyExcelUtils {
     private static String getFormatCellValue(Cell cell, String datePattern) {
 
         //如果是日期格式，重新格式化
-        if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC && DateUtil.isCellDateFormatted(cell)) {
+        if (cell.getCellTypeEnum() == CellType.NUMERIC && DateUtil.isCellDateFormatted(cell)) {
 
             return DateFormatUtils.format(cell.getDateCellValue(), datePattern);
 
@@ -484,6 +472,67 @@ public class MyExcelUtils {
 
 
     /**
+     * 获取输入的 excel 文件的所有 sheet
+     *
+     * @param excelFile
+     * @return 按照 index 排序的 Sheet 集合
+     */
+    public static List<org.apache.poi.ss.usermodel.Sheet> getSheets(File excelFile) {
+        Optional<Workbook> workbook = getInputWorkbook(excelFile);
+        if (!workbook.isPresent())
+            return Collections.emptyList();
+        List tempL = Lists.newArrayList(workbook.get().sheetIterator());
+//        Collections.sort(tempL, new Comparator<org.apache.poi.ss.usermodel.Sheet>() {
+//            public int compare(org.apache.poi.ss.usermodel.Sheet s1, org.apache.poi.ss.usermodel.Sheet s2) {
+//                return s1.getSheetName().compareTo(s2.getSheetName());
+//            }
+//        });
+        return tempL;
+
+    }
+
+    /**
+     * 获取读入的 excel 文件，转换为 Workbook
+     *
+     * @param inputExcelFile 读入的 excel 文件
+     * @return
+     */
+    private static Optional<Workbook> getInputWorkbook(File inputExcelFile) {
+
+        Workbook workbook = null; //<-Interface, accepts both HSSF and XSSF.
+        logger.info("read excel begin...");
+
+        if (!inputExcelFile.exists()) {
+            logger.info("excel file not exist {}", inputExcelFile);
+            return Optional.empty();
+        }
+        //判断文件类型
+        try {
+
+            FileInputStream fileInputStream = new FileInputStream(inputExcelFile);
+
+            if (FilenameUtils.isExtension(inputExcelFile.getName().toLowerCase(), "xls")) {
+                logger.info(inputExcelFile.getName() + " extension is  xls");
+                workbook = new HSSFWorkbook(fileInputStream);
+            } else if (FilenameUtils.isExtension(inputExcelFile.getName().toLowerCase(), "xlsx")) {
+                logger.info(inputExcelFile.getName() + " extension is  xlsx");
+                workbook = new XSSFWorkbook(fileInputStream);
+            } else {
+                throw new IllegalArgumentException("Received file does not have a standard excel extension.");
+            }
+
+            IOUtils.closeQuietly(fileInputStream);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.of(workbook);
+    }
+
+    /**
      * 判断给定的行是否为空白行
      *
      * @param row 指定行
@@ -521,6 +570,4 @@ public class MyExcelUtils {
             return null;
         }
     }
-
-
 }

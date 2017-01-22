@@ -1,6 +1,5 @@
 package org.h819.commons.file;
 
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
@@ -13,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -163,7 +163,7 @@ public class PdfExamples {
         PdfWriter writer = stamper.getWriter();
 
         PdfAction action = PdfAction
-                .javaScript(FileUtils.readFileToString(new File("d:\\js.js")),
+                .javaScript(FileUtils.readFileToString(new File("d:\\js.js"), Charset.defaultCharset()),
                         writer, true);
         stamper.setPageAction(PdfWriter.PAGE_OPEN, action, 1);
 
