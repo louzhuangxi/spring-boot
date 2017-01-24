@@ -1,0 +1,13 @@
+级联查询？
+one to many , lazy
+map generator
+动态生成 sql
+
+===============
+spring jdbc 也能，自己手工 RowMapper 各中查询结果 , mybatis 自动 maper
+http://www.mybatis.tk/  很多工具
+
+===================
+
+到底有什么好处?
+
