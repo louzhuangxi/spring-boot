@@ -6,9 +6,9 @@ import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.service.UserService;
 import com.base.spring.utils.BCryptPassWordUtils;
-import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
+import org.h819.web.spring.jpa.DtoUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.endsWith;
@@ -30,7 +30,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * To change this template use File | Settings | File Templates.
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 @Rollback(false)
