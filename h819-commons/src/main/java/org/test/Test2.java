@@ -5,6 +5,7 @@ import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyPDFUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,8 @@ public class Test2 {
         // t.decryptDirectory();
         //t.testExcelSheet();
         //t.testExcelRead();
-        t.testHtmlText();
+       // t.testHtmlText();
+        t.testAssert();
     }
 
     private void decryptDirectory() {
@@ -71,6 +73,15 @@ public class Test2 {
         String s ="<td><span class=\"sortSpan\" style=\"display:none\">26</span><a href=\"home/store/catalogue_tc/catalogue_detail.htm?csnumber=70124\" class=\"develop\">ISO/NP 11299-3</a><br>Plastics piping systems for renovation of underground gas supply networks -- Part 3: Lining with close-fit pipes</td>";
 
        System.out.println(MyStringUtils.htmlToPlainText(s));
+
+    }
+
+    private void testAssert(){
+
+      //  Assert.isTrue(1!=1,"is true");
+
+        Assert.isTrue("coun . a".contains("count"),"queryNativeSql 和 countNativeSql 参数顺序不对");
+
 
     }
 

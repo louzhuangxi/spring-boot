@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class FtpPropertiesTest {
     @Autowired
-    private FtpPropertyBean ftpProperties;
+    private FtpProperty ftpProperties;
 
     @Test
     public void testConfigurationProperties()

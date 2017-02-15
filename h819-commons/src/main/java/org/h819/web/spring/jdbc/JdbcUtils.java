@@ -5,9 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,50 +42,81 @@ public class JdbcUtils {
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
 
+
     /**
-     * 构造分页查询，有排序提交件
-     * -
-     * 利用 spring JdbcTemplate 进行分页查询，BeanPropertyRowMapper 包装
-     * 分页需要进行两次查询
-     * 排序条件不在这里维护，占位符不能用于 order by
-     *
-     * @param jdbcTemplate   注入 JdbcTemplate 方法
-     *                       //@Autowired JdbcTemplate jdbcTemplate;
-     *                       -
-     *                       如果是多数据源，并且配置时数据源设置了　 @Primary 指向需要连接的数据库，仅需要
-     *                       //@Autowired JdbcTemplate jdbcTemplate;
-     *                       -
-     *                       如果是多数据源，配置时数据源没有设置 @Primary
-     *                       //@Autowired //@Qualifier("oracleDataSource") JdbcTemplate jdbcTemplate; 需要指定数据源名称
-     * @param dbDialect      数据库类型，不同的数据库生成的分页语句不一样
-     * @param queryNativeSql 本地查询条件，和不分页时相同，如
-     *                       select * from standard st where st.namecn like '%中国%' ,
-     *                       select st.id,st.name from standard st where st.id ='239711'  等
-     * @param queryArgs      arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数
-     *                       (leaving it to the PreparedStatement to guess the corresponding SQL type ，是 Object 类型，系统可以自动匹配成 sql 类型)
-     *                       无参数时，传入 new Objects[]{} 空数组即可
-     *                       占位符方式，可以避免 sql 注入  Queries with Named Parameters
-     * @param countNativeSql 本地计算总数的语句
-     * @param countArgs      计算总数时，绑定 countNativeSql 上的参数
-     * @param currentPageNo  当前页码，从 1 开始
-     * @param pageSize       页大小
-     * @param resultClass    返回值类型
-     * @return
+     * 自定义返回值包装 包装
      */
     public static <T> PageBean<T> findPageByNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
                                                             final String queryNativeSql, Object[] queryArgs,
                                                             final String countNativeSql, Object[] countArgs,
                                                             int currentPageNo, int pageSize,
-                                                            Class resultClass) {
+                                                            RowMapper<T> rowMapper) {
+        return findPageByNativeSqlString0(jdbcTemplate, dbDialect,
+                queryNativeSql, queryArgs,
+                countNativeSql, countArgs,
+                currentPageNo, pageSize, false, null,
+                rowMapper);
 
-        if (currentPageNo < 1)
-            throw new IllegalArgumentException("currentPageNo : 起始页应从 1 开始。");
 
-        if (pageSize < 0)
-            throw new IllegalArgumentException("pageSize : 页大小不能小于 0");
+    }
 
-        if (!countNativeSql.toLowerCase().contains("count"))
-            throw new IllegalArgumentException("queryNativeSql 和 countNativeSql 参数顺序不对");
+    /**
+     * BeanPropertyRowMapper 包装
+     */
+    public static <T> PageBean<T> findPageByNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
+                                                            final String queryNativeSql, Object[] queryArgs,
+                                                            final String countNativeSql, Object[] countArgs,
+                                                            int currentPageNo, int pageSize,
+                                                            Class<T> resultClass) {
+        return findPageByNativeSqlString0(jdbcTemplate, dbDialect,
+                queryNativeSql, queryArgs,
+                countNativeSql, countArgs,
+                currentPageNo, pageSize, true, resultClass,
+                null);
+
+
+    }
+
+    /**
+     * 利用 spring JdbcTemplate 进行分页查询
+     * 分页需要进行两次查询
+     * 排序条件不在这里维护，占位符不能用于 order by
+     *
+     * @param jdbcTemplate            注入 JdbcTemplate 方法
+     *                                //@Autowired JdbcTemplate jdbcTemplate;
+     *                                -
+     *                                如果是多数据源，并且配置时数据源设置了　 @Primary 指向需要连接的数据库，仅需要
+     *                                //@Autowired JdbcTemplate jdbcTemplate;
+     *                                -
+     *                                如果是多数据源，配置时数据源没有设置 @Primary
+     *                                //@Autowired //@Qualifier("oracleDataSource") JdbcTemplate jdbcTemplate; 需要指定数据源名称
+     * @param dbDialect               数据库类型，不同的数据库生成的分页语句不一样
+     * @param queryNativeSql          本地查询条件，和不分页时相同，如
+     *                                select * from standard st where st.namecn like '%中国%' ,
+     *                                select st.id,st.name from standard st where st.id ='239711'  等
+     * @param queryArgs               arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数
+     *                                (leaving it to the PreparedStatement to guess the corresponding SQL type ，是 Object 类型，系统可以自动匹配成 sql 类型)
+     *                                无参数时，传入 new Objects[]{} 空数组即可
+     *                                占位符方式，可以避免 sql 注入  Queries with Named Parameters
+     * @param countNativeSql          本地计算总数的语句
+     * @param countArgs               计算总数时，绑定 countNativeSql 上的参数
+     * @param currentPageNo           当前页码，从 1 开始
+     * @param pageSize                页大小
+     * @param isBeanPropertyRowMapper 用 BeanPropertyRowMapper 包装返回值
+     * @param resultClass             BeanPropertyRowMapper 包装返回值时，返回值类型
+     * @param rowMapper               自定义返回值
+     * @param <T>
+     * @return
+     */
+    private static <T> PageBean<T> findPageByNativeSqlString0(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
+                                                              final String queryNativeSql, Object[] queryArgs,
+                                                              final String countNativeSql, Object[] countArgs,
+                                                              int currentPageNo, int pageSize, boolean isBeanPropertyRowMapper, Class<T> resultClass,
+                                                              RowMapper<T> rowMapper) {
+
+        Assert.isTrue(currentPageNo >= 1, "currentPageNo : 起始页应从 1 开始。");
+        Assert.isTrue(pageSize >= 0, "pageSize : 页大小不能小于 0");
+        Assert.isTrue(countNativeSql.contains("count"), "queryNativeSql 和 countNativeSql 参数顺序不对");
 
 
         String queryNativeSqlString = SqlUtils.createNativePageSqlString(dbDialect, queryNativeSql, currentPageNo, pageSize);
@@ -96,9 +129,14 @@ public class JdbcUtils {
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
         if (totalRecordsSize == 0)
-            return new PageBean(pageSize, 0, 0, new ArrayList(0));
+            return new PageBean(pageSize, 0, 0, Collections.EMPTY_LIST);
 
-        List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, new BeanPropertyRowMapper(resultClass));
+
+        List<T> content;
+        if (isBeanPropertyRowMapper)
+            content = jdbcTemplate.query(queryNativeSqlString, queryArgs, new BeanPropertyRowMapper(resultClass));
+        else
+            content = jdbcTemplate.query(queryNativeSqlString, queryArgs, rowMapper);
 
         return new PageBean(pageSize, currentPageNo, totalRecordsSize, content);
     }
@@ -113,10 +151,25 @@ public class JdbcUtils {
      */
     public static <T> List<T> findByNativeSqlString(final JdbcTemplate jdbcTemplate,
                                                     final String queryNativeSql, Object[] queryArgs,
-                                                    Class resultClass) {
+                                                    Class<T> resultClass) {
         return jdbcTemplate.query(queryNativeSql, queryArgs, new BeanPropertyRowMapper(resultClass));
     }
 
+    /**
+     * 自定义返回值包装
+     *
+     * @param jdbcTemplate
+     * @param queryNativeSql
+     * @param queryArgs
+     * @param rowMapper
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> findByNativeSqlString(final JdbcTemplate jdbcTemplate,
+                                                    final String queryNativeSql, Object[] queryArgs,
+                                                    RowMapper<T> rowMapper) {
+        return jdbcTemplate.query(queryNativeSql, queryArgs, rowMapper);
+    }
 
     /**
      * 构造排序条件
