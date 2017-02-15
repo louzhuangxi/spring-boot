@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- mybatis-generator-maven-plugin 配置信息-->
+<generatorConfiguration>
+
+    <!-- 数据库连接，此处为 MySql
+    http://www.mybatis.org/generator/configreference/context.html
+    -->
+    <!-- 数据库驱动位置 -->
+    <classPathEntry location="F:\baiduyun\maven\repository\mysql\mysql-connector-java\5.1.40\mysql-connector-java-5.1.40.jar"/>
+
+    <!-- MyBatis3(targetRuntime="MyBatis3Simple") , 每个表生成一个实体类(defaultModelType="flat") -->
+    <context id="MySqlContext" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!-- 配置 -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!-- 忽略生成的 map 的注释信息 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/springboottest?autoReconnect=true&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"
+                        userId="springboottest"
+                        password="springboottest">
+        </jdbcConnection>
+
+        <!-- 指定JDBC类型和Java类型如何转换。
+           <property name="forceBigDecimals" value="false" /> 为默认配置，可以省略，此处仅为示例
+        -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--生成实体类
+         targetProject 配置到 main\java
+        -->
+        <javaModelGenerator targetPackage="com.example.mybatis.generate.domain" targetProject="E:\program\IntelliJ IDEA Project\open-project\spring-boot-mybatis\src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/> <!--对参数执行 .trim() 操作-->
+        </javaModelGenerator>
+
+        <!--生成实 xml-->
+        <sqlMapGenerator targetPackage="mybatis.xml" targetProject="E:\program\IntelliJ IDEA Project\open-project\spring-boot-mybatis\src\main\resources"/>
+
+        <!--生成 xml 对应的 mapper
+          type="XMLMAPPER"  所有的方法都在XML中，接口调用依赖XML文件。
+            targetProject 配置到 main\java
+         -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.mybatis.generate.dao" targetProject="E:\program\IntelliJ IDEA Project\open-project\spring-boot-mybatis\src\main\java"/>
+
+        <!--定义哪些表生成
+         tableName="%" : 所有表
+        -->
+        <table tableName="%">
+            <!--自动生成主键的名字 -->
+            <generatedKey column="id" sqlStatement="Mysql"/>
+        </table>
+    </context>
+</generatorConfiguration>
