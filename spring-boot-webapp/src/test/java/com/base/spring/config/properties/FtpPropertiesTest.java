@@ -21,8 +21,7 @@ public class FtpPropertiesTest {
     private FtpProperty ftpProperties;
 
     @Test
-    public void testConfigurationProperties()
-    {
+    public void testConfigurationProperties() {
         MyJsonUtils.prettyPrint(ftpProperties);
     }
 }

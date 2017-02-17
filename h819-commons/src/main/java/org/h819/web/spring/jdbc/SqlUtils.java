@@ -14,17 +14,18 @@ public class SqlUtils {
      * 分页SQL，仅测试了 oracle
      * 通过数据库分页，在满足条件的所有结果中截取一夜数据，所以传入的查询参数 {0} 是不分页时候的查询条件
      */
-    private static final String MYSQL_SQL = "select * from ({0}) sel_tab00 limit {1},{2}"; // mysql
-    private static final String POSTGRE_SQL = "select * from ({0}) sel_tab00 limit {2} offset {1}";// postgresql
+    private static final String MYSQL_PAGE_SQL = "select * from ({0}) sel_tab00 limit {1},{2}"; // mysql
+    private static final String POSTGRE_PAGE_SQL = "select * from ({0}) sel_tab00 limit {2} offset {1}";// postgresql
     // oracle ，没有根据 oracle 版本进行优化
-    private static final String ORACLE_SQL = "select * from (\n" +
+    // 此种方法为通用方法，很多开源项目 如 jfinal 等分页语句，均是此种写法
+    private static final String ORACLE_PAGE_SQL = "select * from (\n" +
             "  select rownum row_num, subq.* \n" +
             "  from \n" +
             "    ({0}) subq\n" +
             "     where rownum <= {1}) \n" +
             "where row_num > {2}"; // oracle
 
-    private static final String SQLSERVER_SQL = "select * from ( select row_number() over(order by tempColumn) tempRowNumber, * from (select top {1} tempColumn = 0, {0}) t ) tt where tempRowNumber > {2}"; // sqlserver
+    private static final String SQLSERVER_PAGE_SQL = "select * from ( select row_number() over(order by tempColumn) tempRowNumber, * from (select top {1} tempColumn = 0, {0}) t ) tt where tempRowNumber > {2}"; // sqlserver
 
     /**
      * 构造数据库相关的本地分页查询语句
@@ -40,9 +41,7 @@ public class SqlUtils {
      * @param pageSize       页大小
      * @return
      */
-    public static String createNativePageSqlString(Dialect dbDialect,
-                                                   String queryNativeSql,
-                                                   int currentPageNo, int pageSize) {
+    public static String createNativePageSqlString(Dialect dbDialect, String queryNativeSql, int currentPageNo, int pageSize) {
 
         if (currentPageNo < 1)
             throw new IllegalArgumentException("currentPageNo : 起始页应从 1 开始。");
@@ -57,9 +56,9 @@ public class SqlUtils {
         sqlParam[2] = pageSize + "";
 
         if (dbDialect.equals(Dialect.MySql)) { //mysql
-            queryNativeSql = MessageFormat.format(MYSQL_SQL, sqlParam);
+            queryNativeSql = MessageFormat.format(MYSQL_PAGE_SQL, sqlParam);
         } else if (dbDialect.equals(Dialect.PostgreSQL)) { // postgre
-            queryNativeSql = MessageFormat.format(POSTGRE_SQL, sqlParam);
+            queryNativeSql = MessageFormat.format(POSTGRE_PAGE_SQL, sqlParam);
         } else {
 
             //计算起止
@@ -69,10 +68,10 @@ public class SqlUtils {
 
             //oracle
             if (dbDialect.equals(Dialect.Oracle)) { // oracle
-                queryNativeSql = MessageFormat.format(ORACLE_SQL, sqlParam);
+                queryNativeSql = MessageFormat.format(ORACLE_PAGE_SQL, sqlParam);
             } else if (dbDialect.equals(Dialect.SqlServer)) {//SqlServer
                 sqlParam[0] = queryNativeSql.substring(getAfterSelectInsertPoint(queryNativeSql));
-                queryNativeSql = MessageFormat.format(SQLSERVER_SQL, sqlParam);
+                queryNativeSql = MessageFormat.format(SQLSERVER_PAGE_SQL, sqlParam);
             }
         }
         return queryNativeSql.trim();

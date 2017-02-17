@@ -51,7 +51,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param beans
      */
@@ -68,7 +68,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param beans
      */
@@ -81,7 +81,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param beans
      */
@@ -125,7 +125,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param file
      * @param beans
@@ -140,7 +140,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param file
      * @param beans
@@ -155,7 +155,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param file
      * @param beans
@@ -176,7 +176,7 @@ public class MyJsonUtils {
     }
 
     /**
-     * 多写一个结合参数的方法
+     * 多写一个集合参数的方法
      *
      * @param file
      * @param beans
