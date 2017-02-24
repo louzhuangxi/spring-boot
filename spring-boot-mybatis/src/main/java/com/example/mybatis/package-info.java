@@ -22,5 +22,8 @@
  * =====
  * 和 spring jdbc 直接写 sql 区别 ？  有什么好处?
  * spring jdbc 也能，自己手工 RowMapper 各中查询结果 , mybatis 自动 maper
+ * =====
+ * https://my.oschina.net/wangxincj/blog/841299
+ *
  */
 package com.example.mybatis;

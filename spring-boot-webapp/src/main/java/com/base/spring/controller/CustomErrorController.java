@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 public class CustomErrorController implements ErrorController {
 
-    private static final String ERROR_MAPPING = "/error";
+    private static final String ERROR_MAPPING = "/error";   // 自定义的出错后返回的地址
 
     @Autowired
     private ErrorAttributes errorAttributes;
