@@ -48,7 +48,7 @@ public class MyCSVUtils {
      * @return
      * @throws IOException
      */
-    public static Collection<CSVRecord> getCSVRecords(File csvFile, boolean duplicate) throws IOException {
+    public static List<CSVRecord> getCSVRecords(File csvFile, boolean duplicate) throws IOException {
 
         List<CSVRecord> collection = CSVParser.parse(csvFile, MyCharsetUtils.detectEncoding(csvFile), CSVFormat.DEFAULT).getRecords();
 
@@ -76,14 +76,14 @@ public class MyCSVUtils {
                 set1.add(csvRecord);
             }
 
-            return set1;
+            return new ArrayList<>(set1);
         }
     }
 
     /**
      * 得到指定行号的行 CSVRecord
      *
-     * @param csvFile      CSV 文件
+     * @param csvFile    CSV 文件
      * @param lineNumber 指定行号（第 0 行号，第 7 行 ... 行号从 0 开始）
      * @return
      * @throws IOException
@@ -96,42 +96,41 @@ public class MyCSVUtils {
     /**
      * 在行数据中，得到指定列号的单元格数据
      *
-     * @param CSVRecord 行数据
+     * @param csvRecord 行数据
      * @param index     列号（从 0 开始）
      * @return
      */
-    public static String getCSVValue(CSVRecord CSVRecord, int index) {
-        return CSVRecord.get(index);
+    public static String getCSVValue(CSVRecord csvRecord, int index) {
+        return csvRecord.get(index);
 
     }
 
     /**
      * 在行数据中，得到指定列名称的单元格数据
      *
-     * @param CSVRecord                 行数据
+     * @param csvRecord                 行数据
      * @param excelColumnAlphaTitleName 英文名字为 AA-ZZ 之间，不区分大小写 。
      *                                  Excel 显示的列名称，在 ExcelUtils 中定义,只能用于微软 Excel 软件打开 CSV 文件格式。
      *                                  CSV 文件本身没有列名称属性，只是微软的 Excel 软件打开 CSV 文件的时候，Excel 软件本身加上了列名称，便于查看。
      * @return
      */
-    public static String getCSVValue(CSVRecord CSVRecord, String excelColumnAlphaTitleName) {
-        return CSVRecord.get(MyExcelUtils.convertColumnTitleToIndex(excelColumnAlphaTitleName.toUpperCase()));
+    public static String getCSVValue(CSVRecord csvRecord, String excelColumnAlphaTitleName) {
+        return csvRecord.get(MyExcelUtils.convertColumnTitleToIndex(excelColumnAlphaTitleName.toUpperCase()));
 
     }
 
     /**
      * 获取行数据的所有单元格值
      *
-     * @param CSVRecord 行数据
+     * @param csvRecord 行数据
      * @return 数组顺序就是单元格顺序
      */
-    public static String[] getCSVArrayValues(CSVRecord CSVRecord) {
-
-        int size = CSVRecord.size();
+    public static String[] getCSVArrayValues(CSVRecord csvRecord) {
+        int size = csvRecord.size();
         String[] values = new String[size];
         int i = 0;
         while (i < size) {
-            values[i] = CSVRecord.get(i);
+            values[i] = csvRecord.get(i);
             i++;
         }
         return values;
@@ -140,12 +139,11 @@ public class MyCSVUtils {
     /**
      * 获取行数据的所有单元格值
      *
-     * @param CSVRecord 行数据
+     * @param csvRecord 行数据
      * @return 数组顺序就是单元格顺序
      */
-    public static List<String> getCSVListValues(CSVRecord CSVRecord) {
-
-        return Arrays.asList(getCSVArrayValues(CSVRecord));
+    public static List<String> getCSVListValues(CSVRecord csvRecord) {
+        return Arrays.asList(getCSVArrayValues(csvRecord));
     }
 
     private void test() {
@@ -171,11 +169,7 @@ public class MyCSVUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 }
 
 

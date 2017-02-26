@@ -39,7 +39,7 @@ public class MyServerBackup {
      * @param username
      * @param password
      */
-    @Deprecated // 用 Runtime
+    @Deprecated // 用 Runtime ，此方法不好使
     private void mysqlBack1(String hostIp, int port, String username, String password, File backup, String dbName) {
         List<ExecParameter> list = new ArrayList<ExecParameter>();
 //        list.add(new ExecParameter("-h", hostIp)); // 只有 key ，没有 value

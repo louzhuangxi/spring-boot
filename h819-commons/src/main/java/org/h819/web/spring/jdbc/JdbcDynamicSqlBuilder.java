@@ -1,8 +1,7 @@
 package org.h819.web.spring.jdbc;
 
 /**
- * Description : TODO(创建动态查询语句 Specification ，有了 Specification 之后，可以利用 JPA 进行查询。Specification 就是各种查询条件集合)
- * Description : TODO(Specification ，实现其接口 toPredicate 方法即可 )
+ * Description : TODO(尝试动态构造 sql)
  * User: h819
  * Date: 2016-9-28
  * Time: 下午13:20
