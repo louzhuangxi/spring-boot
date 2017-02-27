@@ -108,35 +108,18 @@ public class ElementSelector {
     }
 
     /**
-     * 按属性过虑
-     * -
-     * select 语法 ：[attr]
-     * example : select("[width]")
-     *
-     * @param attributeName 属性名字
-     * @return
-     */
-    public ElementSelector byAttribute(String attributeName) {
-        StringBuilder builder = new StringBuilder(3);
-        builder.append("[").append(attributeName).append("]");
-        this.currentElements = this.currentElements.select(builder.toString());
-        return this;
-    }
-
-
-    /**
      * 按属性、属性值过虑
      * -
      * select 语法 ：[attr=val]
      * example : select("[width=500]")
      *
-     * @param attributeName  属性名字
-     * @param attributeValue 属性值
+     * @param tag       tag 名字
+     * @param attribute 属性名字
      * @return
      */
-    public ElementSelector byAttribute(String attributeName, String attributeValue) {
+    public ElementSelector byTagAndAttribute(String tag, String attribute) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append("[").append(attributeName).append("=").append(attributeValue).append("]");
+        builder.append(tag).append("[").append(attribute).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }

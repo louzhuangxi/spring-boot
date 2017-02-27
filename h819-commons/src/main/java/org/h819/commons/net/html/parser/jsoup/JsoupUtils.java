@@ -35,7 +35,7 @@ public class JsoupUtils {
      */
     public static Connection getDefaultConnectionWithCookies(String url, Connection.Method method, String indexCookiesUrl) {
         // 首先通过获取 Jsoup  cookies ，之后再进行 url 访问 ，不能先 url ，之后再 cookiesUrl
-        return getDefaultConnection(url, method).cookies(getIndexCookies(indexCookiesUrl));
+        return getDefaultConnection(url, method).cookies(getCookies(indexCookiesUrl));
     }
 
     /**
@@ -91,6 +91,19 @@ public class JsoupUtils {
         return absHref;
     }
 
+    public static String getHrefValue(Element element) {
+
+        //<a href="home/store/catalogue_tc/catalogue_tc_browse.htm?commid=625645">WMO</a>
+        // String relHref = link.attr("href"); // == "/"
+
+        Elements elements = element.select("a[href]");
+        if (elements.size() != 1)
+            throw new IllegalArgumentException("多个 a 标签");
+
+        String absHref = elements.attr("abs:href"); // "http://jsoup.org/"
+        return absHref;
+    }
+
     public static Map getCookies(Connection.Response response) {
         return response.cookies();
     }
@@ -101,8 +114,8 @@ public class JsoupUtils {
      * @param url 首页 url
      * @return
      */
-    private static Map getIndexCookies(String url) {
-        Map map = new HashMap();
+    public static Map<String, String> getCookies(String url) {
+        Map<String, String> map = new HashMap();
         try {
             map = getDefaultConnection(url, Connection.Method.GET).execute().cookies();
         } catch (IOException e) {
