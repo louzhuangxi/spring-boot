@@ -22,6 +22,10 @@ import java.util.List;
  */
 //SerializerFeature 属性
 //http://46aae4d1e2371e4aa769798941cef698.devproxy.yunshipei.com/u010246789/article/details/52539576
+
+/**
+ *
+ */
 public class MyJsonUtils {
 
     /**

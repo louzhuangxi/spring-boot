@@ -84,11 +84,14 @@ public class JsoupUtils {
         // String relHref = link.attr("href"); // == "/"
 
         Elements elements = element.select("a[href]");
-        if (elements.size() != 1)
+
+        if (elements.size() == 0)
+            return "";
+
+        if (elements.size() > 1)
             throw new IllegalArgumentException("多个 a 标签");
 
-        String absHref = elements.attr("abs:href"); // "http://jsoup.org/"
-        return absHref;
+        return elements.attr("abs:href"); // "http://jsoup.org/"
     }
 
     public static String getHrefValue(Element element) {

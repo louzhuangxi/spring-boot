@@ -6,7 +6,6 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.h819.commons.MyCharsetUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyFileUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
@@ -47,7 +46,7 @@ public class Test {
         File to = new File("d:\\01\\");
         File to1 = new File("d:\\UKEY申请表_2016.doc");
 
-
+        System.out.println(to1.getName());
 
 
         Test t = new Test();
@@ -68,8 +67,8 @@ public class Test {
         // Assert.noNullElements(new Object[] {null,null},"不能为空");
         //Assert.hasText("s", "has text");
 
-        System.out.println(MyCharsetUtils.detectEncoding(to1));
-        System.out.println("");
+//        System.out.println(MyCharsetUtils.detectEncoding(to1));
+//        System.out.println("");
 
     }
 
