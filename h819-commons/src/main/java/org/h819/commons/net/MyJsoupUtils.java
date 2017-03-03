@@ -1,5 +1,6 @@
-package org.h819.commons.net.html.parser.jsoup;
+package org.h819.commons.net;
 
+import org.h819.commons.net.html.parser.jsoup.JsoupContants;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -16,9 +17,9 @@ import java.util.Map;
  * Time: 16:15
  * To change this template use File | Settings | File Templates.
  */
-public class JsoupUtils {
+public class MyJsoupUtils {
 
-    private JsoupUtils() {
+    private MyJsoupUtils() {
     }
 
     /**
@@ -78,7 +79,7 @@ public class JsoupUtils {
      * @param element
      * @return
      */
-    public static String getHrefValue(Elements element) {
+    public static String getHrefValue(Element element) {
 
         //<a href="home/store/catalogue_tc/catalogue_tc_browse.htm?commid=625645">WMO</a>
         // String relHref = link.attr("href"); // == "/"
@@ -94,18 +95,6 @@ public class JsoupUtils {
         return elements.attr("abs:href"); // "http://jsoup.org/"
     }
 
-    public static String getHrefValue(Element element) {
-
-        //<a href="home/store/catalogue_tc/catalogue_tc_browse.htm?commid=625645">WMO</a>
-        // String relHref = link.attr("href"); // == "/"
-
-        Elements elements = element.select("a[href]");
-        if (elements.size() != 1)
-            throw new IllegalArgumentException("多个 a 标签");
-
-        String absHref = elements.attr("abs:href"); // "http://jsoup.org/"
-        return absHref;
-    }
 
     public static Map getCookies(Connection.Response response) {
         return response.cookies();

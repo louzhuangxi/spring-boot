@@ -24,7 +24,7 @@ import java.util.List;
 //http://46aae4d1e2371e4aa769798941cef698.devproxy.yunshipei.com/u010246789/article/details/52539576
 
 /**
- *
+ * 对于复杂对象的序列化，应该用 java bean 相互嵌套来表示，不要用 List<List<Map>> 等这样的基础 Collection ，不容易反序列化
  */
 public class MyJsonUtils {
 

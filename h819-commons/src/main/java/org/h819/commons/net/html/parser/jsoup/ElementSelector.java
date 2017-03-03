@@ -59,12 +59,12 @@ public class ElementSelector {
     /**
      * 构造  element.select(name).select(name1);
      *
-     * @param tag
+     * @param tagName
      * @return
      */
-    public ElementSelector byTagsNested(String... tag) {
+    public ElementSelector byTagsNested(String... tagName) {
         Elements temp = this.currentElements;
-        for (String name : tag)
+        for (String name : tagName)
             temp = temp.select(name);
         this.currentElements = temp;
         return this;
@@ -108,36 +108,38 @@ public class ElementSelector {
     }
 
     /**
-     * 按属性、属性值过虑
+     * 标签名称为 tag , 标签的包含属性名称为 attrName 的所有节点
+     * "<a class="CDcover185" id="albumCover" href="/album/2100226190" title="Hello">"
      * -
-     * select 语法 ：[attr=val]
-     * example : select("[width=500]")
+     * select 语法 ：tag[attr]
+     * example : select("a[href]")
      *
-     * @param tag       tag 名字
-     * @param attribute 属性名字
+     * @param tagName  tag 名字
+     * @param attrName 属性名字
      * @return
      */
-    public ElementSelector byTagAndAttribute(String tag, String attribute) {
+    public ElementSelector byTagAndAttr(String tagName, String attrName) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append(tag).append("[").append(attribute).append("]");
+        builder.append(tagName).append("[").append(attrName).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
+
     /**
-     * 按tag、属性和属性值过滤
+     * 标签名称为 tag , 标签的包含属性名称为 attrName ，且 attrName 的值为 attrValue 的所有节点
      * -
      * select 语法 ：tag[attr=val]
      * example : select("img[width=500]")
      *
-     * @param tag
-     * @param attribute
+     * @param tagName
+     * @param attrName
      * @param attrValue
      * @return
      */
-    public ElementSelector byTagAndAttribute(String tag, String attribute, String attrValue) {
+    public ElementSelector byTagAndAttrAndAttrValue(String tagName, String attrName, String attrValue) {
         StringBuilder builder = new StringBuilder(6);
-        builder.append(tag).append("[").append(attribute).append("=").append(attrValue).append("]");
+        builder.append(tagName).append("[").append(attrName).append("=").append(attrValue).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
@@ -159,17 +161,20 @@ public class ElementSelector {
     }
 
     /**
-     * 按tag、样式 class 过滤
+     * 标签名称为 tag , 标签的包含 class 名称为 className  的所有节点
      * select 语法 ：tag.class
      * example : select("div.left")
+     * -
+     * <div class="left" />
+     * -
      *
-     * @param tag
+     * @param tagName
      * @param className
      * @return
      */
-    public ElementSelector byTagAndClass(String tag, String className) {
+    public ElementSelector byTagAndClass(String tagName, String className) {
         StringBuilder builder = new StringBuilder(3);
-        builder.append(tag).append(".").append(className);
+        builder.append(tagName).append(".").append(className);
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
@@ -195,138 +200,173 @@ public class ElementSelector {
      * -
      * select 语法 ：div#id
      * example : select("div#wrap")
+     * -
+     * <div id="wrap" ></div>
      *
-     * @param tag
+     * @param tagName
      * @param idName
      * @return
      */
-    public ElementSelector byTagAndId(String tag, String idName) {
+    public ElementSelector byTagAndId(String tagName, String idName) {
         StringBuilder builder = new StringBuilder(3);
-        builder.append(tag).append("#").append(idName);
+        builder.append(tagName).append("#").append(idName);
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按属性值开始特征部分过虑
-     * 按 按属性值开始 过滤
+     * 属性名称为 attrName ，属性值以 valuePrefix 开始的所有节点
      * -
      * select 语法 ：[attr^=valPrefix]
      * example : select("href^=http:")
      *
-     * @param attributeName
-     * @param valuePrefix
+     * @param attrName
+     * @param attrValuePrefix
      * @return
      */
-    public ElementSelector byAttrValueStartsWith(String attributeName, String valuePrefix) {
+    public ElementSelector byAttrAndValueStartsWith(String attrName, String attrValuePrefix) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append("[").append(attributeName).append("^=").append(valuePrefix).append("]");
+        builder.append("[").append(attrName).append("^=").append(attrValuePrefix).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按 tag 、属性值开始 过滤
+     * 标签名称为 tag , 标签的包含属性名称为 attrName ，且 attrName 的值为以 attrValuePrefix 开始的所有节点
      * -
      * select 语法 ：tag[attr^=valPrefix]
      * example : select("a[href^=http:]")
      *
-     * @param tag
-     * @param attributeName
-     * @param valuePrefix
+     * @param tagName
+     * @param attrName
+     * @param attrValuePrefix
      * @return
      */
-    public ElementSelector byTagAndAttrValueStartsWith(String tag, String attributeName, String valuePrefix) {
+    public ElementSelector byTagAndAttrAndAttrValueStartsWith(String tagName, String attrName, String attrValuePrefix) {
         StringBuilder builder = new StringBuilder(6);
-        builder.append(tag).append("[").append(attributeName).append("^=").append(valuePrefix).append("]");
+        builder.append(tagName).append("[").append(attrName).append("^=").append(attrValuePrefix).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按 属性值结束 过滤
+     * 属性名称为 attrName ，属性值以 valSuffix 结尾的所有节点
      * -
      * select 语法 ：[attr$=valSuffix]
      * example : select("[src$=.png]")
      *
-     * @param attributeName
-     * @param valSuffix
+     * @param attrName
+     * @param attrValSuffix
      * @return
      */
-    public ElementSelector byAttrValueEndsWith(String attributeName, String valSuffix) {
+    public ElementSelector byAttrAndValueEndsWith(String attrName, String attrValSuffix) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append("[").append(attributeName).append("$=").append(valSuffix).append("]");
+        builder.append("[").append(attrName).append("$=").append(attrValSuffix).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按 tag 属性值结束 过滤
+     * 标签名称为 tag , 标签的包含属性名称为 attrName ，且 attrName 的值为以 attrValSuffix 结尾的所有节点
      * -
      * select 语法 ：tag[attr$=valSuffix]
      * example : select("img[src$=.png]")
      *
-     * @param tag
-     * @param attributeName
-     * @param valSuffix
+     * @param tagName
+     * @param attrName
+     * @param attrValSuffix
      * @return
      */
-    public ElementSelector byTagAndAttrValueEndsWith(String tag, String attributeName, String valSuffix) {
+    public ElementSelector byTagAndAttrAndAttrValueEndsWith(String tagName, String attrName, String attrValSuffix) {
         StringBuilder builder = new StringBuilder(6);
-        builder.append(tag).append("[").append(attributeName).append("$=").append(valSuffix).append("]");
+        builder.append(tagName).append("[").append(attrName).append("$=").append(attrValSuffix).append("]");
+        this.currentElements = this.currentElements.select(builder.toString());
+        return this;
+    }
+
+
+    /**
+     * 属性名称为 attrName 的所有节点
+     * -
+     * select 语法 ：[attr]
+     *
+     * @param attrName
+     * @return
+     */
+
+    public ElementSelector byAttr(String attrName) {
+        StringBuilder builder = new StringBuilder(3);
+        builder.append("[").append(attrName).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按 属性值包含 过滤
+     * 属性名称为 attrName ，属性值等于 attrVal 的所有节点
      * -
      * select 语法 ：[attr*=valContaining]
      * example : select("[href*=/search/]")
      *
-     * @param attributeName
-     * @param valContaining
+     * @param attrName
+     * @param attrVal
      * @return
      */
-    public ElementSelector byAttrValueContais(String attributeName, String valContaining) {
+    public ElementSelector byAttrAndValue(String attrName, String attrVal) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append("[").append(attributeName).append("*=").append(valContaining).append("]");
+        builder.append("[").append(attrName).append("=").append(attrVal).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
     /**
-     * 按 tag 属性值包含 过滤
+     * 属性名称为 attrName ，属性值包含 valContaining 的所有节点
+     * -
+     * select 语法 ：[attr*=valContaining]
+     * example : select("[href*=/search/]")
+     *
+     * @param attrName
+     * @param attrValContaining
+     * @return
+     */
+    public ElementSelector byAttrAndValueContais(String attrName, String attrValContaining) {
+        StringBuilder builder = new StringBuilder(5);
+        builder.append("[").append(attrName).append("*=").append(attrValContaining).append("]");
+        this.currentElements = this.currentElements.select(builder.toString());
+        return this;
+    }
+
+    /**
+     * 标签名称为 tag , 标签的包含属性名称为 attrName ，且 attrName 的值包含 attrValContaining 的所有节点
      * -
      * select 语法 ：tag[attr*=valContaining]
      * example : select("a[href*=/search/]")
      *
-     * @param tag
-     * @param attributeName
-     * @param valContaining
+     * @param tagName
+     * @param attrName
+     * @param attrValContaining
      * @return
      */
-    public ElementSelector byTagAndAttrValueContais(String tag, String attributeName, String valContaining) {
+    public ElementSelector byTagAndAttrAndAttrValueContais(String tagName, String attrName, String attrValContaining) {
         StringBuilder builder = new StringBuilder(6);
-        builder.append(tag).append("[").append(attributeName).append("*=").append(valContaining).append("]");
+        builder.append(tagName).append("[").append(attrName).append("*=").append(attrValContaining).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
 
 
     /**
-     * 按 tag 属性值匹配正则表达式进行 过滤
+     * 标签名称为 tag , 标签的包含属性名称为 attrName ，且 attrName 的值包含 满足 attrValRegex 正则表达式的 的所有节点
      * -
      * select 语法 ：[attr~=regex]
      * example : select("[src~=(?i)\\.(png|jpe?g)]")
      *
-     * @param attributeName
-     * @param valRegex
+     * @param attrName
+     * @param attrValRegex
      * @return
      */
-    public ElementSelector byAttrValueRegexMatching(String attributeName, String valRegex) {
+    public ElementSelector byAttrAndValueRegexMatching(String attrName, String attrValRegex) {
         StringBuilder builder = new StringBuilder(5);
-        builder.append("[").append(attributeName).append("~=").append(valRegex).append("]");
+        builder.append("[").append(attrName).append("~=").append(attrValRegex).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
@@ -337,14 +377,14 @@ public class ElementSelector {
      * select 语法 ：tag[attr~=regex]
      * example : select("img[src~=(?i)\\.(png|jpe?g)]")
      *
-     * @param tag
-     * @param attributeName
+     * @param tagName
+     * @param attrName
      * @param valRegex
      * @return
      */
-    public ElementSelector byTagAndAttrValueRegexMatching(String tag, String attributeName, String valRegex) {
+    public ElementSelector byTagAndAttrAndAttrValueRegexMatching(String tagName, String attrName, String valRegex) {
         StringBuilder builder = new StringBuilder(6);
-        builder.append(tag).append("[").append(attributeName).append("~=").append(valRegex).append("]");
+        builder.append(tagName).append("[").append(attrName).append("~=").append(valRegex).append("]");
         this.currentElements = this.currentElements.select(builder.toString());
         return this;
     }
