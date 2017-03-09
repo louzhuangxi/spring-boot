@@ -1,8 +1,13 @@
 package org.test;
 
+import org.apache.commons.collections4.ListUtils;
+import org.h819.commons.MyJsonUtils;
 import org.h819.commons.net.html.parser.jsoup.ElementSelector;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Description : TODO()
@@ -16,7 +21,9 @@ public class Test3 {
     public static void main(String[] args) {
 
         Test3 t = new Test3();
-        t.testJsoup();
+        //t.testJsoup();
+
+        t.subList();
     }
 
     private void testJsoup() {
@@ -33,4 +40,16 @@ public class Test3 {
 
         System.out.println(elements);
     }
+
+    private void subList(){
+
+        List<Integer> largeList = Arrays.asList(0,1,2,3,4,5,6,7,8,9);
+
+        List<List<Integer>> output = ListUtils.partition(largeList, 3);
+
+        MyJsonUtils.prettyPrint(output);
+
+    }
+
 }
+
