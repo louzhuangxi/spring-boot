@@ -1,5 +1,6 @@
 package org.h819.commons;
 
+import org.apache.commons.collections4.ListUtils;
 import org.h819.commons.collection.MergeSort;
 
 import java.util.*;
@@ -63,10 +64,10 @@ public class MyCollectionUtils {
      */
     public static <T> boolean removeNull(Collection<T> collection) {
         return collection.removeAll(Collections.singleton(null));
-      // jdk 8
-       // collection.parallelStream().filter(i -> i != null).collect(Collectors.toList());
-      //  list.stream().filter(i -> i != null).collect(Collectors.toList());
-       // listWithoutNulls.removeIf(p -> p == null);
+        // jdk 8
+        // collection.parallelStream().filter(i -> i != null).collect(Collectors.toList());
+        //  list.stream().filter(i -> i != null).collect(Collectors.toList());
+        // listWithoutNulls.removeIf(p -> p == null);
     }
 
 
@@ -81,5 +82,16 @@ public class MyCollectionUtils {
 //    }
 
 
+    /**
+     * 单个 List ，分割成几个 List , 保持原来 List 中元素的排序
+     *
+     * @param list
+     * @param size 每个 sub list 的大小
+     * @param <T>
+     * @return
+     */
+    static <T> List<List<T>> toSubList(List<T> list, int size) {
+        return ListUtils.partition(list, size);
+    }
 
 }

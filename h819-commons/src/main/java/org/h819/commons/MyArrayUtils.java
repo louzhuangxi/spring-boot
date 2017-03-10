@@ -1,7 +1,10 @@
 package org.h819.commons;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,4 +40,16 @@ public class MyArrayUtils {
     public static <T> List<T> asArrayList(T... ts) {
         return new ArrayList<>(Arrays.asList(ts));
     }
+
+    /**
+     * 集合 to Array
+     * 和具体类型相关，无法写成通用方法
+     */
+    private void collectionToArrayExample() {
+
+        Collection<String> collection = Lists.newArrayList("sting1", "sting1", "sting1");
+        String[] foos = collection.toArray(new String[collection.size()]);
+    }
+
+
 }
