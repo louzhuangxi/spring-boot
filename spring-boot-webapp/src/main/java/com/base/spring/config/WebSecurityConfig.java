@@ -1,7 +1,7 @@
 package com.base.spring.config;
 
-import com.base.spring.custom.CustomAuthenticationFailureHandler;
-import com.base.spring.custom.CustomAuthenticationSuccessHandler;
+import com.base.spring.custom.security.CustomAuthenticationFailureHandler;
+import com.base.spring.custom.security.CustomAuthenticationSuccessHandler;
 import com.base.spring.service.security.CustomUserDetailsService;
 import com.base.spring.utils.BCryptPassWordUtils;
 import org.springframework.beans.factory.annotation.Autowired;

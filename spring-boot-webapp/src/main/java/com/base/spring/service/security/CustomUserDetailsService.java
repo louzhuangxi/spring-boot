@@ -1,6 +1,6 @@
 package com.base.spring.service.security;
 
-import com.base.spring.custom.SecurityUser;
+import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.domain.UserEntity;
 import com.base.spring.service.UserService;
 import org.slf4j.Logger;

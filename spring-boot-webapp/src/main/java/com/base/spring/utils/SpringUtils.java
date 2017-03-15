@@ -1,7 +1,7 @@
 package com.base.spring.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.base.spring.custom.SecurityUser;
+import com.base.spring.custom.security.SecurityUser;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

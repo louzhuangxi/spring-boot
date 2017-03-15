@@ -1,7 +1,7 @@
 package com.base.spring.controller;
 
 
-import com.base.spring.custom.SecurityUser;
+import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.service.UserService;
 import org.h819.web.commons.MyServletUtils;

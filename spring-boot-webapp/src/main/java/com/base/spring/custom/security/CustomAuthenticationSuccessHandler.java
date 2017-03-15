@@ -1,4 +1,4 @@
-package com.base.spring.custom;
+package com.base.spring.custom.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

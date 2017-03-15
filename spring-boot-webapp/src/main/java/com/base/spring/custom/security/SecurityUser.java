@@ -1,4 +1,4 @@
-package com.base.spring.custom;
+package com.base.spring.custom.security;
 
 import com.base.spring.domain.UserEntity;
 import org.springframework.security.core.authority.AuthorityUtils;

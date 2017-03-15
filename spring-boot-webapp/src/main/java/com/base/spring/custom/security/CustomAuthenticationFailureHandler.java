@@ -1,4 +1,4 @@
-package com.base.spring.custom;
+package com.base.spring.custom.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

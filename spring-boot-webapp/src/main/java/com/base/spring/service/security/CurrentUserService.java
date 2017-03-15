@@ -1,7 +1,7 @@
 package com.base.spring.service.security;
 
 
-import com.base.spring.custom.SecurityUser;
+import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
