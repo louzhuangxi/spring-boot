@@ -42,11 +42,12 @@ public class MyArrayUtils {
     }
 
     /**
-     * 集合 to Array
+     * Collection to Array  example
      * 和具体类型相关，无法写成通用方法
      */
     private void collectionToArrayExample() {
 
+        //String 类型
         Collection<String> collection = Lists.newArrayList("sting1", "sting1", "sting1");
         String[] foos = collection.toArray(new String[collection.size()]);
     }

@@ -282,13 +282,17 @@
             <version>${org.bouncycastle.bcpkix-jdk15on.version}</version>
         </dependency>
 
-        <!-- pdf 用到的中文字体-->
+        <!-- pdf 用到的中文字体
+        https://pan.baidu.com/s/1jI9L8ii
+        -->
         <dependency>
             <groupId>org.h819</groupId>
             <artifactId>h819-commons-font-STCAIYUN</artifactId>
             <version>publish-1.0.0</version>
         </dependency>
-        <!-- pdf 用到 pdfdecrypt-->
+        <!-- pdf 用到 pdfdecrypt
+        https://pan.baidu.com/s/1jI9L8ii
+        -->
         <dependency>
             <groupId>org.h819</groupId>
             <artifactId>h819-commons-pdfdecrypt</artifactId>
@@ -313,16 +317,7 @@
             <version>${apache.tika.core.version}</version>
         </dependency>
         <!-- 判断文件的编码 CharSet
-         https://code.google.com/p/juniversalchardet/
-         that is the encoding detector library of Mozilla.
-       用 icu4j 代替 , juniversalchardet 已经不维护了
-        =========================================================== -->
-        <dependency>
-            <groupId>com.googlecode.juniversalchardet</groupId>
-            <artifactId>juniversalchardet</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <!-- http://userguide.icu-project.org/conversion/detection -->
+         http://userguide.icu-project.org/conversion/detection -->
         <dependency>
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>

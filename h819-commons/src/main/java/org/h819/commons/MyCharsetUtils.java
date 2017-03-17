@@ -4,15 +4,11 @@ import com.ibm.icu.text.CharsetDetector;
 import com.ibm.icu.text.CharsetMatch;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.IllegalCharsetNameException;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
 
 /**
  * @author h819
@@ -27,47 +23,6 @@ public class MyCharsetUtils {
      * 静态方法调用，不需要生成实例
      */
     private MyCharsetUtils() {
-    }
-
-    /**
-     * Attempts to figure out the character set of the file using the excellent juniversalchardet library.
-     * https://code.google.com/p/juniversalchardet/
-     * that is the encoding detector library of Mozilla
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    @Deprecated  //icu4j 代替
-    public static Charset getEncoding(File file) throws IOException {
-
-        byte[] buf = new byte[4096];
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
-        final UniversalDetector universalDetector = new UniversalDetector(null);
-        int numberOfBytesRead;
-        while ((numberOfBytesRead = bufferedInputStream.read(buf)) > 0 && !universalDetector.isDone()) {
-            universalDetector.handleData(buf, 0, numberOfBytesRead);
-        }
-        universalDetector.dataEnd();
-        String encoding = universalDetector.getDetectedCharset();
-        universalDetector.reset();
-        bufferedInputStream.close();
-
-        if (encoding != null) { // 解析不出来，默认为 ISO_8859_1
-            logger.debug("Detected encoding for {} is {}.", file.getAbsolutePath(), encoding);
-            try {
-                return Charset.forName(encoding);
-            } catch (IllegalCharsetNameException err) {
-                logger.debug("Invalid detected charset name '" + encoding + "': " + err);
-                return StandardCharsets.ISO_8859_1;
-            } catch (UnsupportedCharsetException err) {
-                logger.error("Detected charset '" + encoding + "' not supported: " + err);
-                return StandardCharsets.ISO_8859_1;
-            }
-        } else {
-            logger.info("encodeing is null, will use 'ISO_8859_1'  : " + file.getAbsolutePath() + " , " + encoding);
-            return StandardCharsets.ISO_8859_1;
-        }
     }
 
     /**
@@ -135,6 +90,8 @@ public class MyCharsetUtils {
 
     /**
      * 利用 icu4j 探测输入流编码，只能探测文本类型的输入流
+     * -
+     * 抛弃 juniversalchardet
      *
      * @param in
      * @return

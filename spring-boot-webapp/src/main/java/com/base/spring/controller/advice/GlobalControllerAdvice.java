@@ -1,15 +1,18 @@
 package com.base.spring.controller.advice;
 
-import com.base.spring.vo.CustomErrorResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 /**
@@ -24,9 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 // @ControllerAdvice(basePackages = {"com.concretepage.controller"} ) //指定拦截应用到哪些包的 controller 中
 // @ControllerAdvice(annotations=RestController.class)仅处理 @RestController 标记的的 controller
 @ControllerAdvice
-public class CurrentUserControllerAdvice {
+public class GlobalControllerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(CurrentUserControllerAdvice.class);
+    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
 
     /**
@@ -91,22 +94,16 @@ public class CurrentUserControllerAdvice {
     }
 
     // 应用到所有 @RequestMapping 注解的方法，在该方法抛出 Exception 异常时执行此方法
-    // 未起作用，不知道为什么
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    CustomErrorResponseMessage defaultErrorHandler(HttpServletRequest request, Throwable ex) throws Throwable {
+    @ExceptionHandler(value = FileNotFoundException.class)
+    public void handle(FileNotFoundException ex, HttpServletResponse response) throws IOException {
+        System.out.println("handling file not found exception");
+        response.sendError(404, ex.getMessage());
+    }
 
-        // If the exception is annotated with @ResponseStatus rethrow it and let
-        // the framework handle it - like the OrderNotFoundException example
-        // at the start of this post.
-        // AnnotationUtils is a Spring Framework utility class.
-        if (AnnotationUtils.findAnnotation
-                (ex.getClass(), ResponseStatus.class) != null)
-            throw ex;
-
-        // Otherwise setup and send the user to a default error-view.
-
-        return new CustomErrorResponseMessage(request, ex.getMessage());
+    @ExceptionHandler(value = IOException.class)
+    public void handle(IOException ex, HttpServletResponse response) throws IOException {
+        System.out.println("handling io exception");
+        response.sendError(500, ex.getMessage());
     }
 
 }

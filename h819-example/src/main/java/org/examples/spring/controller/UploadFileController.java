@@ -1,12 +1,9 @@
 package org.examples.spring.controller;
-
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,11 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,9 +25,9 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping("/files")
-public class FileController {
+public class UploadFileController {
 
-    private static Logger logger = LoggerFactory.getLogger(FileController.class);
+    private static Logger logger = LoggerFactory.getLogger(UploadFileController.class);
 
     @Autowired
     private ServletContext servletContext; //获得应用的路径用
@@ -66,44 +59,13 @@ public class FileController {
                 //文件存放路径为 webApp/upload
                 FileOutputStream fos = new FileOutputStream(servletContext.getRealPath("/") +
                         "upload/" + sdf.format(new Date()) + fileName.substring(fileName.lastIndexOf('.')));
-                IOUtils.copy(file.getInputStream(), fos);
-                fos.flush();
-                fos.close();
+                FileCopyUtils.copy(file.getInputStream(), fos);
                 return "You successfully uploaded " + fileName + "!";
             } catch (Exception e) {
                 return "You failed to upload " + e.getMessage();
             }
         } else {
             return "You failed to upload because the file was empty.";
-        }
-    }
-
-    /**
-     * 直接下载文件
-     *
-     * @param fileName
-     * @param response
-     */
-    @RequestMapping(value = "/download", method = RequestMethod.GET)
-    public void downFiles(@RequestParam("filename") String fileName, HttpServletResponse response) {
-
-        logger.info("fileName = " + fileName);
-
-        try {
-
-            String filename = StringUtils.substringBetween(fileName, "/", ".") + ".doc";
-            String filePathToBeServed = servletContext.getRealPath("/") + fileName;
-            File fileToDownload = new File(filePathToBeServed);
-            InputStream inputStream = new FileInputStream(fileToDownload);
-            response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment; filename=" + filename);
-            // IOUtils: 用缓存拷贝，不会占用大量内存。连接数量限制，应该用 server 控制
-            IOUtils.copy(inputStream, response.getOutputStream());
-            response.flushBuffer();
-            inputStream.close();
-        } catch (Exception e) {
-            logger.debug("Request could not be completed at this moment. Please try again.");
-            e.printStackTrace();
         }
     }
 
