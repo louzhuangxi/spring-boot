@@ -40,11 +40,12 @@ public class AsyncExampleServiceTest {
         //wait until all they are completed.
         CompletableFuture.allOf(task1, task2, task3).join(); // 多个线程执行，直至结束
         //==
-        //获取最终结果
+        //线程结束后，可以获取线程的返回值，进行汇总处理
+        // 更复杂的例子，见中关村数据查询
         allStr = task1.get() + task2.get() + task3.get();
-
+        System.out.println("all str = " + allStr);
         long end = System.currentTimeMillis();
-        System.out.println("任务全部完成，总耗时：" + (end - start)/1000 + "秒");
+        System.out.println("任务全部完成，总耗时：" + (end - start) / 1000 + "秒");
 
     }
 
@@ -60,7 +61,7 @@ public class AsyncExampleServiceTest {
         CompletableFuture<String> taskAll = task.fakeAsyncTask();
         CompletableFuture.allOf(taskAll).join();
         long end = System.currentTimeMillis();
-        System.out.println("任务全部完成，总耗时：" + (end - start)/1000 + "秒");
+        System.out.println("任务全部完成，总耗时：" + (end - start) / 1000 + "秒");
 
     }
 

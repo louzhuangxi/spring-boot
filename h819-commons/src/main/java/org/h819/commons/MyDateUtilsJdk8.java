@@ -2,6 +2,7 @@ package org.h819.commons;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -456,7 +457,12 @@ public class MyDateUtilsJdk8 {
         private transient DateTimeFormatter formatter;
 
         DateFormat(String pattern) {
-            formatter = DateTimeFormatter.ofPattern(pattern);
+           // formatter = DateTimeFormatter.ofPattern(pattern);
+            formatter =
+                    new DateTimeFormatterBuilder().appendPattern(pattern)
+                          //  .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
+                            .toFormatter()
+                            .withZone(ZoneId.systemDefault());
         }
     }
 
