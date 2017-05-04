@@ -19,6 +19,7 @@ import javax.servlet.ServletContextListener;
 // web 配置
 //WebMvcConfigurerAdapter 中有更多设置，参考文档
 @Configuration
+//@EnableWebMvc 不需要这句，已经自动启用
 class WebMVCConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(WebMVCConfig.class);
