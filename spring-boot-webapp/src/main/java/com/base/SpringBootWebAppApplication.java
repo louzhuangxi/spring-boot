@@ -5,7 +5,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+
+// 注册  http://www.baeldung.com/spring-security-registration?utm_source=email&utm_medium=email&utm_content=lss_registration&utm_campaign=campaign_lss
+
+//http://www.baeldung.com/spring-security-expressions?utm_source=email&utm_medium=email&utm_content=lss_expressions&utm_campaign=campaign_lss
+ //http://www.baeldung.com/role-and-privilege-for-spring-security-registration?utm_source=email&utm_medium=email&utm_content=lss_roles_permissions&utm_campaign=campaign_lss&tl_inbound=1&tl_target_all=1&tl_period_type=3
+
 //http://kielczewski.eu/2014/12/spring-boot-security-application/
+
+//https://git.oschina.net/jeff1993/springboot-learning-example
 
 // 邮箱激活 http://www.baeldung.com/registration-verify-user-by-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_47_sec
 // 增加反爬虫机制
@@ -13,6 +21,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 //权限管理例子
 //1 https://www.oschina.net/p/uniauth-
+//https://github.com/wayshall/onetwo
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class SpringBootWebAppApplication extends SpringBootServletInitializer {
 

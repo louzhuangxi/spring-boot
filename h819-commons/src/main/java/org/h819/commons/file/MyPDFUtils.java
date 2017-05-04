@@ -40,7 +40,6 @@ import java.util.List;
  */
 
 //http://tutorials.jenkov.com/java-itext/index.html
-
 //html->pdf
 //http://www.petrikainulainen.net/programming/spring-framework/spring-from-the-trenches-creating-pdf-documents-with-wkhtmltopdf/
 //http://wkhtmltopdf.org/
@@ -304,7 +303,7 @@ public class MyPDFUtils {
      * @param waterMarkImage 水印图片
      */
     public static void addWaterMarkFile(File srcPdf, File destPdf, File waterMarkImage) throws IOException, DocumentException {
-        addWaterMarkFile(srcPdf, destPdf, null, waterMarkImage);
+        addWaterMarkFile(srcPdf, destPdf, waterMarkImage, null);
     }
 
 
@@ -316,7 +315,7 @@ public class MyPDFUtils {
      * @param waterMarkText 水印文字
      */
     public static void addWaterMarkFile(File srcPdf, File destPdf, String waterMarkText) throws IOException, DocumentException {
-        addWaterMarkFile(srcPdf, destPdf, waterMarkText, null);
+        addWaterMarkFile(srcPdf, destPdf, null, waterMarkText);
     }
 
 
@@ -339,7 +338,7 @@ public class MyPDFUtils {
         for (File file : srcPdfFileDirectory.listFiles()) {
             String path = descPdfFileDirectory.getAbsolutePath() + File.separator + file.getName();
             if (file.isFile()) {
-                addWaterMarkFile(file, Paths.get(path).toFile(), null, waterMarkImage);
+                addWaterMarkFile(file, Paths.get(path).toFile(), waterMarkImage, null);
             } else if (file.isDirectory())
                 addWaterMarkDerictory(file, Paths.get(path).toFile(), waterMarkImage);
             else return;
@@ -384,8 +383,9 @@ public class MyPDFUtils {
      * @param waterMarkText  水印文字
      * @param waterMarkImage 水印图片
      */
-    public static void addWaterMarkFile(File srcPdf, File destPdf, String waterMarkText, File waterMarkImage) throws IOException, DocumentException {
+    public static void addWaterMarkFile(File srcPdf, File destPdf, File waterMarkImage, String waterMarkText) throws IOException, DocumentException {
 
+        //加指定页
         if (waterMarkText == null && waterMarkImage == null)
             throw new FileNotFoundException(waterMarkText + " " + waterMarkImage + " all null.");
 
@@ -397,13 +397,12 @@ public class MyPDFUtils {
         if (!FilenameUtils.getExtension(srcPdf.getAbsolutePath()).toLowerCase().equals("pdf"))
             return;
 
-
         if (waterMarkImage != null) {
             if (!waterMarkImage.exists() || !waterMarkImage.isFile())
                 throw new FileNotFoundException("img file :  '" + srcPdf + "' does not exsit.");
 
             if (!FilenameUtils.getExtension(waterMarkImage.getAbsolutePath()).toLowerCase().equals("png"))
-                throw new FileNotFoundException("image file '" + srcPdf + "'  not png.(必须为透明图片格式，否则会遮挡 pdf 内容)");
+                throw new FileNotFoundException("image file '" + srcPdf + "'  not png.(必须为透明图片(png)格式，否则会遮挡 pdf 内容)");
         }
 
 
@@ -648,7 +647,7 @@ public class MyPDFUtils {
         // 损坏的 0 字节文件，直接拷贝到统一的文件夹
         if (FileUtils.sizeOf(srcPdf) == 0) {
             logger.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            FileUtils.copyDirectory(srcPdf, badDirectory,true);
+            FileUtils.copyDirectory(srcPdf, badDirectory, true);
             return;
         }
 
@@ -680,7 +679,7 @@ public class MyPDFUtils {
         } catch (BadPasswordException e) {
             // 有打开密码的文件，不能破解，统一拷贝至一个文件夹。
             logger.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            FileUtils.copyFileToDirectory(srcPdf, badDirectory,true);
+            FileUtils.copyFileToDirectory(srcPdf, badDirectory, true);
             e.printStackTrace();
             return;
         } catch (IOException e) {
