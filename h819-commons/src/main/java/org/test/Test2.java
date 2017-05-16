@@ -3,12 +3,10 @@ package org.test;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.h819.commons.MyStringUtils;
 import org.h819.commons.file.MyExcelUtils;
-import org.h819.commons.file.MyPDFUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
 import org.springframework.util.Assert;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,11 +33,11 @@ public class Test2 {
         File desc = new File("D:\\2016-8-4_desc\\");
         File bad = new File("D:\\2016-8-4_desc_bad\\");
 
-        try {
-            MyPDFUtils.decryptDirectory(src, desc, bad);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            MyPDFUtils.decryptDirectory(src, desc, bad);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
