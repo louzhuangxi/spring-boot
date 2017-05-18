@@ -97,7 +97,9 @@ public class FileUtilsBase {
                      * 文件 Hash
                      * 1. com.google.common.io.Files.hash 最快 (比 commons DigestUtils.md5Hex 快 50%)
                      * 2. md5 比 SHA-256 快 40% 以上，md5 用于文件 hash ，足够准确
-                     * md5 和 sha-1 已经被证实，在 pdf 文件中，不同的文件内容，sha-1 相同，如果不是要求非常高的系统 md5 足够
+                     * md5 已经被证实，是不安全的，可以被破解和伪装。就是说不同的文件内容，md5 可能会相同
+                     * sha-1 新进被 google 证实，同 md5 一样可以被伪装
+                     * 如果不是要求非常高的系统 md5 验证足够
                      */
                     String uniqueFileHash = Files.hash(new File(fileStr), Hashing.md5()).toString();
                     System.out.println(String.format("calculate file hash : %s -> %s", uniqueFileHash, fileStr));
