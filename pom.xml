@@ -92,9 +92,10 @@
         <icu4j.version>58.1</icu4j.version>
         <!-- pdf 解析  -->
         <itextpdf.version>5.5.11</itextpdf.version>
-        <!-- itext 解析 pdf 需要的第三方包 , 在 itext maven 依赖中可以看的  -->
-        <org.bouncycastle.bcpkix-jdk15on.version>1.54</org.bouncycastle.bcpkix-jdk15on.version>
-        <org.bouncycastle.bcprov-jdk15on.version>1.54</org.bouncycastle.bcprov-jdk15on.version>
+        <!-- itext 解析 pdf 需要的第三方包 , 在 itext maven 依赖中可以看的 .
+         pdf 加密时可以用到 -->
+        <org.bouncycastle.bcpkix-jdk15on.version>1.57</org.bouncycastle.bcpkix-jdk15on.version>
+        <org.bouncycastle.bcprov-jdk15on.version>1.57</org.bouncycastle.bcprov-jdk15on.version>
 
         <!-- 二维码开发包 https://github.com/zxing/zxing/ -->
         <com.google.zxing.version>3.1.0</com.google.zxing.version>

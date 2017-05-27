@@ -1,6 +1,6 @@
 ﻿function CheckExpire() {
 	var nowDate = new Date();
-	var startDateStr = "2011,01,01";
+	var startDateStr = "2011-01-01";
 	var startDate = new Date(startDateStr);
 	var expiredDays = 365;
 	var alertDays = 355;
@@ -14,7 +14,7 @@
 	//到了警告期，还没有过期
 	if ( alertDays <=DiffDays && DiffDays<expiredDays) {
 		nButton = app.alert({
-			cMsg : "文件即将超出使用日期！\n\nThe expiration date is drawing near!",
+			cMsg : "文件即将超出使用日期！\n\n The expiration date is drawing near!",
 			cTitle : "警告信息",
 			nIcon : 1,
 			nType : 0
@@ -25,7 +25,7 @@
 	//过期
 	if (DiffDays>=expiredDays) {
 		nButton = app.alert({
-			cMsg : "文件超出使用日期！\n\The expiration date has already passed !",
+			cMsg : "文件超出使用日期！\n\n The expiration date has already passed !",
 			cTitle : "警告信息",
 			nIcon : 1,
 			nType : 0

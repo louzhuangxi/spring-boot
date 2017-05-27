@@ -6,7 +6,13 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.h819.commons.MyDateUtils;
@@ -109,11 +115,9 @@ public class MyExcelUtils {
         Collection<ExcelLine> lines;
 
         if (isDuplicateLine) // 允许重复
-            lines = new LinkedList(); //按照 add 先后排序. LinkList add,delete 快  ArrayList get 定位快
+            lines = new LinkedList(); //按照 add 先后排序. LinkList: add,delete 快;  ArrayList: get 定位快
         else
             lines = new LinkedHashSet();    // 利用 LinkedHashSet 来保证元素按照添加顺序排序，默认的比较器
-
-        logger.info("read excel begin...");
 
         //判断文件类型
         try {
