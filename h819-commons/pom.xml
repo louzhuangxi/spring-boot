@@ -263,22 +263,25 @@
                需要第三方依赖 bcpkix-jdk15on ,bcprov-jdk15on ，必须有，否则会有异常
                java.lang.NoClassDefFoundError: org/bouncycastle/asn1/ASN1Encodable
            -->
-
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itext7-core</artifactId>
-            <version>7.0.2</version>
+            <version>${itextpdf.core.version}</version>
         </dependency>
+
+       
+
+
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>${org.bouncycastle.bcpkix-jdk15on.version}</version>
+            <version>${bcpkix-jdk15on.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>${org.bouncycastle.bcprov-jdk15on.version}</version>
+            <version>${bcprov-jdk15on.version}</version>
         </dependency>
 
 

@@ -13,23 +13,13 @@
 	
 	//到了警告期，还没有过期
 	if ( alertDays <=DiffDays && DiffDays<expiredDays) {
-		nButton = app.alert({
-			cMsg : "文件即将超出使用日期！\n\n The expiration date is drawing near!",
-			cTitle : "警告信息",
-			nIcon : 1,
-			nType : 0
-		});
+		nButton = app.alert("文件即将超出使用日期！\n\n The expiration date is drawing near!");
 		// 修改 nButtton 的默认返回值，不关闭文件
 		nButton = 0;
 	}
 	//过期
 	if (DiffDays>=expiredDays) {
-		nButton = app.alert({
-			cMsg : "文件超出使用日期！\n\n The expiration date has already passed !",
-			cTitle : "警告信息",
-			nIcon : 1,
-			nType : 0
-		});
+		nButton = app.alert("文件超出使用日期！\n\n The expiration date has already passed !");
 
 	}
 	//nType =0 时, nButtton 的默认返回值是 1

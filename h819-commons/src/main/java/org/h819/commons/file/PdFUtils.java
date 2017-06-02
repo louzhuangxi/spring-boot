@@ -25,11 +25,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.dom4j.DocumentException;
 import org.h819.commons.MyConstants;
+import org.h819.commons.file.pdf.itext.PdfBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -221,7 +221,7 @@ import java.util.*;
  * http://www.artofsolving.com/opensource
  */
 
-public class PdFUtils {
+public class PdFUtils extends PdfBase {
 
     private static String src_text = "D:\\itext7\\text_src.pdf";
     private static String dest_2 = "D:\\itext7\\DEST2.pdf";
@@ -315,7 +315,7 @@ public class PdFUtils {
     private static void testExpireDate() throws IOException {
 //        FileUtils.forceDelete(new File("D:\\itext7\\test__ExpireDate.pdf"));
 //      ///  Files.deleteIfExists(Paths.get("D:\\itext7\\test__ExpireDate.pdf"));
-       setExpireDateWithJavaScript(new File("D:\\itext7"), new File("D:\\itext_date"), "2017-05-27", 1, 2);
+        setExpireDateWithJavaScript(new File("D:\\itext7"), new File("D:\\itext_date"), "2017-05-27", 1, 2);
 
 //        Optional<String> s = Optional.empty();
 //        System.out.println(s.isPresent());
@@ -536,7 +536,7 @@ public class PdFUtils {
 
         if (!descPdfFileDir.exists())
             try {
-            Files.createDirectory(Paths.get(descPdfFileDir.getAbsolutePath()));
+                Files.createDirectory(Paths.get(descPdfFileDir.getAbsolutePath()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -892,7 +892,7 @@ public class PdFUtils {
      *
      * @param srcPdfFileDir  源文件夹
      * @param descPdfFileDir 目标文件夹
-     * @param startDate      开始日期，字符串格式需为 "2011,01,01"
+     * @param startDate      开始日期，字符串格式需为 "2011-01-01"
      * @param alerDays       从开始日期计算，出现警告日期的天数。到达警告期后，出现警告信息，但可以查看文本
      * @param expiredDays    从开始日期计算，到达失效日期的天数。到达失效期后，出现警告信息后，直接关闭文本，不再允许查看文本。
      * @throws java.io.IOException
@@ -920,16 +920,12 @@ public class PdFUtils {
 
         if (listFiles.length == 0) {
             logger.info("srcPdfFileDir has not file. "
-                    + srcPdfFileDir.getAbsolutePath());
+                    + srcPdfFileDir.getAbsolutePath());   ???
             return;
         }
-
-        // 拷贝资源文件到临时目录
-        // String[] resources = new String[]{"/pdfexpiration.js"};
-        // File resPath = MyFileUtils.copyResourceFileFromJarLibToTmpDir("/pdfexpiration.js");  //????
-        File resPath = new File("E:\\program\\IntelliJ IDEA Project\\open-project\\h819-commons\\src\\main\\resources\\static\\source\\pdfutils\\pdfexpiration.js");  //????
         // 得到资源文件内容
-        String jsStr = FileUtils.readFileToString(resPath, Charset.defaultCharset());
+      //  String jsStr = JsStrExpireDate;
+        String jsStr = JsStrExpireDate;//  ????
 
         /** 替换 js 文件中的字符串，作为输入条件 */
         // 替换开始日期
@@ -959,10 +955,16 @@ public class PdFUtils {
                         continue;
                     PdfDocument pdfDocument = new PdfDocument(reader.get(), new PdfWriter(new FileOutputStream(fileDesc)));
 
+                    /**
+                     * 执行 js 语句
+                     */
                     PdfAction printAction = new PdfAction();
                     printAction.put(PdfName.S, PdfName.JavaScript);
-                    printAction.put(PdfName.JS, new PdfString("this.print(true);\r"));
-                    pdfDocument.getCatalog().setOpenAction(printAction);
+
+
+
+                    printAction.put(PdfName.JS, new PdfString(jsStr));  //"app.alert('Thank you for reading');"
+                    pdfDocument.getCatalog().setOpenAction(printAction); //打开 pdf 时，出现的提示框动作
 
                     // 给文件添加 javaScript 代码
 //                        stamper.setPageAction(PdfWriter.PAGE_OPEN, action, 1);
@@ -1016,7 +1018,6 @@ public class PdFUtils {
         pdf.close();
     }
 
-
     /**
      * 文本位置
      */
@@ -1028,5 +1029,4 @@ public class PdFUtils {
         LEFT,   //左边缘
         RIGHT   //右边缘
     }
-
 }
