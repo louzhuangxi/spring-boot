@@ -21,11 +21,12 @@ import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.dom4j.DocumentException;
 import org.h819.commons.MyConstants;
-import org.h819.commons.file.pdf.itext.PdfBase;
+import org.h819.commons.MyExecUtils;
+import org.h819.commons.exe.ExecParameter;
+import org.h819.commons.file.pdf.PdfBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+
 
 /**
  * Description : TODO()
@@ -285,13 +287,15 @@ public class PdFUtils extends PdfBase {
 	 * 选择了很久，目前网上没有合适的中空字体，流传的"王汉之中空字体"有缺陷，不是所有的汉字都能为中空， 所以不好用，暂时用"华文彩云" 字体吧
 	 */
 
+
     public static void main(String[] args) throws Exception {
 
 
         //测试添加水印文字的位置
         //  PdFUtils.testWaterMark();
         // PdFUtils.testEncryptPdf();
-        PdFUtils.testExpireDate();
+        //  PdFUtils.testExpireDate();
+        PdFUtils.testDecryptPdf();
     }
 
     private static void testWaterMark() throws FileNotFoundException {
@@ -309,16 +313,22 @@ public class PdFUtils extends PdfBase {
 //        encryptPdf(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "notuser")), "user", null, true, true);
 //        encryptPdf(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "notowner")), null, "user2", true, true);
 
-        decryptPdf(new File(DEST_TEXT_Position.replace("temp", "notuser")), new File(DEST_TEXT_Position.replace("temp", "notuser_decrypt")), "user");
+        decryptFile(new File(DEST_TEXT_Position.replace("temp", "notuser")), new File(DEST_TEXT_Position.replace("temp", "notuser_decrypt")), "user");
+    }
+
+    private static void testDecryptPdf() throws IOException {
+
+        decryptFile(new File("D:\\itext7\\text_src_encrypt.pdf"), new File("D:\\itext7\\text_src_encrypt_de.pdf"), new File("D:\\itext7\\bad"));
     }
 
     private static void testExpireDate() throws IOException {
 //        FileUtils.forceDelete(new File("D:\\itext7\\test__ExpireDate.pdf"));
 //      ///  Files.deleteIfExists(Paths.get("D:\\itext7\\test__ExpireDate.pdf"));
-        setExpireDateWithJavaScript(new File("D:\\itext7"), new File("D:\\itext_date"), "2017-05-27", 1, 2);
-
+        //  addExpireDateWithJavaScriptFile(new File("D:\\itext7\\text_src.pdf"), new File("D:\\itext7\\text_src_no_warning.pdf"), "2017-06-05", 1, 2);
 //        Optional<String> s = Optional.empty();
 //        System.out.println(s.isPresent());
+
+        removeJavaScript(new File("D:\\itext7\\text_src_no_warning.pdf"), new File("D:\\itext7\\text_src_no_warning_.pdf"), PdfName.OpenAction);
     }
 
     /**
@@ -349,10 +359,10 @@ public class PdFUtils extends PdfBase {
      * @return
      * @throws IOException
      */
-    private static PdfReader getPdfReader(File pdfFile, String userPassword) throws IOException {
+    private static Optional<PdfReader> getPdfReader(File pdfFile, String userPassword) throws IOException {
         IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile).getChannel());
         // .setUnethicalReading(true) 必须设置，才可以打开有用户密码的文件
-        return new PdfReader(source, new ReaderProperties().setPassword(userPassword.getBytes())).setUnethicalReading(true);
+        return Optional.of(new PdfReader(source, new ReaderProperties().setPassword(userPassword.getBytes())).setUnethicalReading(true));
 
     }
 
@@ -379,7 +389,6 @@ public class PdFUtils extends PdfBase {
         }
         return PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H);
     }
-
 
     /**
      * 计算指定目录中所有的pdf文本的页数，包括子目录。
@@ -447,7 +456,6 @@ public class PdFUtils extends PdfBase {
         addWaterMarkFile(srcPdf, destPdf, waterMarkImage, null, null);
     }
 
-
     /**
      * 单个文件添加水印文字
      *
@@ -458,7 +466,6 @@ public class PdFUtils extends PdfBase {
     public static void addWaterMarkFile(File srcPdf, File destPdf, String waterMarkText, TextPosition textPosition) throws IOException, DocumentException {
         addWaterMarkFile(srcPdf, destPdf, null, waterMarkText, textPosition);
     }
-
 
     /**
      * 文件夹中所有文件添加水印图片
@@ -486,7 +493,6 @@ public class PdFUtils extends PdfBase {
 
         }
     }
-
 
     /**
      * 文件夹中所有文件添加水印文字
@@ -792,7 +798,6 @@ public class PdFUtils extends PdfBase {
 
     }
 
-
     /**
      * 加密 pdf 文件
      * -
@@ -864,46 +869,176 @@ public class PdFUtils extends PdfBase {
         }
     }
 
-
     /**
      * 解密有用户密码的文件
      *
      * @param srcPdfFile
      * @param descPdfFile
-     * @param userPassword user or owner password.
+     * @param userPassword pdf 文件的 user or owner password.
      * @throws IOException
      */
-    public static void decryptPdf(File srcPdfFile, File descPdfFile,
-                                  String userPassword) throws IOException, BadPasswordException {
+    public static void decryptFile(File srcPdfFile, File descPdfFile,
+                                   String userPassword) throws IOException, BadPasswordException {
 
         if (srcPdfFile == null || !srcPdfFile.exists())
             throw new IOException("src pdf file '" + srcPdfFile
                     + "' does not exist.");
-        PdfReader reader = getPdfReader(srcPdfFile, userPassword);
+        PdfReader reader = getPdfReader(srcPdfFile, userPassword).get();
         PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(descPdfFile.getAbsolutePath()));
         pdfDoc.close();
     }
 
+
     /**
-     * 为已经存在的pdf文件添加使用日期限制，在警告期内可以查看，过期之后，直接关闭。
-     * <p>
-     * 由于是用 javaScript 做限制，adobe reader 禁止 javaScript 或者调整客户端电脑的时间，均失效。
-     * </p>
+     * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。可以递归破解指定文件夹内的所有文件，并保留原来的目录结构
      *
-     * @param srcPdfFileDir  源文件夹
-     * @param descPdfFileDir 目标文件夹
-     * @param startDate      开始日期，字符串格式需为 "2011-01-01"
-     * @param alerDays       从开始日期计算，出现警告日期的天数。到达警告期后，出现警告信息，但可以查看文本
-     * @param expiredDays    从开始日期计算，到达失效日期的天数。到达失效期后，出现警告信息后，直接关闭文本，不再允许查看文本。
+     * @param srcPdfFileDirectory  存放待破解 pdf 文件的文件夹. 破解之后的文件，存放子默认的文件夹内。
+     * @param descPdfFileDirectory 破解之后的文件存放的文件夹，保持和源文件同样的结构
+     * @param badDirectory         存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void setExpireDateWithJavaScript(File srcPdfFileDir,
-                                                   File descPdfFileDir, String startDate, int alerDays, int expiredDays)
-            throws IOException {
+    public static void decryptFileDerictory(File srcPdfDirectory, File descPdfDirectory, File badDirectory) throws IOException, DocumentException {
 
+        if (descPdfDirectory.getAbsolutePath().contains(srcPdfDirectory.getAbsolutePath()))
+            throw new IOException("目标文件夹不能在原文件夹中");
+
+
+        if (!isEnoughSpace(srcPdfDirectory, descPdfDirectory))
+            return;
+
+        for (File file : srcPdfDirectory.listFiles()) {
+            String destPath = descPdfDirectory.getAbsolutePath() + File.separator + file.getName();
+            if (file.isFile()) {
+                decryptFile(file, Paths.get(destPath).toFile(), badDirectory);
+            } else if (file.isDirectory())
+                decryptFileDerictory(file, Paths.get(destPath).toFile(), badDirectory);
+            else return;
+
+        }
+    }
+
+    /**
+     * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。
+     *
+     * @param srcPdf
+     * @param descPdf
+     * @param badDirectory
+     * @throws IOException
+     */
+    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) throws IOException {
+
+        decryptFile(srcPdf, descPdf, null, badDirectory);
+
+    }
+
+    /**
+     * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。
+     * windows 下使用
+     * "PDF Password Remover v4.0" 软件提供命令行破解，通过系统调用该命令行，进行破解
+     *
+     * @param srcPdf        存放待破解 pdf 文件
+     * @param descPdf       存放破解之后的 pdf 文件
+     * @param ownerPassword 用户打开文件密码。如果设置了打开密码，需要此参数，否则不能解密
+     * @param badDirectory  存放有打开密码，不能破解的 pdf 的文件夹。
+     * @throws java.io.IOException
+     */
+    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) throws IOException {
+
+        if (!srcPdf.exists()) {
+            logger.info("{} not exist.", srcPdf.getAbsoluteFile());
+            return;
+        }
+        String extension = FilenameUtils.getExtension(srcPdf.getAbsolutePath());
+
+        if (!extension.equalsIgnoreCase("pdf"))
+            return;
+
+        // 损坏的 0 字节文件，直接拷贝到统一的文件夹
+        if (FileUtils.sizeOf(srcPdf) == 0) {
+            logger.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
+            FileUtils.copyDirectory(srcPdf, badDirectory, true);
+            return;
+        }
+
+        try {
+
+            PdfReader reader;
+            if (ownerPassword != null)
+                reader = getPdfReader(srcPdf, ownerPassword).get();
+            else
+                reader = getPdfReader(srcPdf).get();
+
+            logger.info("{}", reader.isEncrypted());
+
+            List<ExecParameter> list = new ArrayList(2);
+            list.add(new ExecParameter("-i", srcPdf.getAbsolutePath())); // 只有 key ，没有 value
+            list.add(new ExecParameter("-o", descPdf.getAbsolutePath()));
+//            list.add(new ExecParameter("-u", ""));
+//            list.add(new ExecParameter("-w", ""));
+
+
+            String re =
+                    MyExecUtils.exec(Paths.get(getPdfPdfdecryptExec()), list, 1);
+
+            /**
+             *  reader.isEncrypted() 判断不行，itext5 可以，itext7 不行，不知道为什么
+             *  只好用其他方法判断。
+             *  re 是命令返回的执行信息， pdfdecrypt.exe 如果没有加密，则会返回
+             *  The 'D:\itext7\text_src_encrypt.pdf' file hasn't been encrypted.
+             *  信息。
+             */
+            if (re.contains("file hasn't been encrypted")) {// 未加密的文件，直接拷贝 。
+                FileUtils.copyFile(srcPdf, descPdf);
+                logger.info("not encrypted,copy {} to {} ", srcPdf.getAbsolutePath(), descPdf.getAbsoluteFile());
+                return;
+            }
+
+            logger.info("decrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
+            // 关闭处理完成的文件
+            reader.close();
+
+        } catch (BadPasswordException e) {
+            // 有打开密码的文件，不能破解，统一拷贝至一个文件夹。
+            logger.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
+            FileUtils.copyFileToDirectory(srcPdf, badDirectory, true);
+            e.printStackTrace();
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * 为已经存在的 pdf 文件添加使用日期限制，在警告期内可以查看，过期之后，直接关闭。
+     * <p>
+     * adobe acrobat 创建的 pdf 文件，可以执行自定义的 javaScript 语句，再利用 adobe reader 打开该 pdf 文件时，可以执行此 js 语句。
+     * 此功能仅限于 adobe 的产品。
+     * 内建的 js 函数见 http://help.adobe.com/livedocs/acrobat_sdk/10/Acrobat10_HTMLHelp/wwhelp/wwhimpl/common/html/wwhelp.htm?context=Acrobat10_SDK_HTMLHelp&file=JS_Dev_Overview.71.1.html
+     * adobe reader 打开 pdf 时，可以禁止 javaScript 执行。
+     * -
+     * 本方法利用 js 函数限制 pdf 的打开，仅限于 adobe reader 产品。
+     * -
+     * adobe reader 可以禁止 javaScript， 或者调整客户端电脑的时间，均失效。
+     * </p>
+     *
+     * @param srcPdfFile  源文件
+     * @param descPdfFile 目标文件
+     * @param startDate   开始日期，字符串格式需为 "2011-01-01"
+     * @param alertDays   从开始日期计算，出现警告日期的天数。到达警告期后，出现警告信息，但可以查看文本
+     * @param expiredDays 从开始日期计算，到达失效日期的天数。到达失效期后，出现警告信息后，直接关闭文本，不再允许查看文本。
+     * @throws java.io.IOException
+     */
+    public static void addExpireDateWithJavaScriptFile(File srcPdfFile, File descPdfFile, String startDate, int alertDays, int expiredDays) throws IOException {
+
+        if (!srcPdfFile.isFile())
+            return;
+
+        //   logger.info("{} , {} {}", alertDays,expiredDays,alertDays>expiredDays);
         // 简单判断开始日期格式
-        if (alerDays >= expiredDays) {
-            logger.info(" '警告天数 ' " + alerDays + " 大于 '过期天数' " + expiredDays);
+        if (alertDays >= expiredDays) {
+            logger.info(" '警告天数 ' " + alertDays + " 大于 '过期天数' " + expiredDays);
             return;
         }
 
@@ -913,78 +1048,72 @@ public class PdFUtils extends PdfBase {
             return;
         }
 
+
+        String extension = FilenameUtils.getExtension(srcPdfFile.getAbsolutePath()).toLowerCase();
+
+        if (extension.equals("pdf")) {
+            String js = expireDate.replace("startDateStr_replace", startDate)
+                    .replace("alertDays_replace", String.valueOf(alertDays))
+                    .replace("expiredDays_replace", String.valueOf(expiredDays));
+
+
+            System.out.println(js);
+
+
+            Optional<PdfReader> reader = getPdfReader(srcPdfFile);
+            if (!reader.isPresent())
+                return;
+            PdfDocument pdfDocument = new PdfDocument(reader.get(), new PdfWriter(new FileOutputStream(descPdfFile)));
+            /**
+             * 执行 js 语句
+             * 文件即将超出使用日期！\n\n The expiration date is drawing near!
+             * 文件超出使用日期！\n\n The expiration date has already passed !
+             */
+            PdfAction printAction = new PdfAction();
+            printAction.put(PdfName.S, PdfName.JavaScript);
+            printAction.put(PdfName.JS, new PdfString(js));
+            pdfDocument.getCatalog().setOpenAction(printAction); //打开 pdf 时，出现的提示框动作
+            pdfDocument.close();
+            logger.info(descPdfFile.getAbsolutePath() + " 已经添加了日期限制 !");
+
+        } else {
+            logger.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+        }
+
+    }
+
+    /**
+     * 文件夹
+     *
+     * @param srcPdfFileDir
+     * @param descPdfFileDir
+     * @param startDate
+     * @param alertDays
+     * @param expiredDays
+     * @throws IOException
+     */
+    public static void addExpireDateWithJavaScriptDerictory(File srcPdfFileDir, File descPdfFileDir, String startDate, int alertDays, int expiredDays) throws IOException {
+
         if (!isEnoughSpace(srcPdfFileDir, descPdfFileDir))
             return;
 
         File listFiles[] = srcPdfFileDir.listFiles();
 
         if (listFiles.length == 0) {
-            logger.info("srcPdfFileDir has not file. "
-                    + srcPdfFileDir.getAbsolutePath());   ???
+            logger.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
             return;
         }
-        // 得到资源文件内容
-      //  String jsStr = JsStrExpireDate;
-        String jsStr = JsStrExpireDate;//  ????
-
-        /** 替换 js 文件中的字符串，作为输入条件 */
-        // 替换开始日期
-        jsStr = StringUtils.replace(jsStr, "2011-01-01", startDate);
-        // 替换到达警告期的天数
-        jsStr = StringUtils.replace(jsStr, "alertDays = 355", "alertDays = " + Integer.toString(alerDays));
-        // 替换到达过期天数
-        jsStr = StringUtils.replace(jsStr, "expiredDays = 365", "expiredDays = " + Integer.toString(expiredDays));
-
-        System.out.println(jsStr);
-
-        // logger.info(descPdfFileDir.getAbsolutePath());
 
         for (File f : listFiles) {
-            String fileName = f.getName();
-            String extension = FilenameUtils.getExtension(fileName).toLowerCase();
-
             if (f.isFile()) {
-                if (extension.equals("pdf")) {
-                    File fileDesc = new File(descPdfFileDir.getAbsolutePath()
-                            + File.separator + fileName);
-
-                    System.out.println(f.getAbsoluteFile());
-                    System.out.println(descPdfFileDir.getAbsoluteFile());
-                    Optional<PdfReader> reader = getPdfReader(f);
-                    if (!reader.isPresent())
-                        continue;
-                    PdfDocument pdfDocument = new PdfDocument(reader.get(), new PdfWriter(new FileOutputStream(fileDesc)));
-
-                    /**
-                     * 执行 js 语句
-                     */
-                    PdfAction printAction = new PdfAction();
-                    printAction.put(PdfName.S, PdfName.JavaScript);
-
-
-
-                    printAction.put(PdfName.JS, new PdfString(jsStr));  //"app.alert('Thank you for reading');"
-                    pdfDocument.getCatalog().setOpenAction(printAction); //打开 pdf 时，出现的提示框动作
-
-                    // 给文件添加 javaScript 代码
-//                        stamper.setPageAction(PdfWriter.PAGE_OPEN, action, 1);
-//                        // Close the stamper
-//                        stamper.close();
-                    pdfDocument.close();
-
-                    logger.info(fileDesc.getAbsolutePath() + " 加密完成 !");
-
-
-                } else
-                    continue;
-
+                addExpireDateWithJavaScriptFile(f,
+                        new File(descPdfFileDir.getAbsolutePath()
+                                + File.separator + f.getName()), startDate,
+                        alertDays, expiredDays);
             }// end if f.isFile
 
             else if (f.isDirectory()) {
-                setExpireDateWithJavaScript(f,
-                        new File(descPdfFileDir.getAbsolutePath()
-                                + File.separator + fileName), startDate,
-                        alerDays, expiredDays);
+                addExpireDateWithJavaScriptDerictory(f, descPdfFileDir, startDate, alertDays, expiredDays);
             }// end if f.isDirectory
             else
                 continue;
@@ -992,13 +1121,132 @@ public class PdFUtils extends PdfBase {
         }// end for
     }
 
+
     /**
-     * 合并 pdf
+     * 去掉 OpenAction javaScript
      *
-     * @param srcPdfs
-     * @param destPdf
+     * @param srcPdfFile
+     * @param descPdfFile
      * @throws IOException
      */
+    public static void removeOpenActionJavaScript(File srcPdfFile,
+                                                  File descPdfFile) throws IOException {
+        removeJavaScript(srcPdfFile, descPdfFile, PdfName.OpenAction);
+
+    }
+
+    /**
+     * http://www.javabeat.net/javascript-in-pdf-documents-using-itext/
+     * http://www.javabeat.net/javascript-communication-between-html-and-pdf-in-itext/
+     * 去除附在 PDF 属性 field 上的 javaScript
+     * <p>
+     * pdf 文件可以添加 javaScript，来实现某种功能，例如激发对话框等动作。
+     * <p>
+     * javaScript 可以附加于某个 filed，此时去掉 这个 filed，使 javaScript 代码因缺少变量而无法执行
+     * <p>
+     * 即可以达到去除 javaScript 的目的。
+     * <p>
+     * 通过 itext 的 reader.getJavaScript()方法，可以查看 pdf 文件 JavaScript源代码(adobe pro
+     * 控制台也可以看到源码)
+     * <p>
+     * 通过源代码可以得到具体的 field 名称
+     *
+     * @param srcPdfFile  源文件夹
+     * @param descPdfFile 目标文件夹
+     * @param pdfName     添加的 pdf 属性
+     * @throws java.io.IOException
+     */
+    public static void removeJavaScript(File srcPdfFile,
+                                        File descPdfFile, PdfName pdfName) throws IOException {
+
+
+        if (!srcPdfFile.isFile())
+            return;
+
+        String extension = FilenameUtils.getExtension(srcPdfFile.getAbsolutePath()).toLowerCase();
+
+        if (extension.equals("pdf")) {
+
+            Optional<PdfReader> reader = getPdfReader(srcPdfFile);
+            if (!reader.isPresent())
+                return;
+            PdfDocument pdfDoc = new PdfDocument(reader.get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+            PdfDictionary root = pdfDoc.getCatalog().getPdfObject();
+
+            /**
+             * 查看所有的 key ，可以得知 js 加在 那个 PdfName 上，之后去掉即可。
+             */
+//            for (Map.Entry<PdfName, PdfObject> entry : root.entrySet()) {
+//                System.out.println("Key : " + entry.getKey() + "\n Value : " + entry.getValue());
+//            }
+
+            // root.remove(PdfName.OpenAction); // 去掉 OpenAction，pdf 文件添加了 OpenAction 时
+            root.remove(pdfName);
+            pdfDoc.close();
+
+            logger.info(descPdfFile.getAbsolutePath() + " 已经删除 javaScript  !");
+
+        } else {
+            logger.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+        }
+    }
+
+    /**
+     * 获取 pdfdecrypt.exe 文件路径
+     *
+     * @return
+     * @throws IOException
+     */
+    private static String getPdfPdfdecryptExec() {
+
+        //命令行模式，只需要两个文件即可
+        String exec1 = "/pdfdecrypt.exe";
+        String exec2 = "/license.dat";
+
+        String tempPath =
+                SystemUtils.getJavaIoTmpDir()
+                        + File.separator + MyConstants.JarTempDir + File.separator;
+
+        String exec1Path = tempPath + exec1;
+        String exec2Path = tempPath + exec2;
+
+        //如果已经拷贝过，就不用再拷贝了
+        if (!Files.exists(Paths.get(exec1Path)))
+            MyFileUtils.copyResourceFileFromJarLibToTmpDir(exec1);
+
+        if (!Files.exists(Paths.get(exec2Path)))
+            MyFileUtils.copyResourceFileFromJarLibToTmpDir(exec2);
+
+
+        return exec1Path;
+    }
+
+    public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
+        PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
+        PdfDictionary root = pdfDoc.getCatalog().getPdfObject();
+        PdfDictionary names = root.getAsDictionary(PdfName.Names);
+        names.remove(PdfName.JavaScript);
+        pdfDoc.close();
+    }
+
+    /**
+     * 检查文件夹内的文件是否被加密，用到了递归方法，返回值被全局变量记录，通过 findEncryptPdf()函数调用
+     *
+     * @param srcPdfFile 待检查的文件夹
+     * @throws java.io.IOException
+     */
+    private static boolean isEcryptFile(File srcPdfFile) throws IOException {
+             PdfReader reader = getPdfReader(srcPdfFile).get();
+             return reader.isEncrypted();  // itext7 中不好用，itext5 可以，不知道为什么
+    }
+
+        /**
+         * 合并 pdf
+         *
+         * @param srcPdfs
+         * @param destPdf
+         * @throws IOException
+         */
     public void mergeFiles(List<File> srcPdfs, File destPdf) throws IOException {
         //Initialize PDF document with output intent
         PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf.getAbsolutePath()));
@@ -1019,7 +1267,7 @@ public class PdFUtils extends PdfBase {
     }
 
     /**
-     * 文本位置
+     * text 在文本的位置
      */
     public enum TextPosition {
 

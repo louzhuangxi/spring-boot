@@ -13,11 +13,4 @@
 
 支持命令行，支持文件夹
 
-
-
-2. pdfexpiration.js
-用于给已经存在的 pdf 添加使用日期限制，javaScript 方式实现
-超过使用日期，提示和，文件自动关闭。
-
-
 PDF Password Remover

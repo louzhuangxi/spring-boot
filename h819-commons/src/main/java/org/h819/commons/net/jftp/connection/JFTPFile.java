@@ -27,7 +27,7 @@ public class JFTPFile {
         this.name = name;
         this.size = size;
         this.absolutePath = absolutePath;
-        this.lastModified = MyDateUtilsJdk8.getLocalDateTime(mTime);
+        this.lastModified = MyDateUtilsJdk8.asLocalDateTime(mTime);
         this.directory = isDirectory;
     }
 

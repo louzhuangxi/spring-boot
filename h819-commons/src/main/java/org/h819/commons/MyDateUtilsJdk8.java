@@ -36,7 +36,7 @@ public class MyDateUtilsJdk8 {
     /**
      * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
      */
-    private static final DateTimeFormatter DEFAULT_DATETIME_FORMATTER = DateFormat.LONG_DATE_PATTERN_LINE.formatter;
+    private static final DateTimeFormatter Default_DateTime_Formatter = DateFormat.DateTime_Pattern_With_millisecond_Line.formatter;
 
     private MyDateUtilsJdk8() {
         // no construct function
@@ -51,7 +51,7 @@ public class MyDateUtilsJdk8 {
         //测试
 //        System.out.println(DateUtilsJdk8.getLocalDate(new Date()));
 //        System.out.println(DateUtilsJdk8.getLocalTime(new Date()));
-//        System.out.println(DateUtilsJdk8.getLocalDateTime(new Date()));
+//        System.out.println(DateUtilsJdk8.asLocalDateTime(new Date()));
 
 
     }
@@ -118,76 +118,95 @@ public class MyDateUtilsJdk8 {
     }
 
     /**
-     * String 转时间
-     *
-     * @param timeStr
-     * @return
-     */
-    public static LocalDateTime parseDate(String timeStr) {
-        return LocalDateTime.parse(timeStr, DEFAULT_DATETIME_FORMATTER);
-    }
-
-    /**
-     * String 转时间
-     *
-     * @param timeStr
-     * @param format  时间格式
-     * @return
-     */
-    public static LocalDateTime parseDate(String timeStr, DateFormat format) {
-        return LocalDateTime.parse(timeStr, format.formatter);
-    }
-
-    /**
-     * 时间转 String
-     *
-     * @param time
-     * @return
-     */
-    public static String parseDate(LocalDateTime time) {
-        return DEFAULT_DATETIME_FORMATTER.format(time);
-    }
-
-    /**
-     * 时间转 String
-     *
-     * @param time
-     * @param format 时间格式
-     * @return
-     */
-    public static String parseDate(LocalDateTime time, DateFormat format) {
-        return format.formatter.format(time);
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @return
-     */
-    public static String getCurrentDatetime() {
-        return DEFAULT_DATETIME_FORMATTER.format(LocalDateTime.now());
-    }
-
-
-    /**
-     * 获取当前时间
-     *
-     * @param format 时间格式
-     * @return
-     */
-    public static String getCurrentDatetime(DateFormat format) {
-        return format.formatter.format(LocalDateTime.now());
-    }
-
-
-    /**
-     * 根据毫秒
+     * 根据毫秒创建 LocalDateTime
      *
      * @param milliseconds
      * @return
      */
-    public static LocalDateTime getLocalDateTime(long milliseconds) {
+    public static LocalDateTime asLocalDateTime(long milliseconds) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(milliseconds), ZoneId.systemDefault());
+    }
+
+
+    /**
+     * @param localDateStr
+     * @return
+     */
+    public static LocalDate parseLocalDate(String localDateStr, DateFormat format) {
+        return LocalDate.parse(localDateStr, format.formatter);
+    }
+
+    public static LocalTime parseLocalTime(String localTimeStr, DateFormat format) {
+        return LocalTime.parse(localTimeStr, format.formatter);
+    }
+
+
+    /**
+     * String 转时间
+     *
+     * @param localDateTimeStr
+     * @param format           时间格式
+     * @return
+     */
+    public static LocalDateTime parseLocalDateTime(String localDateTimeStr, DateFormat format) {
+        return LocalDateTime.parse(localDateTimeStr, format.formatter);
+    }
+
+
+    public static String parseLocalDate(LocalDate localDate, DateFormat format) {
+        return format.formatter.format(localDate);
+    }
+
+    /**
+     * 时间转 String
+     *
+     * @param localTime
+     * @return
+     */
+    public static String parseLocalTime(LocalTime localTime, DateFormat format) {
+        return format.formatter.format(localTime);
+    }
+
+    /**
+     * 时间转 String
+     *
+     * @param localDateTime
+     * @param format        时间格式
+     * @return
+     */
+    public static String parseLocalDateTime(LocalDateTime localDateTime, DateFormat format) {
+        return format.formatter.format(localDateTime);
+    }
+
+
+    public static String getCurrentLocalDate(DateFormat format) {
+        return format.formatter.format(LocalDate.now());
+    }
+
+    public static String getCurrentLocaltime(DateFormat format) {
+        return format.formatter.format(LocalTime.now());
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @param format 时间格式
+     * @return
+     */
+    public static String getCurrentLocalDatetime(DateFormat format) {
+        return format.formatter.format(LocalDateTime.now());
+    }
+
+    public static LocalDateTime getCurrentLocalDatetime() {
+        return LocalDateTime.now();
+    }
+
+    public static LocalDate getCurrentLocalDate() {
+        return LocalDate.now();
+    }
+
+    public static LocalTime getCurrentLocalTime() {
+        return LocalTime.now();
     }
 
 
@@ -208,7 +227,7 @@ public class MyDateUtilsJdk8 {
 //        Java 8中新的时间与日期API中的所有类都是不可变且线程安全的，这与之前的Date与Calendar API中的恰好相反，那里面像java.util.Date以及SimpleDateFormat这些关键的类都不是线程安全的。
 //        新的时间与日期API中很重要的一点是它定义清楚了基本的时间与日期的概念，比方说，瞬时时间，持续时间，日期，时间，时区以及时间段。它们都是基于ISO日历体系的。
 //
-// 每个Java开发人员都应该至少了解这套新的API中的这五个类：
+//        每个Java开发人员都应该至少了解这套新的API中的这五个类：
 //        Instant 它代表的是时间戳，比如2014-01-14T02:20:13.592Z，这可以从java.time.Clock类中获取，像这样： Instant current = Clock.system(ZoneId.of(“Asia/Tokyo”)).instant();
 //        LocalDate 它表示的是不带时间的日期，比如2014-01-14。它可以用来存储生日，周年纪念日，入职日期等。
 //        LocalTime – 它表示的是不带日期的时间
@@ -431,36 +450,42 @@ public class MyDateUtilsJdk8 {
     public enum DateFormat {
 
         /**
-         * 短时间格式
+         * 日期格式
          */
-        SHORT_DATE_PATTERN_LINE("yyyy-MM-dd"),
-        SHORT_DATE_PATTERN_SLASH("yyyy/MM/dd"),
-        SHORT_DATE_PATTERN_DOUBLE_SLASH("yyyy\\MM\\dd"),
-        SHORT_DATE_PATTERN_NONE("yyyyMMdd"),
+        Date_Pattern_Line("yyyy-MM-dd"),
+        Date_Pattern_Slash("yyyy/MM/dd"),
+        Date_Pattern_Double_Slash("yyyy\\MM\\dd"),
+        Date_Pattern_None("yyyyMMdd"),
 
         /**
-         * 长时间格式
+         * 时间格式
          */
-        LONG_DATE_PATTERN_LINE("yyyy-MM-dd HH:mm:ss"),
-        LONG_DATE_PATTERN_SLASH("yyyy/MM/dd HH:mm:ss"),
-        LONG_DATE_PATTERN_DOUBLE_SLASH("yyyy\\MM\\dd HH:mm:ss"),
-        LONG_DATE_PATTERN_NONE("yyyyMMdd HH:mm:ss"),
+        Time_Pattern_Slash("HH:mm:ss"),
+        Time_Pattern_With_millisecond_Double_Slash("HH:mm:ss.SSS"),
 
         /**
-         * 长时间格式 带毫秒
+         * 日期时间格式
          */
-        LONG_DATE_PATTERN_WITH_MILSEC_LINE("yyyy-MM-dd HH:mm:ss.SSS"),
-        LONG_DATE_PATTERN_WITH_MILSEC_SLASH("yyyy/MM/dd HH:mm:ss.SSS"),
-        LONG_DATE_PATTERN_WITH_MILSEC_DOUBLE_SLASH("yyyy\\MM\\dd HH:mm:ss.SSS"),
-        LONG_DATE_PATTERN_WITH_MILSEC_NONE("yyyyMMdd HH:mm:ss.SSS");
+        DateTime_Pattern_Line("yyyy-MM-dd HH:mm:ss"),
+        DateTime_Pattern_Slash("yyyy/MM/dd HH:mm:ss"),
+        DateTime_Pattern_Double_Slash("yyyy\\MM\\dd HH:mm:ss"),
+        DateTime_Pattern_None("yyyyMMdd HH:mm:ss"),
+
+        /**
+         * 日期时间格式 带毫秒
+         */
+        DateTime_Pattern_With_millisecond_Line("yyyy-MM-dd HH:mm:ss.SSS"),
+        DateTime_Pattern_With_millisecond_Slash("yyyy/MM/dd HH:mm:ss.SSS"),
+        DateTime_Pattern_With_millisecond_Double_Slash("yyyy\\MM\\dd HH:mm:ss.SSS"),
+        DateTime_Pattern_With_millisecond_None("yyyyMMdd HH:mm:ss.SSS");
 
         private transient DateTimeFormatter formatter;
 
         DateFormat(String pattern) {
-           // formatter = DateTimeFormatter.ofPattern(pattern);
+            // formatter = DateTimeFormatter.ofPattern(pattern);
             formatter =
                     new DateTimeFormatterBuilder().appendPattern(pattern)
-                          //  .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
+                            //  .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
                             .toFormatter()
                             .withZone(ZoneId.systemDefault());
         }

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,31 +29,38 @@ public class MyExecUtils {
     private static Logger logger = LoggerFactory.getLogger(MyExecUtils.class);
 
     /**
+     * 例子： PdfUtils.java
+     *
      * @param exeFile   命令一般以 exe 等文件的形式存在，本参数为该命令文件的绝对值路径
      * @param arguments 参数。
      *                  命令执行的参数不需要严格的顺序，即参数先后出现在哪个位置都可以。
      * @param exitValue 执行成功的返回值，这只之后，如果返回该值，程序不抛出异常 ，一般为 1 或 0
+     * @return 返回命令执行后返回到控制台的信息。不同的命令返回的信息不同，可以通过这些信息判断发生的异常，做不同的处理。
      */
-    public static void exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
+    public static String exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
 
         if (!Files.exists(exeFile) || !exeFile.isAbsolute()) {
             System.out.println(exeFile + " 不存在");
-            return;
+            return "";
         }
 
         if (!exeFile.toFile().canRead()) {
             System.out.println(exeFile + "  无读取'该可执行文件'权限");
-            return;
+            return "";
         }
 
         if (!exeFile.toFile().canExecute()) {
             System.out.println(exeFile + "  无执行'该可执行文件'权限");
-            return;
+            return "";
         }
 
+        //
+        //命令执行的过程中，会输出信息，定义输出流来存放这些信息
+        //正常执行输出信息
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        //不能执行，返回的错误信息
         ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
-        //定义一个结果输出流
+
         PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
 
         CommandLine cmdLine = getCommandLine(exeFile.toAbsolutePath().toString(), arguments);
@@ -83,20 +91,19 @@ public class MyExecUtils {
                 if (executor.isFailure(resultHandler.getExitValue()) && watchdog.killedProcess()) {//提示 process was killed
                     System.out.println("命令等待时间超过 watchdog 规定的时间，process was killed");
                 }
+
                 ExecuteException ex = resultHandler.getException();
 
                 if (ex != null) {  // 发生异常
+                    //执行异常
                     ex.printStackTrace();
                 }
-            }
+            }        //throws ExecuteException
 
-            //输出结果到控制台，必须在命令执行完成之后
+            //输出结果到控制台，必须在命令执行完成之后。这些结果是命令行工具自己返回到 cmd 界面的。
             System.out.println(outputStream.toString("gbk"));
             System.err.println(errorStream.toString("gbk"));
 
-        } catch (ExecuteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -106,7 +113,24 @@ public class MyExecUtils {
 
             IOUtils.closeQuietly(outputStream);
             IOUtils.closeQuietly(errorStream);
+            /**
+             *返回命令执行后返回到控制台的信息。不同的命令返回的信息不同，可以通过这些信息判断发生的异常，做不同的处理。
+             */
+            if (outputStream != null && outputStream.size() != 0)
+                try {
+                    return outputStream.toString("gbk");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
+            if (errorStream != null && errorStream.size() != 0)
+                try {
+                    return errorStream.toString("gbk");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+            return "";
         }
     }
 
