@@ -267,10 +267,8 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>itext7-core</artifactId>
             <version>${itextpdf.core.version}</version>
+            <type>pom</type> <!--必须加上 <type>pom</type> ，否则编译不通过-->
         </dependency>
-
-       
-
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
