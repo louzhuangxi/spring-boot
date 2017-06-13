@@ -48,11 +48,11 @@ public class JdbcTemplateUtils {
     /**
      * Map 包装
      */
-    public static PageBean findPageByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
-                                                              final String queryNativeSql, Object[] queryArgs,
-                                                              final String countNativeSql, Object[] countArgs,
-                                                              int currentPageNo, int pageSize) {
-        return findPageByNativeSqlString(jdbcTemplate, dbDialect,
+    public static PageBean queryPageByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
+                                                               final String queryNativeSql, Object[] queryArgs,
+                                                               final String countNativeSql, Object[] countArgs,
+                                                               int currentPageNo, int pageSize) {
+        return queryPageByNativeSqlString(jdbcTemplate, dbDialect,
                 queryNativeSql, queryArgs,
                 countNativeSql, countArgs,
                 currentPageNo, pageSize, new ColumnMapRowMapper());
@@ -61,12 +61,12 @@ public class JdbcTemplateUtils {
     /**
      * BeanPropertyRowMapper 包装
      */
-    public static <T> PageBean<T> findPageByBeanMppaerNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
-                                                                      final String queryNativeSql, Object[] queryArgs,
-                                                                      final String countNativeSql, Object[] countArgs,
-                                                                      int currentPageNo, int pageSize,
-                                                                      Class<T> resultClass) {
-        return findPageByNativeSqlString(jdbcTemplate, dbDialect,
+    public static <T> PageBean<T> queryPageByBeanMppaerNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
+                                                                       final String queryNativeSql, Object[] queryArgs,
+                                                                       final String countNativeSql, Object[] countArgs,
+                                                                       int currentPageNo, int pageSize,
+                                                                       Class<T> resultClass) {
+        return queryPageByNativeSqlString(jdbcTemplate, dbDialect,
                 queryNativeSql, queryArgs,
                 countNativeSql, countArgs,
                 currentPageNo, pageSize, new BeanPropertyRowMapper(resultClass));
@@ -101,10 +101,10 @@ public class JdbcTemplateUtils {
      * @param <T>
      * @return
      */
-    private static <T> PageBean<T> findPageByNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
-                                                             final String queryNativeSql, Object[] queryArgs,
-                                                             final String countNativeSql, Object[] countArgs,
-                                                             int currentPageNo, int pageSize, RowMapper<T> rowMapper) {
+    private static <T> PageBean<T> queryPageByNativeSqlString(final JdbcTemplate jdbcTemplate, final SqlUtils.Dialect dbDialect,
+                                                              final String queryNativeSql, Object[] queryArgs,
+                                                              final String countNativeSql, Object[] countArgs,
+                                                              int currentPageNo, int pageSize, RowMapper<T> rowMapper) {
 
         Assert.isTrue(currentPageNo >= 1, "currentPageNo : 起始页应从 1 开始。");
         Assert.isTrue(pageSize >= 0, "pageSize : 页大小不能小于 0");
@@ -139,10 +139,27 @@ public class JdbcTemplateUtils {
      * @param <T>
      * @return 如果没有查询结果，返回空 list ，不返回 null
      */
-    public static <T> List<T> findByNativeSqlString(final JdbcTemplate jdbcTemplate,
-                                                    final String queryNativeSql, Object[] queryArgs,
-                                                    RowMapper<T> rowMapper) {
+    public static <T> List<T> queryForListByNativeSqlString(final JdbcTemplate jdbcTemplate,
+                                                            final String queryNativeSql, Object[] queryArgs,
+                                                            RowMapper<T> rowMapper) {
         return jdbcTemplate.query(queryNativeSql, queryArgs, rowMapper);
+    }
+
+    https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html#queryForObject-java.lang.String-java.lang.Class-java.lang.Object...-
+    /**
+     * 返回单个结果
+     *
+     * @param jdbcTemplate
+     * @param queryNativeSql
+     * @param queryArgs
+     * @param rowMapper
+     * @param <T>
+     * @return
+     */
+    public static <T> T queryForObjectByNativeSqlString(final JdbcTemplate jdbcTemplate,
+                                                        final String queryNativeSql, Object[] queryArgs,
+                                                        RowMapper<T> rowMapper) {        ???
+        return jdbcTemplate.queryForObject(queryNativeSql, queryArgs, rowMapper);
     }
 
     /**
@@ -154,10 +171,10 @@ public class JdbcTemplateUtils {
      * @param resultClass
      * @return resultClass 类型的数据
      */
-    public static <T> List<T> findByBeanMapperNativeSqlString(final JdbcTemplate jdbcTemplate,
-                                                              final String queryNativeSql, Object[] queryArgs,
-                                                              Class<T> resultClass) {
-        return findByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new BeanPropertyRowMapper(resultClass));
+    public static <T> List<T> queryForListByBeanMapperNativeSqlString(final JdbcTemplate jdbcTemplate,
+                                                                      final String queryNativeSql, Object[] queryArgs,
+                                                                      Class<T> resultClass) {
+        return queryForListByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new BeanPropertyRowMapper(resultClass));
     }
 
 
@@ -170,8 +187,8 @@ public class JdbcTemplateUtils {
      * @param queryArgs
      * @return
      */
-    public static List<Map<String, Object>> findByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final String queryNativeSql, Object[] queryArgs) {
-        return findByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new ColumnMapRowMapper());
+    public static List<Map<String, Object>> queryForListByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final String queryNativeSql, Object[] queryArgs) {
+        return queryForListByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new ColumnMapRowMapper());
     }
 
     /**

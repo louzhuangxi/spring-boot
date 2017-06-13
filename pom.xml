@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <h819-commons.version>1.0.33</h819-commons.version>
+        <h819-commons.version>1.0.34</h819-commons.version>
 
         <!-- spring -->
         <springloaded.version>1.2.4.RELEASE</springloaded.version>
