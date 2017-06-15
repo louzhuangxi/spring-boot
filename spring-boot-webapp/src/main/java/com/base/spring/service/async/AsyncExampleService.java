@@ -33,7 +33,7 @@ public class AsyncExampleService {
     @Async
     // 通过@Async注解表明该方法是个异步方法，如果注解在类级别，则表明该类所有的方法都是异步方法。
     // 而这里的方法自动被注入使用 ThreadPoolTaskExecutor 作为 TaskExecutor
-    // 方法的返回值可以是任意数据，可以通过 CompletableFuture.get()  获得。
+    // 方法的返回值可以是任意数据，通过 CompletableFuture.get()  获得。
     public CompletableFuture<String> doTaskOne() throws InterruptedException {
         System.out.println("开始做任务一");
         System.out.println("Execute method doTaskOne. thread name is : " + Thread.currentThread().getName());

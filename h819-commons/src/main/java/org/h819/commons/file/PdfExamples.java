@@ -56,7 +56,7 @@ public class PdfExamples {
 //        // The action is triggered just after saving the document.
 //        // PdfWriter.DID_SAVE
 //
-//        // The action is triggered just before printing (part of) the
+//        // The action is triggered just before printing (partition of) the
 //        // document.
 //        // PdfWriter.WILL_PRINT
 //

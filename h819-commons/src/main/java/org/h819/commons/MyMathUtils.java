@@ -152,8 +152,8 @@ public class MyMathUtils {
 
 
     /**
-     * 将一个整数 number，平均分成 part 份，返回每份的起始和结束数，例如
-     * 5846 平局分成 10 份，每份的起始和结束数是
+     * 将一个整数 number，平均分成 partition 份，返回每份的起始和结束数，例如
+     * 5846 平均分成 10 份，每份的起始和结束数是
      * ------
      * [1,585],
      * [586,1170],
@@ -174,22 +174,22 @@ public class MyMathUtils {
      */
     public static List<Integer[]> averageNumberToPart(int number, int part) {
 
-        int allPage = number;
+        int all = number;
         int count = part;//平局分成十分
-        int average = allPage / count; // 平局数
-        int r = allPage % count; // 余数
+        int average = all / count; // 平均数
+        int r = all % count; // 余数
         //  System.out.println(r);
         if (r != 0)
-            if (r < count)
+            if (r < count) // 余数小于平均数，平均数+1
                 average = average + 1;
         //   System.out.println(average);
         int i = 0;
         List<Integer[]> list = new ArrayList<>(part);
-        while (i < allPage) {
+        while (i < all) {
             int start = i + 1; // 起始
             int end = i + average; // 结束
-            if (end >= allPage)
-                end = allPage;
+            if (end >= all)
+                end = all;
             System.out.println(start + "~" + end);
             list.add(new Integer[]{start, end});
             i = i + average;
@@ -205,7 +205,7 @@ public class MyMathUtils {
         int number = 5846; //
         int part = 10;    // 分成 10 份
 
-        //  MyMathUtils.averageNumberToPart(number, part);
-        MyJsonUtils.prettyPrint(MyMathUtils.averageNumberToPart(number, part));
+        //  MyMathUtils.averageNumberToPart(number, partition);
+        MyJsonUtils.prettyPrint(MyMathUtils.averageNumberToPart(4000, part));
     }
 }

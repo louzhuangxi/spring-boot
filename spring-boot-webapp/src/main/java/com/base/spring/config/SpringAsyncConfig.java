@@ -10,12 +10,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 /**
- * Description : 对于执行操作数量非常大，并且每个操作结果之间相对独立，没有相互调用，不必一个操作等待另一个操作完成，可以考虑用多线程方式执行
+ * Description : 对于执行操作次数数量非常大，并且每个操作结果之间相对独立，没有相互调用，不必一个操作等待另一个操作完成，可以考虑用多线程方式执行
  * User: h819
  * Date: 2017/3/9
  * Time: 15:05
  * To change this template use File | Settings | File Templates.
  */
+// 例子见 AsyncExampleService.java
 @Configuration
 @EnableAsync// 利用 @EnableAsync 注解，开启异步任务支持
 public class SpringAsyncConfig implements AsyncConfigurer {
@@ -52,6 +53,10 @@ public class SpringAsyncConfig implements AsyncConfigurer {
          *
          * 可以根据机器的性能，调试合理的数目。
          * 有时候，单线程反倒比多线程速度快！
+         * -
+         * 同时启动多少线程？
+         * 启动数目和 CorePoolSize 相同即可
+         * 需要经过测试比较来确定？
          *
          * */
 

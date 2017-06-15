@@ -109,7 +109,7 @@ public class MyDateUtilsJdk8 {
      */
     public static Date astDate(LocalTime date) {
 
-        //  LocalTime actually can't be converted to a Date, because it only contains the time part of DateTime.
+        //  LocalTime actually can't be converted to a Date, because it only contains the time partition of DateTime.
         // Like 11:00. But no day is known. You have to supply it manually:
         // 获取当前日的的事件
         Instant instant = date.atDate(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth())).atZone(ZoneId.systemDefault()).toInstant();

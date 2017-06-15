@@ -1,6 +1,9 @@
 package org.test;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.lang.StringUtils;
+import org.h819.commons.MyCollectionUtils;
 import org.h819.commons.MyJsonUtils;
 import org.h819.commons.net.html.parser.jsoup.ElementSelector;
 import org.jsoup.Jsoup;
@@ -28,26 +31,27 @@ public class Test3 {
 
     private void testJsoup() {
 
-      //  String html0 = "<iframe id=\"frame_content\" name=\"frame_content\" height=\"600px\" width=\"730px\" frameborder=\"0\" scrolling=\"yes\"  src='/temp/ws-23500573617169017-1.html'>";
+        //  String html0 = "<iframe id=\"frame_content\" name=\"frame_content\" height=\"600px\" width=\"730px\" frameborder=\"0\" scrolling=\"yes\"  src='/temp/ws-23500573617169017-1.html'>";
         String html = "<div class=\"cover\">" +
                 "<a class=\"CDcover185\" id=\"albumCover\" href=\"/album/2100226190\" title=\"Hello\">" +
                 "<img class=\"cdCDcover185\" src=\"http://img.xiami.net/images/album/img85/23485/21002261901445585261_2.jpeg\"/>" +
                 "</a>" +
                 "<iframe id=\"frame_content\" name=\"frame_content\" height=\"600px\" width=\"730px\" frameborder=\"0\" scrolling=\"yes\"  src='/temp/ws-23500573617169017-1.html' />" +
                 "</div>";
-       // String html = html0 + html1;
-        Elements elements = new ElementSelector(Jsoup.parse(html)).byTagAndAttr("a","class").select();
+        // String html = html0 + html1;
+        Elements elements = new ElementSelector(Jsoup.parse(html)).byTagAndAttr("a", "class").select();
 
         System.out.println(elements);
     }
 
-    private void subList(){
-
-        List<Integer> largeList = Arrays.asList(0,1,2,3,4,5,6,7,8,9);
-
-        List<List<Integer>> output = ListUtils.partition(largeList, 3);
-
-        MyJsonUtils.prettyPrint(output);
+    private void subList() {
+        System.out.println(StringUtils.center("apache commons", 80, "="));
+        List<Integer> largeList = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+        MyJsonUtils.prettyPrint(ListUtils.partition(largeList, 3));
+        System.out.println(StringUtils.center("Guava", 80, "="));
+        MyJsonUtils.prettyPrint(Lists.partition(largeList, 3));
+        System.out.println(StringUtils.center("my customize", 80, "="));
+        MyJsonUtils.prettyPrint(MyCollectionUtils.partition(largeList, 3));
 
     }
 

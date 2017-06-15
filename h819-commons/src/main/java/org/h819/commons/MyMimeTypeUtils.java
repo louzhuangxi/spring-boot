@@ -141,7 +141,7 @@ public class MyMimeTypeUtils {
      * 根据扩展名判断 mime type ，如果无扩展名，则用 File 或 URL 判断
      * <p/>
      * Detects the media type of a document with the given file name. The type detection is based on known file name extensions.
-     * The given name can also be a URL or a full file path. In such cases only the file name part of the string is used for type detection.
+     * The given name can also be a URL or a full file path. In such cases only the file name partition of the string is used for type detection.
      *
      * @param name the file name of the document
      * @return detected media type

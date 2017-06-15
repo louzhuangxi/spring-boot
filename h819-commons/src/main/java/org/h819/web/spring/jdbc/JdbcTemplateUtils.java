@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description : JdbcTemplate工具类 ，参数绑定方式，可以避免 sql 注入
+ * Description : JdbcTemplate 工具类 ，参数绑定方式，可以避免 sql 注入
  * User: h819
  * Date: 2015/6/11
  * Time: 11:27
@@ -129,8 +129,8 @@ public class JdbcTemplateUtils {
 
 
     /**
-     * 同上，构造查询语句，不分页
-     * 自定义返回值包装
+     * 同上，构造查询语句，不分页,自定义返回值包装
+     * 如果查询结果是单个结果时，可以 list.get(0) 获得
      *
      * @param jdbcTemplate
      * @param queryNativeSql
@@ -145,22 +145,6 @@ public class JdbcTemplateUtils {
         return jdbcTemplate.query(queryNativeSql, queryArgs, rowMapper);
     }
 
-    https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html#queryForObject-java.lang.String-java.lang.Class-java.lang.Object...-
-    /**
-     * 返回单个结果
-     *
-     * @param jdbcTemplate
-     * @param queryNativeSql
-     * @param queryArgs
-     * @param rowMapper
-     * @param <T>
-     * @return
-     */
-    public static <T> T queryForObjectByNativeSqlString(final JdbcTemplate jdbcTemplate,
-                                                        final String queryNativeSql, Object[] queryArgs,
-                                                        RowMapper<T> rowMapper) {        ???
-        return jdbcTemplate.queryForObject(queryNativeSql, queryArgs, rowMapper);
-    }
 
     /**
      * 同上，构造查询语句，不分页
@@ -190,6 +174,7 @@ public class JdbcTemplateUtils {
     public static List<Map<String, Object>> queryForListByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final String queryNativeSql, Object[] queryArgs) {
         return queryForListByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new ColumnMapRowMapper());
     }
+
 
     /**
      * 构造排序条件
