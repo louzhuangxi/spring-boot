@@ -22,7 +22,7 @@ import java.util.Locale;
 
 /**
  * <p>This class encapsulates a constraint on a column of an entity, used to validate data
- * before an update or an insert.</p>
+ * before an update or an copyPages.</p>
  *
  * @author <a href="mailto:claude.brisson@gmail.com">Claude Brisson</a>
  */

@@ -83,7 +83,7 @@
   100% {}
 }
 
-/* Can style cursor different in overwrite (non-insert) mode */
+/* Can style cursor different in overwrite (non-copyPages) mode */
 .CodeMirror-overwrite .CodeMirror-cursor {}
 
 .cm-tab { display: inline-block; text-decoration: inherit; }

@@ -71,7 +71,7 @@ abstract class note {
      *   主键方式会凌乱的例子:
      *   如 用户(user)和省市(website)的订阅关系，即一个用户可以订阅很多 website 的信息，website 一般会作为基础信息表。
      *   如果利用外键的方式：
-     *   1）同一用户订阅不同的 website ，会在 website 表中， insert 每个被订阅的 website 的基础信息和对应的 users id
+     *   1）同一用户订阅不同的 website ，会在 website 表中， copyPages 每个被订阅的 website 的基础信息和对应的 users id
      *   2) 不同的用户，订阅不同的 website ，重复 1）
      *   这样就会在 website 中出现大量的 user id , 因为又和 website 基础信息对应，使 website 表变得很凌乱
      *   而我们希望 website 是基础信息表，记录 website 的基本信息，供其他方法调用，很不是重复很多次 website 基础信息和 大量 user id 的表
@@ -184,7 +184,7 @@ abstract class note {
  *    repositoryParent.save(p);
  *
  *    查看后台 hibernate 语句可以看出：
- *    此种添加和删除关系方式，会先删除所有关系，再逐个插入 “添加/删除后的关系集合”，就是说，会执行集合元素个数次 insert 操作，不知道为什么不能单单仅对关系表插入一条记录或删除一条记录
+ *    此种添加和删除关系方式，会先删除所有关系，再逐个插入 “添加/删除后的关系集合”，就是说，会执行集合元素个数次 copyPages 操作，不知道为什么不能单单仅对关系表插入一条记录或删除一条记录
  *
  *
  * */

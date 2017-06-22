@@ -1645,7 +1645,7 @@
 		//$('#simple-colorpicker-1').ace_colorpicker('pick', 2);//select 2nd color
 		//$('#simple-colorpicker-1').ace_colorpicker('pick', '#fbe983');//select #fbe983 color
 		//var picker = $('#simple-colorpicker-1').data('ace_colorpicker')
-		//picker.pick('red', true);//insert the color if it doesn't exist
+		//picker.pick('red', true);//copyPages the color if it doesn't exist
 	
 	
 		$(".knob").knob();

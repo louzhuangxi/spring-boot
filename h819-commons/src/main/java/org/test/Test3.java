@@ -25,8 +25,8 @@ public class Test3 {
 
         Test3 t = new Test3();
         //t.testJsoup();
-
-        t.subList();
+        // t.subList();
+        t.testDate();
     }
 
     private void testJsoup() {
@@ -40,7 +40,6 @@ public class Test3 {
                 "</div>";
         // String html = html0 + html1;
         Elements elements = new ElementSelector(Jsoup.parse(html)).byTagAndAttr("a", "class").select();
-
         System.out.println(elements);
     }
 
@@ -53,6 +52,24 @@ public class Test3 {
         System.out.println(StringUtils.center("my customize", 80, "="));
         MyJsonUtils.prettyPrint(MyCollectionUtils.partition(largeList, 3));
 
+    }
+
+    private void testDate() {
+//        long l = System.currentTimeMillis();
+//        System.out.println(l);
+//        Date date = new Date(l * 1000);
+//        Date date2 = new Date(l * 1000);
+//        System.out.print(date);
+
+        try {
+            System.out.println(Long.valueOf("sfdf"));
+        }   catch (NumberFormatException e) {
+        //  e.printStackTrace();
+          System.out.println("hello");
+
+        }
+
+        
     }
 
 }

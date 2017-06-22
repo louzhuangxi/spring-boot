@@ -1,5 +1,6 @@
 package org.h819.commons.file;
 
+import com.itextpdf.forms.PdfPageFormCopier;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -223,7 +224,7 @@ import java.util.*;
  * http://www.artofsolving.com/opensource
  */
 
-public class PdFUtils extends PdfBase {
+public class MyPdfUtils extends PdfBase {
 
     private static String src_text = "D:\\itext7\\text_src.pdf";
     private static String dest_2 = "D:\\itext7\\DEST2.pdf";
@@ -236,7 +237,7 @@ public class PdFUtils extends PdfBase {
     // 该变量专门为 countPages() 函数设立，由于使用了递归，故提到全局变量，否则每次的返回值不能累计
     private static int numberOfPagesOfDirectory;
     private static List tempList;
-    private static Logger logger = LoggerFactory.getLogger(PdFUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(MyPdfUtils.class);
     private String dest_1 = "D:\\itext7\\DEST1.pdf";
 
     	/*
@@ -295,7 +296,8 @@ public class PdFUtils extends PdfBase {
         //  PdFUtils.testWaterMark();
         // PdFUtils.testEncryptPdf();
         //  PdFUtils.testExpireDate();
-        PdFUtils.testDecryptPdf();
+        // PdFUtils.testDecryptPdf();
+        MyPdfUtils.testCopyPages();
     }
 
     private static void testWaterMark() throws FileNotFoundException {
@@ -329,6 +331,21 @@ public class PdFUtils extends PdfBase {
 //        System.out.println(s.isPresent());
 
         removeJavaScript(new File("D:\\itext7\\text_src_no_warning.pdf"), new File("D:\\itext7\\text_src_no_warning_.pdf"), PdfName.OpenAction);
+    }
+
+    private static void testCopyPages() throws IOException {
+
+        String COVER
+                = "D:\\itext7\\hero.pdf";
+        String DEST
+                = "D:\\itext7\\add_cover1.pdf";
+        String DEST2
+                = "D:\\itext7\\add_cover2.pdf";
+        String RESOURCE
+                = "D:\\itext7\\pages2.pdf";
+
+        copyFrontCoverPages(new File(RESOURCE), new File(COVER), new File(DEST));
+        copyBackCoverPages(new File(RESOURCE), new File(COVER), new File(DEST2));
     }
 
     /**
@@ -892,9 +909,9 @@ public class PdFUtils extends PdfBase {
     /**
      * 通过第三方提供的工具，破解没有设置打开密码的 pdf 文件。可以递归破解指定文件夹内的所有文件，并保留原来的目录结构
      *
-     * @param srcPdfFileDirectory  存放待破解 pdf 文件的文件夹. 破解之后的文件，存放子默认的文件夹内。
-     * @param descPdfFileDirectory 破解之后的文件存放的文件夹，保持和源文件同样的结构
-     * @param badDirectory         存放有打开密码，不能破解的 pdf 的文件夹。
+     * @param srcPdfDirectory  存放待破解 pdf 文件的文件夹. 破解之后的文件，存放子默认的文件夹内。
+     * @param descPdfDirectory 破解之后的文件存放的文件夹，保持和源文件同样的结构
+     * @param badDirectory     存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
     public static void decryptFileDerictory(File srcPdfDirectory, File descPdfDirectory, File badDirectory) throws IOException, DocumentException {
@@ -1012,6 +1029,8 @@ public class PdFUtils extends PdfBase {
 
     /**
      * 为已经存在的 pdf 文件添加使用日期限制，在警告期内可以查看，过期之后，直接关闭。
+     * <p>
+     * javaScript  加在  OpenAction 上，可以用下文的方法去掉
      * <p>
      * adobe acrobat 创建的 pdf 文件，可以执行自定义的 javaScript 语句，再利用 adobe reader 打开该 pdf 文件时，可以执行此 js 语句。
      * 此功能仅限于 adobe 的产品。
@@ -1156,9 +1175,7 @@ public class PdFUtils extends PdfBase {
      * @param pdfName     添加的 pdf 属性
      * @throws java.io.IOException
      */
-    public static void removeJavaScript(File srcPdfFile,
-                                        File descPdfFile, PdfName pdfName) throws IOException {
-
+    public static void removeJavaScript(File srcPdfFile, File descPdfFile, PdfName pdfName) throws IOException {
 
         if (!srcPdfFile.isFile())
             return;
@@ -1221,6 +1238,75 @@ public class PdFUtils extends PdfBase {
         return exec1Path;
     }
 
+    /**
+     * 检查文件夹内的文件是否被加密，用到了递归方法，返回值被全局变量记录，通过 findEncryptPdf()函数调用
+     *
+     * @param srcPdfFile 待检查的文件夹
+     * @throws java.io.IOException
+     */
+    private static boolean isEcryptFile(File srcPdfFile) throws IOException {
+        PdfReader reader = getPdfReader(srcPdfFile).get();
+        return reader.isEncrypted();  // itext7 中不好用，itext5 可以，不知道为什么
+    }
+
+
+    /**
+     * 给 pdf 文件增加一页封面
+     *
+     * @param srcPdfFile    源文件
+     * @param insertPdfFile 待插入文件
+     * @param descPdfFile   目标文件
+     * @throws IOException
+     */
+    public static void copyFrontCoverPages(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
+        cover.copyPagesTo(1, 1, pdfDoc, 1, new PdfPageFormCopier());
+        cover.close();
+        pdfDoc.close();
+
+    }
+
+    /**
+     * 给 pdf 文件增加一页封底
+     *
+     * @param srcPdfFile    源文件
+     * @param insertPdfFile 待插入文件
+     * @param descPdfFile   目标文件
+     * @throws IOException
+     */
+    public static void copyBackCoverPages(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
+        cover.copyPagesTo(1, 1, pdfDoc, pdfDoc.getNumberOfPages() + 1, new PdfPageFormCopier());
+        cover.close();
+        pdfDoc.close();
+
+    }
+
+    /**
+     * 向已有的 pdf 文件插入 pdf 文件
+     *
+     * @param srcPdfFile             源文件
+     * @param insertPageBeforeSrcPdf 源文件插入开始页数
+     * @param insertPdfFile          待插入文件
+     * @param pageFromInsertPdf      待插入文件的起始页 (会把起始页到结束页插入到源文件中，生成目标文件)
+     * @param pageToInsertPdf        待插入文件的结束页
+     * @param descPdfFile            目标文件
+     * @throws IOException
+     */
+    public static void copyPages(File srcPdfFile, int insertPageBeforeSrcPdf, File insertPdfFile, int pageFromInsertPdf,
+                                 int pageToInsertPdf, File descPdfFile) throws IOException {
+
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
+        cover.copyPagesTo(pageFromInsertPdf, pageToInsertPdf, pdfDoc, insertPageBeforeSrcPdf, new PdfPageFormCopier());
+        cover.close();
+        pdfDoc.close();
+    }
+
     public void manipulatePdf(String src, String dest) throws IOException, DocumentException {
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(src), new PdfWriter(dest));
         PdfDictionary root = pdfDoc.getCatalog().getPdfObject();
@@ -1230,23 +1316,12 @@ public class PdFUtils extends PdfBase {
     }
 
     /**
-     * 检查文件夹内的文件是否被加密，用到了递归方法，返回值被全局变量记录，通过 findEncryptPdf()函数调用
+     * 合并 pdf
      *
-     * @param srcPdfFile 待检查的文件夹
-     * @throws java.io.IOException
+     * @param srcPdfs
+     * @param destPdf
+     * @throws IOException
      */
-    private static boolean isEcryptFile(File srcPdfFile) throws IOException {
-             PdfReader reader = getPdfReader(srcPdfFile).get();
-             return reader.isEncrypted();  // itext7 中不好用，itext5 可以，不知道为什么
-    }
-
-        /**
-         * 合并 pdf
-         *
-         * @param srcPdfs
-         * @param destPdf
-         * @throws IOException
-         */
     public void mergeFiles(List<File> srcPdfs, File destPdf) throws IOException {
         //Initialize PDF document with output intent
         PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf.getAbsolutePath()));
@@ -1265,6 +1340,7 @@ public class PdFUtils extends PdfBase {
         pdf.setFlushUnusedObjects(true);
         pdf.close();
     }
+
 
     /**
      * text 在文本的位置
