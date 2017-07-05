@@ -45,7 +45,7 @@ public class Oauth2ClientRestTemplate {
      *  1. authorization_code (或 implicit ，不常用):
      *
      *     第三方网站提供用户身份验证服务。
-     *     在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，client 在第三方网站登录成功后，获取到 access_token ，已表明通过身份验证，之后在访问资源服务器内容。
+     *     在 client 在不知道用户名和密码的情况下，通过自己登陆到第三方网站，client 在第三方网站登录成功后，获取到 access_token ，表明已通过身份验证，之后再访问资源服务器内容。
      *     目前这种认证方式是 oauth 的主要用途，如各个网站提供的单点登录功能，就是利用第三方提供的 oauth 的认证，让用户通过第三方的账号，登陆本网站，而网站本身不保留用户的信息。
      *
      *  2. password 和 client_credentials 方式:
@@ -84,9 +84,9 @@ public class Oauth2ClientRestTemplate {
 
      *  如果出现有时验证成功，有时不成功的情况，大多数是因为更改了相关参数，此时删除以后的  token 信息，重新启动电脑即可。
      *
-     *   常用的有两种模式
-     *   grant_type=client_credentials ，用于对外开放 api
-     *   grant_type=authorization_code ，用于单点登录
+     *  常用的有两种模式
+     *  grant_type=client_credentials ，用于对外开放 api
+     *  grant_type=authorization_code ，用于单点登录
      *
      *
      *  === oauth2 四种验证方式说明和应用场景 ===

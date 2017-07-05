@@ -344,8 +344,8 @@ public class MyPdfUtils extends PdfBase {
         String RESOURCE
                 = "D:\\itext7\\pages2.pdf";
 
-        copyFrontCoverPages(new File(RESOURCE), new File(COVER), new File(DEST));
-        copyBackCoverPages(new File(RESOURCE), new File(COVER), new File(DEST2));
+        insertFrontCoverPage(new File(RESOURCE), new File(COVER), new File(DEST));
+        insertBackCoverPage(new File(RESOURCE), new File(COVER), new File(DEST2));
     }
 
     /**
@@ -354,6 +354,7 @@ public class MyPdfUtils extends PdfBase {
      * -Xms512m
      * <p>
      * 经过此方法优化之后，可以读取大文件，不会溢出。
+     * -
      * 但写文件不知道怎么优化，文件大了还要内存溢出。
      *
      * @param pdfFile
@@ -1258,7 +1259,7 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile   目标文件
      * @throws IOException
      */
-    public static void copyFrontCoverPages(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+    public static void insertFrontCoverPage(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
 
         PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
@@ -1276,7 +1277,7 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile   目标文件
      * @throws IOException
      */
-    public static void copyBackCoverPages(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+    public static void insertBackCoverPage(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
 
         PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
@@ -1297,8 +1298,8 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile            目标文件
      * @throws IOException
      */
-    public static void copyPages(File srcPdfFile, int insertPageBeforeSrcPdf, File insertPdfFile, int pageFromInsertPdf,
-                                 int pageToInsertPdf, File descPdfFile) throws IOException {
+    public static void insertPages(File srcPdfFile, int insertPageBeforeSrcPdf, File insertPdfFile, int pageFromInsertPdf,
+                                   int pageToInsertPdf, File descPdfFile) throws IOException {
 
         PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());

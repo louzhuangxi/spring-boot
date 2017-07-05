@@ -1,11 +1,12 @@
 package com.base.spring.config.properties;
 
-import org.h819.commons.MyJsonUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Map;
 
 /**
  * Description : TODO()
@@ -22,6 +23,15 @@ public class FtpPropertiesTest {
 
     @Test
     public void testConfigurationProperties() {
-        MyJsonUtils.prettyPrint(ftpProperties);
+
+        System.out.println(ftpProperties.getUrl());
+        System.out.println(ftpProperties.getPort());
+        for (FtpProperty.User user : ftpProperties.getUsers())
+            System.out.println(user.getName() + "," + user.getPassword());
+
+        for (Map.Entry<String, String> entry : ftpProperties.getInfos().entrySet()) {
+            System.out.println("Key : " + entry.getKey() + " ,  Value : " + entry.getValue());
+        }
+
     }
 }

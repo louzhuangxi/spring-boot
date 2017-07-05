@@ -1,10 +1,15 @@
 package com.base.spring.config.properties;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description : TODO()
@@ -14,22 +19,28 @@ import org.springframework.stereotype.Component;
  * To change this template use File | Settings | File Templates.
  */
 @Component
+@PropertySource(value = "classpath:ftp.properties", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "ftp")
-@Getter
-@Setter
+@Data
+//可以进行验证 ，未进一步研究
+// org.hibernate.validator.constraints
+//javax.validation
 public class FtpProperty {
 
+    //map example
+    private final Map<String, String> infos = new HashMap<>();
 
-    //可以进行验证 ，未进一步研究
-    // org.hibernate.validator.constraints
-    //javax.validation
     @NotEmpty
     private String url;
     private int port;
     @NotEmpty
-    private String username;
-    @NotEmpty
-    private String password;
+    private List<User> users = new ArrayList<>();
+
+    @Data
+    public static class User {
+        private String name;
+        private String password;
+    }
 
     /**
      * 使用
