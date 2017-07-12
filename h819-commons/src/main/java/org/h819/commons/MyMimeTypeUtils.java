@@ -43,7 +43,7 @@ import java.util.List;
 //Files.probeContentType(path) 根据扩展名判断，不准确
 public class MyMimeTypeUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyMimeTypeUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyMimeTypeUtils.class);
 
     private static String propertiesFileName = "mimetype.properties";
 

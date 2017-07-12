@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MyConfigurationPropertiesUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyConfigurationPropertiesUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyConfigurationPropertiesUtils.class);
     //如果需要对 propertiesConfiguration 进行设置，或直接调用 propertiesConfiguration 的方法，通过 get 方法获得 propertiesConfiguration 后，再进行设置
     private PropertiesConfiguration propertiesConfiguration;
 

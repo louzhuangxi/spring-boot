@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class ConfigurationExample {
 
-    private static Logger logger = LoggerFactory.getLogger(ConfigurationExample.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationExample.class);
 
     public static void readProperties() {
         //注意路径默认指向的是classpath的根目录

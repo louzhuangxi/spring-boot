@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class LogbackService {
 
-    private static Logger logger = LoggerFactory.getLogger(LogbackService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogbackService.class);
 
 
     @Autowired

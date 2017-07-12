@@ -27,7 +27,7 @@ import java.util.Date;
 @RequestMapping("/files")
 public class UploadFileController {
 
-    private static Logger logger = LoggerFactory.getLogger(UploadFileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UploadFileController.class);
 
     @Autowired
     private ServletContext servletContext; //获得应用的路径用

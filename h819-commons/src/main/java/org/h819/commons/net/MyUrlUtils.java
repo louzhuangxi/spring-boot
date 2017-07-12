@@ -29,7 +29,7 @@ public class MyUrlUtils {
      * @since 0.12
      */
     public static final String UNKNOWN_HOST = "";
-    private static Logger logger = LoggerFactory.getLogger(MyUrlUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyUrlUtils.class);
 
     public static void main(String[] arg) {
 

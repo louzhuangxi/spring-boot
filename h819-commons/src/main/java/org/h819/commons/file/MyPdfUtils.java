@@ -237,7 +237,7 @@ public class MyPdfUtils extends PdfBase {
     // 该变量专门为 countPages() 函数设立，由于使用了递归，故提到全局变量，否则每次的返回值不能累计
     private static int numberOfPagesOfDirectory;
     private static List tempList;
-    private static Logger logger = LoggerFactory.getLogger(MyPdfUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyPdfUtils.class);
     private String dest_1 = "D:\\itext7\\DEST1.pdf";
 
     	/*

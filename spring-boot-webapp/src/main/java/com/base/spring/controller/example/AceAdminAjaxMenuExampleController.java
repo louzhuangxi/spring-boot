@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/ace/example/ajax") //重要: 必须以 ajax 结尾，以符合 ace.js 中 content_url 的要求，ace/example 为前缀，可以为任意值或者没有，解释如上
 public class AceAdminAjaxMenuExampleController {
 
-    private static Logger logger = LoggerFactory.getLogger(AceAdminAjaxMenuExampleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AceAdminAjaxMenuExampleController.class);
 
 
     /**

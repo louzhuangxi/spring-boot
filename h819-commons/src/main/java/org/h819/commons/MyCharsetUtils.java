@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  */
 public class MyCharsetUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyCharsetUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyCharsetUtils.class);
 
     /**
      * 静态方法调用，不需要生成实例

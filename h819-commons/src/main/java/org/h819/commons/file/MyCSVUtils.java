@@ -24,7 +24,7 @@ import java.util.*;
 public class MyCSVUtils {
 
 
-    private static Logger logger = LoggerFactory.getLogger(MyCSVUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyCSVUtils.class);
     // File from = new File("E:\\123");
 
     File to = new File("e:\\456");

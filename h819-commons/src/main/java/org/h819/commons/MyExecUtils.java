@@ -26,7 +26,7 @@ public class MyExecUtils {
     //大文件，pdf2swf 命令要读入，会有一段时间，所以等待时间不能太短。另外如果文件太大，jvm 会不会假死？
     private static int wait = 60;
 
-    private static Logger logger = LoggerFactory.getLogger(MyExecUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyExecUtils.class);
 
     /**
      * 例子： PdfUtils.java

@@ -19,7 +19,7 @@ import java.util.Enumeration;
 
 public class CompressExample {
 
-    private static Logger logger = LoggerFactory.getLogger(CompressExample.class);
+    private static final Logger logger = LoggerFactory.getLogger(CompressExample.class);
 
 
     //多重打包

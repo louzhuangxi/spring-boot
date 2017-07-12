@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  */
 public class EmailCheck extends FieldConstraint {
 
-    private static Logger logger = LoggerFactory.getLogger(DNSResolver.class);
+    private static final Logger logger = LoggerFactory.getLogger(DNSResolver.class);
     /**
      * valid email pattern.
      */

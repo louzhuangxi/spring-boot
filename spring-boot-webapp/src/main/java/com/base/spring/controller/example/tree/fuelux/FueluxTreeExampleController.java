@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Deprecated //弃用 . 多选的时候很麻烦，没有全选功能，选择父节点，不能自动选择其子节点
 public class FueluxTreeExampleController {
 
-    private static Logger logger = LoggerFactory.getLogger(FueluxTreeExampleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FueluxTreeExampleController.class);
 
     @Autowired
     TreeRepository treeNodeRepository;

@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/ajax/tree/ztree")
 public class ZTreeAjaxController {
 
-    private static Logger logger = LoggerFactory.getLogger(ZTreeAjaxController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZTreeAjaxController.class);
 
     @Autowired
     TreeRepository treeNodeRepository;

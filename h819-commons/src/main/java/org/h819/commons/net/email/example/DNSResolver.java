@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class DNSResolver {
 
-    private static Logger logger = LoggerFactory.getLogger(DNSResolver.class);
+    private static final Logger logger = LoggerFactory.getLogger(DNSResolver.class);
 
     /**
      * check DNS.

@@ -33,7 +33,7 @@ import java.util.Map;
 // java.nio.file.Files ,java.nio.file.Paths 提供很多相应的工具
 public class MyFileUtils extends FileUtilsBase {
 
-    private static Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
     /**
      * 静态方法调用，不需要生成实例

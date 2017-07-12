@@ -17,7 +17,7 @@ import java.util.Date;
 @Service    //只要 spring 容器能够自动加载的 bean 就可以，不一定是 @Service
 public class TaskExample {
 
-    private static Logger logger = LoggerFactory.getLogger(TaskExample.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskExample.class);
 
     public void job1() {
         logger.info("task run..");

@@ -34,7 +34,7 @@ public class JdbcTemplateUtils {
     //where name like '%中国%' ，转换为占位符方式，相当于
     //where name like '%'||?||'%'
     public static String BIND_LIKE_STRING = " '%'||?||'%' ";
-    private static Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
 
     //其他的例子
     //= ：  name =?

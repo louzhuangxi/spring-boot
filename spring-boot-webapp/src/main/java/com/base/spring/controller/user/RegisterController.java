@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class RegisterController {
 
-    private static Logger logger = LoggerFactory.getLogger(RegisterController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
      //http://www.baeldung.com/registration-verify-user-by-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_55_spring
     //http://www.baeldung.com/spring-security-registration-verification-email?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_56_spring
     //http://www.baeldung.com/spring-security-registration-i-forgot-my-password?utm_source=email-newsletter&utm_medium=email&utm_campaign=auto_57_spring

@@ -43,7 +43,7 @@ import java.util.Map;
 @RequestMapping("/ace-admin")
 public class JqgridController {
 
-    private static Logger logger = LoggerFactory.getLogger(JqgridController.class);
+    private static final Logger logger = LoggerFactory.getLogger(JqgridController.class);
     @Autowired
     TreeEntityRepository treeEntityRepository;
 

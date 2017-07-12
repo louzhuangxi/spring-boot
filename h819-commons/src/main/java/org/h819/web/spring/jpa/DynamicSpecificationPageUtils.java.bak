@@ -38,7 +38,7 @@ import java.util.List;
 
 public class DynamicSpecificationPageUtils<T> {
 
-    private static Logger logger = LoggerFactory.getLogger(DynamicSpecificationPageUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DynamicSpecificationPageUtils.class);
 
 
     /**

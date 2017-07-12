@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class RefTeacherStudentEntityService {
 
-    private static Logger logger = LoggerFactory.getLogger(RefTeacherStudentEntityService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RefTeacherStudentEntityService.class);
 
     @Autowired
     private RefTeacherStudentEntityRepository refTeacherStudentEntityRepository;

@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class JpaUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JpaUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JpaUtils.class);
 
     /**
      * 仅通过静态方法调用

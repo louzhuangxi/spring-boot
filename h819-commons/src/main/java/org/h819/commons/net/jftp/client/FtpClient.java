@@ -19,7 +19,7 @@ public class FtpClient extends Client {
     private static final String UNABLE_TO_LOGIN_MESSAGE = "Unable to login for user %s";
     private static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to host %s on port %d";
     private static final String STATUS_ERROR_MESSAGE = "The host %s on port %d returned a bad status code.";
-    private static Logger logger = LoggerFactory.getLogger(FtpClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtpClient.class);
     private static Connection connection;
     protected FTPClient ftpClient;
     private ConnectionFactory connectionFactory = new ConnectionFactory();

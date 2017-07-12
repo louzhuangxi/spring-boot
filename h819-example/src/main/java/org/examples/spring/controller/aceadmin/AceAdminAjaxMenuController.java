@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/page") //不要更改，以符合ajax.html 中 js 函数要求
 public class AceAdminAjaxMenuController {
 
-    private static Logger logger = LoggerFactory.getLogger(AceAdminAjaxMenuController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AceAdminAjaxMenuController.class);
 
     /**
      * 访问 ajax.jsp

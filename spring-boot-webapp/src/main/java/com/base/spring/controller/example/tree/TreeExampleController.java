@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/example/tree/manage") //重要: 必须以 ajax 结尾，以符合 ace content_url 的要求
 public class TreeExampleController {
 
-    private static Logger logger = LoggerFactory.getLogger(TreeExampleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TreeExampleController.class);
 
     @RequestMapping(value = "/ztree.html", method = RequestMethod.GET)
     public String ztree(HttpServletRequest request, Model model) {

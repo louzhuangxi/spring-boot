@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class NavigateController {
 
-    private static Logger logger = LoggerFactory.getLogger(NavigateController.class);
+    private static final Logger logger = LoggerFactory.getLogger(NavigateController.class);
 
     @Autowired
     UserService userService;

@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class DNSUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(DNSUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DNSUtils.class);
 
     /**
      * check DNS.

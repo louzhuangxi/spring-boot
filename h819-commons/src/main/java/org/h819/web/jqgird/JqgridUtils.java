@@ -18,7 +18,7 @@ import java.util.Collection;
  */
 public class JqgridUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JqgridUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JqgridUtils.class);
 
     /**
      * 仅通过静态方法调用

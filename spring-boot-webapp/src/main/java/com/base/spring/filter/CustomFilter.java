@@ -29,7 +29,7 @@ import java.io.IOException;
  */
 public class CustomFilter extends OncePerRequestFilter {
 
-    private static Logger logger = LoggerFactory.getLogger(CustomFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomFilter.class);
 
 
     @Override

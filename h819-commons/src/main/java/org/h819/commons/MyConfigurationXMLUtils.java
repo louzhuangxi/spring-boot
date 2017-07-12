@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MyConfigurationXMLUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyConfigurationXMLUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyConfigurationXMLUtils.class);
     //如果需要对 config 进行设置，或直接调用 config 的方法，通过 get 方法获得 config 后，再进行设置
     private XMLConfiguration config;
 

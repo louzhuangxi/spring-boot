@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
  */
 public class JpaPageRequestUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JpaPageRequestUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JpaPageRequestUtils.class);
 
 
     /**

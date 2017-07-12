@@ -42,7 +42,7 @@ import java.util.*;
 //https://github.com/chenjianjx/sep4j
 public class MyExcelUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);
     //默认输出的 txt 文件名
     private static String defaultTxtFile = "txtFile.txt";
     private static String defaultDatePattern = MyDateUtils.datePattern;

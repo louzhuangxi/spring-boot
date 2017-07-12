@@ -30,7 +30,7 @@ public class MyNetUtils {
      * @since 0.12
      */
     public static final String UNKNOWN_HOST = "";
-    private static Logger logger = LoggerFactory.getLogger(MyNetUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyNetUtils.class);
 
     public static void main(String[] arg) {
 

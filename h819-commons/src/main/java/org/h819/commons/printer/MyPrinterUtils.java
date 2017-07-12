@@ -20,7 +20,7 @@ import java.io.IOException;
 // https://sourceforge.net/projects/jacob-project/
 public class MyPrinterUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(MyPrinterUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyPrinterUtils.class);
 
 
     /**
