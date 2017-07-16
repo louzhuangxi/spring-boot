@@ -1,6 +1,8 @@
 /**
+ * 单数据源不用配置此类
+ * ----
  * 多数据源配置 步骤 :
- * *--- 必须保证两个数据源都能连通
+ * --- 必须保证两个数据源都能连通
  * 配置 MultiConfig1 , MultiConfig2 即可
  * 1. application-multi.properties 文件中正确命名
  * # 注意，最后一个点后面的为关键字，如 url,username,password.
