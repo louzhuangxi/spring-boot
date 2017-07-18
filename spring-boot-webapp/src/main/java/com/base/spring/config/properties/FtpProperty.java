@@ -25,6 +25,7 @@ import java.util.Map;
 //可以进行验证 ，未进一步研究
 // org.hibernate.validator.constraints
 //javax.validation
+//使用见 FtpPropertiesTest
 public class FtpProperty {
 
     //map example
@@ -47,5 +48,4 @@ public class FtpProperty {
      * 在任意 bean 中
      * @Autowired private FtpProperties ftpProperties;
      */
-
 }
