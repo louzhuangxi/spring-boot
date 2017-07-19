@@ -1,13 +1,12 @@
 package org.examples.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
+ * 需要去掉ie 的迅雷自动启动迅雷下载插件，否则会有问题.
+ * response 方式 非 ie 下面有问题
+ * <p>
  * Description : TODO()
  * User: h819
  * Date: 2017/3/16
@@ -44,7 +46,7 @@ public class DownloadFileController {
     @GetMapping(value = "/a", produces = APPLICATION_PDF)
     @ResponseBody
     public void downloadA(@RequestParam("filename") String fileName, HttpServletResponse response) throws IOException {
-        File file = getFile(fileName);
+        File file = getFromWebAppPathFile(fileName);
         InputStream in = new FileInputStream(file);
         response.setContentType(APPLICATION_PDF);
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
@@ -62,7 +64,7 @@ public class DownloadFileController {
     @GetMapping(value = "/b", produces = APPLICATION_PDF)
     @ResponseBody
     public HttpEntity<byte[]> downloadB(@RequestParam("filename") String fileName) throws IOException {
-        File file = getFile(fileName);
+        File file = getFromWebAppPathFile(fileName);
         byte[] document = FileCopyUtils.copyToByteArray(file);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "pdf"));
@@ -79,30 +81,43 @@ public class DownloadFileController {
      * @return
      * @throws FileNotFoundException
      */
-    @GetMapping(value = "/c", produces = APPLICATION_PDF)
+    @GetMapping(value = "/c", produces = APPLICATION_PDF) // pdf
     @ResponseBody
-    public Resource downloadC(@RequestParam("filename") String fileName, HttpServletResponse response) throws FileNotFoundException {
-        File file = getFile(fileName);
-        response.setContentType(APPLICATION_PDF);
-        response.setHeader("Content-Disposition", "inline; filename=" + file.getName());
+    public void downloadClassPathFile(@RequestParam("filename") String fileName, HttpServletResponse response) throws IOException {
+        File file = getFromClassPath(fileName);
+        response.setContentType(APPLICATION_PDF); // excel : MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
         response.setHeader("Content-Length", String.valueOf(file.length()));
-        return new FileSystemResource(file);
+        FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
     }
 
 
     /**
+     * 获得 web app 应用目录下的文件
+     *
      * @param fileName
      * @return
      * @throws FileNotFoundException
      */
-    private File getFile(String fileName) throws FileNotFoundException {
+    private File getFromWebAppPathFile(String fileName) throws FileNotFoundException {
         //获取应用内的文件，其他目录的同理
         String filePath = servletContext.getRealPath("/") + fileName;
-        File fileToDownload = new File(filePath);
-        if (!fileToDownload.exists()) {
+        File file = new File(filePath);
+        if (!file.exists()) {
             throw new FileNotFoundException("file with path: " + fileName + " was not found.");
         }
-        return fileToDownload;
+        return file;
+    }
+
+
+    /**
+     * 获取 classpath 中的文件
+     *
+     * @param fileName
+     * @return
+     */
+    public File getFromClassPath(String fileName) throws FileNotFoundException {
+        return ResourceUtils.getFile("classpath:" + fileName);
     }
 
 

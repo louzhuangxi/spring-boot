@@ -56,7 +56,7 @@ public class MyFileUtils extends FileUtilsBase {
         // 拷贝资源文件到临时目录
         //  { "/license.dat", "/pdfdecrypt.exe", "/SkinMagic.dll" };
         // { "/STCAIYUN.TTF" };
-        InputStream inputStream = MyFileUtils.class.getResourceAsStream(resourceName);
+        InputStream inputStream = getResourceFileInputStream(resourceName);
 
         if (inputStream == null) {
             logger.info(resourceName + " not exist in jar liberary.");
@@ -64,14 +64,14 @@ public class MyFileUtils extends FileUtilsBase {
         }
         //在系统临时目录下建立文件夹，存放拷贝后的文件
         //建立 java_jar_source_temp 文件夹，不用随机数，否则创建文件夹过多
-        String tempfilepath =
+        String tempFilePath =
                 SystemUtils.getJavaIoTmpDir()
                         + File.separator + MyConstants.JarTempDir + File.separator
                         + resourceName;
 
-        File resourceFile = new File(tempfilepath);
+        File resourceFile = new File(tempFilePath);
 
-        logger.info("resource copy to :" + tempfilepath);
+        logger.info("resource copy to :" + tempFilePath);
 
         try {
             // 拷贝资源文件到临时文件夹，每次都覆盖
@@ -86,6 +86,16 @@ public class MyFileUtils extends FileUtilsBase {
 
         IOUtils.closeQuietly(inputStream);
         return resourceFile;
+    }
+
+    /**
+     * 获取应用类路径中的文件，包括 resources 中的资源文件，依赖的 jar 文件中的文件
+     * @param fileName
+     * @return
+     */
+    public static InputStream getResourceFileInputStream(String fileName){
+        //Get file from resources folder
+        return MyFileUtils.class.getResourceAsStream(fileName);
     }
 
     /**
