@@ -17,9 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
- * 需要去掉ie 的迅雷自动启动迅雷下载插件，否则会有问题.
- * response 方式 非 ie 下面有问题
- * <p>
+ * 需要去掉 ie 的迅雷自动启动迅雷下载插件，否则会有问题.
+ * -
+ * chrome 问题
+ * 下载窗口不能关闭，否则 response 方式 ，chrome 下有问题。可以让浏览器休眠几秒钟(h819.js 中有相关函数)再关闭，此时 chrome 已经下载完成
+ * -
  * Description : TODO()
  * User: h819
  * Date: 2017/3/16
@@ -49,8 +51,8 @@ public class DownloadFileController {
         File file = getFromWebAppPathFile(fileName);
         InputStream in = new FileInputStream(file);
         response.setContentType(APPLICATION_PDF);
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-        response.setHeader("Content-Length", String.valueOf(file.length()));
+        response.setContentLength((int) file.length());
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); //filename 前面必须有空格
         FileCopyUtils.copy(in, response.getOutputStream());
     }
 
@@ -68,7 +70,7 @@ public class DownloadFileController {
         byte[] document = FileCopyUtils.copyToByteArray(file);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "pdf"));
-        header.set("Content-Disposition", "inline; filename=" + file.getName());
+        header.set("Content-Disposition", "inline; filename=" + file.getName());   //filename 前面必须有空格
         header.setContentLength(document.length);
         return new HttpEntity<>(document, header);
     }
@@ -86,7 +88,8 @@ public class DownloadFileController {
     public void downloadClassPathFile(@RequestParam("filename") String fileName, HttpServletResponse response) throws IOException {
         File file = getFromClassPath(fileName);
         response.setContentType(APPLICATION_PDF); // excel : MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+        response.setContentLength((int) file.length());
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());   //filename 前面必须有空格
         response.setHeader("Content-Length", String.valueOf(file.length()));
         FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
     }
