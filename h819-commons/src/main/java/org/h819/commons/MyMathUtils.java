@@ -206,6 +206,6 @@ public class MyMathUtils {
         int part = 10;    // 分成 10 份
 
         //  MyMathUtils.averageNumberToPart(number, partition);
-        MyJsonUtils.prettyPrint(MyMathUtils.averageNumberToPart(4000, part));
+        MyFastJsonUtils.prettyPrint(MyMathUtils.averageNumberToPart(4000, part));
     }
 }

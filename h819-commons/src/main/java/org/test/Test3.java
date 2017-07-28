@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang.StringUtils;
 import org.h819.commons.MyCollectionUtils;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.net.html.parser.jsoup.ElementSelector;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
@@ -46,11 +46,11 @@ public class Test3 {
     private void subList() {
         System.out.println(StringUtils.center("apache commons", 80, "="));
         List<Integer> largeList = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
-        MyJsonUtils.prettyPrint(ListUtils.partition(largeList, 3));
+        MyFastJsonUtils.prettyPrint(ListUtils.partition(largeList, 3));
         System.out.println(StringUtils.center("Guava", 80, "="));
-        MyJsonUtils.prettyPrint(Lists.partition(largeList, 3));
+        MyFastJsonUtils.prettyPrint(Lists.partition(largeList, 3));
         System.out.println(StringUtils.center("my customize", 80, "="));
-        MyJsonUtils.prettyPrint(MyCollectionUtils.partition(largeList, 3));
+        MyFastJsonUtils.prettyPrint(MyCollectionUtils.partition(largeList, 3));
 
     }
 

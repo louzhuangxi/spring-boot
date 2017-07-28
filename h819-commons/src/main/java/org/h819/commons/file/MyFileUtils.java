@@ -5,7 +5,7 @@ import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.base.FileUtilsBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,7 +252,7 @@ public class MyFileUtils extends FileUtilsBase {
 
 
         Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir4));
-        MyJsonUtils.prettyPrint(lists);
+        MyFastJsonUtils.prettyPrint(lists);
 
         System.out.println(StringUtils.center("splite",80,"*"));
 

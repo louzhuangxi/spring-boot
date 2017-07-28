@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ import java.util.List;
 /**
  * 对于复杂对象的序列化，应该用 java bean 相互嵌套来表示，不要用 List<List<Map>> 等这样的基础 Collection ，不容易反序列化
  */
-public class MyJsonUtils {
+public class MyFastJsonUtils {
 
     /**
      * 满足 Bean 格式的对象的序列化和反序列化
@@ -39,28 +38,15 @@ public class MyJsonUtils {
     // 反序列化 String -> Object
     // VO vo = JSON.parseObject("...", VO.class);  //单个对象字符串
     // List<VO> vo = JSON.parseArray("...", VO.class);  //多个对象字符串，如 list 有多个对象，序列化为字符串之后，进行反序列化
-    private MyJsonUtils() {
+    private MyFastJsonUtils() {
     }
 
-    /**
-     * 使用和单个 Bean 对象，和 Bean 对象的集合
-     * 多写一个集合参数，便于理解，实际上不写也行
-     */
 
     /**
-     * @param bean
+     * @param bean 可以是单个 Bean ，也可以是  Bean 对象的集合  Collection<Object> beans
      */
     public static void prettyPrint(Object bean) {
         prettyPrint(bean, null, Charset.defaultCharset());
-    }
-
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param beans
-     */
-    public static void prettyPrint(Collection<Object> beans) {
-        prettyPrint(beans);
     }
 
     /**
@@ -71,26 +57,9 @@ public class MyJsonUtils {
         prettyPrint(bean, null, charset);
     }
 
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param beans
-     */
-    public static void prettyPrint(Collection<Object> beans, Charset charset) {
-        prettyPrint(beans, charset);
-    }
 
     public static void prettyPrint(Object bean, FastJsonPropertyPreFilter preFilter) {
         prettyPrint(bean, preFilter, Charset.defaultCharset());
-    }
-
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param beans
-     */
-    public static void prettyPrint(Collection<Object> beans, FastJsonPropertyPreFilter preFilter) {
-        prettyPrint(beans, preFilter);
     }
 
     /**
@@ -114,61 +83,26 @@ public class MyJsonUtils {
         }
     }
 
-    public static void prettyPrint(Collection<Object> beans, FastJsonPropertyPreFilter preFilter, Charset charset) {
-        prettyPrint(beans, preFilter, charset);
-    }
-
     /**
      * 输出到文件
      *
-     * @param file
-     * @param bean
+     * @param file json 字符串输出到的文件
+     * @param bean 可以是单个 Bean ，也可以是  Bean 对象的集合  Collection<Object> beans
      */
     public static void prettyWrite(File file, Object bean) {
         prettyWrite(file, bean, null, Charset.defaultCharset());
     }
 
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param file
-     * @param beans
-     */
-    public static void prettyWrite(File file, Collection<Object> beans) {
-        prettyWrite(file, beans);
-    }
 
     public static void prettyWrite(File file, Object bean, Charset charset) {
 
         prettyWrite(file, bean, null, charset);
     }
 
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param file
-     * @param beans
-     * @param charset
-     */
-    public static void prettyWrite(File file, Collection<Object> beans, Charset charset) {
-        prettyWrite(file, beans, charset);
-    }
-
     public static void prettyWrite(File file, Object bean, FastJsonPropertyPreFilter preFilter) {
         prettyWrite(file, bean, preFilter, Charset.defaultCharset());
     }
 
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param file
-     * @param beans
-     * @param preFilter
-     */
-    public static void prettyWrite(File file, Collection<Object> beans, FastJsonPropertyPreFilter preFilter) {
-
-        prettyWrite(file, beans, preFilter);
-    }
 
     public static void prettyWrite(File file, Object bean, FastJsonPropertyPreFilter preFilter, Charset charset) {
 
@@ -179,17 +113,6 @@ public class MyJsonUtils {
         }
     }
 
-    /**
-     * 多写一个集合参数的方法
-     *
-     * @param file
-     * @param beans
-     * @param preFilter
-     * @param charset
-     */
-    public static void prettyWrite(File file, Collection<Object> beans, FastJsonPropertyPreFilter preFilter, Charset charset) {
-        prettyWrite(file, beans, preFilter, charset);
-    }
 
     private static String getJSONString(Object bean, FastJsonPropertyPreFilter preFilter) {
 
@@ -207,27 +130,20 @@ public class MyJsonUtils {
 
     }
 
-    public static String toJSONString(Object bean, FastJsonPropertyPreFilter preFilter) {
-        JSON.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-        SerializerFeature[] features = {
-                SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteDateUseDateFormat
-        };
-
-        if (preFilter == null)
-            return JSON.toJSONString(bean, features);
-        else
-            return JSON.toJSONString(bean, preFilter, features);
-
-    }
 
     public static String toPrettyJSONString(Object bean, FastJsonPropertyPreFilter preFilter) {
 
         return getJSONString(bean, preFilter);
     }
 
-    public static <T> T parse(String text, Class<T> clazz) {
-        return JSON.parseObject(text, clazz);
+    public static <T> T parse(String jsonText, Class<T> clazz) {
+        return JSON.parseObject(jsonText, clazz);
+    }
+
+
+    public static <T> T parse(File jsonText, Class<T> clazz) throws IOException {
+        return parse(jsonText, Charset.defaultCharset(), clazz);
+
     }
 
     /**
@@ -238,13 +154,8 @@ public class MyJsonUtils {
      * @return
      * @throws IOException
      */
-    public static <T> T parse(File jsonText, Class<T> clazz, Charset charset) throws IOException {
+    public static <T> T parse(File jsonText, Charset charset, Class<T> clazz) throws IOException {
         return parse(FileUtils.readFileToString(jsonText, charset), clazz);
-
-    }
-
-    public static <T> T parse(File jsonText, Class<T> clazz) throws IOException {
-        return parse(jsonText, clazz, Charset.defaultCharset());
 
     }
 
@@ -253,21 +164,22 @@ public class MyJsonUtils {
 
     }
 
+
+    public static <T> List<T> parseArray(File jsonText, Class<T> clazz) throws IOException {
+        return parseArray(jsonText, Charset.defaultCharset(), clazz);
+
+    }
+
     /**
-     * @param jsonText 用 FileUtils 读取， jdk Files.read 方法会有问题
+     * @param jsonText 用 FileUtils 读取， jdk Files.read 方法有问题
      * @param clazz
      * @param charset
      * @param <T>
      * @return
      * @throws IOException
      */
-    public static <T> List<T> parseArray(File jsonText, Class<T> clazz, Charset charset) throws IOException {
+    public static <T> List<T> parseArray(File jsonText, Charset charset, Class<T> clazz) throws IOException {
         return parseArray(FileUtils.readFileToString(jsonText, charset), clazz);
-
-    }
-
-    public static <T> List<T> parseArray(File jsonText, Class<T> clazz) throws IOException {
-        return parseArray(jsonText, clazz, Charset.defaultCharset());
 
     }
 

@@ -1,6 +1,6 @@
 package org.test;
 
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelCell;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
@@ -36,13 +36,13 @@ public class TestExcelUtils {
         line.addCellValue(cell);
         line.addCellValue(cell1);
 
-        MyJsonUtils.prettyPrint(line);
+        MyFastJsonUtils.prettyPrint(line);
 
         System.out.println("==================");
 
         MyExcelUtils.replaceCellValueByColumnAlphaTitleName(line,"f","replace_value");
 
-        MyJsonUtils.prettyPrint(line);
+        MyFastJsonUtils.prettyPrint(line);
 
 
 

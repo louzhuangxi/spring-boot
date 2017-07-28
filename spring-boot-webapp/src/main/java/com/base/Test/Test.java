@@ -1,7 +1,7 @@
 package com.base.Test;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
 
@@ -38,7 +38,7 @@ public class Test {
             }
         });
 
-        MyJsonUtils.prettyPrint(list);
+        MyFastJsonUtils.prettyPrint(list);
         // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
 
         //   System.out.print("中文");

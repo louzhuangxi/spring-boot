@@ -4,7 +4,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang.StringUtils;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -210,7 +210,7 @@ public class FileUtilsBase {
         Map<String, List<String>> duplicateFiles = findDuplicateFiles(fileFilter, directories);
         //MyJsonUtils.prettyPrint(duplicateFiles);
         if (outDuplicateFile != null)
-            MyJsonUtils.prettyWrite(outDuplicateFile, duplicateFiles);
+            MyFastJsonUtils.prettyWrite(outDuplicateFile, duplicateFiles);
 
         System.out.println(StringUtils.center("begin to delete duplicate file start with " + deletePathStartWith, 80, "="));
 

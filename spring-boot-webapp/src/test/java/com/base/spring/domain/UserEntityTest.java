@@ -6,7 +6,7 @@ import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.service.UserService;
 import com.base.spring.utils.BCryptPassWordUtils;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.junit.Test;
@@ -77,7 +77,7 @@ public class UserEntityTest {
 
         Example<UserEntity> example = Example.of(admin, matcher);
 
-        MyJsonUtils.prettyPrint(userRepository.findAll(example));
+        MyFastJsonUtils.prettyPrint(userRepository.findAll(example));
         System.out.println(userRepository.count(example));
 
     }
@@ -108,7 +108,7 @@ public class UserEntityTest {
         utils.addExcludes(TreeEntity.class, "parent","roles");
 
        // MyJsonUtils.prettyPrint(utils.createDTOcopy(treeEntity,3));
-      MyJsonUtils.prettyPrint(utils.createMapCopy(treeEntity,3));
+      MyFastJsonUtils.prettyPrint(utils.createMapCopy(treeEntity,3));
 
 
     }

@@ -1,7 +1,7 @@
 package com.base.spring.domain;
 
 import com.base.spring.repository.TreeRepository;
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.spring.jpa.JpaDynamicSpecificationBuilder;
 import org.h819.web.spring.jpa.SearchFilter;
@@ -65,7 +65,7 @@ public class TreeEntityTest {
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeEntity.class, "parent");
 
-        MyJsonUtils.prettyPrint(entity, preFilter);
+        MyFastJsonUtils.prettyPrint(entity, preFilter);
 
 
     }
@@ -75,7 +75,7 @@ public class TreeEntityTest {
 
         List<TreeType> list = repository.findTreeTypes();
 
-        MyJsonUtils.prettyPrint(list);
+        MyFastJsonUtils.prettyPrint(list);
 
 
     }
