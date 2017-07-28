@@ -52,7 +52,7 @@ var isIEBrowser = function (ver) {
  * 使用方法
 
  $.sleep(2, function () {
-    alert('五秒后我才弹出') ; //此处为需要休眠2秒钟后执行的语句。
+    alert('2秒后我才弹出') ; //此处为需要休眠2秒钟后执行的语句。
 });
 
  *

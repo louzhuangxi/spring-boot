@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -60,7 +61,7 @@ public class GroupAjaxController {
      * @param sort          排序的方式desc/asc
      * @return jqgrid 展示所需要的 json 结构，通过 spring 自动完成
      */
-    @RequestMapping(value = "/jqgrid-search", produces = "application/json")
+    @RequestMapping(value = "/jqgrid-search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     //注意 value  /jqgrid-search  ，不能为 /jqgrid-search/ ，不能多加后面的斜线
     @ResponseBody
     public JqgridPage jqgridSearch(

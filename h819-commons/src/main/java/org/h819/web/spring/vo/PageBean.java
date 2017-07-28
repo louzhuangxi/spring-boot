@@ -74,7 +74,7 @@ public class PageBean<T> implements Serializable {
     public PageBean(int pageSize, int currentPageNo, int totalRecords, List<T> content) {
 
         if (currentPageNo < 1)
-            throw new IllegalArgumentException("currentPageNo : 起始页应从 1 开始。");
+            throw new IllegalArgumentException("currentPageNo : 起始页不应小于 1 ，且从 1 开始。");
 
         if (pageSize < 0)
             throw new IllegalArgumentException("pageSize : 页大小不能小于 0");

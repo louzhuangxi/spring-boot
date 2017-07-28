@@ -71,6 +71,20 @@
  * <p>
  * =============================================================================================================================
  * -
+ * spring boot 1.5.4 问题
+ * javax.persistence.Transient
+ * 标注在变量上，在使用 repository 查找返回 entity 时，提示无法对应变量 ccsName
+ * @Transient private String ccsName;
+ * -
+ * 标注在 getter 方法上时，可以
+ * @Transient //临时
+ * public String getCcsName() {
+ * return ccsName;  }
+ * --
+ * 日后确认是什么问题
+ *=============================================================================================================================
+ * <p>
+ * <p>
  * ===
  */
 package com.base.spring.domain;

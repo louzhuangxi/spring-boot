@@ -17,6 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+// apache shiro
+//https://developer.okta.com/blog/2017/07/13/apache-shiro-spring-boot
+
 //4.1 新特性
 //http://docs.spring.io/spring-security/site/docs/4.1.x/reference/htmlsingle/#new
 

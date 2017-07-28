@@ -97,7 +97,7 @@ public class DownloadFileController {
 
     /**
      * 获得 web app 应用目录下的文件
-     *
+     * 以相对于 Web 应用根目录的方式进行访问
      * @param fileName
      * @return
      * @throws FileNotFoundException

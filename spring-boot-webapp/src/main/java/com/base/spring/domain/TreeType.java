@@ -9,6 +9,14 @@ public enum TreeType {
     DepartMent, //部门
     // Group,// 组，用 GroupEntity 单独表示，没有层级
     Standard // 具体的业务类型，如果标准
+
+
+    // 存入数据库
+//    使用枚举的时候，我们希望数据库中存储的是枚举对应的String类型，而不是枚举的索引值，
+//    需要在属性上面添加 @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = true)
+//    private TreeType type;
 }
 
 

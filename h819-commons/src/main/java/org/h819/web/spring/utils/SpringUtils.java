@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 
 public class SpringUtils {
 
+    /**
+     * 其他几个工具类
+     */
+    //org.springframework.web.util.WebUtils
+    //org.springframework.web.util.HtmlUtils
 
     /**
      * 在web 环境下,  非 Spring bean （无 @Component 注释的类，无法使用 @Autowired 自动注入 ）中 ，获取 bean
@@ -25,7 +30,10 @@ public class SpringUtils {
      */
     public static <T> T getWebApplicationContextBean(HttpServletRequest request, String beanName) {
 
+
         //使用：UserService service = SpringUtils.getWebApplicationContextBean(httpServletRequest,"userService");
         return (T) WebApplicationContextUtils.getWebApplicationContext(request.getServletContext()).getBean(beanName);
     }
+
+    
 }

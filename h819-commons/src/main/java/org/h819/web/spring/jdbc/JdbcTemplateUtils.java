@@ -106,7 +106,7 @@ public class JdbcTemplateUtils {
                                                               final String countNativeSql, Object[] countArgs,
                                                               int currentPageNo, int pageSize, RowMapper<T> rowMapper) {
 
-        Assert.isTrue(currentPageNo >= 1, "currentPageNo : 起始页应从 1 开始。");
+        Assert.isTrue(currentPageNo >= 1, "currentPageNo : 起始页不应小于 1 ，且从 1 开始。");
         Assert.isTrue(pageSize >= 0, "pageSize : 页大小不能小于 0");
         Assert.isTrue(countNativeSql.contains("count"), "queryNativeSql 和 countNativeSql 参数顺序不对");
 
@@ -120,7 +120,7 @@ public class JdbcTemplateUtils {
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
         if (totalRecordsSize == 0)
-            return new PageBean(pageSize, 0, 0, Collections.EMPTY_LIST);
+            return new PageBean(pageSize, 0+1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
 
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, rowMapper);
 

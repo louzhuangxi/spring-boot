@@ -8,6 +8,7 @@ import com.base.spring.service.TreeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,7 +47,7 @@ public class ZTreeAjaxController {
      * @param menuType 第一次加载树，决定了是哪种类型
      * @return
      */
-    @RequestMapping(value = "/asyncByTreeType.html", produces = "application/json")
+    @RequestMapping(value = "/asyncByTreeType.html", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeType menuType) {
 
@@ -66,7 +67,7 @@ public class ZTreeAjaxController {
      * @param menuType
      * @return
      */
-    @RequestMapping(value = "/asyncByTreeTypeAndRole.html", produces = "application/json")
+    @RequestMapping(value = "/asyncByTreeTypeAndRole.html", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String asyncByTreeTypeAndRole(@RequestParam(value = "id", required = false) Long id,
                                          @RequestParam(value = "treeType", required = true) TreeType menuType,

@@ -31,8 +31,7 @@ import java.util.Date;
 //        MonthDay : 这个类由月日组合，不包含年信息
 //https://github.com/JeffLi1993/java-core-learning-example/blob/master/src/main/java/org/javacore/time/TimeUtil.java
 public class MyDateUtilsJdk8 {
-
-
+    
     /**
      * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
      */
