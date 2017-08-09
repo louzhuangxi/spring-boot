@@ -1,10 +1,10 @@
-package org.h819.commons.beanutils.example;
+package org.date.bean.example;
 
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.beanutils.LazyDynaMap;
-import org.h819.commons.beanutils.bean.UserEntity;
+import org.date.bean.UserBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +38,7 @@ public class DynaBeansExample {
         dynaBean.set("gender", new Integer(1));  //simple
 
         //bean 属性,通过属性名 bean 调用
-        UserEntity beanExample = new UserEntity();
+        UserBean beanExample = new UserBean();
         beanExample.setName("name string."); //simple
         dynaBean.set("bean", beanExample);
 

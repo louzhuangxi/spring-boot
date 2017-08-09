@@ -1,8 +1,10 @@
 package org.h819.commons;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -31,11 +33,35 @@ import java.util.Date;
 //        MonthDay : 这个类由月日组合，不包含年信息
 //https://github.com/JeffLi1993/java-core-learning-example/blob/master/src/main/java/org/javacore/time/TimeUtil.java
 public class MyDateUtilsJdk8 {
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(MyDateUtils.class);
     /**
      * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
      */
-    private static final DateTimeFormatter Default_DateTime_Formatter = DateFormat.DateTime_Pattern_With_millisecond_Line.formatter;
+    // ====== 正则表达式(为了字符串合并的时候不产生歧义，每个子字符串都用括号()括起来)=====
+    /* 判断是否是正确的年份,必须以 19,20 开头，并且是四位 */
+    public static String yearPatternReg = "((19|20)[0-9]{2})";
+    /* 判断日期格式 yyyy-MM-dd */
+    public static String datePatternReg = "((19|20)[0-9]{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]))";
+    /* 判断时间格式 HH:mm:dd */
+    public static String time24PatternReg = "((0[0-9]|1[0-9]|2[0-4]):(0[0-9]|[1-5][0-9]|60):(0[0-9]|[1-5][0-9]|60))";
+    /* 判断日期格式 yyyy-MM-dd HH:mm:dd */
+    public static String dateTime24PatternReg = datePatternReg + " " + time24PatternReg;
+    // ===== 字符串 =====
+    // year
+    public static String yearPattern = "yyyy";
+    // date
+    // public static String datePattern = "yyyy-MM-dd";
+    // date
+    public static String datePattern = "yyyy-MM-dd";
+    // 24 小时制
+    public static String timePattern24 = "HH:mm:ss";
+    // 24 小时制
+    public static String dateTime24Pattern = datePattern + " " + timePattern24;
+    // 12 小时制
+    public static String timePattern12 = "hh:mm:ss";
+    // 12 小时制
+    public static String dateTime12Pattern = datePattern + " " + timePattern12;
 
     private MyDateUtilsJdk8() {
         // no construct function
@@ -67,12 +93,6 @@ public class MyDateUtilsJdk8 {
 
     }
 
-    public static Date asDate(LocalDate date) {
-        Instant instant = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-        return Date.from(instant);
-
-    }
-
     /**
      * 转换 java.util.Date -> java.time.LocalTime ，用于老系统向新系统转换，新系统中，不用 Date
      *
@@ -97,25 +117,6 @@ public class MyDateUtilsJdk8 {
 
     }
 
-    public static Date asDate(LocalDateTime date) {
-        Instant instant = date.atZone(ZoneId.systemDefault()).toInstant();
-        return Date.from(instant);
-    }
-
-    /**
-     * @param date
-     * @return
-     */
-    public static Date astDate(LocalTime date) {
-
-        //  LocalTime actually can't be converted to a Date, because it only contains the time partition of DateTime.
-        // Like 11:00. But no day is known. You have to supply it manually:
-        // 获取当前日的的事件
-        Instant instant = date.atDate(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth())).atZone(ZoneId.systemDefault()).toInstant();
-        return Date.from(instant);
-
-    }
-
     /**
      * 根据毫秒创建 LocalDateTime
      *
@@ -127,16 +128,43 @@ public class MyDateUtilsJdk8 {
     }
 
 
+    public static Date asDate(LocalDate date) {
+        Instant instant = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+
+    }
+
+    /**
+     * @param date
+     * @return
+     */
+    public static Date astDate(LocalTime date) {
+
+        // LocalTime actually can't be converted to a Date, because it only contains the time partition of DateTime.
+        // Like 11:00. But no day is known. You have to supply it manually:
+        // 获取当前日的的事件
+        Instant instant = date.atDate(LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth())).atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+
+    }
+
+    public static Date asDate(LocalDateTime date) {
+        Instant instant = date.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+    }
+
+
+
     /**
      * @param localDateStr
      * @return
      */
-    public static LocalDate parseLocalDate(String localDateStr, DateFormat format) {
-        return LocalDate.parse(localDateStr, format.formatter);
+    public static LocalDate parseLocalDate(String localDateStr, String format) {
+        return LocalDate.parse(localDateStr, DateTimeFormatter.ofPattern(format));
     }
 
-    public static LocalTime parseLocalTime(String localTimeStr, DateFormat format) {
-        return LocalTime.parse(localTimeStr, format.formatter);
+    public static LocalTime parseLocalTime(String localTimeStr, String format) {
+        return LocalTime.parse(localTimeStr, DateTimeFormatter.ofPattern(format));
     }
 
 
@@ -147,13 +175,13 @@ public class MyDateUtilsJdk8 {
      * @param format           时间格式
      * @return
      */
-    public static LocalDateTime parseLocalDateTime(String localDateTimeStr, DateFormat format) {
-        return LocalDateTime.parse(localDateTimeStr, format.formatter);
+    public static LocalDateTime parseLocalDateTime(String localDateTimeStr, String format) {
+        return LocalDateTime.parse(localDateTimeStr, DateTimeFormatter.ofPattern(format));
     }
 
 
-    public static String parseLocalDate(LocalDate localDate, DateFormat format) {
-        return format.formatter.format(localDate);
+    public static String parseLocalDate(LocalDate localDate, String format) {
+        return localDate.format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
@@ -162,8 +190,8 @@ public class MyDateUtilsJdk8 {
      * @param localTime
      * @return
      */
-    public static String parseLocalTime(LocalTime localTime, DateFormat format) {
-        return format.formatter.format(localTime);
+    public static String parseLocalTime(LocalTime localTime, String format) {
+        return localTime.format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
@@ -173,17 +201,17 @@ public class MyDateUtilsJdk8 {
      * @param format        时间格式
      * @return
      */
-    public static String parseLocalDateTime(LocalDateTime localDateTime, DateFormat format) {
-        return format.formatter.format(localDateTime);
+    public static String parseLocalDateTime(LocalDateTime localDateTime, String format) {
+        return localDateTime.format(DateTimeFormatter.ofPattern(format));
     }
 
 
-    public static String getCurrentLocalDate(DateFormat format) {
-        return format.formatter.format(LocalDate.now());
+    public static String getCurrentLocalDate(String format) {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern(format));
     }
 
-    public static String getCurrentLocaltime(DateFormat format) {
-        return format.formatter.format(LocalTime.now());
+    public static String getCurrentLocaltime(String format) {
+        return LocalTime.now().format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
@@ -192,8 +220,8 @@ public class MyDateUtilsJdk8 {
      * @param format 时间格式
      * @return
      */
-    public static String getCurrentLocalDatetime(DateFormat format) {
-        return format.formatter.format(LocalDateTime.now());
+    public static String getCurrentLocalDatetime(String format) {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
     }
 
     public static LocalDateTime getCurrentLocalDatetime() {
@@ -442,52 +470,4 @@ public class MyDateUtilsJdk8 {
             ex.printStackTrace();
         }
     }
-
-    /**
-     * 时间格式
-     */
-    public enum DateFormat {
-
-        /**
-         * 日期格式
-         */
-        Date_Pattern_Line("yyyy-MM-dd"),
-        Date_Pattern_Slash("yyyy/MM/dd"),
-        Date_Pattern_Double_Slash("yyyy\\MM\\dd"),
-        Date_Pattern_None("yyyyMMdd"),
-
-        /**
-         * 时间格式
-         */
-        Time_Pattern_Slash("HH:mm:ss"),
-        Time_Pattern_With_millisecond_Double_Slash("HH:mm:ss.SSS"),
-
-        /**
-         * 日期时间格式
-         */
-        DateTime_Pattern_Line("yyyy-MM-dd HH:mm:ss"),
-        DateTime_Pattern_Slash("yyyy/MM/dd HH:mm:ss"),
-        DateTime_Pattern_Double_Slash("yyyy\\MM\\dd HH:mm:ss"),
-        DateTime_Pattern_None("yyyyMMdd HH:mm:ss"),
-
-        /**
-         * 日期时间格式 带毫秒
-         */
-        DateTime_Pattern_With_millisecond_Line("yyyy-MM-dd HH:mm:ss.SSS"),
-        DateTime_Pattern_With_millisecond_Slash("yyyy/MM/dd HH:mm:ss.SSS"),
-        DateTime_Pattern_With_millisecond_Double_Slash("yyyy\\MM\\dd HH:mm:ss.SSS"),
-        DateTime_Pattern_With_millisecond_None("yyyyMMdd HH:mm:ss.SSS");
-
-        private transient DateTimeFormatter formatter;
-
-        DateFormat(String pattern) {
-            // formatter = DateTimeFormatter.ofPattern(pattern);
-            formatter =
-                    new DateTimeFormatterBuilder().appendPattern(pattern)
-                            //  .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
-                            .toFormatter()
-                            .withZone(ZoneId.systemDefault());
-        }
-    }
-
 }

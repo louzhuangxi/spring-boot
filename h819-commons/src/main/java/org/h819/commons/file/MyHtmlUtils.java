@@ -131,7 +131,7 @@ public class MyHtmlUtils {
      * @param len
      *            截取字符长度
      *
-     *         Document dirtyDocument = Jsoup.parse(sb.toString());<br />
+     *         Document dirtyDocument = Jsoup.parseObject(sb.toString());<br />
      *         Element source = dirtyDocument.body();<br />
      *         Document clean = Document.createShell(dirtyDocument.baseUri());<br />
      *         Element dest = clean.body();<br />

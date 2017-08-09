@@ -4,7 +4,7 @@ import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.collections4.map.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.h819.commons.MyLangUtils;
-import org.h819.commons.beanutils.bean.NameBean;
+import org.date.bean.NameBean;
 
 import java.util.*;
 

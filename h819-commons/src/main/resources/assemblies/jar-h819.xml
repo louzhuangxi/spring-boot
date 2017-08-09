@@ -21,6 +21,7 @@
                 <exclude>**/test/**</exclude>
                 <exclude>**/logback/**</exclude>
                 <exclude>**/static/**</exclude>
+                <exclude>**/test</exclude>
             </excludes>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>

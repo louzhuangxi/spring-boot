@@ -2,7 +2,7 @@ package org.h819.commons.beanutils;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.h819.commons.MyBeanUtils;
-import org.h819.commons.beanutils.bean.CityBean;
+import org.date.bean.CityBean;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

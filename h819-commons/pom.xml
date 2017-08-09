@@ -390,6 +390,12 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!--web jar 用处不大，不用
         <dependency>
             <groupId>org.webjars</groupId>

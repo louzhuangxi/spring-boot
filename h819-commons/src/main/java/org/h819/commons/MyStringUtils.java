@@ -273,12 +273,12 @@ public class MyStringUtils {
      * @param padChar
      * @return
      */
-    public static String center(int size, char padChar) {
+    public static String center(int size, String padChar) {
         return StringUtils.center("", size, padChar);
     }
 
     /**
-     * parse html to plain text
+     * parseObject html to plain text
      *
      * @param htmlStr
      * @return

@@ -1,6 +1,6 @@
 package org.h819.web.spring.jpa;
 
-import org.h819.commons.MyJsonUtils;
+import org.h819.commons.MyFastJsonUtils;
 import org.junit.Test;
 
 /**
@@ -21,7 +21,7 @@ public class DTOUtilsTest {
 
         // MyJsonUtils.prettyPrint(user);
 
-        MyJsonUtils.prettyPrint(utils.createDTOcopy(user,2));
+        MyFastJsonUtils.prettyPrint(utils.createDTOcopy(user,2));
 
     }
 
