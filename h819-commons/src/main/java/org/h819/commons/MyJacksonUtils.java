@@ -1,13 +1,14 @@
 package org.h819.commons;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.google.common.collect.Lists;
 import org.apache.commons.io.FileUtils;
-import org.h819.commons.json.FastJsonPropertyPreFilter;
+import org.date.bean.UserBean;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,13 +29,14 @@ import java.util.List;
  */
 
 /**
- * 与 fast json 的区别是，无法使用属性过滤
+ * 与 fast json 的区别是，无法使用属性过滤。注解方式，只能过滤一层属性，而不能递归过滤属性类中的属性
  * 所以在有双向级联的对象中，不要使用
- * 
+ * 对于转换 string to list 方面，也非常麻烦，直接用 fast json 吧
  */
+@Deprecated
 public class MyJacksonUtils {
 
-    https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
+    //https://github.com/alibaba/fastjson/wiki/%E5%9C%A8-Spring-%E4%B8%AD%E9%9B%86%E6%88%90-Fastjson
 
     private static ObjectMapper objectMapper;
 
@@ -92,49 +93,34 @@ public class MyJacksonUtils {
         }
     }
 
-    /**
-     * 输出到文件
-     *
-     * @param file json 字符串输出到的文件
-     * @param bean 可以是单个 Bean ，也可以是  Bean 对象的集合  Collection<Object> beans
-     */
-    public static void prettyWrite(File file, Object bean) {
-        prettyWrite(file, bean, null, Charset.defaultCharset());
-    }
-
-
-    public static void prettyWrite(File file, Object bean, Charset fileCharset) {
-
-        prettyWrite(file, bean, null, fileCharset);
-    }
-
-    public static void prettyWrite(File file, Object bean, FastJsonPropertyPreFilter preFilter) {
-        prettyWrite(file, bean, preFilter, Charset.defaultCharset());
-    }
-
-
-    public static void prettyWrite(File file, Object bean, FastJsonPropertyPreFilter preFilter, Charset fileCharset) {
-
-        try {
-            FileUtils.write(file, toPrettyJSONString(bean, preFilter), fileCharset);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static String toPrettyJSONString(Object bean) {
         try {
-            objectMapper.writeValueAsString(bean);
+            // objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean) ;
+            return objectMapper.writeValueAsString(bean);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
 
     }
 
 
+    /**
+     * JSON from String to Object
+     *
+     * @param jsonString
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> T parseObject(String jsonString, Class<T> clazz) {
-        return JSON.parseObject(jsonString, clazz);
+        try {
+            return objectMapper.readValue(jsonString, clazz);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -156,8 +142,25 @@ public class MyJacksonUtils {
 
     }
 
+    /**
+     * 非常麻烦
+     *
+     * @param jsonString
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> parseArray(String jsonString, Class<T> clazz) {
-        return JSON.parseArray(jsonString, clazz);
+
+        //注册一种类型
+        // 非常麻烦 ，不同的应用，需要注册不同的类型，直接用 fast json 吧
+        CollectionType javaType = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
+        try {
+            return objectMapper.readValue(jsonString, javaType);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
@@ -181,8 +184,33 @@ public class MyJacksonUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(JSON.toJSONString("hell world."));
-        System.out.println(toPrettyJSONString(new Date()));
+
+        UserBean bean1 = new UserBean();
+        bean1.setName("name1");
+        bean1.setPasswd("pass1");
+
+        UserBean bean2 = new UserBean();
+        bean2.setName("name2");
+        bean2.setPasswd("pass2");
+
+        List users = Lists.newArrayList(bean1, bean2);
+        /**
+         * pretty print test
+         */
+
+//        System.out.println(toPrettyJSONString(new Date()));
+//        System.out.println(MyStringUtils.center(80,"*"));
+//        prettyPrint(bean1);
+//        System.out.println(MyStringUtils.center(80,"*"));
+//        prettyPrint(users);
+//        System.out.println(MyStringUtils.center(80,"*"));
+        /**
+         * parse test
+         */
+
+        // prettyPrint(parseObject(toPrettyJSONString(bean1),UserBean.class));
+        System.out.println(MyStringUtils.center(80, "*"));
+        prettyPrint(parseArray(toPrettyJSONString(users), UserBean.class));
     }
 
 }

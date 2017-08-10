@@ -1,5 +1,8 @@
 package com.base.spring.config;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.base.spring.filter.XSSFilter;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
@@ -8,6 +11,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
@@ -15,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 // web 配置
 //WebMvcConfigurerAdapter 中有更多设置，参考文档
@@ -143,6 +149,33 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
          */
 
         configurer.setUseSuffixPatternMatch(false);
+    }
+
+    /**
+     * 替换 jackson 为 fastJson
+     * fastJson 有很多符合国人的使用习惯
+     * <p>
+     * Configure the HttpMessageConverters to use for reading or writing to the body of the request or response.
+     * - spring mvc message converters
+     *
+     * @param converters
+     */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        //自定义配置...
+        FastJsonConfig config = new FastJsonConfig();
+        SerializerFeature[] features = {
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.PrettyFormat};
+
+        config.setSerializerFeatures(features);
+        config.setDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        config.setCharset(StandardCharsets.UTF_8);
+
+        converter.setFastJsonConfig(config);
+        converters.add(converter);
     }
 
 }
