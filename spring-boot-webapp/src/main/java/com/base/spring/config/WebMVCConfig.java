@@ -129,6 +129,10 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
         configurer.favorPathExtension(false). //关闭URL后缀检测的方法如下
                 favorParameter(true).
+                parameterName("mediaType").
+                ignoreAcceptHeader(true).
+                useJaf(false).
+                mediaType("xml", MediaType.APPLICATION_XML).
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
 
@@ -162,20 +166,22 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        FastJsonHttpMessageConverter httpMessageConverter = new FastJsonHttpMessageConverter();
         //自定义配置...
         FastJsonConfig config = new FastJsonConfig();
+
         SerializerFeature[] features = {
                 SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.WriteDateUseDateFormat, //使用用户在属性上自定义的日期格式
                 SerializerFeature.PrettyFormat};
 
-        config.setSerializerFeatures(features);
+        config.setSerializerFeatures(features); //序列化时设置
         config.setDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         config.setCharset(StandardCharsets.UTF_8);
 
-        converter.setFastJsonConfig(config);
-        converters.add(converter);
+        httpMessageConverter.setFastJsonConfig(config);
+
+        converters.add(httpMessageConverter);
     }
 
 }

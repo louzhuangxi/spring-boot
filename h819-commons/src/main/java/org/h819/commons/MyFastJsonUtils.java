@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -76,9 +77,9 @@ public class MyFastJsonUtils {
     /**
      * 打印 bean object 到 console
      * -
-     * 利用 SerializerFeature.PrettyFormat ，格式化输出输出 json 字符串 ，属性过滤器用 fastJson 实现
+     * 格式化输出输出 json 字符串 ，属性过滤器用 fastJson 实现
      * -
-     * 如果不在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉，才可以不进入死循环
+     * 如果在 hibernate 的事务环境下，级联属性是不能输出的，此时要把所有的级联属性过滤掉，才可以不进入死循环
      *
      * @param bean         待打印的对象，可以是对象的集合
      * @param preFilter    过滤器
@@ -89,6 +90,7 @@ public class MyFastJsonUtils {
         try {
             PrintStream out = new PrintStream(System.out, true, printCharset.name());
             out.println(toPrettyJSONString(bean, preFilter));
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -187,8 +189,12 @@ public class MyFastJsonUtils {
     }
 
     public static void main(String[] args) {
+
+        String format ="yyyy-MM-dd HH:mm:ss.SSS";
+
         System.out.println(JSON.toJSONString("hell world."));
         System.out.println(toPrettyJSONString(new Date()));
+        System.out.println(JSON.toJSONStringWithDateFormat(LocalDateTime.now(),format));
     }
 
 }
