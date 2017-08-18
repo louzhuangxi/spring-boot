@@ -1,7 +1,6 @@
 package com.base.spring.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.base.spring.filter.XSSFilter;
 import org.apache.catalina.filters.RemoteIpFilter;
@@ -156,9 +155,8 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     }
 
     /**
-     * 替换 jackson 为 fastJson
-     * fastJson 有很多符合国人的使用习惯
-     * <p>
+     * 自定义转换器
+     * -
      * Configure the HttpMessageConverters to use for reading or writing to the body of the request or response.
      * - spring mvc message converters
      *
@@ -166,22 +164,39 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        FastJsonHttpMessageConverter httpMessageConverter = new FastJsonHttpMessageConverter();
-        //自定义配置...
-        FastJsonConfig config = new FastJsonConfig();
 
+        //替换 jackson 为 fastJson
+        //fastJson 有很多符合国人的使用习惯
+        converters.add(getFastJsonConverter());
+
+        //其他转换器
+//        List<HttpMessageConverter<?>> messageConverters = new ArrayList();
+//        messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+//        messageConverters.add(new FormHttpMessageConverter());
+//        messageConverters.add(new ByteArrayHttpMessageConverter());
+//        converters.addAll(messageConverters);
+    }
+
+    /**
+     * 自定义 一个 json 转换器
+     * 详见 fast json 官方文档
+     *
+     * @return
+     */
+    private HttpMessageConverter getFastJsonConverter() {
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        //自定义配置...
+        com.alibaba.fastjson.support.config.FastJsonConfig config = new com.alibaba.fastjson.support.config.FastJsonConfig();
         SerializerFeature[] features = {
                 SerializerFeature.DisableCircularReferenceDetect,
-                SerializerFeature.WriteDateUseDateFormat, //使用用户在属性上自定义的日期格式
+                SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.PrettyFormat};
-
-        config.setSerializerFeatures(features); //序列化时设置
+        config.setSerializerFeatures(features);
         config.setDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         config.setCharset(StandardCharsets.UTF_8);
+        converter.setFastJsonConfig(config);
+        return converter;
 
-        httpMessageConverter.setFastJsonConfig(config);
-
-        converters.add(httpMessageConverter);
     }
 
 }

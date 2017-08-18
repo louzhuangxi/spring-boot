@@ -91,7 +91,21 @@ public class GlobalControllerAdvice {
     public void initBinder(WebDataBinder binder) {
         //忽略 request 中的参数 dis ，更多关于 WebDataBinder ，可参考文档。
         //binder.setDisallowedFields("dis");
+//        binder.registerCustomEditor(LocalDate.class, new PropertyEditorSupport() {
+//            @Override
+//            public void setAsText(String text) throws IllegalArgumentException {
+//                LocalDate.parse(text, DateTimeFormatter.ISO_DATE);
+//            }
+//        });  //自动绑定 LocalDate
+//
+//        @GetMapping
+//        public ResponseEntity<List<Order>> getOrdersByDate(
+//                @RequestParam(name = "date")LocalDate date) {
+//            // retrieve and return orders by date
+//        }
+
     }
+
 
     // 应用到所有 @RequestMapping 注解的方法，在该方法抛出 Exception 异常时执行此方法
     @ExceptionHandler(value = FileNotFoundException.class)

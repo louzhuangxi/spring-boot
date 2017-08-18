@@ -192,36 +192,36 @@ public class JpaUtils {
     /**
      * 根据 jqgrid 传过来的排序信息，构造排序所需要的 Sort
      *
-     * @param sortDirection 排序的方式，只能为  desc 或 asc
-     * @param sortParameter 用于排序的列名, grouping:true 时格式特殊，需要正确解析
+     * @param direction 排序的方式，只能为  desc 或 asc
+     * @param property  用于排序的列名, grouping:true 时格式特殊，需要正确解析
      * @return
      */
-    private static Sort getJqgirdSpringSort(String sortDirection, String sortParameter) {
+    private static Sort getJqgirdSpringSort(String property, String direction) {
 
-        if (sortParameter == null || sortParameter.isEmpty()) {
+        if (property == null || property.isEmpty()) {
             logger.info("排序字段为 null 或 空");
             return null;
         }
 
         //排序字段
-        if (!sortParameter.contains(",")) { //未分组
+        if (!property.contains(",")) { //未分组
 
-            return createSort(sortDirection, sortParameter);
+            return createSort(direction, property);
 
         } else { //分组,grouping:true 时
 
-            String[] arrays = StringUtils.removeEnd(sortParameter.trim(), ",").split(",");  //传来的排序请求字符串，形如 sidx =name asc, herf desc,实际经过参数对应后变成字符串 name asc, herf desc,
+            String[] arrays = StringUtils.removeEnd(property.trim(), ",").split(",");  //传来的排序请求字符串，形如 sidx =name asc, herf desc,实际经过参数对应后变成字符串 name asc, herf desc,
             //arrays = {[name asc],[herf desc]}
 
             List<Sort.Order> orders = Lists.newArrayList();
             List<String> unique = Lists.newArrayList();   //为了避免同一个属性，重复添加。此情况发生在 grouping:true 时，没有进一步测试。
             for (String s : arrays) { //拼接所有的排序请求。
-                String property = StringUtils.substringBefore(s.trim(), " ");
-                if (unique.contains(property))
+                String propertyT = StringUtils.substringBefore(s.trim(), " ");
+                if (unique.contains(propertyT))
                     continue;
-                unique.add(property);
-                String direction = StringUtils.substringAfter(s.trim(), " ");
-                orders.add(createOrder(direction, property));
+                unique.add(propertyT);
+                String directionT = StringUtils.substringAfter(s.trim(), " ");
+                orders.add(createOrder(directionT, propertyT));
             }
             return createSort(orders);
         }
@@ -231,22 +231,22 @@ public class JpaUtils {
     /**
      * 单个排序条件创建 Sort
      *
-     * @param direction
      * @param property
+     * @param direction
      * @return
      */
-    public static Sort createSort(Sort.Direction direction, String property) {
+    public static Sort createSort(String property, Sort.Direction direction) {
         return new Sort(direction, property);
     }
 
     /**
      * 单个排序条件创建 Sort
-     *
-     * @param direction
      * @param property
+     * @param direction
+
      * @return
      */
-    public static Sort createSort(String direction, String property) {
+    public static Sort createSort(String property,String direction) {
         return new Sort(createOrder(direction, property));
     }
 
@@ -280,7 +280,7 @@ public class JpaUtils {
      * @param property
      * @return
      */
-    public static Sort.Order createOrder(String direction, String property) {
+    public static Sort.Order createOrder(String property,String direction) {
         Assert.isTrue(!property.isEmpty(), " 排序字段没有指定");
         return new Sort.Order(createDirection(direction), property);
     }

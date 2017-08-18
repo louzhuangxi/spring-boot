@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
@@ -15,7 +14,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  * Time: 0:04
  * To change this template use File | Settings | File Templates.
  */
-@Configuration
+//@Configuration  // 用 fastJson 代替
 public class JacksonConfig {
 
     @Bean

@@ -308,7 +308,6 @@ public class JpaDynamicSpecificationBuilder {
                             throw new IllegalArgumentException("不能比较! between 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     default:
                         return builder.conjunction();
-
                 }
             }
         };

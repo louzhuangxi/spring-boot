@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import java.util.Map;
 // 例子见 standard-open-api-server , com.open.api.oracle.service.StStandardNativeService
 public class JdbcTemplateUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
     /**
      * 占位符只能用于 value ，不能用于列名(column)
      * 所以 order by ? ,? asc 不可以
@@ -34,7 +34,6 @@ public class JdbcTemplateUtils {
     //where name like '%中国%' ，转换为占位符方式，相当于
     //where name like '%'||?||'%'
     public static String BIND_LIKE_STRING = " '%'||?||'%' ";
-    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
 
     //其他的例子
     //= ：  name =?
@@ -43,7 +42,6 @@ public class JdbcTemplateUtils {
     //@Autowired
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
-
 
     /**
      * Map 包装
@@ -120,7 +118,7 @@ public class JdbcTemplateUtils {
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
         if (totalRecordsSize == 0)
-            return new PageBean(pageSize, 0+1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
+            return new PageBean(pageSize, 0 + 1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
 
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, rowMapper);
 
@@ -174,20 +172,5 @@ public class JdbcTemplateUtils {
     public static List<Map<String, Object>> queryForListByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final String queryNativeSql, Object[] queryArgs) {
         return queryForListByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new ColumnMapRowMapper());
     }
-
-
-    /**
-     * 构造排序条件
-     * 其他参数，需要时在完善
-     *
-     * @param sortParameters
-     * @param sort
-     * @return
-     */
-    public static String createOrderByString(String[] sortParameters, SqlUtils.SortDirection sort) {
-        return " order by  " + Arrays.toString(sortParameters).replace("[", "").replace("]", "") + " " + sort;
-
-    }
-
 
 }
