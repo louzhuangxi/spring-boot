@@ -86,7 +86,6 @@ public class JpaDynamicSpecificationBuilder {
         // 找到最终属性的 tree.parent.name 所代表的 path ，相当于 root.get("tree").get("parent").get("name");
         for (String subPath : names)
             nestedPath = nestedPath.get(subPath);
-
         return nestedPath;
     }
 

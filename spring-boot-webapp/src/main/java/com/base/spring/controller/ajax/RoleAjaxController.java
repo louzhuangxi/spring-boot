@@ -65,7 +65,7 @@ public class RoleAjaxController {
         /**
          * 记录集
          */
-        Page<RoleEntity> pages = JpaUtils.getJqgridPage(roleRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<RoleEntity> pages = JpaUtils.getJqGridPage(roleRepository, currentPageNo, pageSize, sortParameter, sort, filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 

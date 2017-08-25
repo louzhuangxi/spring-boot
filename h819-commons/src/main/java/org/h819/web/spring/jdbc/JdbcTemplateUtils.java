@@ -87,7 +87,7 @@ public class JdbcTemplateUtils {
      * @param queryNativeSql 本地查询条件，和不分页时相同，如
      *                       select * from standard st where st.namecn like '%中国%' ,
      *                       select st.id,st.name from standard st where st.id ='239711'  等
-     * @param queryArgs      arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数
+     * @param queryArgs      arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数，按照位置对应
      *                       (leaving it to the PreparedStatement to guess the corresponding SQL type ，是 Object 类型，系统可以自动匹配成 sql 类型)
      *                       无参数时，传入 new Objects[]{} 空数组即可
      *                       占位符方式，可以避免 sql 注入  Queries with Named Parameters

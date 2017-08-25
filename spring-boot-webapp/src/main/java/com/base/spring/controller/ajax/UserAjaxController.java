@@ -81,7 +81,7 @@ public class UserAjaxController {
         /**
          * 记录集
          */
-        Page<UserEntity> pages = JpaUtils.getJqgridPage(userRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<UserEntity> pages = JpaUtils.getJqGridPage(userRepository, currentPageNo, pageSize, sortParameter, sort, filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 

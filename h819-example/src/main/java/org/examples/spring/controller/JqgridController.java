@@ -143,7 +143,7 @@ public class JqgridController {
         // Page list = JpaUtils.getPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
 
 
-        Page<TreeEntity> pages = JpaUtils.getJqgridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        Page<TreeEntity> pages = JpaUtils.getJqGridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, Collections.emptyList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 

@@ -56,7 +56,6 @@ public class JpaUtils {
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
-
         return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, sort));
 
 
@@ -70,15 +69,15 @@ public class JpaUtils {
      * @param repository          查询器
      * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize            页面可显示行数
-     * @param sortParameter       用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sortDirection       排序的方式，只能为  desc 或 asc
+     * @param property            用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
+     * @param direction           排序的方式，只能为  desc 或 asc
      * @param jqgridFilters       通过 jqgrid search 按键查询，多个查询条件时，包含查询条件的 json 格式数据   ,  filters 为 null  时，可以用作非 jqgrid 情况下
      * @param customSpecification 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件,与 filters AND 关系的查询条件，specification 的构造符合 SearchFilter 写法，详见示例项目。
      *                            customSpecification 中指定的属性名称应该是待查询的 entity 中的属性名称，并且用改 entity 的 repository 进行查询
      * @return
      */
 
-    public static Page getJqgridPage(Repository repository, int currentPageNo, int pageSize, String sortParameter, String sortDirection, String jqgridFilters, Specification customSpecification) {
+    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, String direction, String property, String jqgridFilters, Specification customSpecification) {
 
         JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
 
@@ -88,7 +87,7 @@ public class JpaUtils {
         currentPageNo = currentPageNo - 1;
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
-            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            Sort sort = getJqGirdSort(direction, property);
             if (sort == null)
                 return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize));
             else
@@ -105,7 +104,7 @@ public class JpaUtils {
             if (f.getGroupRelation().equals(SearchFilter.Relation.OR))
                 specificationFilters = new JpaDynamicSpecificationBuilder().or(f.getSearchFilters()).build();
 
-            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            Sort sort = getJqGirdSort(direction, property);
             if (sort == null)
                 return rep.findAll(
                         new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
@@ -148,12 +147,12 @@ public class JpaUtils {
      * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的写法。
      * @param currentPageNo 当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize      页面可显示行数
-     * @param sortParameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sortDirection 排序的方式，只能为  desc 或 asc
+     * @param property      用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
+     * @param direction     排序的方式，只能为  desc 或 asc
      * @param jqgridFilters 通过 jqgrid search 按键查询，多个查询条件时，包含查询条件的 json 格式数据
      * @return
      */
-    public static Page getJqgridPage(Repository repository, int currentPageNo, int pageSize, String sortParameter, String sortDirection, String jqgridFilters) {
+    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, String direction, String property, String jqgridFilters) {
 
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
@@ -162,7 +161,7 @@ public class JpaUtils {
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
             JpaRepository rep = (JpaRepository) repository;
-            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            Sort sort = getJqGirdSort(direction, property);
             if (sort == null)
                 return rep.findAll(new PageRequest(currentPageNo, pageSize));
             else
@@ -181,7 +180,7 @@ public class JpaUtils {
 
             //  Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
 
-            Sort sort = getJqgirdSpringSort(sortDirection, sortParameter);
+            Sort sort = getJqGirdSort(direction, property);
             if (sort == null)
                 return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize));
             else
@@ -196,7 +195,7 @@ public class JpaUtils {
      * @param property  用于排序的列名, grouping:true 时格式特殊，需要正确解析
      * @return
      */
-    private static Sort getJqgirdSpringSort(String property, String direction) {
+    private static Sort getJqGirdSort(String direction, String property) {
 
         if (property == null || property.isEmpty()) {
             logger.info("排序字段为 null 或 空");
@@ -235,18 +234,18 @@ public class JpaUtils {
      * @param direction
      * @return
      */
-    public static Sort createSort(String property, Sort.Direction direction) {
+    public static Sort createSort(Sort.Direction direction, String property) {
         return new Sort(direction, property);
     }
 
     /**
      * 单个排序条件创建 Sort
+     *
      * @param property
      * @param direction
-
      * @return
      */
-    public static Sort createSort(String property,String direction) {
+    public static Sort createSort(String direction, String property) {
         return new Sort(createOrder(direction, property));
     }
 
@@ -280,13 +279,13 @@ public class JpaUtils {
      * @param property
      * @return
      */
-    public static Sort.Order createOrder(String property,String direction) {
+    public static Sort.Order createOrder(String direction, String property) {
         Assert.isTrue(!property.isEmpty(), " 排序字段没有指定");
         return new Sort.Order(createDirection(direction), property);
     }
 
     /**
-     * String to Direction
+     * String to Sort.Direction
      *
      * @param direction
      * @return
@@ -294,7 +293,7 @@ public class JpaUtils {
     private static Sort.Direction createDirection(String direction) {
 
         // logger.info(direction);
-        Assert.state(direction.equalsIgnoreCase("asc") || direction.equalsIgnoreCase("desc"), " 排序 direction 只能为 asc or desc");
+        Assert.state(direction.equalsIgnoreCase("ASC") || direction.equalsIgnoreCase("DESC"), " 排序 direction 只能为 ASC or DESC");
         Sort.Direction directionTemp;
         if (direction.toLowerCase().equals("asc"))
             directionTemp = Sort.Direction.ASC;
@@ -302,5 +301,41 @@ public class JpaUtils {
         return directionTemp;
     }
 
+    /**
+     * 创建分页请求.
+     *
+     * @param currentPageNo 当前页码，第一页为 0
+     * @param pageSize      每页记录数
+     * @param property      排序字段
+     * @param direction     排序关键字，应为 DESC、ASC，可以为 null ，此时按默认排序，即 DESC
+     * @return
+     */
+    public static PageRequest createPageRequest(int currentPageNo, int pageSize, String direction, String property) {
 
+        Assert.hasText(property, "fieldName must not be null or empty!");
+        return new PageRequest(currentPageNo, pageSize, createSort(property, direction));
+    }
+
+    /**
+     * 创建分页请求，默认排序.
+     *
+     * @param currentPageNo 当前页码，第一页为 0
+     * @param pageSize      每页记录数
+     * @return
+     */
+    public static PageRequest createPageRequest(int currentPageNo, int pageSize) {
+        return new PageRequest(currentPageNo, pageSize);
+    }
+
+    /**
+     * 创建分页请求，自定义排序.
+     *
+     * @param currentPageNo 当前页码，第一页为 0
+     * @param pageSize      每页记录数
+     * @param sort          排序
+     * @return
+     */
+    public static PageRequest createPageRequest(int currentPageNo, int pageSize, Sort sort) {
+        return new PageRequest(currentPageNo, pageSize, sort);
+    }
 }
