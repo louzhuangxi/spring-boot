@@ -475,6 +475,7 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <!--定义多个 execution ，可以调用多个 assembly 配置文件。assembly 配置文件中可以定义多种格式包-->
                     <execution>  <!--执行器 mvn assembly:assembly-->
