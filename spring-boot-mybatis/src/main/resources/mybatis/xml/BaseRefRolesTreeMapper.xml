@@ -18,4 +18,21 @@
     select role_id, tree_id
     from base_ref_roles_tree
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefRolesTree">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="tree_id" jdbcType="BIGINT" property="treeId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_roles_tree
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and tree_id = #{treeId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefRolesTree">
+    insert into base_ref_roles_tree (role_id, tree_id)
+    values (#{roleId,jdbcType=BIGINT}, #{treeId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, tree_id
+    from base_ref_roles_tree
+  </select>
 </mapper>

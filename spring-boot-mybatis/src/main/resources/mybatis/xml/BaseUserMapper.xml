@@ -104,4 +104,107 @@
     user_name, weixin, created_date, modified_date, expire_date
     from base_user
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="account_non_expired" jdbcType="BIT" property="accountNonExpired" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="email_valid" jdbcType="BIT" property="emailValid" />
+    <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="account_non_locked" jdbcType="BIT" property="accountNonLocked" />
+    <result column="credentials_non_expired" jdbcType="BIT" property="credentialsNonExpired" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="postcode" jdbcType="VARCHAR" property="postcode" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="receive_email_info" jdbcType="BIT" property="receiveEmailInfo" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="weixin" jdbcType="VARCHAR" property="weixin" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseUser">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_user (id, enabled, `operator`, 
+      remark, `valid`, account_non_expired, 
+      address, company, email, 
+      email_valid, fax, account_non_locked, 
+      credentials_non_expired, login_name, mobile, 
+      nick_name, `password`, postcode, 
+      qq, receive_email_info, telephone, 
+      token, user_name, weixin, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{accountNonExpired,jdbcType=BIT}, 
+      #{address,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{emailValid,jdbcType=BIT}, #{fax,jdbcType=VARCHAR}, #{accountNonLocked,jdbcType=BIT}, 
+      #{credentialsNonExpired,jdbcType=BIT}, #{loginName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{postcode,jdbcType=VARCHAR}, 
+      #{qq,jdbcType=VARCHAR}, #{receiveEmailInfo,jdbcType=BIT}, #{telephone,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseUser">
+    update base_user
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      account_non_expired = #{accountNonExpired,jdbcType=BIT},
+      address = #{address,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      email_valid = #{emailValid,jdbcType=BIT},
+      fax = #{fax,jdbcType=VARCHAR},
+      account_non_locked = #{accountNonLocked,jdbcType=BIT},
+      credentials_non_expired = #{credentialsNonExpired,jdbcType=BIT},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      postcode = #{postcode,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      receive_email_info = #{receiveEmailInfo,jdbcType=BIT},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      weixin = #{weixin,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, account_non_expired, address, company, 
+    email, email_valid, fax, account_non_locked, credentials_non_expired, login_name, 
+    mobile, nick_name, `password`, postcode, qq, receive_email_info, telephone, token, 
+    user_name, weixin, created_date, modified_date, expire_date
+    from base_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, account_non_expired, address, company, 
+    email, email_valid, fax, account_non_locked, credentials_non_expired, login_name, 
+    mobile, nick_name, `password`, postcode, qq, receive_email_info, telephone, token, 
+    user_name, weixin, created_date, modified_date, expire_date
+    from base_user
+  </select>
 </mapper>

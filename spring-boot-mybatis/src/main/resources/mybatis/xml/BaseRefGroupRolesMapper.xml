@@ -18,4 +18,21 @@
     select group_id, role_id
     from base_ref_group_roles
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefGroupRoles">
+    <id column="group_id" jdbcType="BIGINT" property="groupId" />
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_group_roles
+    where group_id = #{groupId,jdbcType=BIGINT}
+      and role_id = #{roleId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefGroupRoles">
+    insert into base_ref_group_roles (group_id, role_id)
+    values (#{groupId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select group_id, role_id
+    from base_ref_group_roles
+  </select>
 </mapper>

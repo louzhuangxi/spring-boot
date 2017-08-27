@@ -50,4 +50,53 @@
     expire_date
     from base_role
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRole">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRole">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_role (id, enabled, `operator`, 
+      remark, `valid`, `name`, created_date, 
+      modified_date, expire_date)
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{createdDate,jdbcType=BINARY}, 
+      #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseRole">
+    update base_role
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, `name`, created_date, modified_date, 
+    expire_date
+    from base_role
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, `name`, created_date, modified_date, 
+    expire_date
+    from base_role
+  </select>
 </mapper>
