@@ -30,7 +30,6 @@ public class TestExcelUtils {
         set.add(cell3);
 
 
-
         ExcelLine line = new ExcelLine();
         line.setCellValues(set);
         line.addCellValue(cell);

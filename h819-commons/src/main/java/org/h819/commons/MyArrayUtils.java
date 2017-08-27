@@ -1,6 +1,7 @@
 package org.h819.commons;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import java.util.List;
  * Time: 下午4:06
  * To change this template use File | Settings | File Templates.
  */
-public class MyArrayUtils {
+public class MyArrayUtils extends ArrayUtils {
 
     /**
      * 合并两个 array，保持原先后顺序
@@ -29,6 +30,7 @@ public class MyArrayUtils {
         System.arraycopy(secondArgs, 0, result, firstArgs.length, secondArgs.length);
         return result;
     }
+
 
     /**
      * Arrays.asList 生成的 list 大小不可变，重新包装。

@@ -83,7 +83,7 @@ public class JqgridLogBackController {
         DtoUtils dtoUtils = new DtoUtils();  //用法见 DTOUtils
 
         //记录总数
-        Page<LoggingEventEntity> list = JpaUtils.getJqgridPage(loggingEventEntityRepository, page, rows, sidx, sord, filters, specification);
+        Page<LoggingEventEntity> list = JpaUtils.getJqGridPage(loggingEventEntityRepository, page, rows, sidx, sord, filters, specification);
 
         if (list.getTotalElements() == 0)
             return JSON.toJSONString(new JqgridPage(rows, 0, 0, Lists.newArrayList())); //构造空数据集，返回 null ，有问题

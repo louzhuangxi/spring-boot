@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import java.util.Map;
 // 例子见 standard-open-api-server , com.open.api.oracle.service.StStandardNativeService
 public class JdbcTemplateUtils {
 
+    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
     /**
      * 占位符只能用于 value ，不能用于列名(column)
      * 所以 order by ? ,? asc 不可以
@@ -34,7 +34,6 @@ public class JdbcTemplateUtils {
     //where name like '%中国%' ，转换为占位符方式，相当于
     //where name like '%'||?||'%'
     public static String BIND_LIKE_STRING = " '%'||?||'%' ";
-    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
 
     //其他的例子
     //= ：  name =?
@@ -43,7 +42,6 @@ public class JdbcTemplateUtils {
     //@Autowired
     //@Qualifier("oracleDataSource")  // 配置文件中，有了 @Primary ，会默认连接次数据库，不要在指定
     //       JdbcTemplate jdbcTemplate;
-
 
     /**
      * Map 包装
@@ -89,7 +87,7 @@ public class JdbcTemplateUtils {
      * @param queryNativeSql 本地查询条件，和不分页时相同，如
      *                       select * from standard st where st.namecn like '%中国%' ,
      *                       select st.id,st.name from standard st where st.id ='239711'  等
-     * @param queryArgs      arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数
+     * @param queryArgs      arguments to bind to the query ，查询时，绑定在 queryNativeSql 上的参数，按照位置对应
      *                       (leaving it to the PreparedStatement to guess the corresponding SQL type ，是 Object 类型，系统可以自动匹配成 sql 类型)
      *                       无参数时，传入 new Objects[]{} 空数组即可
      *                       占位符方式，可以避免 sql 注入  Queries with Named Parameters
@@ -120,7 +118,7 @@ public class JdbcTemplateUtils {
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
 //        logger.info("totalRecordsSize : " + totalRecordsSize);
         if (totalRecordsSize == 0)
-            return new PageBean(pageSize, 0+1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
+            return new PageBean(pageSize, 0 + 1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
 
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, rowMapper);
 
@@ -174,20 +172,5 @@ public class JdbcTemplateUtils {
     public static List<Map<String, Object>> queryForListByMapMapperNativeSqlString(final JdbcTemplate jdbcTemplate, final String queryNativeSql, Object[] queryArgs) {
         return queryForListByNativeSqlString(jdbcTemplate, queryNativeSql, queryArgs, new ColumnMapRowMapper());
     }
-
-
-    /**
-     * 构造排序条件
-     * 其他参数，需要时在完善
-     *
-     * @param sortParameters
-     * @param sort
-     * @return
-     */
-    public static String createOrderByString(String[] sortParameters, SqlUtils.SortDirection sort) {
-        return " order by  " + Arrays.toString(sortParameters).replace("[", "").replace("]", "") + " " + sort;
-
-    }
-
 
 }

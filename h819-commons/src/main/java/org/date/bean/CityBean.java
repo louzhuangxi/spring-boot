@@ -1,4 +1,4 @@
-package org.h819.commons.beanutils.bean;
+package org.date.bean;
 
 import java.io.Serializable;
 

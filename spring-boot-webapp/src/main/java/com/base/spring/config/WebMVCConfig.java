@@ -1,5 +1,7 @@
 package com.base.spring.config;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.base.spring.filter.XSSFilter;
 import org.apache.catalina.filters.RemoteIpFilter;
 import org.slf4j.Logger;
@@ -8,6 +10,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
@@ -15,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 // web 配置
 //WebMvcConfigurerAdapter 中有更多设置，参考文档
@@ -123,6 +128,10 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
         configurer.favorPathExtension(false). //关闭URL后缀检测的方法如下
                 favorParameter(true).
+                parameterName("mediaType").
+                ignoreAcceptHeader(true).
+                useJaf(false).
+                mediaType("xml", MediaType.APPLICATION_XML).
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
 
@@ -143,6 +152,51 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
          */
 
         configurer.setUseSuffixPatternMatch(false);
+    }
+
+    /**
+     * 自定义转换器
+     * -
+     * Configure the HttpMessageConverters to use for reading or writing to the body of the request or response.
+     * - spring mvc message converters
+     *
+     * @param converters
+     */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+        //替换 jackson 为 fastJson
+        //fastJson 有很多符合国人的使用习惯
+        converters.add(getFastJsonConverter());
+
+        //其他转换器
+//        List<HttpMessageConverter<?>> messageConverters = new ArrayList();
+//        messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+//        messageConverters.add(new FormHttpMessageConverter());
+//        messageConverters.add(new ByteArrayHttpMessageConverter());
+//        converters.addAll(messageConverters);
+    }
+
+    /**
+     * 自定义 一个 json 转换器
+     * 详见 fast json 官方文档
+     *
+     * @return
+     */
+    private HttpMessageConverter getFastJsonConverter() {
+        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+        //自定义配置...
+        com.alibaba.fastjson.support.config.FastJsonConfig config = new com.alibaba.fastjson.support.config.FastJsonConfig();
+        SerializerFeature[] features = {
+                SerializerFeature.DisableCircularReferenceDetect,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.PrettyFormat};
+        config.setSerializerFeatures(features);
+        config.setDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        config.setCharset(StandardCharsets.UTF_8);
+        converter.setFastJsonConfig(config);
+        return converter;
+
     }
 
 }

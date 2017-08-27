@@ -1,6 +1,7 @@
 package org.h819.web.spring.jdbc;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 
 /**
@@ -111,20 +112,36 @@ public class SqlUtils {
     }
 
     /**
+     * 构造排序条件 sql 语句
+     *
+     * @param order 自定义的排序条件
+     * @return
+     */
+    public static String createOrderString(OrderBean... order) {
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(" order by ");
+        for (OrderBean o : order)
+            builder.append(o.getProperty()).append(" ").append(o.getDirection()).append(", ");
+        int last = builder.lastIndexOf(",");
+        builder.deleteCharAt(last);
+        builder.append(" ");
+        return builder.toString();
+    }
+
+    public static String createOrderString(List<OrderBean> orderList) {
+        OrderBean[] orders = orderList.toArray(new OrderBean[orderList.size()]);
+        return createOrderString(orders);
+
+    }
+
+    /**
      * 数据库类型
      */
     public enum Dialect {
-
         MySql,
         Oracle,
         SqlServer,
         PostgreSQL;
-    }
-
-    /**
-     * 数据库排序，为了可以脱离 spring 使用 ，不使用 org.springframework.data.domain.Sort
-     */
-    public enum SortDirection {
-        DESC, ASC
     }
 }

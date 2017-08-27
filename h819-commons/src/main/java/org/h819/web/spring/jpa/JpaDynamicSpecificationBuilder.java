@@ -86,7 +86,6 @@ public class JpaDynamicSpecificationBuilder {
         // 找到最终属性的 tree.parent.name 所代表的 path ，相当于 root.get("tree").get("parent").get("name");
         for (String subPath : names)
             nestedPath = nestedPath.get(subPath);
-
         return nestedPath;
     }
 
@@ -308,7 +307,6 @@ public class JpaDynamicSpecificationBuilder {
                             throw new IllegalArgumentException("不能比较! between 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     default:
                         return builder.conjunction();
-
                 }
             }
         };

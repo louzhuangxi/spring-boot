@@ -10,6 +10,9 @@ import org.apache.commons.collections.ComparatorUtils;
 import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.date.bean.UserBean;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -33,31 +36,26 @@ public class MyBeanUtils {
      *
      * @param list           待排序的 list
      * @param listOrderedMap 排序条件。
-     *                       这是一个有序的 list ，排序条件按照加入到 list 的bean的属性(map 的 key)的先后顺序排序。
-     *                       listOrderedMap 的 key 为待排序的bean的属性名称，值为是否按该属性的正序排序，true 为正序，false 为逆序。
-     *                       使用方法见本类的 main 函数例子，使用时注意不要写错 bean 的属性名称。
-     * @param <V>            list 中的 bean 类型
+     *                       这是一个有序的 list ，排序条件按照加入到 list 的 bean 的属性(map 的 key)的先后顺序排序。
+     *                       listOrderedMap 的 key 为待排序的 bean 的属性名称，值为是否按该属性的正序排序，true 为正序，false 为逆序。
+     *                       使用方法见本类的 testSortListBeans() 方法例子，使用时注意不要写错 bean 的属性名称。
+     * @param <T>            list 中的 bean 类型
      */
-    public static <V> void sortListBeans(List<V> list, ListOrderedMap listOrderedMap) {
+    public static <T> void sortListBeans(List<T> list, ListOrderedMap listOrderedMap) {
 
-//        ListOrderedMap properties = new ListOrderedMap();
-//        properties.put("hello", "hello1");
-//        properties.put("12", "lsff");
-//        properties.put("abs", true);
         int num = listOrderedMap.size();
-
         ArrayList sortFields = new ArrayList();
 
         for (int i = 0; i < num; i++) {
             //  System.out.println("key =" + listOrderedMap.get(i) + " , value=" + listOrderedMap.getValue(i));
-            Comparator mycmp = ComparableComparator.getInstance();
+            Comparator comp = ComparableComparator.getInstance();
 
-            mycmp = ComparatorUtils.nullLowComparator(mycmp);  //允许null
+            comp = ComparatorUtils.nullLowComparator(comp);  //允许null
 
             if ((Boolean) listOrderedMap.getValue(i) == false)
-                mycmp = ComparatorUtils.reversedComparator(mycmp); //逆序
+                comp = ComparatorUtils.reversedComparator(comp); //逆序
 
-            Comparator cmp = new BeanComparator((String) listOrderedMap.get(i), mycmp);
+            Comparator cmp = new BeanComparator((String) listOrderedMap.get(i), comp);
             sortFields.add(cmp);
         }
 
@@ -65,11 +63,10 @@ public class MyBeanUtils {
         Collections.sort(list, multiSort);
     }
 
-
     /**
-     * bean to map
+     * 浅拷贝，bean to map
      * -
-     * 如果涉及到bean属性是复杂属性，看参考 DtoUtils 转换为 map 的方法
+     * 浅拷贝，如果涉及到 bean 属性是复杂属性，看参考 DtoUtils 转换为 map 的方法
      *
      * @param bean java bean 类型的值对象
      * @return
@@ -209,38 +206,58 @@ public class MyBeanUtils {
         BeanUtils.populate(bean, map);
     }
 
-    public static void main(String[] args) {
+    /**
+     * 拷贝 source 中的属性到 target 中
+     *
+     * @param source
+     * @param target
+     * @param properties
+     */
+    public static void copyBeanProperties(final Object source, final Object target, final Iterable<String> properties) {
 
-//        ListOrderedMap properties = new ListOrderedMap();
-//        // properties.put("name", true);
-//        properties.put("name", false);
-//        //properties.put("passwd", false);
-//
-//
-//        BeanEntity beanEntity1 = new BeanEntity();
-//        beanEntity1.setName("jiang");
-//        beanEntity1.setPasswd("jiang password");
-//
-//        BeanEntity beanEntity2 = new BeanEntity();
-//        beanEntity2.setName("hui");
-//        beanEntity2.setPasswd("hui password");
-//
-//        BeanEntity beanEntity3 = new BeanEntity();
-//        beanEntity3.setName("123");
-//        beanEntity3.setPasswd("123 password");
-//
-//        ArrayList<BeanEntity> alist = new ArrayList();
-//        alist.add(beanEntity1);
-//        alist.add(beanEntity2);
-//        alist.add(beanEntity3);
-//
-//        sortListBeans(alist, properties);
-//
-//        for (BeanEntity bean : alist) {
-//            System.out.println("name =" + bean.getName() + ", passwd =" + bean.getPasswd());
-//        }
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        final BeanWrapper trg = new BeanWrapperImpl(target);
 
+        for (final String propertyName : properties) {
+            trg.setPropertyValue(propertyName, src.getPropertyValue(propertyName));
+        }
 
     }
 
+    public static void main(String[] args) {
+
+    }
+
+    private void testSortListBeans() {
+
+        ListOrderedMap properties = new ListOrderedMap();
+        // properties.put("name", true);
+        properties.put("name", false);
+        //properties.put("passwd", false);
+
+
+        UserBean beanEntity1 = new UserBean();
+        beanEntity1.setName("jiang");
+        beanEntity1.setPasswd("jiang password");
+
+        UserBean beanEntity2 = new UserBean();
+        beanEntity2.setName("hui");
+        beanEntity2.setPasswd("hui password");
+
+        UserBean beanEntity3 = new UserBean();
+        beanEntity3.setName("123");
+        beanEntity3.setPasswd("123 password");
+
+        ArrayList<UserBean> alist = new ArrayList();
+        alist.add(beanEntity1);
+        alist.add(beanEntity2);
+        alist.add(beanEntity3);
+
+        sortListBeans(alist, properties);
+
+        for (UserBean bean : alist) {
+            System.out.println("name =" + bean.getName() + ", passwd =" + bean.getPasswd());
+        }
+
+    }
 }
