@@ -1,8 +1,7 @@
 package org.h819.web.spring.jpa;
 
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.spring.vo.PageBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
@@ -24,9 +23,10 @@ import java.util.List;
 // 参考
 //https://github.com/nejads/Articles/blob/master/paging.md
 //http://www.baeldung.com/jpa-pagination
+@Slf4j
 public class JqlUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JqlUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(JqlUtils.class);
     /**
      * 占位符只能用于 value ，不能用于列名(column)
      * 所以 order by ? ,? asc 不可以
@@ -84,8 +84,8 @@ public class JqlUtils {
                                                         int currentPageNo, int pageSize, Class<T> resultClass) {
 
 
-        logger.info("queryJqlString : \n {} ", queryJql);
-        logger.info("countJqlString : \n {} ", countJql);
+        log.info("queryJqlString : \n {} ", queryJql);
+        log.info("countJqlString : \n {} ", countJql);
 
 
         Assert.isTrue(currentPageNo >= 1, "currentPageNo : 起始页不应小于 1 ，且从 1 开始。");
@@ -101,7 +101,7 @@ public class JqlUtils {
 
         if (totalRecordsSize == 0)
             return new PageBean(pageSize, 0 + 1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
-//        logger.info("totalRecordsSize : " + totalRecordsSize);
+//        log.info("totalRecordsSize : " + totalRecordsSize);
         //分页
         Query query = em.createQuery(queryJql);
         query.setFirstResult((currentPageNo - 1) * pageSize);
@@ -134,7 +134,7 @@ public class JqlUtils {
     private static <T> List<T> queryListByJQLString(final EntityManager em, final String queryJql, Object[] queryArgs, Class<T> resultClass) {
 
 
-        logger.info("queryJqlString : \n {} ", queryJql);
+        log.info("queryJqlString : \n {} ", queryJql);
 
         Query query = em.createQuery(queryJql);
 //        final List<Object[]> content = query.getResultList();

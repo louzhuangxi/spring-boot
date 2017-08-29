@@ -18,8 +18,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.h819.commons.MyDateUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelCell;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -42,7 +40,7 @@ import java.util.*;
 //https://github.com/chenjianjx/sep4j
 public class MyExcelUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);
     //默认输出的 txt 文件名
     private static String defaultTxtFile = "txtFile.txt";
     private static String defaultDatePattern = MyDateUtils.datePattern;
@@ -164,7 +162,7 @@ public class MyExcelUtils {
             e.printStackTrace();
         }
 
-        logger.info("read excel end...");
+        System.out.println("read excel end...");
 
         //重新包装为 list
         return new ArrayList(lines);
@@ -504,10 +502,10 @@ public class MyExcelUtils {
     private static Optional<Workbook> getInputWorkbook(File inputExcelFile) {
 
         Workbook workbook = null; //<-Interface, accepts both HSSF and XSSF.
-        logger.info("read excel begin...");
+        System.out.println("read excel begin...");
 
         if (!inputExcelFile.exists()) {
-            logger.info("excel file not exist {}", inputExcelFile);
+            System.out.println("excel file not exist "+inputExcelFile );
             return Optional.empty();
         }
         //判断文件类型
@@ -516,10 +514,10 @@ public class MyExcelUtils {
             FileInputStream fileInputStream = new FileInputStream(inputExcelFile);
 
             if (FilenameUtils.isExtension(inputExcelFile.getName().toLowerCase(), "xls")) {
-                logger.info(inputExcelFile.getName() + " extension is  xls");
+                System.out.println(inputExcelFile.getName() + " extension is  xls");
                 workbook = new HSSFWorkbook(fileInputStream);
             } else if (FilenameUtils.isExtension(inputExcelFile.getName().toLowerCase(), "xlsx")) {
-                logger.info(inputExcelFile.getName() + " extension is  xlsx");
+                System.out.println(inputExcelFile.getName() + " extension is  xlsx");
                 workbook = new XSSFWorkbook(fileInputStream);
             } else {
                 throw new IllegalArgumentException("Received file does not have a standard excel extension.");

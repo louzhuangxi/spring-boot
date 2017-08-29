@@ -3,11 +3,11 @@ package com.base.spring.controller.ajax;
 import com.base.spring.domain.RoleEntity;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.service.RoleService;
-import org.h819.web.spring.jpa.DtoUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.jqgird.JqgridPage;
+import org.h819.web.spring.jdbc.SqlUtils;
+import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -26,9 +26,10 @@ import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/ajax/grid/role")
+@Slf4j
 public class RoleAjaxController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RoleAjaxController.class);
+    //private static final log log = LoggerFactory.getLogger(RoleAjaxController.class);
 
 
     @Autowired
@@ -44,8 +45,8 @@ public class RoleAjaxController {
      * @param filters       通过 jqgrid search 查询，多个查询条件时，包含查询条件为 json 格式数据。_search = false 时，jqgrid 传递过来的参数没有 filters , 此时 filters 的值为 null
      * @param currentPageNo 当前页码
      * @param pageSize      页面可显示行数
-     * @param sortParameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sort          排序的方式desc/asc
+     * @param parameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
+     * @param direction          排序的方式desc/asc
      * @return jqgrid 展示所需要的 json 结构，通过 spring 自动完成
      */
     @RequestMapping(value = "/jqgrid-search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -56,16 +57,17 @@ public class RoleAjaxController {
             @RequestParam(value = "filters", required = false) String filters,
             @RequestParam(value = "page", required = true) Integer currentPageNo,
             @RequestParam(value = "rows", required = true) Integer pageSize,
-            @RequestParam(value = "sidx", required = true) String sortParameter,
-            @RequestParam(value = "sord", required = true) String sort, RedirectAttributes redirectAttrs, HttpServletRequest request) {
+            @RequestParam(value = "sidx", required = true) String parameter,
+            @RequestParam(value = "sord", required = true) String direction, RedirectAttributes redirectAttrs, HttpServletRequest request) {
 
 
-        logger.info("search ={},page ={},rows ={},sord={},sidx={},filters={}", search, currentPageNo, pageSize, sort, sortParameter, filters);
+        log.info("search ={},page ={},rows ={},sord={},sidx={},filters={}", search, currentPageNo, pageSize, direction, parameter, filters);
 
         /**
          * 记录集
          */
-        Page<RoleEntity> pages = JpaUtils.getJqGridPage(roleRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+
+        Page<RoleEntity> pages = JpaUtils.getJqGridPage(roleRepository, currentPageNo, pageSize, SqlUtils.createOrder(direction,parameter), filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -111,15 +113,15 @@ public class RoleAjaxController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("oper ={},ids={},name={}", oper, ids, name);
+        log.info("oper ={},ids={},name={}", oper, ids, name);
 
 
         //删除
         if (oper.equals("del")) {
-            logger.info("del action.");
+            log.info("del action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
                 roleRepository.delete(Long.valueOf(id));
             }
 
@@ -127,7 +129,7 @@ public class RoleAjaxController {
 
         } else if (oper.equals("add")) {
 
-            logger.info("add action.");
+            log.info("add action.");
             Assert.hasText(name.trim(), "namecn must not be null!");
             RoleEntity entity = new RoleEntity(name);
             roleRepository.save(entity);
@@ -135,10 +137,10 @@ public class RoleAjaxController {
 
         } else if (oper.equals("edit")) {
 
-            logger.info("edit action.");
+            log.info("edit action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
                 Assert.hasText(name.trim(), "namecn must not be null!");
 
@@ -164,7 +166,7 @@ public class RoleAjaxController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("ids={} , roleId={}", ids, roleId);
+        log.info("ids={} , roleId={}", ids, roleId);
 //
 //        if (ids == null)
 //            System.out.println("null");

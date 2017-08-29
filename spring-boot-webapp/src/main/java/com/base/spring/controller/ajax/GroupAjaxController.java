@@ -11,12 +11,12 @@ import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.service.GroupService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.h819.web.jqgird.JqgridPage;
+import org.h819.web.spring.jdbc.SqlUtils;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -37,9 +37,10 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/ajax/grid/group")
+@Slf4j
 public class GroupAjaxController {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupAjaxController.class);
+    //private static final log log = LoggerFactory.getLogger(GroupAjaxController.class);
 
 
     @Autowired
@@ -58,7 +59,7 @@ public class GroupAjaxController {
      * @param currentPageNo 当前页码
      * @param pageSize      页面可显示行数
      * @param sortParameter 用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param sort          排序的方式desc/asc
+     * @param sortDirection          排序的方式desc/asc
      * @return jqgrid 展示所需要的 json 结构，通过 spring 自动完成
      */
     @RequestMapping(value = "/jqgrid-search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,15 +71,15 @@ public class GroupAjaxController {
             @RequestParam(value = "page", required = true) Integer currentPageNo,
             @RequestParam(value = "rows", required = true) Integer pageSize,
             @RequestParam(value = "sidx", required = true) String sortParameter,
-            @RequestParam(value = "sord", required = true) String sort, RedirectAttributes redirectAttrs, HttpServletRequest request) {
+            @RequestParam(value = "sord", required = true) String sortDirection, RedirectAttributes redirectAttrs, HttpServletRequest request) {
 
 
-        logger.info("search ={},page ={},rows ={},sord={},sidx={},filters={}", search, currentPageNo, pageSize, sort, sortParameter, filters);
+        log.info("search ={},page ={},rows ={},sord={},sidx={},filters={}", search, currentPageNo, pageSize, sortDirection, sortParameter, filters);
 
         /**
          * 记录集
          */
-        Page<GroupEntity> pages = JpaUtils.getJqGridPage(groupRepository, currentPageNo, pageSize, sortParameter, sort, filters);
+        Page<GroupEntity> pages = JpaUtils.getJqGridPage(groupRepository, currentPageNo, pageSize, SqlUtils.createOrder(sortDirection,sortParameter), filters);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, new ArrayList(0)); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -124,15 +125,15 @@ public class GroupAjaxController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("oper ={},ids={},name={},remark={}", oper, ids, name, remark);
+        log.info("oper ={},ids={},name={},remark={}", oper, ids, name, remark);
 
 
         //删除
         if (oper.equals("del")) {
-            logger.info("del action.");
+            log.info("del action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
                 groupRepository.delete(Long.valueOf(id));
             }
 
@@ -140,7 +141,7 @@ public class GroupAjaxController {
 
         } else if (oper.equals("add")) {
 
-            logger.info("add action.");
+            log.info("add action.");
             Assert.hasText(name.trim(), "name must not be null!");
             GroupEntity entity = new GroupEntity();
             entity.setName(name);
@@ -150,10 +151,10 @@ public class GroupAjaxController {
 
         } else if (oper.equals("edit")) {
 
-            logger.info("edit action.");
+            log.info("edit action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
                 Assert.hasText(name.trim(), "name must not be null!");
                 GroupEntity entity = groupRepository.findOne(Long.valueOf(id));
@@ -186,7 +187,7 @@ public class GroupAjaxController {
             @RequestParam(value = "group_id", required = true) String groupId,
             RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        logger.info("groupId={}", groupId);
+        log.info("groupId={}", groupId);
 
         Assert.notNull(groupId, "groupId is null");
 
@@ -237,9 +238,9 @@ public class GroupAjaxController {
             @RequestParam(value = "checkbox[]", required = false) String[] userIds) {
 
 
-        logger.info("group id ={}", groupId);
+        log.info("group id ={}", groupId);
         if (userIds != null)
-            logger.info("user id ={}", Arrays.asList(userIds));
+            log.info("user id ={}", Arrays.asList(userIds));
         //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
         //去掉 ： ArrayUtils.removeElement(userIds, "on")
         groupService.associateUsers(ArrayUtils.removeElement(userIds, "on"), groupId);
@@ -267,7 +268,7 @@ public class GroupAjaxController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("ids={}", groupId);
+        log.info("ids={}", groupId);
 
         Assert.notNull(groupId, "groupId is null");
 
@@ -318,9 +319,9 @@ public class GroupAjaxController {
             @RequestParam(value = "checkbox[]", required = false) String[] roleIds) // 前端的参数为 checkbox , array 类型
     {
 
-        logger.info("group id ={}", groupId);
+        log.info("group id ={}", groupId);
         if (roleIds != null)
-            logger.info("role id ={}", Arrays.asList(roleIds));
+            log.info("role id ={}", Arrays.asList(roleIds));
 
         //发现，提交的 check box , chrome 浏览器会多了一个 on 参数，其他浏览器没有这个问题
         //去掉 ： ArrayUtils.removeElement(roleIds, "on")

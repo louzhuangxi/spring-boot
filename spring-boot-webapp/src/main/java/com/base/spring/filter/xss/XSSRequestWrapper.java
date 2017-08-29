@@ -1,8 +1,5 @@
 package com.base.spring.filter.xss;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.regex.Pattern;
@@ -18,7 +15,7 @@ import java.util.regex.Pattern;
 //http://blog.knownsec.com/wp-content/uploads/2014/07/%E7%BB%99%E5%BC%80%E5%8F%91%E8%80%85%E7%9A%84%E7%BB%88%E6%9E%81XSS%E9%98%B2%E6%8A%A4%E5%A4%87%E5%BF%98%E5%BD%95.pdf
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(XSSRequestWrapper.class);
+    //private static final log log = LoggerFactory.getLogger(XSSRequestWrapper.class);
 
 
     private static Pattern[] patterns = new Pattern[]{

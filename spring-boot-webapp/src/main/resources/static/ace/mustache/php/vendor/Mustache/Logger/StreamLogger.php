@@ -10,9 +10,9 @@
  */
 
 /**
- * A Mustache Stream Logger.
+ * A Mustache Stream log.
  *
- * The Stream Logger wraps a file resource instance (such as a stream) or a
+ * The Stream log wraps a file resource instance (such as a stream) or a
  * stream URL. All log messages over the threshold level will be appended to
  * this stream.
  *

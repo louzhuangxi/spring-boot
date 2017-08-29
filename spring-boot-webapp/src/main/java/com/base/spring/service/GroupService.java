@@ -6,9 +6,8 @@ import com.base.spring.domain.UserEntity;
 import com.base.spring.repository.GroupRepository;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +23,12 @@ import java.util.Set;
  * Time: 10:02
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class GroupService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
+    //private static final log log = LoggerFactory.getLogger(GroupService.class);
 
 
     @Autowired
@@ -53,14 +53,14 @@ public class GroupService {
 
         //清空
         if (userIds == null || userIds.length == 0) {
-            logger.info("clear users.");
+            log.info("clear users.");
             groupEntity.clearUsers();
             groupRepository.save(groupEntity);
             return;
         }
 
 //        for (String userId : userIds) {
-//            logger.info("userId ={}", userId);
+//            log.info("userId ={}", userId);
 //        }
 
         //构造 id 集合
@@ -122,14 +122,14 @@ public class GroupService {
 
         //没有选择 roles，表示清空
         if (roleIds == null || roleIds.length == 0) {
-            logger.info("clear roles.");
+            log.info("clear roles.");
             groupEntity.clearRoles();
             groupRepository.save(groupEntity);
             return;
         }
 
 //        for (String roleId : roleIds) {
-//            logger.info("userId ={}", roleId);
+//            log.info("userId ={}", roleId);
 //        }
 
         //构造 id 集合

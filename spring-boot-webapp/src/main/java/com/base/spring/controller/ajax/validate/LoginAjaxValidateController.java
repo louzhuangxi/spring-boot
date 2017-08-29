@@ -3,8 +3,7 @@ package com.base.spring.controller.ajax.validate;
 import com.base.spring.domain.UserEntity;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.utils.BCryptPassWordUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +21,10 @@ import java.util.Optional;
  */
 @Controller
 @RequestMapping("/ajax/validate/login") // 此处要和 Spring security 中 ignoring 要呼应，不能进行登录限制，否则无法进行验证
+@Slf4j
 public class LoginAjaxValidateController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginAjaxValidateController.class);
+    //private static final log log = LoggerFactory.getLogger(LoginAjaxValidateController.class);
 
     @Autowired
     UserRepository userEntityRepository;
@@ -46,44 +46,44 @@ public class LoginAjaxValidateController {
     @ResponseBody
     public String validateEmail(@RequestParam(value = "email", required = false) Optional<String> email, @RequestParam(value = "checktype", required = false) Optional<String> checkType) {
 
-       // logger.info("check type : {}, email : {} ", checkType.get(), email.get());
+       // log.info("check type : {}, email : {} ", checkType.get(), email.get());
 
         if (!email.isPresent()) {
-       //     logger.info("email 没有填写 ");
+       //     log.info("email 没有填写 ");
             return ("email 没有填写"); //登录名已经存在，不能注册
         }
 
         if (!checkType.isPresent()) {
-        //    logger.info("不是验证 email 请求 ");
+        //    log.info("不是验证 email 请求 ");
             return ("不是验证 email 请求"); //登录名已经存在，不能注册
         }
 
         //注册时进行检查，此时需要该属性不存在，才可以注册
         if (checkType.get().equals("register")) {
-            logger.info("用户注册验证 ，邮件地址不存在，才可以通过验证 ...");
+            log.info("用户注册验证 ，邮件地址不存在，才可以通过验证 ...");
 
             Optional<UserEntity> userEntity = userEntityRepository.findOneByEmail(email.get());
             if (!userEntity.isPresent()) {
-                logger.info("email :  {} 不存在 , 验证通过 ", email.get());
+                log.info("email :  {} 不存在 , 验证通过 ", email.get());
                 return "true";
             } else {
-                logger.info("email : {} 已经存在 , 验证不通过 ", email.get());
+                log.info("email : {} 已经存在 , 验证不通过 ", email.get());
                 return ("email 已经存在"); //登录名已经存在，不能注册
             }
 
         } else if (checkType.get().equals("login") || checkType.get().equals("find")) { // 验证登陆和找回密码，email 是否存在
 
-            logger.info("login or find email validate");
+            log.info("login or find email validate");
 
             Optional<UserEntity> userEntity = userEntityRepository.findOneByEmail(email.get());
 
-        //    logger.info(" user.isPresent {}", userEntity.isPresent());
+        //    log.info(" user.isPresent {}", userEntity.isPresent());
 
             if (userEntity.isPresent()) {
-                logger.info("email : {} 存在，验证通过 ", email.get());
+                log.info("email : {} 存在，验证通过 ", email.get());
                 return "true";
             } else {
-                logger.info("email : {}  不存在 , 验证不通过 ", email.get());
+                log.info("email : {}  不存在 , 验证不通过 ", email.get());
                 return ("email 不存在"); //登录名已经存在，不能注册
             }
 
@@ -107,22 +107,22 @@ public class LoginAjaxValidateController {
     @ResponseBody
     public String validateLoginPassword(@RequestParam(value = "email", required = false) Optional<String> email, @RequestParam(value = "loginpasword", required = false) Optional<String> loginPassword) {
 
-        logger.info("check login_password : {}, email : {} ", loginPassword.get(), email.get());
+        log.info("check login_password : {}, email : {} ", loginPassword.get(), email.get());
 
         if (!email.isPresent()) {
-            logger.info("email 没有填写 ");
+            log.info("email 没有填写 ");
             return ("email 没有填写");
         }
 
         if (!loginPassword.isPresent()) {
-            logger.info("登陆密码没有填写 ");
+            log.info("登陆密码没有填写 ");
             return ("登陆密码没有填写");
         }
 
         //登陆时，验证密码是否错误。
         //邮件地址此时 已经验证完毕，验证密码即可
 
-        logger.info("用户登录，进行密码验证 ...");
+        log.info("用户登录，进行密码验证 ...");
         Optional<UserEntity> userEntity = userEntityRepository.findOneByEmail(email.get());
         if (!userEntity.isPresent()) {
 
@@ -131,7 +131,7 @@ public class LoginAjaxValidateController {
         } else {
 
             if (BCryptPassWordUtils.matches(loginPassword.get(), userEntity.get().getPassword())) {
-                logger.info("密码匹配: {} 验证通过 ", email.get());
+                log.info("密码匹配: {} 验证通过 ", email.get());
                 return "true";
             } else
                 return "密码错误";

@@ -2,10 +2,9 @@ package org.h819.commons;
 
 import com.ibm.icu.text.CharsetDetector;
 import com.ibm.icu.text.CharsetMatch;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -15,9 +14,10 @@ import java.nio.charset.Charset;
  * @Description: TODO(编码工具类)
  * @date May 14, 2016 10:15:24
  */
+@Slf4j
 public class MyCharsetUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyCharsetUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyCharsetUtils.class);
 
     /**
      * 静态方法调用，不需要生成实例
@@ -50,14 +50,14 @@ public class MyCharsetUtils {
             if (FilenameUtils.isExtension(srcFile.getName().toLowerCase(), extension)) {
                 try {
                     String encodingSrc = MyCharsetUtils.detectEncoding(srcFile).name();
-                    // logger.info(encodingSrc);
+                    // log.info(encodingSrc);
                     InputStreamReader in = new InputStreamReader(new FileInputStream(srcFile), encodingSrc);
                     File f = new File(descDirectory + File.separator + srcFile.getName());
                     OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(f), charset.name());
                     IOUtils.copy(in, out);
                     IOUtils.closeQuietly(in);
                     IOUtils.closeQuietly(out);
-                    // logger.info(MyFileUtils.getDetectedEncoding(f).name());
+                    // log.info(MyFileUtils.getDetectedEncoding(f).name());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
@@ -71,7 +71,7 @@ public class MyCharsetUtils {
             for (File f : fs)
                 convertEncoding(f, new File(descDirectory + File.separator + srcFile.getName()), charset);
         } else {
-            logger.info("wrong file type :" + srcFile.getAbsolutePath());
+            log.info("wrong file type :" + srcFile.getAbsolutePath());
         }
     }
 
@@ -103,14 +103,14 @@ public class MyCharsetUtils {
 
         final CharsetMatch charsetMatch = detector.detect();
         if (charsetMatch == null) {
-            logger.info("Cannot detect source charset.");
+            log.info("Cannot detect source charset.");
             return null;
         }
         //This is an integer from 0 to 100. The higher the value, the more confidence
         //探测的相似度在 1~100 之间，相似度越高结果越准确。
         int confidence = charsetMatch.getConfidence();
         final String name = charsetMatch.getName();
-        logger.info("CharsetMatch: {} ({}% 相似度，相似度小于 50% 时，可能编码无法判断。)", name, confidence);
+        log.info("CharsetMatch: {} ({}% 相似度，相似度小于 50% 时，可能编码无法判断。)", name, confidence);
         //打印该文本编码，所有可能性
 //        CharsetMatch[] matches = detector.detectAll();
 //        System.out.println("All possibilities : " + Arrays.asList(matches));

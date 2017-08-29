@@ -29,7 +29,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         /*如果需要跳转到不同的 url ，启用下面的代码 ，注释掉   super.handle(request, response, authentication);
         String targetUrl = getUrl(authentication);
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 

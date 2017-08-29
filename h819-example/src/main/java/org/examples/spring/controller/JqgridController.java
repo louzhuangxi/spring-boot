@@ -1,16 +1,16 @@
 package org.examples.spring.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.examples.spring.domain.TreeEntity;
 import org.examples.spring.repository.TreeEntityRepository;
 import org.h819.web.jqgird.JqgridPage;
+import org.h819.web.spring.jdbc.SqlUtils;
 import org.h819.web.spring.jpa.DtoUtils;
 import org.h819.web.spring.jpa.JpaDynamicSpecificationBuilder;
 import org.h819.web.spring.jpa.JpaUtils;
 import org.h819.web.spring.jpa.SearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -39,11 +39,12 @@ import java.util.Map;
  * Time: 下午4:47
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @Controller
 @RequestMapping("/ace-admin")
 public class JqgridController {
 
-    private static final Logger logger = LoggerFactory.getLogger(JqgridController.class);
+    //private static final Logger log = LoggerFactory.getLogger(JqgridController.class);
     @Autowired
     TreeEntityRepository treeEntityRepository;
 
@@ -76,7 +77,7 @@ public class JqgridController {
      * @param currentPageNo    当前页码
      * @param pageSize         页面可显示行数
      * @param sortParameter    用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param direction        排序的方式desc/asc
+     * @param sortDirection        排序的方式desc/asc
      * @param allRequestParams 可以自动获取所有的参数
      * @return jqgrid 展示所需要的 json 结构，通过 spring 自动完成
      */
@@ -89,13 +90,13 @@ public class JqgridController {
             @RequestParam(value = "page", required = true) Integer currentPageNo,
             @RequestParam(value = "rows", required = true) Integer pageSize,
             @RequestParam(value = "sidx", required = true) String sortParameter,
-            @RequestParam(value = "sord", required = true) String direction, @RequestParam Map<String, String> allRequestParams, RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(value = "sord", required = true) String sortDirection, @RequestParam Map<String, String> allRequestParams, RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
 
-        logger.info("search ={},page ={},rows ={},direction={},sidx={},filters={}", search, currentPageNo, pageSize, direction, sortParameter, filters);
+        log.info("search ={},page ={},rows ={},direction={},sidx={},filters={}", search, currentPageNo, pageSize, sortDirection, sortParameter, filters);
 
 
-        logger.info("当前应用路径是 ： " + servletContext.getContextPath()); //返回：/h819-flexpaper
-        logger.info("当前应用的磁盘路径 ： " + servletContext.getRealPath("/")); //返回：E:\program\IntelliJ IDEA Project\my-project\h819-flexpaper\src\main\webapp
+        log.info("当前应用路径是 ： " + servletContext.getContextPath()); //返回：/h819-flexpaper
+        log.info("当前应用的磁盘路径 ： " + servletContext.getRealPath("/")); //返回：E:\program\IntelliJ IDEA Project\my-project\h819-flexpaper\src\main\webapp
 
 
         /**
@@ -143,7 +144,7 @@ public class JqgridController {
         // Page list = JpaUtils.getPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, null, customSpecification);
 
 
-        Page<TreeEntity> pages = JpaUtils.getJqGridPage(treeEntityRepository, currentPageNo, pageSize, sortParameter, direction, filters, customSpecification);
+        Page<TreeEntity> pages = JpaUtils.getJqGridPage(treeEntityRepository, currentPageNo, pageSize, SqlUtils.createOrder(sortDirection,sortParameter),filters, customSpecification);
         if (pages.getTotalElements() == 0)
             return new JqgridPage(pageSize, 0, 0, Collections.emptyList()); //构造空数据集，否则返回结果集 jqgird 解析会有问题
 
@@ -237,15 +238,15 @@ public class JqgridController {
          *    删除时，只有 oper 和 id 两个参数，所以其他参数都设置为 false
          */
 
-        logger.info("oper ={},id={},code={},name={},css={},url={},oder={},parent.code={}", oper, ids, code, name, css, url, order, pCode);
+        log.info("oper ={},id={},code={},name={},css={},url={},oder={},parent.code={}", oper, ids, code, name, css, url, order, pCode);
 
 
         //删除
         if (oper.equals("del")) {
-            logger.info("del action.");
+            log.info("del action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
                 // do delete action
             }
 
@@ -253,16 +254,16 @@ public class JqgridController {
 
         } else if (oper.equals("add")) {
 
-            logger.info("add action.");
+            log.info("add action.");
 
             // do add action
 
         } else if (oper.equals("edit")) {
 
-            logger.info("edit action.");
+            log.info("edit action.");
             //多选时，逐个处理
             for (String id : ids) {
-                logger.info("id =" + id);
+                log.info("id =" + id);
 
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
                 Assert.hasText(code.trim(), "namecn must not be null!");
@@ -313,11 +314,11 @@ public class JqgridController {
         // request.getSession();
 
         if (oper.equals("read")) {
-            logger.info("read");
+            log.info("read");
             for (String id : ids) {
                 //自定义按钮，提交的是字符串 ["1","2"] ，需要自己提取出 id 值
                 String idstr = StringUtils.substringBetween(id, "\"", "\"");
-                logger.info("id =" + idstr);
+                log.info("id =" + idstr);
 
                 //do something
 
@@ -500,11 +501,11 @@ public class JqgridController {
 
         if (oper.equals("mark")) {
 
-            logger.info("mark");
+            log.info("mark");
             for (String id : ids) {
                 //自定义按钮，提交的是字符串 ["1","2"] 需要自己提取出 id 值
                 String idstr = StringUtils.substringBetween(id, "\"", "\"");
-                logger.info("id =" + idstr);
+                log.info("id =" + idstr);
 
 
                 //do something

@@ -23,7 +23,7 @@ public class AsyncExampleServiceTest {
     AsyncExampleService task;
 
     /**
-     * 每个线程的名字都不同，是多线程并行执行
+     * 每个线程的名字都不同，是多线程并行执行,注意要用 CompletableFuture
      *
      * @throws Exception
      */
@@ -38,7 +38,7 @@ public class AsyncExampleServiceTest {
         // CompletableFuture 能确认三个线程都结束，再退出主线程
         //否则没等线程结束，主线程就结束了（程序停止了）
         //wait until all they are completed.
-        CompletableFuture.allOf(task1, task2, task3).join(); // 多个线程执行，直至结束
+        CompletableFuture.allOf(task1, task2, task3).join(); // 等待所有线程执行完成
         //==
         //线程结束后，可以获取线程的返回值，进行汇总处理
         // 更复杂的例子，见中关村数据查询

@@ -34,7 +34,7 @@ import java.util.Date;
 //https://github.com/JeffLi1993/java-core-learning-example/blob/master/src/main/java/org/javacore/time/TimeUtil.java
 public class MyDateUtilsJdk8 {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyDateUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MyDateUtils.class);
     /**
      * 获取默认时间格式: yyyy-MM-dd HH:mm:ss
      */

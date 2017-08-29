@@ -3,8 +3,7 @@ package com.base.spring.controller.example.tree.fuelux;
 import com.base.spring.domain.TreeType;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.service.FueluxTreeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/tree/fuelux/ajax")
+@Slf4j
 @Deprecated //弃用 . 多选的时候很麻烦，没有全选功能，选择父节点，不能自动选择其子节点
 public class FueluxTreeExampleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(FueluxTreeExampleController.class);
+    //private static final log log = LoggerFactory.getLogger(FueluxTreeExampleController.class);
 
     @Autowired
     TreeRepository treeNodeRepository;
@@ -40,9 +40,9 @@ public class FueluxTreeExampleController {
     @ResponseBody
     public String async(@RequestParam(value = "pId", required = true) Long pId, @RequestParam(value = "menu_type", required = true) TreeType menuType) {
 
-        logger.info("pId={} , type={}", pId, menuType);
+        log.info("pId={} , type={}", pId, menuType);
         String fueluxJsonData = treeNodeService.async(pId, menuType);
-//        logger.info(fueluxJsonData);
+//        log.info(fueluxJsonData);
         return fueluxJsonData;
     }
 

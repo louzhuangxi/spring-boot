@@ -32,7 +32,7 @@ import java.io.PrintWriter;
 @RequestMapping("/oltu")
 public class OltuOauth2ClientController {
 
-    private static final Logger logger = LoggerFactory.getLogger(OltuOauth2ClientController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(OltuOauth2ClientController.class);
     @Value("unity-client")
     private static String client_id = "clientId";
     @Value("unity")

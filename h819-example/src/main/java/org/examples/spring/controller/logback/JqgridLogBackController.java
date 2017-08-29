@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/grid/sys/task")
 public class JqgridLogBackController {
 
-    private static final Logger logger = LoggerFactory.getLogger(JqgridLogBackController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(JqgridLogBackController.class);
 
     @Autowired
     LoggingEventEntityRepository loggingEventEntityRepository;

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/ztree")
 public class ZTreeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ZTreeController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(ZTreeController.class);
 
     @Autowired
     TreeNodeRepository treeNodeRepository;

@@ -344,10 +344,10 @@
 		调用浏览器调试日志, 打印字符串
 		message 可以是任何对象。
 		需要注意的是:
-		如果 message 为 object（如 josn），那么不要使用 logger("obejct is :"+message)，字符串+对象，log 就无法打印了。
-		如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+		如果 message 为 object（如 josn），那么不要使用 log("obejct is :"+message)，字符串+对象，log 就无法打印了。
+		如果 message 字符串，那么可以 + 字符串如： log("hello"+"world")
 		 */
-		function logger(message) {
+		function log(message) {
 			console.log(message);
 		}
 		
@@ -430,7 +430,7 @@
 
 			}
 
-			logger("name=" + treeNode[0].name + ",index=" + treeNode[0].getIndex() + ",pId=" + treeNode[0].pId + ",level=" + treeNode[0].level);
+			log("name=" + treeNode[0].name + ",index=" + treeNode[0].getIndex() + ",pId=" + treeNode[0].pId + ",level=" + treeNode[0].level);
 			/**/
 			$.ajax({ //ajax 提交到controller的delApplication方法处理
 				type : "post",
@@ -447,10 +447,10 @@
 				success : function (data) { //处理成功的回调函数
 					//  $('#dgApplication').datagrid('reload');
 					//刷新资源树修改后的节点的父节点
-					//logger("refresh");
+					//log("refresh");
 					var parent = treeNode[0].getParentNode();
 					zTree.reAsyncChildNodes(parent, "refresh");
-					// logger("refresh2");
+					// log("refresh2");
 				},
 				error : function () {}
 				//处理失败的回到函数
@@ -500,7 +500,7 @@
 			//把检查文件名放在此方法中
 
 			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			logger(treeNode);
+			log(treeNode);
 			/*
 			$.ajax({ //ajax 提交到controller的delApplication方法处理
 			type : "post",
@@ -514,7 +514,7 @@
 			success : function (data) { //处理成功的回调函数
 			var parent=treeNode.getParentNode();
 			zTree.reAsyncChildNodes(parent, "refresh");
-			logger(data);
+			log(data);
 			},
 			error : function () {}
 			//处理失败的回到函数
@@ -572,7 +572,7 @@
 					},
 					dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 					success : function (data) { //处理成功的回调函数
-					logger(data);
+					log(data);
 					},
 					error : function () {}
 					//处理失败的回到函数
@@ -629,7 +629,7 @@
 					},
 					dataType : "html", //dataType指定返回值的类型，必须与后台的返回值一致。否则无法进入success回掉
 					success : function (data) { //处理成功的回调函数
-					logger(data);
+					log(data);
 					},
 					error : function () {}
 					//处理失败的回到函数
@@ -784,12 +784,12 @@
 		function onDrop(event, treeId, treeNodes, targetNode, moveType, isCopy) {
 		  var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		  var treeNode = treeNodes[0]; //每次只能选择一个节点，这是被选中的节点
-			//logger("treeId:"+treeId);
-			//logger("moveType:"+moveType);
-			//logger("isCopy:"+isCopy);
-			logger("被拖拽的节点，拖拽完成后的状态 : name="+treeNode.name +",index="+treeNode.getIndex());
-			logger("被拖拽节点，参照的节点是 : name="+targetNode.name +",index="+targetNode.getIndex());
-	        logger("被拖拽的节点，他的现父节点状态是: id="+targetNode.getParentNode().id+" , name="+targetNode.getParentNode().name); // 通过 targetNode 获取
+			//log("treeId:"+treeId);
+			//log("moveType:"+moveType);
+			//log("isCopy:"+isCopy);
+			log("被拖拽的节点，拖拽完成后的状态 : name="+treeNode.name +",index="+treeNode.getIndex());
+			log("被拖拽节点，参照的节点是 : name="+targetNode.name +",index="+targetNode.getIndex());
+	        log("被拖拽的节点，他的现父节点状态是: id="+targetNode.getParentNode().id+" , name="+targetNode.getParentNode().name); // 通过 targetNode 获取
 			/*
 			更新操作，只更新被拖拽的节点现在的父节点的所有子节点即可（排序）
 			操作之前的节点，子节点少了一个，其他节点没有排序，所以不必理会，只是节点排序不连续而已

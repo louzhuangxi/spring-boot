@@ -1,10 +1,10 @@
 package org.h819.web.spring.jpa;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.h819.web.jqgird.JqgridUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.h819.web.spring.jdbc.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,9 +25,10 @@ import java.util.List;
  * <p>
  * 根据 jqgrid 传递过来的参数，通过 Repository 进行查询，封装了各项查询条件。
  */
+@Slf4j
 public class JpaUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JpaUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(JpaUtils.class);
 
     /**
      * 仅通过静态方法调用
@@ -69,15 +70,14 @@ public class JpaUtils {
      * @param repository          查询器
      * @param currentPageNo       当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize            页面可显示行数
-     * @param property            用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param direction           排序的方式，只能为  desc 或 asc
+     * @param order               用于排序的 order ，启用 groups 时，此项复杂，需要特殊解析
      * @param jqgridFilters       通过 jqgrid search 按键查询，多个查询条件时，包含查询条件的 json 格式数据   ,  filters 为 null  时，可以用作非 jqgrid 情况下
      * @param customSpecification 除了 jqgrid 传递过来的查询条件外，自己又附加查询条件,与 filters AND 关系的查询条件，specification 的构造符合 SearchFilter 写法，详见示例项目。
      *                            customSpecification 中指定的属性名称应该是待查询的 entity 中的属性名称，并且用改 entity 的 repository 进行查询
      * @return
      */
 
-    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, String direction, String property, String jqgridFilters, Specification customSpecification) {
+    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, Order order, String jqgridFilters, Specification customSpecification) {
 
         JpaSpecificationExecutor rep = (JpaSpecificationExecutor) repository;
 
@@ -87,7 +87,7 @@ public class JpaUtils {
         currentPageNo = currentPageNo - 1;
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
-            Sort sort = getJqGirdSort(direction, property);
+            Sort sort = getJqGirdSort(order);
             if (sort == null)
                 return rep.findAll(customSpecification, new PageRequest(currentPageNo, pageSize));
             else
@@ -104,7 +104,7 @@ public class JpaUtils {
             if (f.getGroupRelation().equals(SearchFilter.Relation.OR))
                 specificationFilters = new JpaDynamicSpecificationBuilder().or(f.getSearchFilters()).build();
 
-            Sort sort = getJqGirdSort(direction, property);
+            Sort sort = getJqGirdSort(order);
             if (sort == null)
                 return rep.findAll(
                         new JpaDynamicSpecificationBuilder().and(customSpecification, specificationFilters).build(),
@@ -147,12 +147,11 @@ public class JpaUtils {
      * @param repository    查询器，必须是 extends JpaRepository<???, Long>, JpaSpecificationExecutor 类型的写法。
      * @param currentPageNo 当前页，实际对应 jqgrid 传递过来的 page 参数，jqgrid 规定起始页为 1
      * @param pageSize      页面可显示行数
-     * @param property      用于排序的列名 ，启用 groups 时，此项复杂，需要特殊解析
-     * @param direction     排序的方式，只能为  desc 或 asc
+     * @param order         用于排序的 order  ，启用 groups 时，此项复杂，需要特殊解析
      * @param jqgridFilters 通过 jqgrid search 按键查询，多个查询条件时，包含查询条件的 json 格式数据
      * @return
      */
-    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, String direction, String property, String jqgridFilters) {
+    public static Page getJqGridPage(Repository repository, int currentPageNo, int pageSize, Order order, String jqgridFilters) {
 
         //jpa 中起始页为 0，但传递过来的参数 currentPageNo 不能小于1
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
@@ -161,7 +160,7 @@ public class JpaUtils {
 
         if (jqgridFilters == null || jqgridFilters.isEmpty()) {  //刷新表格时，filters.isEmpty() = true
             JpaRepository rep = (JpaRepository) repository;
-            Sort sort = getJqGirdSort(direction, property);
+            Sort sort = getJqGirdSort(order);
             if (sort == null)
                 return rep.findAll(new PageRequest(currentPageNo, pageSize));
             else
@@ -180,7 +179,7 @@ public class JpaUtils {
 
             //  Specification spec = JpaDynamicSpecificationUtils.joinSearchFilter(f.getGroupRelation(), f.getSearchFilters());
 
-            Sort sort = getJqGirdSort(direction, property);
+            Sort sort = getJqGirdSort(order);
             if (sort == null)
                 return rep.findAll(specificationFilters, new PageRequest(currentPageNo, pageSize));
             else
@@ -191,25 +190,24 @@ public class JpaUtils {
     /**
      * 根据 jqgrid 传过来的排序信息，构造排序所需要的 Sort
      *
-     * @param direction 排序的方式，只能为  desc 或 asc
-     * @param property  用于排序的列名, grouping:true 时格式特殊，需要正确解析
+     * @param order
      * @return
      */
-    private static Sort getJqGirdSort(String direction, String property) {
+    private static Sort getJqGirdSort(Order order) {
 
-        if (property == null || property.isEmpty()) {
-            logger.info("排序字段为 null 或 空");
+        if (order.getProperty() == null || order.getProperty().isEmpty()) {
+            log.info("排序字段为 null 或 空");
             return null;
         }
 
         //排序字段
-        if (!property.contains(",")) { //未分组
+        if (!order.getProperty().contains(",")) { //未分组
 
-            return createSort(direction, property);
+            return createSort(order.getDirection().toString(), order.getProperty());
 
         } else { //分组,grouping:true 时
 
-            String[] arrays = StringUtils.removeEnd(property.trim(), ",").split(",");  //传来的排序请求字符串，形如 sidx =name asc, herf desc,实际经过参数对应后变成字符串 name asc, herf desc,
+            String[] arrays = StringUtils.removeEnd(order.getProperty().trim(), ",").split(",");  //传来的排序请求字符串，形如 sidx =name asc, herf desc,实际经过参数对应后变成字符串 name asc, herf desc,
             //arrays = {[name asc],[herf desc]}
 
             List<Sort.Order> orders = Lists.newArrayList();

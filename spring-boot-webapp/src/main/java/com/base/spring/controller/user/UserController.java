@@ -2,8 +2,7 @@ package com.base.spring.controller.user;
 
 import com.base.spring.domain.validator.UserCreateFormValidator;
 import com.base.spring.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,9 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.NoSuchElementException;
 
 @Controller
+@Slf4j
 public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    //private static final log log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
     @Autowired
@@ -63,7 +63,7 @@ public class UserController {
     @PreAuthorize("@currentUserService.canAccessUser(principal, #id)")
     @RequestMapping("/user/{id}")
     public ModelAndView getUserPage(@PathVariable Long id) {
-        LOGGER.debug("Getting user page for user={}", id);
+        log.debug("Getting user page for user={}", id);
 
         return new ModelAndView("user", "user", userService.getUserById(id).orElseThrow(() -> new NoSuchElementException(String.format("User=%s not found", id))));
     }
@@ -72,7 +72,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/user/create", method = RequestMethod.GET)
     public ModelAndView getUserCreatePage() {
-        LOGGER.debug("Getting user create form");
+        log.debug("Getting user create form");
         //返回到前端一个默认的 UserEntity，便于携带信息
         return new ModelAndView("user_create", "form", new UserEntity());
     }
@@ -80,7 +80,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/user/create", method = RequestMethod.POST)
     public String handleUserCreateForm(@Valid @ModelAttribute("form") UserEntity form, BindingResult bindingResult) {
-        LOGGER.debug("Processing user create form={}, bindingResult={}", form, bindingResult);
+        log.debug("Processing user create form={}, bindingResult={}", form, bindingResult);
         if (bindingResult.hasErrors()) {
             // failed validation
             return "user_create";
@@ -90,7 +90,7 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             // probably email already exists - very rare case when multiple admins are adding same user
             // at the same time and form validation has passed for more than one of them.
-            LOGGER.warn("Exception occurred when trying to save the user, assuming duplicate email", e);
+            log.warn("Exception occurred when trying to save the user, assuming duplicate email", e);
             bindingResult.reject("email.exists", "Email already exists");
             return "user_create";
         }
@@ -101,7 +101,7 @@ public class UserController {
      */
     @RequestMapping("/users")
     public ModelAndView getUsersPage() {
-        LOGGER.debug("Getting users page..");
+        log.debug("Getting users page..");
         return new ModelAndView("users", "users", userService.getAllUsers());
     }
 

@@ -109,10 +109,10 @@ class Mustache_Engine
      *         // Character set for `htmlspecialchars`. Defaults to 'UTF-8'. Use 'UTF-8'.
      *         'charset' => 'ISO-8859-1',
      *
-     *         // A Mustache Logger instance. No logging will occur unless this is set. Using a PSR-3 compatible
-     *         // logging library -- such as Monolog -- is highly recommended. A simple stream logger implementation is
+     *         // A Mustache log instance. No logging will occur unless this is set. Using a PSR-3 compatible
+     *         // logging library -- such as Monolog -- is highly recommended. A simple stream log implementation is
      *         // available as well:
-     *         'logger' => new Mustache_Logger_StreamLogger('php://stderr'),
+     *         'log' => new Mustache_Logger_StreamLogger('php://stderr'),
      *
      *         // Only treat Closure instances and invokable classes as callable. If true, values like
      *         // `array('ClassName', 'methodName')` and `array($classInstance, 'methodName')`, which are traditionally
@@ -183,8 +183,8 @@ class Mustache_Engine
             $this->charset = $options['charset'];
         }
 
-        if (isset($options['logger'])) {
-            $this->setLogger($options['logger']);
+        if (isset($options['log'])) {
+            $this->setLogger($options['log']);
         }
 
         if (isset($options['strict_callables'])) {
@@ -427,9 +427,9 @@ class Mustache_Engine
     }
 
     /**
-     * Set the Mustache Logger instance.
+     * Set the Mustache log instance.
      *
-     * @throws Mustache_Exception_InvalidArgumentException If logger is not an instance of Mustache_Logger or Psr\Log\LoggerInterface.
+     * @throws Mustache_Exception_InvalidArgumentException If log is not an instance of Mustache_Logger or Psr\Log\LoggerInterface.
      *
      * @param Mustache_Logger|Psr\Log\LoggerInterface $logger
      */
@@ -443,17 +443,17 @@ class Mustache_Engine
             $this->getCache()->setLogger($logger);
         }
 
-        $this->logger = $logger;
+        $this->log = $logger;
     }
 
     /**
-     * Get the current Mustache Logger instance.
+     * Get the current Mustache log instance.
      *
      * @return Mustache_Logger|Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->log;
     }
 
     /**
@@ -541,7 +541,7 @@ class Mustache_Engine
      */
     public function setCache(Mustache_Cache $cache)
     {
-        if (isset($this->logger) && $cache->getLogger() === null) {
+        if (isset($this->log) && $cache->getLogger() === null) {
             $cache->setLogger($this->getLogger());
         }
 
@@ -780,8 +780,8 @@ class Mustache_Engine
      */
     private function log($level, $message, array $context = array())
     {
-        if (isset($this->logger)) {
-            $this->logger->log($level, $message, $context);
+        if (isset($this->log)) {
+            $this->log->log($level, $message, $context);
         }
     }
 }

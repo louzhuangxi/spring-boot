@@ -54,7 +54,7 @@ import java.util.Collection;
  */
 public class JpaDynamicSpecificationBuilder {
 
-    //  private static final Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationBuilder.class);
+    //  //private static final Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationBuilder.class);
     private Specification specification;
 
     public JpaDynamicSpecificationBuilder() {

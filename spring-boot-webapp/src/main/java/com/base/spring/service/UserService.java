@@ -6,9 +6,8 @@ import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.utils.TreeUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,11 +22,12 @@ import java.util.*;
  * Time: 10:02
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    //private static final log log = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private GroupRepository groupRepository;
     @Autowired
@@ -38,17 +38,17 @@ public class UserService {
     private TreeRepository treeRepository;
 
     public Optional<UserEntity> getUserById(long id) {
-        logger.debug("Getting user={}", id);
+        log.debug("Getting user={}", id);
         return Optional.ofNullable(userRepository.findOne(id));
     }
 
     public Optional<UserEntity> getUserByEmail(String email) {
-        logger.debug("Getting user by email={}", email.replaceFirst("@.*", "@***"));
+        log.debug("Getting user by email={}", email.replaceFirst("@.*", "@***"));
         return userRepository.findOneByEmail(email);
     }
 
     public Collection<UserEntity> getAllUsers() {
-        logger.debug("Getting all users");
+        log.debug("Getting all users");
         return userRepository.findAll(new Sort("email"));
     }
 
@@ -72,7 +72,7 @@ public class UserService {
 
         //清空
         if (groupIds == null || groupIds.length == 0) {
-            logger.info("clear groups.");
+            log.info("clear groups.");
             userEntity.clearGroups();
             userRepository.save(userEntity);
             return;
@@ -170,14 +170,14 @@ public class UserService {
 
         //没有选择 roles，表示清空
         if (roleIds == null || roleIds.length == 0) {
-            logger.info("clear roles.");
+            log.info("clear roles.");
             userEntity.clearRoles();
             userRepository.save(userEntity);
             return;
         }
 
 //        for (String roleId : roleIds) {
-//            logger.info("userId ={}", roleId);
+//            log.info("userId ={}", roleId);
 //        }
 
         //构造 id 集合
@@ -193,7 +193,7 @@ public class UserService {
          * */
         // 被选中的节点
         List<RoleEntity> targetRoles = roleRepository.findByIdIn(listRoleId);
-        //  logger.info("targetRoles size ={} ", targetRoles.size());
+        //  log.info("targetRoles size ={} ", targetRoles.size());
         // user 已经关联的 role
         Set<RoleEntity> sourceRoles = userEntity.getRoles();
         // 需要删除的节点

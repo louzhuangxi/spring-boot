@@ -1,10 +1,9 @@
 package org.h819.commons;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.*;
 import org.apache.commons.io.IOUtils;
 import org.h819.commons.exe.ExecParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,13 +19,14 @@ import java.util.List;
  * Time: 16:18
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 public class MyExecUtils {
 
     //等待时间
     //大文件，pdf2swf 命令要读入，会有一段时间，所以等待时间不能太短。另外如果文件太大，jvm 会不会假死？
     private static int wait = 60;
 
-    private static final Logger logger = LoggerFactory.getLogger(MyExecUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyExecUtils.class);
 
     /**
      * 例子： PdfUtils.java
@@ -143,7 +143,7 @@ public class MyExecUtils {
      */
     private static CommandLine getCommandLine(String cmdPath, List<ExecParameter> arguments) {
         String execStr = "'" + cmdPath + "'" + join(arguments);
-        logger.info("exec command= {}", execStr);
+        log.info("exec command= {}", execStr);
         return CommandLine.parse(execStr);
     }
 

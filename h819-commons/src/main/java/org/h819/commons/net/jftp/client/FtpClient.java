@@ -1,25 +1,25 @@
 package org.h819.commons.net.jftp.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.h819.commons.net.jftp.connection.Connection;
 import org.h819.commons.net.jftp.connection.ConnectionFactory;
 import org.h819.commons.net.jftp.exception.FtpException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.SocketException;
 
+@Slf4j
 public class FtpClient extends Client {
 
     private static final int FIVE_MINUTES = 300;
     private static final String UNABLE_TO_LOGIN_MESSAGE = "Unable to login for user %s";
     private static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to host %s on port %d";
     private static final String STATUS_ERROR_MESSAGE = "The host %s on port %d returned a bad status code.";
-    private static final Logger logger = LoggerFactory.getLogger(FtpClient.class);
+    //private static final Logger log = LoggerFactory.getLogger(FtpClient.class);
     private static Connection connection;
     protected FTPClient ftpClient;
     private ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -75,7 +75,7 @@ public class FtpClient extends Client {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
-                    logger.info("logged out.");
+                    log.info("logged out.");
                 } catch (IOException ioe) {
                     // do nothing
                 }
@@ -86,7 +86,7 @@ public class FtpClient extends Client {
 
     private void connectClientAndCheckStatus() throws SocketException, IOException, FtpException {
 
-        logger.info("Connected to " + host + ":" + port + "  via FTP ...");
+        log.info("Connected to " + host + ":" + port + "  via FTP ...");
         ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true)); // 打印执行的命令?
         ftpClient.connect(host, port);
 

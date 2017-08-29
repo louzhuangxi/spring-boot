@@ -78,7 +78,6 @@ public class SqlUtils {
         return queryNativeSql.trim();
     }
 
-
     /**
      * 构造 sql server 分页语句时使用
      *
@@ -90,7 +89,6 @@ public class SqlUtils {
         int selectDistinctIndex = sql.toLowerCase().indexOf("select distinct");
         return selectIndex + (selectDistinctIndex == selectIndex ? 15 : 6);
     }
-
 
     public static void main(String[] args) throws Exception {
         String searchSql = "select ccs.ccs_name as ccsName,ics.ics_name as icsName,cl.class_name_cn as className, st.* from St_Standard st\n" +
@@ -117,11 +115,11 @@ public class SqlUtils {
      * @param order 自定义的排序条件
      * @return
      */
-    public static String createOrderString(OrderBean... order) {
+    public static String createOrderString(Order... order) {
 
         StringBuilder builder = new StringBuilder();
         builder.append(" order by ");
-        for (OrderBean o : order)
+        for (Order o : order)
             builder.append(o.getProperty()).append(" ").append(o.getDirection()).append(", ");
         int last = builder.lastIndexOf(",");
         builder.deleteCharAt(last);
@@ -129,10 +127,31 @@ public class SqlUtils {
         return builder.toString();
     }
 
-    public static String createOrderString(List<OrderBean> orderList) {
-        OrderBean[] orders = orderList.toArray(new OrderBean[orderList.size()]);
+    public static String createOrderString(List<Order> orderList) {
+        Order[] orders = orderList.toArray(new Order[orderList.size()]);
         return createOrderString(orders);
 
+    }
+
+    public static Order createOrder(String direction, String property) {
+        if (!direction.equalsIgnoreCase("asc") || !direction.equalsIgnoreCase("desc"))
+            throw new IllegalArgumentException("direction must be asc or desc");
+
+        if (direction.equalsIgnoreCase("asc"))
+            return new Order(property, Order.Direction.ASC);
+        else
+            return new Order(property, Order.Direction.DESC);
+    }
+
+    public static String escapeBadSqlPatternChars(String sql) {
+        StringBuffer sb = new StringBuffer(sql);
+        for (int i = 0, len = sb.length(); i < len; ++i)
+            if (sb.charAt(i) == '\'') {
+                sb.insert(i, '\'');
+                ++len;
+                i += 2;
+            }
+        return sb.toString();
     }
 
     /**

@@ -1,8 +1,7 @@
 package org.h819.commons.printer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +17,10 @@ import java.io.IOException;
 
 // jacob 调用 windows 命令，打印任意文档
 // https://sourceforge.net/projects/jacob-project/
+@Slf4j
 public class MyPrinterUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyPrinterUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyPrinterUtils.class);
 
 
     /**
@@ -72,11 +72,11 @@ public class MyPrinterUtils {
             // pdfFilePath: d:\sample.pdf
 
             if (!new File(gspprintPath).exists()) {
-                logger.info("file does not exsit: " + gspprintPath);
+                log.info("file does not exsit: " + gspprintPath);
                 return;
             }
             if (!new File(pdfFilePath).exists()) {
-                logger.info("file does not exsit: " + pdfFilePath);
+                log.info("file does not exsit: " + pdfFilePath);
                 return;
             }
             //所有的命令字符串，都用 引号括起来
@@ -84,7 +84,7 @@ public class MyPrinterUtils {
                     + FilenameUtils.separatorsToSystem(gspprintPath)
                     + "\" -printer " + "\"" + printerName + "\" "
                     + FilenameUtils.separatorsToSystem(pdfFilePath);
-            logger.info("print cmd is: " + cmd);
+            log.info("print cmd is: " + cmd);
             // cmd.exe /c call "e:\Program
             // Files\Ghostgum\gsview\gsprint" -printer "Adobe PDF" d:/1.pdf
 

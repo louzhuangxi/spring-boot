@@ -17,8 +17,7 @@
 
 package org.h819.commons.net.email.example;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,9 +44,10 @@ import java.util.regex.Pattern;
  *
  * @author <a href="mailto:claude.brisson@gmail.com">Claude Brisson</a>
  */
+@Slf4j
 public class EmailCheck extends FieldConstraint {
 
-    private static final Logger logger = LoggerFactory.getLogger(DNSResolver.class);
+    //private static final Logger log = LoggerFactory.getLogger(DNSResolver.class);
     /**
      * valid email pattern.
      */
@@ -92,7 +92,7 @@ public class EmailCheck extends FieldConstraint {
         this.smtpCheck = smtpCheck;
         setMessage("field {0}: [{1}] is not a valid email");
         if (smtpCheck) {
-            logger.error("EmailCheck: smtp-check doesn not work well and should not be used!");
+            log.error("EmailCheck: smtp-check doesn not work well and should not be used!");
         }
     }
 
@@ -142,7 +142,7 @@ public class EmailCheck extends FieldConstraint {
         BufferedReader is = null;
         PrintStream os = null;
 
-        logger.trace("email validation: checking SMTP for <" + user + "@" + hostname + ">");
+        log.trace("email validation: checking SMTP for <" + user + "@" + hostname + ">");
 
         List<String> mxs = DNSResolver.resolveDNS(hostname, true);
 
@@ -151,22 +151,22 @@ public class EmailCheck extends FieldConstraint {
         }
         for (String mx : mxs) {
             try {
-                logger.trace("email validation: checking SMTP: trying with MX server " + mx);
+                log.trace("email validation: checking SMTP: trying with MX server " + mx);
                 sock = new FastTimeoutConnect(mx, 25, 3000).connect();
                 if (sock == null) {
-                    logger.trace("email validation: checking SMTP: timeout");
+                    log.trace("email validation: checking SMTP: timeout");
                     continue;
                 }
                 is = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 os = new PrintStream(sock.getOutputStream());
-                logger.trace(">> establishing connection towards " + mx);
+                log.trace(">> establishing connection towards " + mx);
                 do {
                     response = is.readLine();
-                    logger.trace("<< " + response);
+                    log.trace("<< " + response);
                 }
                 while (response.charAt(3) == '-');
                 if (!response.startsWith("220 ")) {
-                    logger.trace("email validation: checking SMTP: failed after connection");
+                    log.trace("email validation: checking SMTP: failed after connection");
                     if (response.startsWith("4")) {
                         /* server has problems */
                         os.println("QUIT");
@@ -180,15 +180,15 @@ public class EmailCheck extends FieldConstraint {
                 }
                 ;
                 request = "EHLO [" + sock.getLocalAddress().getHostAddress() + "]";
-                logger.trace(">> " + request);
+                log.trace(">> " + request);
                 os.println(request);
                 do {
                     response = is.readLine();
-                    logger.trace("<< " + response);
+                    log.trace("<< " + response);
                 }
                 while (response.charAt(3) == '-');
                 if (!response.startsWith("250 ")) {
-                    logger.trace("email validation: checking SMTP: failed after HELO");
+                    log.trace("email validation: checking SMTP: failed after HELO");
                     if (response.startsWith("4")) {
                         /* server has problems */
                         os.println("QUIT");
@@ -202,15 +202,15 @@ public class EmailCheck extends FieldConstraint {
                 }
                 ;
                 request = "MAIL FROM:<emailchecker@renegat.net>";    // the mail must exist
-                logger.trace(">> " + request);
+                log.trace(">> " + request);
                 os.println(request);
                 do {
                     response = is.readLine();
-                    logger.trace("<< " + response);
+                    log.trace("<< " + response);
                 }
                 while (response.charAt(3) == '-');
                 if (!response.startsWith("250 ")) {
-                    logger.trace("email validation: checking SMTP: failed after MAIL FROM");
+                    log.trace("email validation: checking SMTP: failed after MAIL FROM");
                     if (response.startsWith("4")) {
                         /* server has problems */
                         os.println("QUIT");
@@ -224,15 +224,15 @@ public class EmailCheck extends FieldConstraint {
                 }
                 ;
                 request = "RCPT TO:<" + user + "@" + hostname + ">";
-                logger.trace("<< " + request);
+                log.trace("<< " + request);
                 os.println(request);
                 do {
                     response = is.readLine();
-                    logger.trace("<< " + response);
+                    log.trace("<< " + response);
                 }
                 while (response.charAt(3) == '-');
                 if (!response.startsWith("250 ")) {
-                    logger.trace("email validation: checking SMTP: failed after RCPT TO");
+                    log.trace("email validation: checking SMTP: failed after RCPT TO");
                     if (response.startsWith("4")) {
                         /* server has problems */
                         os.println("QUIT");
@@ -245,10 +245,10 @@ public class EmailCheck extends FieldConstraint {
                     }
                 }
                 ;
-                logger.trace("email validation: checking SMTP: success");
+                log.trace("email validation: checking SMTP: success");
                 return true;
             } catch (Exception e) {
-                logger.trace("email validation: checking SMTP: failure with exception: " + e.getMessage());
+                log.trace("email validation: checking SMTP: failure with exception: " + e.getMessage());
             }
 
             /* new method: try to use VRFY */ finally {
@@ -261,7 +261,7 @@ public class EmailCheck extends FieldConstraint {
                 }
             }
         }
-        logger.trace("email validation: checking SMTP: failure for all MXs");
+        log.trace("email validation: checking SMTP: failure for all MXs");
         return false;
     }
 

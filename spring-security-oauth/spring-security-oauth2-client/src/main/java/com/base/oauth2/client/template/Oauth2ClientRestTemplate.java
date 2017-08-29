@@ -29,7 +29,7 @@ import java.util.Arrays;
 @Transactional
 public class Oauth2ClientRestTemplate {
 
-    private static final Logger logger = LoggerFactory.getLogger(Oauth2ClientRestTemplate.class);
+    //private static final Logger logger = LoggerFactory.getLogger(Oauth2ClientRestTemplate.class);
 
     @Autowired
     private OAuth2ClientContext oAuth2ClientContext;

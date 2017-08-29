@@ -1,7 +1,6 @@
 package com.base.spring.event.login;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -19,9 +18,9 @@ import java.util.Collection;
 /**
  * 没有用到
  */
+@Slf4j
 @Component("myAuthenticationSuccessHandler")
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
@@ -39,7 +38,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         final String targetUrl = determineTargetUrl(authentication);
 
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 

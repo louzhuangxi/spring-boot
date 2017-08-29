@@ -51,7 +51,7 @@ public class MyDateUtils  {
     public static String timePattern12 = "hh:mm:ss";
     // 12 小时制
     public static String dateTime12Pattern = datePattern + " " + timePattern12;
-    private static final Logger logger = LoggerFactory.getLogger(MyDateUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MyDateUtils.class);
 
 
     /**

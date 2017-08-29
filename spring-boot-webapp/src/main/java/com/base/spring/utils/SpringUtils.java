@@ -1,10 +1,8 @@
 package com.base.spring.utils;
 
-import com.alibaba.fastjson.JSON;
 import com.base.spring.custom.security.SecurityUser;
 import com.google.common.collect.Maps;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.h819.commons.MyFastJsonUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -22,7 +20,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class SpringUtils {
-    private static final Logger logger = LoggerFactory.getLogger(SpringUtils.class);
+    //private static final log log = LoggerFactory.getLogger(SpringUtils.class);
 
     /**
      * 坑爹大全 !
@@ -54,15 +52,14 @@ public class SpringUtils {
             map.put(entry.getKey(), entry.getValue()[0]);
         }
 
-        logger.info("" + JSON.toJSON(map));
+        MyFastJsonUtils.prettyPrint(map);
 
         return map;
     }
 
     /**
      * spring security 验证通过之后，获取验证通过的用户信息。
-     *
-     * @return
+     *     * @return
      */
     public static SecurityUser getSecurityUser() {
         return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

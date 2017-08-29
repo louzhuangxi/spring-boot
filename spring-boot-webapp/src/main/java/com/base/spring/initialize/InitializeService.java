@@ -6,8 +6,7 @@ import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.repository.UserRepository;
 import com.base.spring.utils.BCryptPassWordUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +23,9 @@ import java.util.*;
  */
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class InitializeService {
-    private static final Logger logger = LoggerFactory.getLogger(InitializeService.class);
+    //private static final log log = LoggerFactory.getLogger(InitializeService.class);
 
     @Autowired
     TreeRepository treeRepository;
@@ -59,7 +59,7 @@ public class InitializeService {
         List<TreeType> listType = Arrays.asList(TreeType.values());
         for (TreeType type : listType) {
             if (!rootTreeType.contains(type)) {
-                logger.info("init {} tree root node", type);
+                log.info("init {} tree root node", type);
                 TreeEntity root = new TreeEntity(type, "root_" + type, 0, true, null);
                 treeRepository.save(root);
             }
@@ -107,11 +107,11 @@ public class InitializeService {
         List<TreeEntity> exist = treeRepository.findByName("菜单管理");
 
         if (!exist.isEmpty()) {
-            logger.info("menu tree has initialized , continue ");
+            log.info("menu tree has initialized , continue ");
             return;
         }
 
-        logger.info("initialize menu tree ... ");
+        log.info("initialize menu tree ... ");
         createMenuTree();
 
     }
@@ -131,11 +131,11 @@ public class InitializeService {
         List<TreeEntity> exist = treeRepository.findByName("按钮/资源");
 
         if (!exist.isEmpty()) {
-            logger.info("menu tree has initialized , continue ");
+            log.info("menu tree has initialized , continue ");
             return;
         }
 
-        logger.info("initialize pageResource tree ... ");
+        log.info("initialize pageResource tree ... ");
         createPageResourceTree();
 
     }
@@ -148,11 +148,11 @@ public class InitializeService {
         List<TreeEntity> exist = treeRepository.findByName("国家标准");
 
         if (!exist.isEmpty()) {
-            logger.info("menu tree has initialized , continue ");
+            log.info("menu tree has initialized , continue ");
             return;
         }
 
-        logger.info("initialize standard tree ... ");
+        log.info("initialize standard tree ... ");
         createStandardTree();
 
     }
@@ -408,11 +408,11 @@ public class InitializeService {
          * 用户已经初始化
          */
         if (userRepository.findByLoginName("admin").isPresent()) {
-            logger.info("user has initialized , continue");
+            log.info("user has initialized , continue");
             return;
         }
 
-        logger.info("initialize admin user ...");
+        log.info("initialize admin user ...");
 
         UserEntity user = new UserEntity();
         user.setLoginName("admin");
@@ -463,11 +463,11 @@ public class InitializeService {
         if (groupRepository.findByName("系统管理员组").isPresent() &&
                 groupRepository.findByName("用户组").isPresent()) {
 
-            logger.info("group has initialized , continue");
+            log.info("group has initialized , continue");
             return;
         }
 
-        logger.info("initialize group ...");
+        log.info("initialize group ...");
 
 
         GroupEntity admins = new GroupEntity();
@@ -494,11 +494,11 @@ public class InitializeService {
         if (roleRepository.findByName("系统管理员角色").isPresent() &&
                 roleRepository.findByName("用户角色").isPresent()) {
 
-            logger.info("role has initialized , continue");
+            log.info("role has initialized , continue");
             return;
         }
 
-        logger.info("initialize role ...");
+        log.info("initialize role ...");
 
 
         RoleEntity admins = new RoleEntity();

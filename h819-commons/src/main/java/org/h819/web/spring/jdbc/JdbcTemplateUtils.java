@@ -1,8 +1,7 @@
 package org.h819.web.spring.jdbc;
 
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.spring.vo.PageBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,9 +21,10 @@ import java.util.Map;
  */
 
 // 例子见 standard-open-api-server , com.open.api.oracle.service.StStandardNativeService
+@Slf4j
 public class JdbcTemplateUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JdbcTemplateUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(JdbcTemplateUtils.class);
     /**
      * 占位符只能用于 value ，不能用于列名(column)
      * 所以 order by ? ,? asc 不可以
@@ -111,12 +111,12 @@ public class JdbcTemplateUtils {
 
         String queryNativeSqlString = SqlUtils.createNativePageSqlString(dbDialect, queryNativeSql, currentPageNo, pageSize);
 
-        logger.info("countNativeSql : \n {} ", countNativeSql);
-        logger.info("queryPageNativeSql : \n {} ", queryNativeSqlString);
+        log.info("countNativeSql : \n {} ", countNativeSql);
+        log.info("queryPageNativeSql : \n {} ", queryNativeSqlString);
 
         // 计算总数
         final int totalRecordsSize = jdbcTemplate.queryForObject(countNativeSql, countArgs, Integer.class);
-//        logger.info("totalRecordsSize : " + totalRecordsSize);
+//        log.info("totalRecordsSize : " + totalRecordsSize);
         if (totalRecordsSize == 0)
             return new PageBean(pageSize, 0 + 1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
 

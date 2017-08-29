@@ -1,7 +1,6 @@
 package org.h819.commons.net;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -16,6 +15,7 @@ import java.net.UnknownHostException;
  * Time: 上午11:16
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 public class MyNetUtils {
 
     /**
@@ -30,7 +30,7 @@ public class MyNetUtils {
      * @since 0.12
      */
     public static final String UNKNOWN_HOST = "";
-    private static final Logger logger = LoggerFactory.getLogger(MyNetUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyNetUtils.class);
 
     public static void main(String[] arg) {
 
@@ -139,7 +139,7 @@ public class MyNetUtils {
             soc = new Socket();
             soc.connect(new InetSocketAddress(host, port), timeout * 1000);
         } catch (IOException e) {
-            logger.info("connect timed out");
+            log.info("connect timed out");
             isOpen = false;
             // e.printStackTrace();
         } finally {

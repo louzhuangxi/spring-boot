@@ -21,17 +21,17 @@ abstract class Mustache_Cache_AbstractCache implements Mustache_Cache
     private $logger = null;
 
     /**
-     * Get the current logger instance.
+     * Get the current log instance.
      *
      * @return Mustache_Logger|Psr\Log\LoggerInterface
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->log;
     }
 
     /**
-     * Set a logger instance.
+     * Set a log instance.
      *
      * @param Mustache_Logger|Psr\Log\LoggerInterface $logger
      */
@@ -41,7 +41,7 @@ abstract class Mustache_Cache_AbstractCache implements Mustache_Cache
             throw new Mustache_Exception_InvalidArgumentException('Expected an instance of Mustache_Logger or Psr\\Log\\LoggerInterface.');
         }
 
-        $this->logger = $logger;
+        $this->log = $logger;
     }
 
     /**
@@ -53,8 +53,8 @@ abstract class Mustache_Cache_AbstractCache implements Mustache_Cache
      */
     protected function log($level, $message, array $context = array())
     {
-        if (isset($this->logger)) {
-            $this->logger->log($level, $message, $context);
+        if (isset($this->log)) {
+            $this->log->log($level, $message, $context);
         }
     }
 }

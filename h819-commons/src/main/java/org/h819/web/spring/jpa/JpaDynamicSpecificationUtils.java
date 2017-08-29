@@ -41,7 +41,7 @@ import java.util.List;
 @Deprecated // 用 builder 代替
 public class JpaDynamicSpecificationUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(JpaDynamicSpecificationUtils.class);
 
     /**
      * @param searchFilter 查询条件

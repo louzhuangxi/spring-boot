@@ -1,8 +1,7 @@
 package com.base.spring.filter;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,9 +26,10 @@ import java.io.IOException;
  * <p>
  * spring 中的 filter 都是扩展 OncePerRequestFilter ，比实现接口 implements Filter 更安全一些
  */
+@Slf4j
 public class CustomFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomFilter.class);
+    //private static final log log = LoggerFactory.getLogger(CustomFilter.class);
 
 
     @Override
@@ -38,7 +38,7 @@ public class CustomFilter extends OncePerRequestFilter {
         // ((HttpServletRequest) servletRequest).getServletPath()
 
         try {
-            logger.info("in filter : {} ", httpServletRequest.getRequestURL());
+            log.info("in filter : {} ", httpServletRequest.getRequestURL());
 //            System.out.println("1 :" + httpServletRequest.getRequestURI());
 //            System.out.println("2 :" + httpServletRequest.getQueryString());
 //            System.out.println("3 :" + httpServletRequest.getPathInfo());

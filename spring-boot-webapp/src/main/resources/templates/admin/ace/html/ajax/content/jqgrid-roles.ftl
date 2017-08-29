@@ -138,7 +138,7 @@
 
                 var zTree = getZTree(ztree_root);
                 var nodes = zTree.getCheckedNodes(true); //返回的是一个数组
-                //logger(nodes);
+                //log(nodes);
 
                 //id 数组
                 for (i = 0; i < nodes.length; i++) {
@@ -149,7 +149,7 @@
                 for (i = 0; i < ids.length; i++) {
                     ids_str += ids[i] + ",";
                 }
-                //logger("text="+text);
+                //log("text="+text);
 
 
                 $.ajax({ //ajax 提交到controller的delApplication方法处理
@@ -678,10 +678,10 @@
    调用浏览器调试日志, 打印字符串
    message 可以是任何对象。
    需要注意的是:
-   如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
-   如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+   如果 message 为 object（如 josn），那么不要使用 log("obejct is ="+message)，字符串+对象，log 就无法打印了。
+   如果 message 字符串，那么可以 + 字符串如： log("hello"+"world")
     */
-    function logger(message) {
+    function log(message) {
         console.log(message);
     }
 

@@ -4,9 +4,8 @@ package com.base.spring.controller;
 import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.commons.MyServletUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,10 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/menu/ajax")
 //重要: 必须是 ajax/content/xxx 形式，
 // 以符合 ace.js 中 content_url 的要求，menu 为前缀，可以为任意值或者没有
-
+@Slf4j
 public class NavigateController {
 
-    private static final Logger logger = LoggerFactory.getLogger(NavigateController.class);
+    //private static final log log = LoggerFactory.getLogger(NavigateController.class);
 
     @Autowired
     UserService userService;
@@ -54,10 +53,10 @@ public class NavigateController {
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String home(HttpServletRequest request, Model model,
                        @ModelAttribute("currentUser") SecurityUser user) { //SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
-        logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
+        log.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         //初始化菜单
-        logger.info("user name in security={}", user.getUsername());
-        logger.info("user name in entity={}", user.getUser().getUserName());
+        log.info("user name in security={}", user.getUsername());
+        log.info("user name in entity={}", user.getUser().getUserName());
         // 或直接获取 SecurityUser suser = SpringUtils.getSecurityUser();
         // UserEntity uEnity = suser.getUser();
         model.addAttribute("username", user.getUsername());
@@ -82,8 +81,8 @@ public class NavigateController {
     // 加在 service 层，好像粒度更细，如区分 add,del,eidt 等
     public String role(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
 
-        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
-        logger.info("treeType ={}", treeType);
+        log.info("request path={} ,  will go to /html/ajax/content/jqgrid-roles.ftl", MyServletUtils.getFullPath(request));
+        log.info("treeType ={}", treeType);
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         model.addAttribute("treeType", treeType); //对菜单进行授权
         return "admin/ace/html/ajax/content/jqgrid-roles";
@@ -100,7 +99,7 @@ public class NavigateController {
      */
     @RequestMapping(value = "/content/admin/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
     public String user(HttpServletRequest request, Model model) {
-        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
+        log.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         return "admin/ace/html/ajax/content/jqgrid-user";
     }
@@ -117,7 +116,7 @@ public class NavigateController {
      */
     @RequestMapping(value = "/content/admin/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
     public String group(HttpServletRequest request, Model model) {
-        logger.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
+        log.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         return "admin/ace/html/ajax/content/jqgrid-group";
     }
@@ -134,7 +133,7 @@ public class NavigateController {
      */
     @RequestMapping(value = "/content/admin/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
     public String ztree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
-        logger.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
+        log.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         model.addAttribute("treeType", treeType);
@@ -152,7 +151,7 @@ public class NavigateController {
     @Deprecated // 用 zTree 代替，不能全选，不能自动选择所有子节点s
     @RequestMapping(value = "/content/fuelux-tree.html", method = RequestMethod.GET)    // 必须有 /content/
     public String fueluxTree(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
-        logger.info("request path={} , type={},  will go to /html/ajax/content/fuelux-tree.ftl", MyServletUtils.getFullPath(request), type);
+        log.info("request path={} , type={},  will go to /html/ajax/content/fuelux-tree.ftl", MyServletUtils.getFullPath(request), type);
 
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
         model.addAttribute("menu_type", type);

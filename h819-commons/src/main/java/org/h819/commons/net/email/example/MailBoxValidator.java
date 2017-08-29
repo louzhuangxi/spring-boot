@@ -1,7 +1,6 @@
 package org.h819.commons.net.email.example;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.naming.CommunicationException;
 import javax.naming.NamingEnumeration;
@@ -22,9 +21,10 @@ import java.util.Hashtable;
 // License:
 //    http://www.rgagnon.com/varia/faq-e.html#license
 //    There is no restriction to use individual How-To in a development (compiled/source) but a mention is appreciated.
+@Slf4j
 public class MailBoxValidator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MailBoxValidator.class);
+    //private static final Logger log = LoggerFactory.getLogger(MailBoxValidator.class);
 
     private String fromDomain;
     private String fromEmail;
@@ -60,7 +60,7 @@ public class MailBoxValidator {
         try {
             Inet4Address.getByName(host);
         } catch (UnknownHostException e) {
-            logger.info("[mail validation] host of mail does not exist email=" + email + " - " + e.getMessage());
+            log.info("[mail validation] host of mail does not exist email=" + email + " - " + e.getMessage());
             return false;
         }
         return true;
@@ -120,10 +120,10 @@ public class MailBoxValidator {
         try {
             mxList = getMX(domain);
         } catch (CommunicationException ce) {
-            logger.info("[mail validation] got dns problems email=" + address, ce);
+            log.info("[mail validation] got dns problems email=" + address, ce);
             return true;
         } catch (NamingException ex) {
-            logger.info("[mail validation] got host naming exception for email=" + address + " - " + ex);
+            log.info("[mail validation] got host naming exception for email=" + address + " - " + ex);
             return false;
         }
 
@@ -167,12 +167,12 @@ public class MailBoxValidator {
             skt.close();
 
             if (res == 550) {
-                logger.info("[mail validation] got response SMTP 550 for email=" + address);
+                log.info("[mail validation] got response SMTP 550 for email=" + address);
                 return false;
             }
 
         } catch (Exception e) {
-            logger.info("[mail validation] remote mail validation error. Accepting email anyway: email=" + address + " - " + e.getMessage());
+            log.info("[mail validation] remote mail validation error. Accepting email anyway: email=" + address + " - " + e.getMessage());
         }
         return true;
     }

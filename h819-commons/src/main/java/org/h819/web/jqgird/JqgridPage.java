@@ -74,7 +74,7 @@ import java.util.Map;
 public class JqgridPage<T> implements Serializable {
 
 
-    private static final Logger logger = LoggerFactory.getLogger(JqgridPage.class);
+    //private static final Logger logger = LoggerFactory.getLogger(JqgridPage.class);
     /**
      * 当前页序号
      */

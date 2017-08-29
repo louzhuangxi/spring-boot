@@ -1,5 +1,6 @@
 package org.h819.commons;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.h819.commons.entity.MimeTypeEntity;
@@ -9,8 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,9 +40,10 @@ import java.util.List;
  */
 
 //Files.probeContentType(path) 根据扩展名判断，不准确
+@Slf4j
 public class MyMimeTypeUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyMimeTypeUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyMimeTypeUtils.class);
 
     private static String propertiesFileName = "mimetype.properties";
 
@@ -235,7 +235,7 @@ public class MyMimeTypeUtils {
         String url = "http://www.freeformatter.com/mime-types-list.html";
 
         if (!MyUrlUtils.isURLAvailable(url, 3)) {
-            logger.info(url + "   not exist,continue  ...");
+            log.info(url + "   not exist,continue  ...");
 
         }
 

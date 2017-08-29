@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Transactional(readOnly = true)
 class SpringOauth2ClientController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpringOauth2ClientController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(SpringOauth2ClientController.class);
 
     // 配置，配置单配置文件中比较合适下面的
     @Value("type1")

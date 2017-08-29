@@ -6,9 +6,8 @@ import com.base.spring.domain.TreeEntity;
 import com.base.spring.domain.TreeType;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.utils.TreeUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.spring.jpa.DtoUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +16,12 @@ import java.util.List;
 
 //http://git.oschina.net/smallc/SpringBlade
 //可参考处理方式
-
+@Slf4j
 @Service
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
 public class TreeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TreeService.class);
+    //private static final log log = LoggerFactory.getLogger(TreeService.class);
 
     @Autowired
     private TreeRepository treeRepository;
@@ -96,10 +95,10 @@ public class TreeService {
          * 第一次打开页面时，异步加载，而不是点击了某个关闭的父节点，所以此时没有 id 参数， id=null
          */
         if (id == null) {
-            logger.info("initialize ztree first from db by id={} , treeType={}", id, treeTypes);
+            log.info("initialize ztree first from db by id={} , treeType={}", id, treeTypes);
             List<TreeEntity> rootList = treeRepository.findRoot(treeTypes);
             if (rootList == null || rootList.isEmpty()) {
-                logger.info("not exist any tree node !");
+                log.info("not exist any tree node !");
                 return "";
             }
             //构建一个临时的节点
@@ -117,7 +116,7 @@ public class TreeService {
          *  此时有父节点了，已经知道就指定菜单类型了，不必再传入
          */
         else {
-            logger.info("Load ztree async from db by id={} and type={}", id, treeTypes);
+            log.info("Load ztree async from db by id={} and type={}", id, treeTypes);
 
             //数据库中 TreeEntity 的 id 从 1 开始，如果得到 TreeEntity id =0 ，一定是构造的临时节点的 id ，TreeUtils.convertToZTreeNode ，此时返回临时节点的子节点。
             if (id == 0) {
@@ -149,7 +148,7 @@ public class TreeService {
     @Transactional(readOnly = false)
     public void add(String name, int level, int index, boolean isParent, long pId, TreeType treeType) {
 
-        logger.info("Getting name={} ,   pId={}", name, pId);
+        log.info("Getting name={} ,   pId={}", name, pId);
 
         TreeEntity parent = treeRepository.findOne(pId);
         TreeEntity child = new TreeEntity(treeType, name, index, isParent, parent);
@@ -170,7 +169,7 @@ public class TreeService {
     @Transactional(readOnly = false)
     public void clearChildren(long id) {
 
-        logger.info("Getting id={}", id);
+        log.info("Getting id={}", id);
         TreeEntity parent = treeRepository.findOne(id);
         parent.clearChildren();
         parent.setParentNode(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
@@ -195,14 +194,14 @@ public class TreeService {
 
 
         if (curType.equals("copy")) {
-            logger.info("copy nodes to a new parent node");
+            log.info("copy nodes to a new parent node");
             // 复制一份和新生成的对象，加入到 parent 的子中。
             TreeEntity copy = TreeUtils.createCopyTreeEntity(selectNode);
             parentNode.addChildToLastIndex(copy);
         }
 
         if (curType.equals("cut")) {    //直接移动cut : 直接修改 currentNode 的父类为新的父类，不重新创建新的对象，相当于剪切过来。
-            logger.info("paste nodes to a new parent node");
+            log.info("paste nodes to a new parent node");
             parentNode.addChildToLastIndex(selectNode);//此方法可以直接修改父类
             parentNode.setParentNode(true); // 修改参考对象为父节点
         }

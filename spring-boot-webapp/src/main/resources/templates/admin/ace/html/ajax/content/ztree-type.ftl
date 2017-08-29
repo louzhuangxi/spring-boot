@@ -254,10 +254,10 @@
     调用浏览器调试日志, 打印字符串
     message 可以是任何对象。
     需要注意的是:
-    如果 message 为 object（如 josn），那么不要使用 logger("obejct is ="+message)，字符串+对象，log 就无法打印了。
-    如果 message 字符串，那么可以 + 字符串如： logger("hello"+"world")
+    如果 message 为 object（如 josn），那么不要使用 log("obejct is ="+message)，字符串+对象，log 就无法打印了。
+    如果 message 字符串，那么可以 + 字符串如： log("hello"+"world")
      */
-    function logger(message) {
+    function log(message) {
         console.log(message);
     }
 
@@ -385,7 +385,7 @@
                     });
 
                 }
-                logger(treeNode[0]);
+                log(treeNode[0]);
                 /**/
                 $.ajax({ //ajax 提交到controller的delApplication方法处理
                     type: "post",
@@ -466,7 +466,7 @@
 
                 //把检查文件名放在此方法中
                 var zTree = getZTree(ztree_root);
-                logger(treeNode);
+                log(treeNode);
                 /**/
                 $.ajax({ //ajax 提交到controller的delApplication方法处理
                     type: "post",
@@ -546,7 +546,7 @@
                                     printLog(confirm_message, logIocn_del);
                                     //	var parent = treeNode.getParentNode();
                                     //zTree.reAsyncChildNodes(parent, "refresh"); // 关闭刷新，需要时打开
-                                    logger(data);
+                                    log(data);
                                 },
                                 error: function () {
                                     printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
@@ -605,7 +605,7 @@
                                 success: function (data) { //处理成功的回调函数
                                     printLog(confirm_message, logIocn_del);
                                     zTree.removeChildNodes(treeNode);
-                                    logger(data);
+                                    log(data);
                                 },
                                 error: function () {
                                     printLog(treeNode.name + "  &nbsp;&nbsp;&nbsp; ---  &nbsp;&nbsp;&nbsp;删除失败 ", logIocn_warning);
@@ -727,8 +727,8 @@
                 delete targetNode.isCur;
                 zTree.selectNode(targetNode);
 
-                logger(targetNode);
-                logger(targetNode.getParentNode().id);
+                log(targetNode);
+                log(targetNode.getParentNode().id);
                 /**/
                 $.ajax({ //ajax 提交到controller的delApplication方法处理
                     type: "post",
@@ -800,12 +800,12 @@
                 var zTree = getZTree(ztree_root);
                 var treeNode = getZTreeSingleNode(ztree_root);
 
-                //logger("treeId:"+treeId);
-                logger("moveType:" + moveType);
-                logger("isCopy:" + isCopy);
-                logger("被拖拽的节点，拖拽完成后的状态 : name=" + treeNode.name + ",index=" + treeNode.getIndex());
-                //logger("被拖拽节点，参照的节点是 : name="+targetNode.name +",index="+targetNode.getIndex());
-                logger("被拖拽的节点，他的现父节点状态是: id=" + targetNode.getParentNode().id + " , name=" + targetNode.getParentNode().name); // 通过 targetNode 获取
+                //log("treeId:"+treeId);
+                log("moveType:" + moveType);
+                log("isCopy:" + isCopy);
+                log("被拖拽的节点，拖拽完成后的状态 : name=" + treeNode.name + ",index=" + treeNode.getIndex());
+                //log("被拖拽节点，参照的节点是 : name="+targetNode.name +",index="+targetNode.getIndex());
+                log("被拖拽的节点，他的现父节点状态是: id=" + targetNode.getParentNode().id + " , name=" + targetNode.getParentNode().name); // 通过 targetNode 获取
                 /*
                 更新操作，只更新被拖拽的节点现在的父节点的所有子节点即可（排序）
                 操作之前的节点，子节点少了一个，其他节点没有排序，所以不必理会，只是节点排序不连续而已
@@ -852,7 +852,7 @@
                     showAlart("请先选择一个节点");
                     return;
                 }
-                //logger(treeNode);
+                //log(treeNode);
                 $.confirm({
                     title: '菜单 CSS 设置',
                     icon: 'fa fa-warning red2',
@@ -871,10 +871,10 @@
                                 var input_css = $('input#input-css');
                                 var errorText_css = $('p#css-error');
                                 var errorText_css2 = $('p#css-error2');
-                                //logger(treeNode);
-                                //logger(treeNode.getParentNode());
-                                //logger(treeNode.getParentNode().name);
-                                //logger(treeNode.getParentNode().name.indexOf("root_"));
+                                //log(treeNode);
+                                //log(treeNode.getParentNode());
+                                //log(treeNode.getParentNode().name);
+                                //log(treeNode.getParentNode().name.indexOf("root_"));
 
                                 //treeNode.getParentNode() ==null 选择了根节点
                                 // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
@@ -932,7 +932,7 @@
                     showAlart("请先选择一个节点");
                     return;
                 }
-                //logger(treeNode);
+                //log(treeNode);
                 $.confirm({
                     title: '菜单 URL 设置',
                     icon: 'fa fa-warning red2',
@@ -951,10 +951,10 @@
                                 var input_url = $('input#input-url');
                                 var errorText_url1 = $('p#url-error1');
                                 var errorText_url2 = $('p#url-error2');
-                                //logger(treeNode);
-                                //logger(treeNode.getParentNode());
-                                //logger(treeNode.getParentNode().name);
-                                //logger(treeNode.getParentNode().name.indexOf("root_"));
+                                //log(treeNode);
+                                //log(treeNode.getParentNode());
+                                //log(treeNode.getParentNode().name);
+                                //log(treeNode.getParentNode().name.indexOf("root_"));
 
                                 //treeNode.getParentNode() ==null 选择了根节点
                                 // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点
@@ -1012,7 +1012,7 @@
                     showAlart("请先选择一个节点");
                     return;
                 }
-                //logger(treeNode);
+                //log(treeNode);
                 $.confirm({
                     title: '叶节点关联对象',
                     icon: 'fa fa-warning red2',
@@ -1031,10 +1031,10 @@
                                 var input_standard = this.$b.find('input#input-standard');
                                 var errorText_standard1 = this.$b.find('p#standard-error1');
                                 var errorText_standard2 = this.$b.find('p#standard-error2');
-                                //logger(treeNode);
-                                //logger(treeNode.getParentNode());
-                                //logger(treeNode.getParentNode().name);
-                                //logger(treeNode.getParentNode().name.indexOf("root_"));
+                                //log(treeNode);
+                                //log(treeNode.getParentNode());
+                                //log(treeNode.getParentNode().name);
+                                //log(treeNode.getParentNode().name.indexOf("root_"));
 
                                 //treeNode.getParentNode() ==null 选择了根节点
                                 // treeNode.getParentNode().name.indexOf("root_") < 0 选择了非一级节点

@@ -224,7 +224,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //3.maxSessionsPreventsLogin(false) :
                 //3.1 false ：  超过 maximumSessions ，踢出上一个会话，重新开始新的会话。
                 //3.2 注意不能设为 true ，否则登录多个帐号，会不提示信息"会话过多信息"，而直接阻止登录并定位到 failureUrl 定义的地址，从而无法判断问题所在。
-                //    只有把 log 设为  <logger name="org.springframework.security.web" level="debug"/> 时才可以看到。
+                //    只有把 log 设为  <log name="org.springframework.security.web" level="debug"/> 时才可以看到。
                 //自定义 failureHandler 后,  3.2 问题已经解决
                 .maximumSessions(1).expiredUrl("/login?session=timeout").maxSessionsPreventsLogin(false);
 

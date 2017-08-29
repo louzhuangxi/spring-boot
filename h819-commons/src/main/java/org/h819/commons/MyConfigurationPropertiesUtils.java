@@ -5,20 +5,19 @@ package org.h819.commons;
  *
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
+@Slf4j
 public class MyConfigurationPropertiesUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyConfigurationPropertiesUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyConfigurationPropertiesUtils.class);
     //如果需要对 propertiesConfiguration 进行设置，或直接调用 propertiesConfiguration 的方法，通过 get 方法获得 propertiesConfiguration 后，再进行设置
     private PropertiesConfiguration propertiesConfiguration;
 
@@ -47,8 +46,8 @@ public class MyConfigurationPropertiesUtils {
 
 
         MyConfigurationPropertiesUtils s = new MyConfigurationPropertiesUtils("work.properties");
-        logger.info(s.getPropertiesConfiguration().getString(("jdbc.oracle.work.235.url")));
-        logger.info(s.getStringByEncoding("jdbc.oracle.work.235.url", "GBK"));
+        log.info(s.getPropertiesConfiguration().getString(("jdbc.oracle.work.235.url")));
+        log.info(s.getStringByEncoding("jdbc.oracle.work.235.url", "GBK"));
 
 
     }

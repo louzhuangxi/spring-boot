@@ -20,6 +20,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -28,8 +29,6 @@ import org.h819.commons.MyConstants;
 import org.h819.commons.MyExecUtils;
 import org.h819.commons.exe.ExecParameter;
 import org.h819.commons.file.pdf.PdfBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -224,6 +223,7 @@ import java.util.*;
  * http://www.artofsolving.com/opensource
  */
 
+@Slf4j
 public class MyPdfUtils extends PdfBase {
 
     private static String src_text = "D:\\itext7\\text_src.pdf";
@@ -237,7 +237,7 @@ public class MyPdfUtils extends PdfBase {
     // 该变量专门为 countPages() 函数设立，由于使用了递归，故提到全局变量，否则每次的返回值不能累计
     private static int numberOfPagesOfDirectory;
     private static List tempList;
-    private static final Logger logger = LoggerFactory.getLogger(MyPdfUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(MyPdfUtils.class);
     private String dest_1 = "D:\\itext7\\DEST1.pdf";
 
     	/*
@@ -363,7 +363,7 @@ public class MyPdfUtils extends PdfBase {
      */
     private static Optional<PdfReader> getPdfReader(File pdfFile) throws IOException {
         if (pdfFile == null || !pdfFile.exists() || !pdfFile.isFile() || Files.size(Paths.get(pdfFile.getAbsolutePath())) == 0) {
-            logger.info("{} Illegal.", pdfFile.getAbsolutePath());
+            log.info("{} Illegal.", pdfFile.getAbsolutePath());
             return Optional.empty();
         }
         IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile).getChannel());
@@ -741,7 +741,7 @@ public class MyPdfUtils extends PdfBase {
         if (tempList.size() != 0)
             FileUtils.writeLines(new File(srcPdfFileDir.getParent()
                     + File.separator + "encrypt.txt"), StandardCharsets.UTF_8.name(), tempList);
-        logger.info(" finished!");
+        log.info(" finished!");
 
     }
 
@@ -754,18 +754,18 @@ public class MyPdfUtils extends PdfBase {
     private static void findEncryptPdf0(File srcPdfFileDir) throws IOException {
 
         if (!srcPdfFileDir.isDirectory()) {
-            logger.info("srcPdfFileDir is not a Directory: " + srcPdfFileDir.getAbsolutePath());
+            log.info("srcPdfFileDir is not a Directory: " + srcPdfFileDir.getAbsolutePath());
             return;
         }
 
         File listFiles[] = srcPdfFileDir.listFiles();
 
         if (listFiles.length == 0) {
-            logger.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
+            log.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
             return;
         }
 
-        // logger.info(descPdfFileDir.getAbsolutePath());
+        // log.info(descPdfFileDir.getAbsolutePath());
 
         for (File f : listFiles) {
             String fileName = f.getName();
@@ -791,7 +791,7 @@ public class MyPdfUtils extends PdfBase {
                         tempList.add("BadPassword,can not open :" + f.getAbsolutePath());
                         continue;
                     }
-                    // logger.info("fileDesc name :" + fileDesc.getAbsolutePath());
+                    // log.info("fileDesc name :" + fileDesc.getAbsolutePath());
 
                     if (reader.get().isEncrypted()) {// 未加密的文件，，直接登记
                         tempList.add("encrypted :" + f.getAbsolutePath());
@@ -879,7 +879,7 @@ public class MyPdfUtils extends PdfBase {
             PdfDocument pdfDoc = new PdfDocument(reader.get(), writer);
             pdfDoc.close();
 
-            logger.info(srcPdfFile.getAbsoluteFile() + " encrypt finished.");
+            log.info(srcPdfFile.getAbsoluteFile() + " encrypt finished.");
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -963,7 +963,7 @@ public class MyPdfUtils extends PdfBase {
     public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) throws IOException {
 
         if (!srcPdf.exists()) {
-            logger.info("{} not exist.", srcPdf.getAbsoluteFile());
+            log.info("{} not exist.", srcPdf.getAbsoluteFile());
             return;
         }
         String extension = FilenameUtils.getExtension(srcPdf.getAbsolutePath());
@@ -973,7 +973,7 @@ public class MyPdfUtils extends PdfBase {
 
         // 损坏的 0 字节文件，直接拷贝到统一的文件夹
         if (FileUtils.sizeOf(srcPdf) == 0) {
-            logger.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
+            log.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
             FileUtils.copyDirectory(srcPdf, badDirectory, true);
             return;
         }
@@ -986,7 +986,7 @@ public class MyPdfUtils extends PdfBase {
             else
                 reader = getPdfReader(srcPdf).get();
 
-            logger.info("{}", reader.isEncrypted());
+            log.info("{}", reader.isEncrypted());
 
             List<ExecParameter> list = new ArrayList(2);
             list.add(new ExecParameter("-i", srcPdf.getAbsolutePath())); // 只有 key ，没有 value
@@ -1007,17 +1007,17 @@ public class MyPdfUtils extends PdfBase {
              */
             if (re.contains("file hasn't been encrypted")) {// 未加密的文件，直接拷贝 。
                 FileUtils.copyFile(srcPdf, descPdf);
-                logger.info("not encrypted,copy {} to {} ", srcPdf.getAbsolutePath(), descPdf.getAbsoluteFile());
+                log.info("not encrypted,copy {} to {} ", srcPdf.getAbsolutePath(), descPdf.getAbsoluteFile());
                 return;
             }
 
-            logger.info("decrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
+            log.info("decrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
             // 关闭处理完成的文件
             reader.close();
 
         } catch (BadPasswordException e) {
             // 有打开密码的文件，不能破解，统一拷贝至一个文件夹。
-            logger.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
+            log.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
             FileUtils.copyFileToDirectory(srcPdf, badDirectory, true);
             e.printStackTrace();
             return;
@@ -1055,16 +1055,16 @@ public class MyPdfUtils extends PdfBase {
         if (!srcPdfFile.isFile())
             return;
 
-        //   logger.info("{} , {} {}", alertDays,expiredDays,alertDays>expiredDays);
+        //   log.info("{} , {} {}", alertDays,expiredDays,alertDays>expiredDays);
         // 简单判断开始日期格式
         if (alertDays >= expiredDays) {
-            logger.info(" '警告天数 ' " + alertDays + " 大于 '过期天数' " + expiredDays);
+            log.info(" '警告天数 ' " + alertDays + " 大于 '过期天数' " + expiredDays);
             return;
         }
 
         // 简单判断开始日期格式，可以用 正则表达式
         if (!startDate.matches("(19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])")) {
-            logger.info(startDate + " 开始日期格式录入不对，应该型如  'yyyy-MM-dd' 形式");
+            log.info(startDate + " 开始日期格式录入不对，应该型如  'yyyy-MM-dd' 形式");
             return;
         }
 
@@ -1094,10 +1094,10 @@ public class MyPdfUtils extends PdfBase {
             printAction.put(PdfName.JS, new PdfString(js));
             pdfDocument.getCatalog().setOpenAction(printAction); //打开 pdf 时，出现的提示框动作
             pdfDocument.close();
-            logger.info(descPdfFile.getAbsolutePath() + " 已经添加了日期限制 !");
+            log.info(descPdfFile.getAbsolutePath() + " 已经添加了日期限制 !");
 
         } else {
-            logger.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+            log.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
         }
 
     }
@@ -1120,7 +1120,7 @@ public class MyPdfUtils extends PdfBase {
         File listFiles[] = srcPdfFileDir.listFiles();
 
         if (listFiles.length == 0) {
-            logger.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
+            log.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
             return;
         }
 
@@ -1202,10 +1202,10 @@ public class MyPdfUtils extends PdfBase {
             root.remove(pdfName);
             pdfDoc.close();
 
-            logger.info(descPdfFile.getAbsolutePath() + " 已经删除 javaScript  !");
+            log.info(descPdfFile.getAbsolutePath() + " 已经删除 javaScript  !");
 
         } else {
-            logger.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+            log.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
         }
     }
 

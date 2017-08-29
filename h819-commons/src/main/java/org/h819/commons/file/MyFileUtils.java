@@ -1,5 +1,6 @@
 package org.h819.commons.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.*;
 import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang3.StringUtils;
@@ -7,8 +8,6 @@ import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
 import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.base.FileUtilsBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -31,9 +30,10 @@ import java.util.Map;
 
 // org.apache.commons.io.FilenameUtils 中有一些文件名分隔符的有用的类，如separatorsToSystem 方法等
 // java.nio.file.Files ,java.nio.file.Paths 提供很多相应的工具
+@Slf4j
 public class MyFileUtils extends FileUtilsBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MyFileUtils.class);
 
     /**
      * 静态方法调用，不需要生成实例
@@ -59,7 +59,7 @@ public class MyFileUtils extends FileUtilsBase {
         InputStream inputStream = getResourceFileInputStream(resourceName);
 
         if (inputStream == null) {
-            logger.info(resourceName + " not exist in jar liberary.");
+            log.info(resourceName + " not exist in jar liberary.");
             return null;
         }
         //在系统临时目录下建立文件夹，存放拷贝后的文件
@@ -71,7 +71,7 @@ public class MyFileUtils extends FileUtilsBase {
 
         File resourceFile = new File(tempFilePath);
 
-        logger.info("resource copy to :" + tempFilePath);
+        System.out.println("resource copy to :" + tempFilePath);
 
         try {
             // 拷贝资源文件到临时文件夹，每次都覆盖

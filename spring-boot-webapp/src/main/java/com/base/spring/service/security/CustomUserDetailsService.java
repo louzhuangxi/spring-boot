@@ -3,8 +3,7 @@ package com.base.spring.service.security;
 import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.domain.UserEntity;
 import com.base.spring.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,12 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    //private static final log log = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     @Autowired
     private UserService userService;
@@ -52,7 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     //必需，否则无法级联 role 对象，和 WebSecurityConfig 中 EnableGlobalMethodSecurity、EnableTransactionManagement 呼应
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        logger.info("Authenticating user with email={}", email.replaceFirst("@.*", "@***"));
+        log.info("Authenticating user with email={}", email.replaceFirst("@.*", "@***"));
 
         /**
          * 通过事件机制，验证登陆次数，前端显示登陆次数过多的信息，代码如下
@@ -75,10 +74,10 @@ public class CustomUserDetailsService implements UserDetailsService {
          */
         UserEntity userEntity = userService.getUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User with email=%s was not found", email)));
 
-        logger.info("password : " + userEntity.getPassword());
-        logger.info("email : " + userEntity.getEmail());
+        log.info("password : " + userEntity.getPassword());
+        log.info("email : " + userEntity.getEmail());
 //        for (String role : userEntity.getStringRoles())
-//            logger.info("roles name : " + role);
+//            log.info("roles name : " + role);
 
         return new SecurityUser(userEntity);
     }

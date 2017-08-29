@@ -5,8 +5,7 @@ import com.base.spring.domain.TreeType;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.service.TreeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -22,12 +21,12 @@ import java.util.List;
 /**
  * 树操作 : add, copy ,delete and ajax request
  */
-
+@Slf4j
 @Controller
 @RequestMapping("/ajax/tree/ztree")
 public class ZTreeAjaxController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ZTreeAjaxController.class);
+    //private static final log log = LoggerFactory.getLogger(ZTreeAjaxController.class);
 
     @Autowired
     TreeRepository treeNodeRepository;
@@ -51,7 +50,7 @@ public class ZTreeAjaxController {
     @ResponseBody
     public String asyncByTreeType(@RequestParam(value = "id", required = false) Long id, @RequestParam(value = "treeType", required = true) TreeType menuType) {
 
-        logger.info("id={} , menuType={}", id, menuType);
+        log.info("id={} , menuType={}", id, menuType);
 
         List<TreeType> list = new ArrayList(2);
         if (menuType.equals(TreeType.Menu))      //菜单时，同时显示 PageResource
@@ -73,7 +72,7 @@ public class ZTreeAjaxController {
                                          @RequestParam(value = "treeType", required = true) TreeType menuType,
                                          @RequestParam(value = "role_id", required = true) String roleId) {
 
-        logger.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
+        log.info("id={} , menuType={}, roleId={}", id, menuType, roleId);
 
         List<TreeType> list = new ArrayList(2);
         if (menuType.equals(TreeType.Menu))      //菜单时，同时显示 PageResource
@@ -106,7 +105,7 @@ public class ZTreeAjaxController {
                       @RequestParam(value = "isParent", required = true) boolean isParent,
                       @RequestParam(value = "treeType", required = false) TreeType treeType) {
 
-        logger.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
+        log.info("add new treeNode : name={},level={},index={},pId={},isParent={} , menuType={}", name, level, index, pId, isParent, treeType);
         treeNodeService.add(name, level, index, isParent, pId, treeType);
         return "add succeed.";
     }
@@ -119,7 +118,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = "/edit.html", method = RequestMethod.POST)
     @ResponseBody
     public String edit(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name) {
-        logger.info("edit treeNode : id={} , name={}", id, name);
+        log.info("edit treeNode : id={} , name={}", id, name);
         //treeNodeService.clearChildren(id);
         TreeEntity treeNode = treeNodeRepository.findOne(id);
         treeNode.setName(name);
@@ -135,7 +134,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = "/del.html", method = RequestMethod.POST)
     @ResponseBody
     public String remove(@RequestParam(value = "id", required = true) Long id) {
-        logger.info("del treeNode : id={} ", id);
+        log.info("del treeNode : id={} ", id);
         TreeEntity tree = treeNodeRepository.findOne(id);
         if (tree.isRoot())
             return "root node can not be delete";
@@ -153,7 +152,7 @@ public class ZTreeAjaxController {
     @RequestMapping(value = "/clear.html", method = RequestMethod.POST)
     @ResponseBody
     public String clearChildren(@RequestParam(value = "id", required = true) Long id) {
-        logger.info("clear treeNode : id={} ", id);
+        log.info("clear treeNode : id={} ", id);
         treeNodeService.clearChildren(id);
         return "clear succeed.";
     }
@@ -172,7 +171,7 @@ public class ZTreeAjaxController {
                         @RequestParam(value = "pId", required = true) Long pId,
                         @RequestParam(value = "curType", required = true) String curType) {
 
-        logger.info("paste treeNode : id={},pId={},curType={}", id, pId, curType);
+        log.info("paste treeNode : id={},pId={},curType={}", id, pId, curType);
 
         treeNodeService.paste(id, pId, curType);
 
@@ -194,7 +193,7 @@ public class ZTreeAjaxController {
                        @RequestParam(value = "index", required = true) Integer index,
                        @RequestParam(value = "pId", required = true) Long pId) {
 
-        logger.info("move treeNode : id={},pId={},index={}", id, pId, index);
+        log.info("move treeNode : id={},pId={},index={}", id, pId, index);
         treeNodeService.move(id, pId, index);
         return "move succeed.";
     }
@@ -209,7 +208,7 @@ public class ZTreeAjaxController {
     public String editCss(@RequestParam(value = "id", required = true) Long id,
                           @RequestParam(value = "css", required = true) String css) {
 
-        logger.info("move treeNode : id={},css={}", id, css.trim());
+        log.info("move treeNode : id={},css={}", id, css.trim());
         treeNodeService.editCss(id, css.trim());
         return "css edit succeed.";
     }
@@ -224,7 +223,7 @@ public class ZTreeAjaxController {
     public String editUrl(@RequestParam(value = "id", required = true) Long id,
                           @RequestParam(value = "url", required = true) String url) {
 
-        logger.info("move treeNode : id={},url={}", id, url.trim());
+        log.info("move treeNode : id={},url={}", id, url.trim());
         treeNodeService.editUrl(id, url.trim());
         return "css edit succeed.";
     }
@@ -239,7 +238,7 @@ public class ZTreeAjaxController {
     public String linkStandard(@RequestParam(value = "id", required = true) Long id,
                                @RequestParam(value = "standard", required = true) String standard) {
 
-        logger.info("move treeNode : id={},standard={}", id, standard.trim());
+        log.info("move treeNode : id={},standard={}", id, standard.trim());
         return "css edit succeed.";
     }
 

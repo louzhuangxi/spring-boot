@@ -7,7 +7,7 @@ package org.h819.web.spring.jdbc;
  * Time: 10:58
  * To change this template use File | Settings | File Templates.
  */
-public class OrderBean {
+public class Order {
 
     private Direction direction;
     private String property;
@@ -16,16 +16,17 @@ public class OrderBean {
      * @param property  must not be {@literal null} or empty.
      * @param direction must not be {@literal null} or empty
      */
-    public OrderBean(String property, Direction direction) {
+    public Order(String property, Direction direction) {
         this.direction = direction;
         this.property = property;
 
     }
 
+
     /**
      * 只允许带参数初始化
      */
-    private OrderBean() {
+    private Order() {
     }
 
     public Direction getDirection() {

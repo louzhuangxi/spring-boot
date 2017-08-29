@@ -37,7 +37,7 @@ import java.util.Map;
 @RequestMapping("/weixin/")
 public class WeiXinController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinController.class);
+    //private static final Logger logger = LoggerFactory.getLogger(WeiXinController.class);
 
     protected WxMpInMemoryConfigStorage wxMpConfigStorage;
     protected WxMpService wxMpService;

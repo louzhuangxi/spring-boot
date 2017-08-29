@@ -154,7 +154,7 @@ module.exports = {
 },{"./utils":9}],4:[function(require,module,exports){
 // Cache system is a bit outdated and could do with work
 
-module.exports = function(window, options, logger) {
+module.exports = function(window, options, log) {
     var cache = null;
     if (options.env !== 'development') {
         try {
@@ -164,13 +164,13 @@ module.exports = function(window, options, logger) {
     return {
         setCSS: function(path, lastModified, styles) {
             if (cache) {
-                logger.info('saving ' + path + ' to cache.');
+                log.info('saving ' + path + ' to cache.');
                 try {
                     cache.setItem(path, styles);
                     cache.setItem(path + ':timestamp', lastModified);
                 } catch(e) {
                     //TODO - could do with adding more robust error handling
-                    logger.error('failed to save "' + path + '" to local storage for caching.');
+                    log.error('failed to save "' + path + '" to local storage for caching.');
                 }
             }
         },
@@ -351,7 +351,7 @@ module.exports = function(window, less, options) {
         if (e.stack && (e.extract || options.logLevel >= 4)) {
             content += '\nStack Trace\n' + e.stack;
         }
-        less.logger.error(content);
+        less.log.error(content);
     }
 
     return {
@@ -363,7 +363,7 @@ module.exports = function(window, less, options) {
 },{"./browser":3,"./utils":9}],6:[function(require,module,exports){
 /*global window, XMLHttpRequest */
 
-module.exports = function(options, logger) {
+module.exports = function(options, log) {
 
     var AbstractFileManager = require("../less/environment/abstract-file-manager.js");
 
@@ -379,7 +379,7 @@ module.exports = function(options, logger) {
                 /*global ActiveXObject */
                 return new ActiveXObject("Microsoft.XMLHTTP");
             } catch (e) {
-                logger.error("browser doesn't support AJAX.");
+                log.error("browser doesn't support AJAX.");
                 return null;
             }
         }
@@ -407,7 +407,7 @@ module.exports = function(options, logger) {
         if (typeof xhr.overrideMimeType === 'function') {
             xhr.overrideMimeType('text/css');
         }
-        logger.debug("XHR: Getting '" + url + "'");
+        log.debug("XHR: Getting '" + url + "'");
         xhr.open('GET', url, async);
         xhr.setRequestHeader('Accept', type || 'text/x-less, text/css; q=0.9, */*; q=0.5');
         xhr.send(null);
@@ -495,14 +495,14 @@ module.exports = function(window, options) {
     //module.exports = less;
     less.options = options;
     var environment = less.environment,
-        FileManager = require("./file-manager")(options, less.logger),
+        FileManager = require("./file-manager")(options, less.log),
         fileManager = new FileManager();
     environment.addFileManager(fileManager);
     less.FileManager = FileManager;
 
     require("./log-listener")(less, options);
     var errors = require("./error-reporting")(window, less, options);
-    var cache = less.cache = options.cache || require("./cache")(window, options, less.logger);
+    var cache = less.cache = options.cache || require("./cache")(window, options, less.log);
 
     //Setup user functions
     if (options.functions) {
@@ -720,15 +720,15 @@ module.exports = function(window, options) {
                     return;
                 }
                 if (webInfo.local) {
-                    less.logger.info("loading " + sheet.href + " from cache.");
+                    less.log.info("loading " + sheet.href + " from cache.");
                 } else {
-                    less.logger.info("rendered " + sheet.href + " successfully.");
+                    less.log.info("rendered " + sheet.href + " successfully.");
                 }
                 browser.createCSS(window.document, css, sheet);
-                less.logger.info("css for " + sheet.href + " generated in " + (new Date() - endTime) + 'ms');
+                less.log.info("css for " + sheet.href + " generated in " + (new Date() - endTime) + 'ms');
                 if (webInfo.remaining === 0) {
                     totalMilliseconds = new Date() - startTime;
-                    less.logger.info("less has finished. css generated in " + totalMilliseconds + 'ms');
+                    less.log.info("less has finished. css generated in " + totalMilliseconds + 'ms');
                     resolve({
                         startTime: startTime,
                         endTime: endTime,
@@ -788,7 +788,7 @@ module.exports = function(less, options) {
         }];
     }
     for (var i = 0; i < options.loggers.length; i++) {
-        less.logger.addListener(options.loggers[i]);
+        less.log.addListener(options.loggers[i]);
     }
 };
 
@@ -1237,7 +1237,7 @@ abstractFileManager.prototype.extractUrlParts = function extractUrlParts(url, ba
 module.exports = abstractFileManager;
 
 },{}],15:[function(require,module,exports){
-var logger = require("../logger");
+var log = require("../log");
 var environment = function(externalEnvironment, fileManagers) {
     this.fileManagers = fileManagers || [];
     externalEnvironment = externalEnvironment || {};
@@ -1260,10 +1260,10 @@ var environment = function(externalEnvironment, fileManagers) {
 environment.prototype.getFileManager = function (filename, currentDirectory, options, environment, isSync) {
 
     if (!filename) {
-        logger.warn("getFileManager called with no filename.. Please report this issue. continuing.");
+        log.warn("getFileManager called with no filename.. Please report this issue. continuing.");
     }
     if (currentDirectory == null) {
-        logger.warn("getFileManager called with null directory.. Please report this issue. continuing.");
+        log.warn("getFileManager called with null directory.. Please report this issue. continuing.");
     }
 
     var fileManagers = this.fileManagers;
@@ -1289,7 +1289,7 @@ environment.prototype.clearFileManagers = function () {
 
 module.exports = environment;
 
-},{"../logger":32}],16:[function(require,module,exports){
+},{"../log":32}],16:[function(require,module,exports){
 var Color = require("../tree/color"),
     functionRegistry = require("./function-registry");
 
@@ -1694,7 +1694,7 @@ module.exports = function(environment) {
         fallback = function(functionThis, node) {
             return new URL(node, functionThis.index, functionThis.currentFileInfo).eval(functionThis.context);
         },
-        logger = require('../logger');
+        log = require('../log');
 
     functionRegistry.add("data-uri", function(mimetypeNode, filePathNode) {
 
@@ -1744,7 +1744,7 @@ module.exports = function(environment) {
 
         var fileSync = fileManager.loadFileSync(filePath, currentDirectory, this.context, environment);
         if (!fileSync.contents) {
-            logger.warn("Skipped data-uri embedding of " + filePath + " because file not found");
+            log.warn("Skipped data-uri embedding of " + filePath + " because file not found");
             return fallback(this, filePathNode || mimetypeNode);
         }
         var buf = fileSync.contents;
@@ -1762,7 +1762,7 @@ module.exports = function(environment) {
         if (uri.length >= DATA_URI_MAX) {
 
             if (this.context.ieCompat !== false) {
-                logger.warn("Skipped data-uri embedding of " + filePath + " because its size (" + uri.length +
+                log.warn("Skipped data-uri embedding of " + filePath + " because its size (" + uri.length +
                     " characters) exceeds IE8-safe " + DATA_URI_MAX + " characters!");
 
                 return fallback(this, filePathNode || mimetypeNode);
@@ -1773,7 +1773,7 @@ module.exports = function(environment) {
     });
 };
 
-},{"../logger":32,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],19:[function(require,module,exports){
+},{"../log":32,"../tree/quoted":72,"../tree/url":79,"./function-registry":21}],19:[function(require,module,exports){
 var Keyword = require("../tree/keyword"),
     functionRegistry = require("./function-registry");
 
@@ -2410,13 +2410,13 @@ module.exports = function(environment, fileManagers) {
         transformTree: require('./transform-tree'),
         utils: require('./utils'),
         PluginManager: require('./plugin-manager'),
-        logger: require('./logger')
+        log: require('./log')
     };
 
     return less;
 };
 
-},{"./contexts":10,"./data":12,"./environment/abstract-file-manager":14,"./environment/environment":15,"./functions":22,"./import-manager":29,"./less-error":31,"./logger":32,"./parse":34,"./parse-tree":33,"./parser/parser":37,"./plugin-manager":38,"./render":40,"./source-map-builder":41,"./source-map-output":42,"./transform-tree":43,"./tree":61,"./utils":82,"./visitors":86}],31:[function(require,module,exports){
+},{"./contexts":10,"./data":12,"./environment/abstract-file-manager":14,"./environment/environment":15,"./functions":22,"./import-manager":29,"./less-error":31,"./log":32,"./parse":34,"./parse-tree":33,"./parser/parser":37,"./plugin-manager":38,"./render":40,"./source-map-builder":41,"./source-map-output":42,"./transform-tree":43,"./tree":61,"./utils":82,"./visitors":86}],31:[function(require,module,exports){
 var utils = require("./utils");
 
 var LessError = module.exports = function LessError(e, importManager, currentFilename) {
@@ -2499,7 +2499,7 @@ module.exports = {
 },{}],33:[function(require,module,exports){
 var LessError = require('./less-error'),
     transformTree = require("./transform-tree"),
-    logger = require("./logger");
+    log = require("./log");
 
 module.exports = function(SourceMapBuilder) {
     var ParseTree = function(root, imports) {
@@ -2518,7 +2518,7 @@ module.exports = function(SourceMapBuilder) {
         try {
             var compress = Boolean(options.compress);
             if (compress) {
-                logger.warn("The compress option has been deprecated. We recommend you use a dedicated css minifier, for instance see less-plugin-clean-css.");
+                log.warn("The compress option has been deprecated. We recommend you use a dedicated css minifier, for instance see less-plugin-clean-css.");
             }
 
             var toCSSOptions = {
@@ -2558,7 +2558,7 @@ module.exports = function(SourceMapBuilder) {
     return ParseTree;
 };
 
-},{"./less-error":31,"./logger":32,"./transform-tree":43}],34:[function(require,module,exports){
+},{"./less-error":31,"./log":32,"./transform-tree":43}],34:[function(require,module,exports){
 var PromiseConstructor,
     contexts = require("./contexts"),
     Parser = require('./parser/parser'),
@@ -8606,7 +8606,7 @@ module.exports = {
 },{}],83:[function(require,module,exports){
 var tree = require("../tree"),
     Visitor = require("./visitor"),
-    logger = require("../logger");
+    log = require("../log");
 
 /*jshint loopfunc:true */
 
@@ -8723,7 +8723,7 @@ ProcessExtendsVisitor.prototype = {
 
                 if (!indicies[extend.index + ' ' + selector]) {
                     indicies[extend.index + ' ' + selector] = true;
-                    logger.warn("extend '" + selector + "' has no matches");
+                    log.warn("extend '" + selector + "' has no matches");
                 }
             });
     },
@@ -9056,7 +9056,7 @@ ProcessExtendsVisitor.prototype = {
 
 module.exports = ProcessExtendsVisitor;
 
-},{"../logger":32,"../tree":61,"./visitor":89}],84:[function(require,module,exports){
+},{"../log":32,"../tree":61,"./visitor":89}],84:[function(require,module,exports){
 function ImportSequencer(onSequencerEmpty) {
     this.imports = [];
     this.variableImports = [];

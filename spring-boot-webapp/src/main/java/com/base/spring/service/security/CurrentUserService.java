@@ -3,17 +3,17 @@ package com.base.spring.service.security;
 
 import com.base.spring.custom.security.SecurityUser;
 import com.base.spring.repository.RoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+@Slf4j
 @Service(value = "currentUserService") // 变为 spring 容器管理的 bean 对象的时候，默认名字为类名，首字母小写。此处明确指出，便于理解
 public class CurrentUserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CurrentUserService.class);
+    //private static final log log = LoggerFactory.getLogger(CurrentUserService.class);
 
     @Autowired
     RoleRepository roleRepository;
@@ -29,7 +29,7 @@ public class CurrentUserService {
      * @return
      */
     public boolean canAccessUser(SecurityUser securityUser, Long userId) {
-        LOGGER.debug("Checking if user={} has access to user={}", securityUser, userId);
+        log.debug("Checking if user={} has access to user={}", securityUser, userId);
         return securityUser != null && (Arrays.asList(securityUser.getRoles()).contains("ADMIN") || securityUser.getId().equals(userId));
     }
 

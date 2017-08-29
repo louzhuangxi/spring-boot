@@ -1,8 +1,7 @@
 package com.base.spring.controller.ajax.validate;
 
 import com.base.spring.repository.RoleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/ajax/validate/")  // 此处要和 Spring security 中 ignoring 要呼应，不能进行登录限制，否则无法进行验证
+@Slf4j
 public class JqgridEditAjaxValidateController {
 
-    private static final Logger logger = LoggerFactory.getLogger(JqgridEditAjaxValidateController.class);
+    //private static final log log = LoggerFactory.getLogger(JqgridEditAjaxValidateController.class);
 
     @Autowired
     RoleRepository roleRepository;
@@ -37,7 +37,7 @@ public class JqgridEditAjaxValidateController {
     @ResponseBody
     public String validateCode(@RequestParam(value = "ids", required = true) String[] ids, //多选时，如果为单选，数组只有一个值
                                @RequestParam(value = "name", required = false) String name) {
-        logger.info("ids={} , name={}", ids, name);
+        log.info("ids={} , name={}", ids, name);
         if (roleRepository.findByName(name).isPresent())
             return "权限名称已经存在";
         else return "true";
@@ -53,7 +53,7 @@ public class JqgridEditAjaxValidateController {
 
      @RequestMapping(value = "/pcode/validate.html")
      @ResponseBody public String validatePCode(@RequestParam(value = "pcode", required = false) Optional<String> pCode) {
-     logger.info("pCode={}", pCode.get());
+     log.info("pCode={}", pCode.get());
 
      if (!menuRepository.findByCode(pCode.get()).isPresent())
      return "父级菜单编码不存在";

@@ -4,9 +4,8 @@ import com.base.spring.domain.RoleEntity;
 import com.base.spring.domain.TreeEntity;
 import com.base.spring.repository.RoleRepository;
 import com.base.spring.repository.TreeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +21,12 @@ import java.util.Set;
  * Time: 10:02
  * To change this template use File | Settings | File Templates.
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class RoleService {
 
-    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
+    //private static final log log = LoggerFactory.getLogger(RoleService.class);
 
 
     @Autowired
@@ -46,7 +46,7 @@ public class RoleService {
         RoleEntity roleEntity = roleRepository.findOne(Long.valueOf(roleId.trim()));
         //清空
         if (treeNodeIds.isEmpty()) {
-            logger.info("clear.");
+            log.info("clear.");
             roleEntity.clearTreeNodes();
             roleRepository.save(roleEntity);
             return;

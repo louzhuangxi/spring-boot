@@ -17,8 +17,7 @@
 
 package org.h819.commons.net.email.example;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.xbill.DNS.Lookup;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.TextParseException;
@@ -37,9 +36,10 @@ import java.util.List;
 /**
  * Utility class to resolve names against DN servers
  */
+@Slf4j
 public class DNSResolver {
 
-    private static final Logger logger = LoggerFactory.getLogger(DNSResolver.class);
+    //private static final Logger log = LoggerFactory.getLogger(DNSResolver.class);
 
     /**
      * check DNS.
@@ -77,7 +77,7 @@ public class DNSResolver {
         List<String> result = new ArrayList<String>();
 
         try {
-            logger.trace("DNS validation: resolving DNS for " + hostname + " " + (mx ? "(MX)" : "(A/CNAME)"));
+            log.trace("DNS validation: resolving DNS for " + hostname + " " + (mx ? "(MX)" : "(A/CNAME)"));
 
             Hashtable env = new Hashtable();
 
@@ -107,7 +107,7 @@ public class DNSResolver {
                     }
                     return result;
                 } else {
-                    logger.trace("DNS validation: DNS query of '" + hostname + "' failed");
+                    log.trace("DNS validation: DNS query of '" + hostname + "' failed");
                     return null;
                 }
             } else {
@@ -131,18 +131,18 @@ public class DNSResolver {
                             if (h.endsWith(".")) {
                                 h = h.substring(0, h.lastIndexOf('.'));
                             }
-                            logger.trace("DNS validation: recursing on CNAME record towards host " + h);
+                            log.trace("DNS validation: recursing on CNAME record towards host " + h);
                             result.addAll(resolveDNS(h, false));
                         }
                         return result;
                     } else {
-                        logger.trace("DNS validation: DNS query of '" + hostname + "' failed");
+                        log.trace("DNS validation: DNS query of '" + hostname + "' failed");
                         return null;
                     }
                 }
             }
         } catch (NamingException ne) {
-            logger.trace("DNS validation: DNS MX query failed: " + ne.getMessage());
+            log.trace("DNS validation: DNS MX query failed: " + ne.getMessage());
             return null;
         }
     }

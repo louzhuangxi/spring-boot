@@ -3,17 +3,17 @@ package com.base.spring.domain.validator;
 
 import com.base.spring.domain.UserEntity;
 import com.base.spring.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
+@Slf4j
 public class UserCreateFormValidator implements Validator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserCreateFormValidator.class);
+    //private static final log log = LoggerFactory.getLogger(UserCreateFormValidator.class);
     @Autowired
     private UserService userService;
 
@@ -24,7 +24,7 @@ public class UserCreateFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        LOGGER.debug("Validating {}", target);
+        log.debug("Validating {}", target);
         UserEntity form = (UserEntity) target;
         validatePasswords(errors, form);
         validateEmail(errors, form);

@@ -5,8 +5,7 @@ import com.base.spring.domain.TreeEntity;
 import com.base.spring.domain.TreeType;
 import com.base.spring.repository.TreeRepository;
 import com.base.spring.utils.FueluxTreeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
 public class FueluxTreeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FueluxTreeService.class);
+    //private static final log log = LoggerFactory.getLogger(FueluxTreeService.class);
 
     @Autowired
     private TreeRepository treeNodeRepository;
@@ -37,20 +37,20 @@ public class FueluxTreeService {
     public String async(Long pId, TreeType menuType) {
 
         if (pId == 0) {  // 打开页面时，第一次异步加载，返回根节点的所有子节点
-            logger.info("initialize FueluxTree first from db by pId={} , menuType={}", pId, menuType);
+            log.info("initialize FueluxTree first from db by pId={} , menuType={}", pId, menuType);
             Optional<TreeEntity> rootNode = treeNodeRepository.findRoot(menuType);
             if (!rootNode.isPresent()) {
-                logger.info("not exist any tree node !");
+                log.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));
             }
 
             return FueluxTreeUtils.getFueluxTreeJson(rootNode.get().getChildren()); //打开所有一级节点 (跟节点的子节点)
 
         } else {  // 点击了某个节点，展开该节点，即返回该节点的子节点。 此时有父节点了，就指定菜单类型了，不必再传入
-            logger.info("initialize FueluxTree asyncByTreeType from db by pId={}", pId);
+            log.info("initialize FueluxTree asyncByTreeType from db by pId={}", pId);
             TreeEntity rootNode = treeNodeRepository.findOne(pId);
             if (rootNode == null) {
-                logger.info("not exist any tree node !");
+                log.info("not exist any tree node !");
                 return JSON.toJSONString(new ArrayList<>(0));
             }
             return FueluxTreeUtils.getFueluxTreeJson(rootNode.getChildren());

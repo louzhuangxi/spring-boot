@@ -1,7 +1,5 @@
 package com.base.spring.controller.advice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.WebDataBinder;
@@ -29,7 +27,7 @@ import java.io.IOException;
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalControllerAdvice.class);
+    //private static final log log = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
 
     /**
@@ -57,27 +55,27 @@ public class GlobalControllerAdvice {
     public UserDetails getCurrentUser(Authentication authentication) {
 
         //如果 loadUserByUsername 没有找到用户，会返回 返回用户名 anonymousUser 的用户默认用户
-        // 下面 logger 的结果为测试信息
+        // 下面 log 的结果为测试信息
         // is isAuthenticated() ? true
         // Authentication name : anonymousUser
 //        if (authentication != null) {
-//            logger.info("is isAuthenticated() ? " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-//            logger.info("Authentication name : " + SecurityContextHolder.getContext().getAuthentication().getName());
-//            logger.info("getCredentials name : " + SecurityContextHolder.getContext().getAuthentication().getCredentials());
-//            logger.info("getDetails name : " + SecurityContextHolder.getContext().getAuthentication().getDetails());
+//            log.info("is isAuthenticated() ? " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+//            log.info("Authentication name : " + SecurityContextHolder.getContext().getAuthentication().getName());
+//            log.info("getCredentials name : " + SecurityContextHolder.getContext().getAuthentication().getCredentials());
+//            log.info("getDetails name : " + SecurityContextHolder.getContext().getAuthentication().getDetails());
 //            for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities())
-//                logger.info("authority(role) : " + authority.getAuthority());
+//                log.info("authority(role) : " + authority.getAuthority());
 //
 //            //测试验证对象类型
 //            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //            if (principal instanceof UserDetails) {
-//                logger.info("loadUserByUsername 的返回值类型是 UserDetails : " + ((UserDetails) principal).getUsername());
+//                log.info("loadUserByUsername 的返回值类型是 UserDetails : " + ((UserDetails) principal).getUsername());
 //            }
 //            if (principal instanceof Principal) {
-//                logger.info("loadUserByUsername 的返回值类型是 Principal : " + ((Principal) principal).getName());
+//                log.info("loadUserByUsername 的返回值类型是 Principal : " + ((Principal) principal).getName());
 //            }
 //        } else {
-//            logger.info("authentication is null.");
+//            log.info("authentication is null.");
 //        }
 
         return (authentication == null) ? null : (UserDetails) authentication.getPrincipal();

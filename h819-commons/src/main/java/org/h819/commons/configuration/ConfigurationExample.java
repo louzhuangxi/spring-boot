@@ -1,17 +1,17 @@
 package org.h819.commons.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 public class ConfigurationExample {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConfigurationExample.class);
+    //private static final Logger log = LoggerFactory.getLogger(ConfigurationExample.class);
 
     public static void readProperties() {
         //注意路径默认指向的是classpath的根目录
@@ -52,7 +52,7 @@ public class ConfigurationExample {
             String myname = config.getString("myname");
             System.out.println(myname);
         } catch (ConfigurationException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class ConfigurationExample {
                 System.out.println(strKeys);
             }
         } catch (ConfigurationException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 
@@ -160,7 +160,7 @@ public class ConfigurationExample {
             //return creationDate
             System.out.println(configXml.getProperty("tables.table(1).fields.field(2).name"));
         } catch (ConfigurationException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
 
     }
@@ -186,7 +186,7 @@ public class ConfigurationExample {
             }
 
         } catch (ConfigurationException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
     }
 

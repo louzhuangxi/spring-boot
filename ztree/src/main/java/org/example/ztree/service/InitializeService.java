@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class InitializeService {
-    private static final Logger logger = LoggerFactory.getLogger(InitializeService.class);
+    //private static final Logger logger = LoggerFactory.getLogger(InitializeService.class);
 
 
     @Autowired

@@ -1,8 +1,7 @@
 package com.base.spring.controller.example;
 
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.commons.MyServletUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,9 +25,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/ace/example/ajax") //重要: 必须以 ajax 结尾，以符合 ace.js 中 content_url 的要求，ace/example 为前缀，可以为任意值或者没有，解释如上
+@Slf4j
 public class AceAdminAjaxMenuExampleController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AceAdminAjaxMenuExampleController.class);
+    //private static final log log = LoggerFactory.getLogger(AceAdminAjaxMenuExampleController.class);
 
 
     /**
@@ -40,7 +40,7 @@ public class AceAdminAjaxMenuExampleController {
      */
     @RequestMapping(value = "index.html", method = RequestMethod.GET)
     public String home(HttpServletRequest request) {
-        logger.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
+        log.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
         return "admin/ace/html/ajax/index";
     }
 
@@ -55,7 +55,7 @@ public class AceAdminAjaxMenuExampleController {
     @RequestMapping(value = "/content/menu.html")  //必须有 /content/
     public String menu(HttpServletRequest request) {
 
-        logger.info("request path={} ,  will go to /html/ajax/content/menu.ftl", MyServletUtils.getFullPath(request));
+        log.info("request path={} ,  will go to /html/ajax/content/menu.ftl", MyServletUtils.getFullPath(request));
         return "admin/ace/html/ajax/content/menu";
     }
 

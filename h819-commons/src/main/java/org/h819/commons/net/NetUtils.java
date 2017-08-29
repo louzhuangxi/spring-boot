@@ -1,5 +1,6 @@
 package org.h819.commons.net;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
  * @author shawn.qianx
  */
 
+@Slf4j
 public class NetUtils {
 
     public static final String LOCALHOST = "127.0.0.1";
@@ -31,7 +33,7 @@ public class NetUtils {
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
     private static final Map<String, String> hostNameCache = new HashMap<String, String>(1000);
-    private static final Logger logger = LoggerFactory.getLogger(NetUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(NetUtils.class);
     private static volatile InetAddress LOCAL_ADDRESS = null;
 
     public static int getRandomPort() {
@@ -155,7 +157,7 @@ public class NetUtils {
                 return localAddress;
             }
         } catch (Throwable e) {
-            logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+            log.warn("Failed to retriving ip address, " + e.getMessage(), e);
         }
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -172,19 +174,19 @@ public class NetUtils {
                                         return address;
                                     }
                                 } catch (Throwable e) {
-                                    logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                                    log.warn("Failed to retriving ip address, " + e.getMessage(), e);
                                 }
                             }
                         }
                     } catch (Throwable e) {
-                        logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                        log.warn("Failed to retriving ip address, " + e.getMessage(), e);
                     }
                 }
             }
         } catch (Throwable e) {
-            logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+            log.warn("Failed to retriving ip address, " + e.getMessage(), e);
         }
-        logger.error("Could not get local host ip address, will use 127.0.0.1 instead.");
+        log.error("Could not get local host ip address, will use 127.0.0.1 instead.");
         return localAddress;
     }
 

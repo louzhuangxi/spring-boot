@@ -36,7 +36,7 @@ import java.util.List;
 //   Querydsl 改造 http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
 public class DynamicSpecificationUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(DynamicSpecificationUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(DynamicSpecificationUtils.class);
 
     /**
      * @param searchFilter 查询条件

@@ -3,9 +3,8 @@ package com.base.spring.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.base.spring.filter.XSSFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.filters.RemoteIpFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +24,10 @@ import java.util.List;
 //WebMvcConfigurerAdapter 中有更多设置，参考文档
 @Configuration
 //@EnableWebMvc 不需要这句，已经自动启用
+@Slf4j
 class WebMVCConfig extends WebMvcConfigurerAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebMVCConfig.class);
+    //private static final log log = LoggerFactory.getLogger(WebMVCConfig.class);
 
     /**
      * 自定义，并注册   listener 演示
@@ -67,7 +67,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 
             @Override
             public void contextDestroyed(ServletContextEvent sce) {
-                logger.info("ServletContext destroyed");
+                log.info("ServletContext destroyed");
             }
 
         };
@@ -86,7 +86,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         registration.setFilter(new RemoteIpFilter());
         registration.addUrlPatterns("/*");
         registration.setName("RemoteIpFilter");
-        logger.info("RemoteIpFilter initialized");
+        log.info("RemoteIpFilter initialized");
         return registration;
     }
 
@@ -101,7 +101,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
         registration.setFilter(new XSSFilter());
         registration.addUrlPatterns("/*");
         registration.setName("XSSFilter");
-        logger.info("XSSFilter initialized");
+        log.info("XSSFilter initialized");
         return registration;
     }
 

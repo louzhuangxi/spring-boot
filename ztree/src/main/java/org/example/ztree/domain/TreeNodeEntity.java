@@ -27,7 +27,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class) // 该 entity 启用 auditing
 public class TreeNodeEntity implements Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
+    //private static final Logger logger = LoggerFactory.getLogger(TreeNodeEntity.class);
 
     /**
      * 如果没有 @GeneratedValue ，仅有 @Id ，则主键应该由应用程序指定

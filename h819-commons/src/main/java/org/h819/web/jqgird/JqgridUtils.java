@@ -1,9 +1,8 @@
 package org.h819.web.jqgird;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.h819.web.spring.jpa.SearchFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,9 +15,10 @@ import java.util.Collection;
  * <p>
  * 使用 ： JqgridUtils.Filter f = JqgridUtils.getSearchFilters(filters);
  */
+@Slf4j
 public class JqgridUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JqgridUtils.class);
+    //private static final Logger log = LoggerFactory.getLogger(JqgridUtils.class);
 
     /**
      * 仅通过静态方法调用
@@ -41,10 +41,10 @@ public class JqgridUtils {
         JqgridFilter jqgridFilterBean = JSON.parseObject(filters, JqgridFilter.class);
         Collection<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
         //
-        logger.info("查询条件之间的关系：" + jqgridFilterBean.getGroupOp());
+        log.info("查询条件之间的关系：" + jqgridFilterBean.getGroupOp());
         //组装 searchParams
         for (JqgridFilter.Rule rule : jqgridFilterBean.getRules()) {
-            logger.info(rule.getField() + "  " + rule.getOp() + " '" + rule.getData()+"'");
+            log.info(rule.getField() + "  " + rule.getOp() + " '" + rule.getData()+"'");
             //要求 jqgrid 传递的操作符，应该和 SearchFilter.Operator 中的含义一致
             searchFilters.add(new SearchFilter(rule.getField(), SearchFilter.Operator.valueOf(rule.getOp()), rule.getData()));
         }
@@ -71,10 +71,10 @@ public class JqgridUtils {
 //
 //        Collection<SearchFilter> searchFilters = new ArrayList<SearchFilter>();
 //        //
-//        logger.info("查询条件之间的关系：" + filters.getGroupOp());
+//        log.info("查询条件之间的关系：" + filters.getGroupOp());
 //        //组装 searchParams
 //        for (JqgridFilter.Rule rule : filters.getRules()) {
-//            logger.info(rule.getField() + " - " + rule.getOp() + " - " + rule.getData());
+//            log.info(rule.getField() + " - " + rule.getOp() + " - " + rule.getData());
 //            //要求 jqgrid 传递的操作符，应该和 SearchFilter.Operator 中的含义一致
 //            searchFilters.add(new SearchFilter(rule.getField(), SearchFilter.Operator.valueOf(rule.getOp()), rule.getData()));
 //        }

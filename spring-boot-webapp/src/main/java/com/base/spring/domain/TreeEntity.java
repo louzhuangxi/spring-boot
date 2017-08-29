@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -33,7 +31,7 @@ import java.util.*;
 // 二者都级联
 public class TreeEntity extends BaseEntity {
 
-    private static final Logger logger = LoggerFactory.getLogger(TreeEntity.class);
+    //private static final log log = LoggerFactory.getLogger(TreeEntity.class);
 
     /**
      * 父组织

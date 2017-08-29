@@ -1,8 +1,7 @@
 package com.base.spring.controller;
 
 import com.base.spring.vo.CustomErrorResponseMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,9 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
+@Slf4j
 public class LoginController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    ////private static final log log = LoggerFactory.getLogger(LoginController.class);
 
     /**
      * 访问 login.html ， 仅跳转用，不用来传递参数
@@ -48,8 +48,8 @@ public class LoginController {
         // 好像是，只有请求过一次之后，error 才有值，不值得为什么，现象同下面的 error 方法
         // 本方法只用来跳转，所以无法传递参数，此处仅为演示
 //        String param = SpringUtils.parseSpringSecurityLoginUrlWithExtraParameters(request, response).get("error");
-//        logger.info("Getting login page, error={}", param);
-        logger.info("go to login page");
+//        log.info("Getting login page, error={}", param);
+        log.info("go to login page");
         return "admin/ace/html/ajax/content/login";
     }
 
@@ -63,7 +63,7 @@ public class LoginController {
     @RequestMapping(value = "/myerror", method = RequestMethod.GET)
     @ResponseBody
     public CustomErrorResponseMessage error(@RequestParam(value = "error", required = false) String error, HttpServletRequest request) {
-        logger.info("login error, error={}", error);
+        log.info("login error, error={}", error);
         return new CustomErrorResponseMessage(request, error);
     }
 
@@ -75,7 +75,7 @@ public class LoginController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
-        logger.info("redirect to other controller");
+        log.info("redirect to other controller");
         // return "redirect:http://canhelp.cn";
         return "redirect:/menu/ajax/index.html";  // 跳转到 AceAdminAjaxMenuController 中的 url
     }

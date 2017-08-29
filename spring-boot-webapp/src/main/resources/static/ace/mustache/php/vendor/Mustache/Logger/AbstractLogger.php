@@ -10,12 +10,12 @@
  */
 
 /**
- * This is a simple Logger implementation that other Loggers can inherit from.
+ * This is a simple log implementation that other Loggers can inherit from.
  *
  * This is identical to the Psr\Log\AbstractLogger.
  *
  * It simply delegates all log-level-specific methods to the `log` method to
- * reduce boilerplate code that a simple Logger that does the same thing with
+ * reduce boilerplate code that a simple log that does the same thing with
  * messages regardless of the error level has to implement.
  */
 abstract class Mustache_Logger_AbstractLogger implements Mustache_Logger

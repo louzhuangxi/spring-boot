@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class MyLangUtils {
-    private static final Logger logger = LoggerFactory.getLogger(MyLangUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(MyLangUtils.class);
 
     //防止被初始化
     private MyLangUtils() {}
