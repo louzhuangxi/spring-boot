@@ -5,7 +5,8 @@ package org.h819.web.spring.jdbc;
  * User: h819
  * Date: 2017/8/14
  * Time: 10:58
- * To change this template use File | Settings | File Templates.
+ * -
+ * 标准 jdk ，不引入第三方 lib
  */
 public class Order {
 
@@ -33,12 +34,12 @@ public class Order {
         return direction;
     }
 
-    public String getProperty() {
-        return property;
-    }
-
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     public void setProperty(String property) {

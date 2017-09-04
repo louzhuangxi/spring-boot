@@ -44,10 +44,8 @@ import java.util.Map;
 @RequestMapping("/ace-admin")
 public class JqgridController {
 
-    //private static final Logger log = LoggerFactory.getLogger(JqgridController.class);
     @Autowired
     TreeEntityRepository treeEntityRepository;
-
     @Autowired
     private ServletContext servletContext; //获得应用的路径用
 
@@ -90,7 +88,8 @@ public class JqgridController {
             @RequestParam(value = "page", required = true) Integer currentPageNo,
             @RequestParam(value = "rows", required = true) Integer pageSize,
             @RequestParam(value = "sidx", required = true) String sortParameter,
-            @RequestParam(value = "sord", required = true) String sortDirection, @RequestParam Map<String, String> allRequestParams, RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
+            @RequestParam(value = "sord", required = true) String sortDirection,
+            @RequestParam Map<String, String> allRequestParams, RedirectAttributes redirectAttrs, Model model, HttpServletRequest request, HttpServletResponse response) {
 
         log.info("search ={},page ={},rows ={},direction={},sidx={},filters={}", search, currentPageNo, pageSize, sortDirection, sortParameter, filters);
 

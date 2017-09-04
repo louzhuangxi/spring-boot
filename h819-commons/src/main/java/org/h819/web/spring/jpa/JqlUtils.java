@@ -17,6 +17,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Deprecated// 麻烦，此处仅为示例，未测试是否好用
+// 旧系统
 // 解决方案：
 // Hibernate 设计的系统，用 JPA
 // 非 Hibernate 设计的系统，用 JdbcTemplate
