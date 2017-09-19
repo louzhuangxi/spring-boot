@@ -8,7 +8,7 @@
  * 参考资料
  * see http://spring.io/blog/2016/05/03/what-s-new-in-spring-data-hopper
  * see https://www.oschina.net/p/lyadmin
- https://www.oschina.net/p/spring-shiro-training
+ * https://www.oschina.net/p/spring-shiro-training
  * --
  * 测试
  * http://info.michael-simons.eu/2016/10/13/spring-boot-referencing-mockbeans-by-name/
@@ -22,6 +22,13 @@
  * --
  * spring security
  * http://www.concretepage.com/spring/spring-security/
+ * --
+ * 微信
+ * https://gitee.com/kingshine/FastBootWeixin
+ * --
+ * 服务器推送信息到客户端(单向)，不需要客户端定时刷新（会产生大量请求）
+ * https://github.com/mohitsinha/spring-boot-reactive-sse
+ * http://sinhamohit.com/writing/spring-boot-reactive-sse
  * --
  */
 package com.base;

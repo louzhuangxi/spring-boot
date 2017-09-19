@@ -1,12 +1,11 @@
 package org.examples.spring.controller;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,11 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/test")
 @SessionAttributes("session")
 //@Transactional(readOnly = true)
-public class TestController {
+public class ExampleController {
 
-    //private static final Logger logger = LoggerFactory.getLogger(TestController.class);
-
-
+    
     @RequestMapping(value = "/jsp")
 
     public String test1(Model model, RedirectAttributes redirectAttrs) {
@@ -50,13 +47,25 @@ public class TestController {
         System.out.println("2 = " + request.getSession().getAttribute("flashattr"));
         System.out.println("3 = " + request.getSession().getAttribute("model"));
 
-
 //        redirectAttrs.addAttribute("attr","attr").addFlashAttribute("flashattr","flashattr");
 //        model.addAttribute("model","model");
 
-
         return "test";
 
+    }
+
+    @GetMapping("/person")
+    public @ResponseBody
+    ResponseEntity< String > getPerson() {
+        return new ResponseEntity < String > ("Response from GET", HttpStatus.OK);
+    }
+    @GetMapping("/person/{id}")
+    public @ResponseBody ResponseEntity < String > getPersonById(@PathVariable String id) {
+        return new ResponseEntity < String > ("Response from GET with id " + id, HttpStatus.OK);
+    }
+    @PostMapping("/person")
+    public @ResponseBody ResponseEntity < String > postPerson() {
+        return new ResponseEntity < String > ("Response from POST method", HttpStatus.OK);
     }
 
 }
