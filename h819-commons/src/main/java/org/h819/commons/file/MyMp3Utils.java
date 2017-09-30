@@ -1,12 +1,18 @@
 package org.h819.commons.file;
 
 import com.mpatric.mp3agic.*;
+import lombok.Data;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Description : TODO()
@@ -17,8 +23,8 @@ import java.nio.charset.StandardCharsets;
  */
 //https://github.com/mpatric/mp3agic
 public class MyMp3Utils {
-    private static String rootPath =  "F:\\juping\\";
-    private static String album_dir = "中国经典童话故事";
+    private static String rootPath = "D:\\000\\cd\\";
+    private static String album_dir = "寓言故事";
     private static String basePath = rootPath + album_dir + "\\";
 
     /**
@@ -32,13 +38,12 @@ public class MyMp3Utils {
 
         // System.out.println(FilenameUtils.getName("F:\\juping\\动物童话故事\\1.1-乌鸦找窝.mp3"));
 
-        mp3.changeTag(new File(basePath));
+        mp3.changeTag(new File(rootPath));
 
-    //    mp3.rename();
+        //    mp3.rename();
+
+        //   mp3.readFile();
     }
-
-
-
 
     /**
      * 读取 id3v1 信息
@@ -175,31 +180,149 @@ public class MyMp3Utils {
         }
     }
 
-    private void changeTag(File dir) {
+    private void changeTag(File dir) throws UnsupportedTagException, NotSupportedException, InvalidDataException, IOException {
+        for (File f0 : dir.listFiles())
+            if (f0.isDirectory())
 
-        for (File file : dir.listFiles()) {
+                for (File file : f0.listFiles()) {
 
-            try {
-                String name = file.getName();
-                String title0 = StringUtils.substringBetween(name, "-", ".");
-                String title = title0;
-                String artist = "鞠萍";
-                String album = "鞠萍姐姐故事屋-" + album_dir;
-                String destFilePath = dir + "//#" + name;
-                //edit
-                editId3V2(file, new File(destFilePath), title, artist, album);
-                System.out.println(String.format("edit '%s' tag finished. ", file.getAbsolutePath()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (NotSupportedException e) {
-                e.printStackTrace();
-            } catch (InvalidDataException e) {
-                e.printStackTrace();
-            } catch (UnsupportedTagException e) {
-                e.printStackTrace();
+
+                    String name = file.getName();
+                    String title0 = StringUtils.substringBetween(name, " ",".");
+                    String title = title0;
+                    String artist = "睡前10分钟";
+                    String album = "爸爸妈妈讲故事";
+                    String desFileDir = dir + "//00//";
+                    System.out.println(title);
+
+                    File targ = new File("D:\\000\\cd0\\"+name);
+                    //edit
+                    editId3V2(file, targ, title, artist, album);
+                    System.out.println(String.format("edit '%s' tag finished. ", targ.getAbsolutePath()));
+
+
+                }
+
+    }
+
+    private void readFile() throws IOException {
+
+        List<String> list = FileUtils.readLines(new File("D:\\000\\cd\\cd.txt"), StandardCharsets.UTF_8);
+        List<Map<String, Title>> ts = new ArrayList<>();
+        String cd = "";
+
+        StringBuilder joinLine = new StringBuilder();
+        for (String s : list) {
+            joinLine.append(s);
+        }
+
+        String sreg = joinLine.toString();
+        String[] arrays2 = sreg.split("CD\\w+@");
+//            MyFastJsonUtils.prettyPrint(arrays2);
+//            System.out.println(arrays2.length);
+        // String istring="";
+
+        for (int i = 0; i < arrays2.length; i++) {
+            String istring = arrays2[i];
+            if (istring.startsWith("\uFEFF"))
+                continue;
+
+//            System.out.println("=====");
+//            System.out.println(istring);
+            String[] arrays3 = istring.split("\\d{2}.");
+            for (int j = 0; j < arrays3.length; j++) {
+
+                String jstring = arrays3[j];
+                // System.out.println(jstring);
+                Title title = new Title();
+                title.setTitle(jstring);
+
+                String jstr = String.valueOf(j);
+                if (jstr.length() != 2)
+                    jstr = "0" + jstr;
+
+                title.setOrder(jstr);
+                Map<String, Title> map = new HashMap();
+                String istr = String.valueOf(i);
+                if (istr.length() != 2)
+                    istr = "0" + istr;
+                map.put(istr, title);
+                ts.add(map);
             }
+
+
+        }
+
+        //  MyFastJsonUtils.prettyPrint(ts);
+
+        File[] files = new File("D:\\000\\cd").listFiles();
+
+        for (File file : files) {
+
+            if (file.isDirectory())
+                continue;
+            // File[] subFiles = file.listFiles();
+
+            System.out.println(file.getName());
+            //  String newName = file.getParent() + "\\" + getFileName(ts, file.getName(), subf.getName());
+            // System.out.println(newName);
+            String newName2 = file.getParent() + "\\" + getDirName(ts, file.getName()) + "\\" + file.getName();
+            System.out.println("=" + newName2);
+
+
+            file.renameTo(new File(newName2));
+
 
         }
 
     }
+
+
+    private String getFileName(List<Map<String, Title>> list, String dirName, String fileName) {
+
+        for (Map<String, Title> map : list) {
+            for (Map.Entry<String, Title> entry : map.entrySet()) {
+                //  System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+                if (entry.getKey().equalsIgnoreCase(dirName)) {
+                    String o = fileName.substring(0, 2);
+
+                    if (o.equalsIgnoreCase(entry.getValue().getOrder()))
+                        return o + " " + entry.getValue().getTitle();
+                }
+
+            }
+        }
+
+
+        return "";
+    }
+
+
+    private String getDirName(List<Map<String, Title>> list, String fileName) {
+
+        for (Map<String, Title> map : list) {
+            for (Map.Entry<String, Title> entry : map.entrySet()) {
+                //  System.out.println("Key : " + entry.getKey() + " Value : " + entry.getValue());
+                String o = fileName.substring(3, fileName.length());
+                // String o = StringUtils.substringAfterLast(fileName, "  ");
+                // System.out.println(o);
+                // if (fileName.equalsIgnoreCase("15  不肯冬眠的小黑熊")) {
+//                    System.out.println("????"+entry.getValue().getTitle());
+//                    System.out.println(o);
+                if (o.equalsIgnoreCase(entry.getValue().getTitle()))
+                    return entry.getKey();
+                // }
+            }
+        }
+
+
+        return "";
+    }
+
+    @Data
+    class Title {
+        private String order;
+        private String title;
+    }
+
 }
