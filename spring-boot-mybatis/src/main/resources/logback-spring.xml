@@ -24,26 +24,26 @@
     -->
 
     <!-- 公共 jar 定义输出级别，调试期可以设置低一些，便于查看输出信息-->
-    <log name="org.springframework" level="WARN"/>
-    <log name="org.springframework.transaction" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.transaction" level="WARN"/>
     <!-- in order to debug some marshalling issues, this needs to be TRACE -->
-    <log name="org.springframework.web.servlet.mvc" level="WARN"/>
+    <logger name="org.springframework.web.servlet.mvc" level="WARN"/>
     <!-- 展示 session 信息 debug  -->
-    <log name="org.springframework.security.web" level="warn"/>
-    <log name="org.hibernate" level="WARN"/>
+    <logger name="org.springframework.security.web" level="warn"/>
+    <logger name="org.hibernate" level="WARN"/>
 
-    <log name="org.h819" level="DEBUG"/>
-    <log name="org.examples" level="INFO"/>
-    <log name="com.base" level="INFO"/>
+    <logger name="org.h819" level="DEBUG"/>
+    <logger name="com.example.mybatis" level="INFO"/>
+    <logger name="com.base" level="INFO"/>
 
     <!-- 输出不同的信息，以 level 区分对操作进行记录。snatch info 项目，对日志进行记录
     不必在 root 中再次定义下面这句，此 log 已经可以输出。
-    <log name="springapp.jpa.service.snatch.find" level="INFO">
+    <logger name="springapp.jpa.service.snatch.find" level="INFO">
         <appender-ref ref="db-classic-mysql-pool"/>
-    </log>
-    <log name="springapp.jpa.service.snatch" level="ERROR">
+    </logger>
+    <logger name="springapp.jpa.service.snatch" level="ERROR">
         <appender-ref ref="db-classic-mysql-pool"/>
-    </log>
+    </logger>
     -->
 
     <!--
@@ -51,7 +51,7 @@
         无 log 定义的包或类，默认执行此 root 定义的基本和输出
         root 的 level 定义为 WARN ，可以避免输出绝大部分公用 jar 的信息输出，因为这些 jar信息输出大部分为 INFO。系统调试时，可以设置为 INFO ，便于查看输出信息
         root level 可以定义为  TRACE << DEBUG << INFO << WARN << ERROR  (ALL , OFF)
-        如果 root level 定义为 INFO, 则上文定义的 <log ... /> 中，只有 log 的 level 为 INFO << WARN << ERROR 级别的错误才会输出到 root 指定的输出介质中。
+        如果 root level 定义为 INFO, 则上文定义的 <logger ... /> 中，只有 log 的 level 为 INFO << WARN << ERROR 级别的错误才会输出到 root 指定的输出介质中。
         另外 ， root level 定义为 ALL 则全部输出， OFF 全部关闭 ，无论 log 如何定义
      -->
     <root level="WARN">

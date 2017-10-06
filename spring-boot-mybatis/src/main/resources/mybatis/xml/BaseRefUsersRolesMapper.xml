@@ -35,4 +35,531 @@
     select role_id, user_id
     from base_ref_users_roles
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    <id column="role_id" jdbcType="BIGINT" property="roleId" />
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from base_ref_users_roles
+    where role_id = #{roleId,jdbcType=BIGINT}
+      and user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseRefUsersRoles">
+    insert into base_ref_users_roles (role_id, user_id)
+    values (#{roleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select role_id, user_id
+    from base_ref_users_roles
+  </select>
 </mapper>

@@ -110,6 +110,7 @@
         <module>spring-boot-webapp</module>
         <module>h819-commons</module>
         <module>spring-boot-mybatis</module>
+        <module>testlog</module>
     </modules>
 
 </project>

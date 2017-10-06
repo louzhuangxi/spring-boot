@@ -139,4 +139,2143 @@
     target, `type`, url, parent_id, created_date, modified_date, expire_date
     from base_tree
   </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
+  <resultMap id="BaseResultMap" type="com.example.mybatis.generate.domain.BaseTree">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="css" jdbcType="VARCHAR" property="css" />
+    <result column="index_" jdbcType="INTEGER" property="index" />
+    <result column="is_parent" jdbcType="BIT" property="isParent" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="target" jdbcType="VARCHAR" property="target" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="created_date" jdbcType="BINARY" property="createdDate" />
+    <result column="modified_date" jdbcType="BINARY" property="modifiedDate" />
+    <result column="expire_date" jdbcType="BINARY" property="expireDate" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into base_tree (id, enabled, `operator`, 
+      remark, `valid`, css, index_, 
+      is_parent, `name`, target, 
+      `type`, url, parent_id, 
+      created_date, modified_date, expire_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{enabled,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{valid,jdbcType=BIT}, #{css,jdbcType=VARCHAR}, #{index,jdbcType=INTEGER}, 
+      #{isParent,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{createdDate,jdbcType=BINARY}, #{modifiedDate,jdbcType=BINARY}, #{expireDate,jdbcType=BINARY}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.mybatis.generate.domain.BaseTree">
+    update base_tree
+    set enabled = #{enabled,jdbcType=BIT},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      `valid` = #{valid,jdbcType=BIT},
+      css = #{css,jdbcType=VARCHAR},
+      index_ = #{index,jdbcType=INTEGER},
+      is_parent = #{isParent,jdbcType=BIT},
+      `name` = #{name,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      created_date = #{createdDate,jdbcType=BINARY},
+      modified_date = #{modifiedDate,jdbcType=BINARY},
+      expire_date = #{expireDate,jdbcType=BINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, enabled, `operator`, remark, `valid`, css, index_, is_parent, `name`, 
+    target, `type`, url, parent_id, created_date, modified_date, expire_date
+    from base_tree
+  </select>
 </mapper>

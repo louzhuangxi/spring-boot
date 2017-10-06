@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+    Spring boot 默认使用 Logback 作为日志系统，同时也支持 Log4j,Log4J2 ，但需要特殊配置
+    logback.xml 放入 resource 目录下，spring boot 会自动加载
+	选择加载的 appender
+    (参考 spring boot 官方文档设置)
+    -->
+
+    <include resource="log/console-appender.xml"/>
+    <!--
+    <include resource="log/db-appender.xml" />
+    <include resource="log/file-appender.xml" />
+    -->
+
+    <!-- 此处定义 ：一个包或类的日志输出级别(level)及输出介质(appender-ref)
+
+      下面定义的每个 log ，都会输出，所以此处定义的输出介质( appender-ref )，不必在 root 中再写;
+      每个 log 都会继承 root 定义的日志级别及输出介质，如果此处定义的特定包的 level 和 appender-ref 和 root 重复，则覆盖 root 的相应设置，其他部分按照 root 定义输出
+      name : 受此 log 约束的某一个包或者具体的某一个类
+      level : 打印级别(RACE << DEBUG << INFO << WARN << ERROR  (ALL , OFF))，如果未设定，则继承上级包定义的类别
+      appender-ref : 输出介质
+    -->
+
+    <!-- 公共 jar 定义输出级别，调试期可以设置低一些，便于查看输出信息-->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.transaction" level="WARN"/>
+    <!-- in order to debug some marshalling issues, this needs to be TRACE -->
+    <logger name="org.springframework.web.servlet.mvc" level="WARN"/>
+    <!-- 展示 session 信息 debug  -->
+    <logger name="org.springframework.security.web" level="warn"/>
+    <logger name="org.hibernate" level="WARN"/>
+
+    <logger name="org.h819" level="DEBUG"/>
+    <logger name="org.examples" level="INFO"/>
+    <logger name="com.base" level="INFO"/>
+
+    <!-- 输出不同的信息，以 level 区分对操作进行记录。snatch info 项目，对日志进行记录
+    不必在 root 中再次定义下面这句，此 log 已经可以输出。
+    <logger name="springapp.jpa.service.snatch.find" level="INFO">
+        <appender-ref ref="db-classic-mysql-pool"/>
+    </logger>
+    <logger name="springapp.jpa.service.snatch" level="ERROR">
+        <appender-ref ref="db-classic-mysql-pool"/>
+    </logger>
+    -->
+
+    <!--
+        root : 根 log 定义 ，为 所有 log 所继承。
+        无 log 定义的包或类，默认执行此 root 定义的基本和输出
+        root 的 level 定义为 WARN ，可以避免输出绝大部分公用 jar 的信息输出，因为这些 jar信息输出大部分为 INFO。系统调试时，可以设置为 INFO ，便于查看输出信息
+        root level 可以定义为  TRACE << DEBUG << INFO << WARN << ERROR  (ALL , OFF)
+        如果 root level 定义为 INFO, 则上文定义的 <logger ... /> 中，只有 log 的 level 为 INFO << WARN << ERROR 级别的错误才会输出到 root 指定的输出介质中。
+        另外 ， root level 定义为 ALL 则全部输出， OFF 全部关闭 ，无论 log 如何定义
+     -->
+    <root level="WARN">
+        <appender-ref ref="console"/>
+        <!-- 除上文 log 定义的输出外，console 的输出，同时输出到文件和输出到数据库
+               <appender-ref ref="rollingFile"/>
+               appender-ref ref="db-classic-mysql-pool"/>
+		-->
+    </root>
+</configuration>

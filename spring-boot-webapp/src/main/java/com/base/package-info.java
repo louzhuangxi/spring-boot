@@ -30,5 +30,8 @@
  * https://github.com/mohitsinha/spring-boot-reactive-sse
  * http://sinhamohit.com/writing/spring-boot-reactive-sse
  * --
+ * --
+ * 其他可参考
+ * https://gitee.com/YYDeament/88ybg
  */
 package com.base;

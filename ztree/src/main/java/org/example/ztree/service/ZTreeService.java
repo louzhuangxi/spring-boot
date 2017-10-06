@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional(readOnly = true) //在事务中(带有 @Transactional)的 fetch = FetchType.LAZY 才可以自动加载
 public class ZTreeService {
 
-    //private static final Logger logger = LoggerFactory.getLogger(ZTreeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ZTreeService.class);
 
     @Autowired
     private TreeNodeRepository treeNodeRepository;
