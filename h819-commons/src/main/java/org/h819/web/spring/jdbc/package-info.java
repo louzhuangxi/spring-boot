@@ -22,10 +22,8 @@
  * select person.id, person.name, email.email from person person left join email on person.id = email.person_id
  * 其他参考：
  * https://vladmihalcea.com/2017/10/10/how-to-join-unrelated-entities-with-jpa-and-hibernate/
- * 其他学习
- * https://vladmihalcea.com/2017/08/29/the-best-way-to-map-a-projection-query-to-a-dto-with-jpa-and-hibernate/
- * http://www.baeldung.com/java-weekly-198?utm_source=email-newsletter&utm_medium=email&utm_campaign=jww
- * https://vladmihalcea.com/2017/05/10/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
+ * (此方法需要关联的数据项是对象，用 Tuple。不好用)
+ *
  * 3.4 动态 sql 参考  JpaDynamicSpecificationBuilder (未实现)
  */
 package org.h819.web.spring.jdbc;

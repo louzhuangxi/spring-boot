@@ -189,6 +189,21 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http.authorizeRequests().anyRequest().authenticated();
 
+
+        /**
+         * 禁止特定的 HttpMethod 访问
+         * 等同于在 web.xml 中 <security-constraint></security-constraint>
+         * http://www.techstacks.com/howto/disable-http-methods-in-tomcat.html
+         * https://myshittycode.com/category/spring/spring-boot/
+         * 
+         */
+//        http.authorizeRequests().
+//                antMatchers(HttpMethod.OPTIONS, "/**").denyAll().
+//                antMatchers(HttpMethod.PUT, "/**").denyAll().
+//                antMatchers(HttpMethod.DELETE, "/**").denyAll().
+//                antMatchers(HttpMethod.PATCH, "/**").denyAll().
+//                antMatchers(HttpMethod.TRACE, "/**").denyAll();
+
         /**
          * login
          */
