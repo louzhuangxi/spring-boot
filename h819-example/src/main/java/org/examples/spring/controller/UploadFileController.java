@@ -1,6 +1,6 @@
 package org.examples.spring.controller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -25,6 +25,7 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping("/files")
+@Slf4j
 public class UploadFileController {
 
     //private static final Logger logger = LoggerFactory.getLogger(UploadFileController.class);
@@ -60,6 +61,7 @@ public class UploadFileController {
                 FileOutputStream fos = new FileOutputStream(servletContext.getRealPath("/") +
                         "upload/" + sdf.format(new Date()) + fileName.substring(fileName.lastIndexOf('.')));
                 FileCopyUtils.copy(file.getInputStream(), fos);
+                log.info("save to db");
                 return "You successfully uploaded " + fileName + "!";
             } catch (Exception e) {
                 return "You failed to upload " + e.getMessage();

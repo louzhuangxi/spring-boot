@@ -17,9 +17,13 @@
  * 3. ResultSet to Entity
  * 3.1 返回结果满足 Bean 的，用  BeanPropertyRowMapper
  * 3.2 其他，手工 RowMapper
- * 3.3 ont , many 问题
+ * 3.3 one to many 问题 (怎么关联两个没有关联的实体 How to JOIN unrelated entities with JPA and Hibernate)
  * 用 left join 实现 ，之后手工 RowMapper
  * select person.id, person.name, email.email from person person left join email on person.id = email.person_id
- * 3.4 动态 sql 参考  JpaDynamicSpecificationBuilder ，写
+ * 其他参考：
+ * https://vladmihalcea.com/2017/10/10/how-to-join-unrelated-entities-with-jpa-and-hibernate/
+ * (此方法需要关联的数据项是对象，用 Tuple。不好用)
+ *
+ * 3.4 动态 sql 参考  JpaDynamicSpecificationBuilder (未实现)
  */
 package org.h819.web.spring.jdbc;

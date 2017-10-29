@@ -29,11 +29,11 @@ public class FileUtilsBase {
      *  -
      *  方案二：
      *  1. 先比较文件大小
-     *  2. 在比较文件大小相同的文件的 Hash
+     *  2. 再比较文件大小相同的文件的 Hash
      *  -
      *  总结
      *  1. 已经测试过(几万个文件，大小不一)，方案一和方案二，找到的相同的文件的结果一致。
-     *  2. 但两个方案效率相差悬殊，计算文件的 Hash 值很耗时间，尤其是大文件，耗时更长。文件很多，大文件很大的话，方案一以可能需要数小时，而方案二仅需要数秒钟。
+     *  2. 但两个方案效率相差悬殊，计算文件的 Hash 值很耗时间，尤其是大文件，耗时更长。文件很多、大文件很大的话，方案一以可能需要数小时，而方案二仅需要数秒钟。
      *  3. 大文件进行 hash 计算很慢，单个2G 以上的文件可能就需要十几秒钟。
      */
 
@@ -95,13 +95,14 @@ public class FileUtilsBase {
                 try {
                     /**
                      * 文件 Hash
-                     * 1. com.google.common.io.Files.hash 最快 (比 commons DigestUtils.md5Hex 快 50%)
+                     * 1. com.google.common.io.Files.asByteSource(new File(fileStr)).hash(Hashing.goodFastHash(5)) 最快 (比 commons DigestUtils.md5Hex 快 50%)
+                     * goodFastHash(5) 相当于 md5
                      * 2. md5 比 SHA-256 快 40% 以上，md5 用于文件 hash ，足够准确
                      * md5 已经被证实，是不安全的，可以被破解和伪装。就是说不同的文件内容，md5 可能会相同
-                     * sha-1 新进被 google 证实，同 md5 一样可以被伪装
+                     * sha-1 新近被 google 证实，同 md5 一样可以被伪装
                      * 如果不是要求非常高的系统 md5 验证足够
                      */
-                    String uniqueFileHash = Files.hash(new File(fileStr), Hashing.md5()).toString();
+                    String uniqueFileHash = Files.asByteSource(new File(fileStr)).hash(Hashing.goodFastHash(5)).toString();
                     System.out.println(String.format("calculate file hash : %s -> %s", uniqueFileHash, fileStr));
                     List<String> identicalList = outDuplicateFilesMapByHash.get(uniqueFileHash);
                     if (identicalList == null) {
