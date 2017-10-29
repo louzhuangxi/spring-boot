@@ -4,6 +4,7 @@
  * 利用 apache commons net 连接 ftp,ftps
  * 但 apache commons net 不支持 sftp ,(即 sftp over ssl 协议直接连接服务器)
  * sftp 用 JSch (http://www.jcraft.com/jsch/)
+ * sftp 第二个实现 : https://github.com/hierynomus/sshj
  * FtpExamples 演示了用法
  */
     /*
