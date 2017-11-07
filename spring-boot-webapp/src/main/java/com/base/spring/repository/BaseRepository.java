@@ -13,6 +13,6 @@ import java.io.Serializable;
  * Time: 16:17
  * To change this template use File | Settings | File Templates.
  */
-@NoRepositoryBean
+@NoRepositoryBean  //不进行实例化
 public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, JpaSpecificationExecutor {
 }

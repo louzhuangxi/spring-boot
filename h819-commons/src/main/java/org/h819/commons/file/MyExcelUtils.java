@@ -39,6 +39,7 @@ import java.util.*;
 //https://code.csdn.net/zhangdaiscott/easypoi
 //http://git.oschina.net/chyxion/table-to-xls
 //https://github.com/chenjianjx/sep4j
+//https://gitee.com/Crab2Died/Excel4J
 public class MyExcelUtils {
 
     //private static final Logger logger = LoggerFactory.getLogger(MyExcelUtils.class);

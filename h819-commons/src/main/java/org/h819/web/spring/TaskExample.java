@@ -17,8 +17,6 @@ import java.util.Date;
 @Slf4j
 public class TaskExample {
 
-    //private static final Logger log = LoggerFactory.getLogger(TaskExample.class);
-
     public void job1() {
         log.info("task run..");
         System.out.println("Task Job begin new : "+ DateFormatUtils.format(new Date(), "hh:MM:ss"));

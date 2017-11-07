@@ -2,6 +2,7 @@ package com.base.spring.service.async;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -23,6 +24,7 @@ public class AsyncExampleService {
     //只能直接外部调用，否则就会变成阻塞主线程的同步任务
     @Deprecated // 此种方式不行
     @Async
+    @Transactional
     public CompletableFuture<String> fakeAsyncTask() throws InterruptedException {
         doTaskOne();
         doTaskTwo();
@@ -31,6 +33,7 @@ public class AsyncExampleService {
     }
 
     @Async
+    @Transactional
     // 通过@Async注解表明该方法是个异步方法，如果注解在类级别，则表明该类所有的方法都是异步方法。
     // 而这里的方法自动被注入使用 ThreadPoolTaskExecutor 作为 TaskExecutor
     // 方法的返回值可以是任意数据，通过 CompletableFuture.get()  获得。
@@ -45,6 +48,7 @@ public class AsyncExampleService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<String> doTaskTwo() throws InterruptedException {
         System.out.println("开始做任务二");
         System.out.println("Execute method doTaskTwo. thread name is : " + Thread.currentThread().getName());
@@ -56,6 +60,7 @@ public class AsyncExampleService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<String> doTaskThree() throws InterruptedException {
         System.out.println("开始做任务三");
         System.out.println("Execute method doTaskThree. thread name is : " + Thread.currentThread().getName());

@@ -94,11 +94,11 @@ public class PageBean<T> implements Serializable {
             return;
         }
 
-        long totalTemp = totalRecords / pageSize;
+        int totalTemp = totalRecords / pageSize;
         if (totalRecords % pageSize > 0) {
             totalTemp++;
         }
-        totalPages = (int) totalTemp;
+        totalPages = totalTemp;
     }
 
     public int getCurrentPageNo() {

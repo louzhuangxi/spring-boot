@@ -2,14 +2,17 @@ package org.h819.web.spring.jpa;
 
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SearchFilter {
 
 
     private String fieldName;
     private Object value;
-    private Operator operator;
+    private Operator operator; //ISNULL 等判断时, value 不用赋值
 
-    //between 用到，此时 value 不用赋值
+    //between 用到，此时上面的 value 不用赋值
     private Object betweenFrom;
     private Object betweenTo;
 
@@ -27,9 +30,15 @@ public class SearchFilter {
      * @param value
      */
     public SearchFilter(String fieldName, Operator operator, Object value) {
-        Assert.isTrue(!operator.equals(Operator.BETWEEN), "非 between 操作，operator 不能为 Operator.BETWEEN");
+        Assert.isTrue(!operator.equals(Operator.BETWEEN), "非 between 操作，operator 不能为 Operator.BETWEEN"); // 该构造方法，不能用于 between 
         Assert.hasText(fieldName, "fieldName 没有填写");
-        Assert.notNull(value, "非 between 操作，value 不能为 null");
+
+        //判断 value = null 时的例外
+        Operator[] operators = {Operator.BETWEEN, Operator.ISNULL, Operator.ISNOTNULL, Operator.ISEMPTY,
+                Operator.ISNOTEMPTY, Operator.ISTRUE, Operator.ISFALSE};
+        List<Operator> list = Arrays.asList(operators);
+        if (!list.contains(operator))
+            Assert.notNull(value, "非 between / is**  操作，value 不能为 null");
 
         this.fieldName = fieldName;
         this.value = value;
@@ -96,10 +105,15 @@ public class SearchFilter {
         GTE, //大于等于
         LT, //小于
         LTE,//小于等于
-        NN, //notNull
         IN,  //in(在范围内)
         NIN, //nin(不在范围内)
-        BETWEEN;
+        BETWEEN, // 之间
+        ISNULL,
+        ISNOTNULL,
+        ISTRUE,
+        ISFALSE,
+        ISEMPTY,
+        ISNOTEMPTY;
 
     }
 

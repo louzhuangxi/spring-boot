@@ -33,5 +33,9 @@
  * --
  * 其他可参考
  * https://gitee.com/YYDeament/88ybg
+ * https://gitee.com/zhocuhenglin/dp-BOOT?from=weekly-email
+ * 可参考码云的“权限管理”类 项目 https://gitee.com/explore/starred/authority-management
+ *
+ *
  */
 package com.base;

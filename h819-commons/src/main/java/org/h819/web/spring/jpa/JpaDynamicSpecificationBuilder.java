@@ -15,17 +15,20 @@ import java.util.Collection;
  * Date: 2016-9-28
  * Time: 下午13:20
  * To change this template use File | Settings | File Templates.
- */
-
-/**
- * jpa 与 querydsl 的区别
+ * <p>
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ * <p>
+ * jpql 与 querydsl 的区别
  * -
- * 二者都是数据库查询等操作的具体实现
+ * 二者都是数据库操作的具体实现
  * jpa 用 jpql 语句
  * querydsl 用自己的实现方式
  * -
  * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
- * jpql 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
  * -
  * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
  * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
@@ -50,7 +53,219 @@ import java.util.Collection;
  * Specification specification = new JpaDynamicSpecificationBuilder()
  * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
  * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
  * -
+ * <p>
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ * <p>
+ * jpql 与 querydsl 的区别
+ * -
+ * 二者都是数据库操作的具体实现
+ * jpa 用 jpql 语句
+ * querydsl 用自己的实现方式
+ * -
+ * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * -
+ * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * -
+ * 总结：
+ * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
+ * 所以就用 jpa 吧，不在尝试 querydsl
+ * -
+ * 另外一种查询方式 QBE ：
+ * org.springframework.data.domain.Example
+ * Support for query by example (QBE).
+ * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
+ * -
+ * <p>
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ * <p>
+ * jpql 与 querydsl 的区别
+ * -
+ * 二者都是数据库操作的具体实现
+ * jpa 用 jpql 语句
+ * querydsl 用自己的实现方式
+ * -
+ * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * -
+ * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * -
+ * 总结：
+ * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
+ * 所以就用 jpa 吧，不在尝试 querydsl
+ * -
+ * 另外一种查询方式 QBE ：
+ * org.springframework.data.domain.Example
+ * Support for query by example (QBE).
+ * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
+ * -
+ * <p>
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ * <p>
+ * jpql 与 querydsl 的区别
+ * -
+ * 二者都是数据库操作的具体实现
+ * jpa 用 jpql 语句
+ * querydsl 用自己的实现方式
+ * -
+ * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * -
+ * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * -
+ * 总结：
+ * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
+ * 所以就用 jpa 吧，不在尝试 querydsl
+ * -
+ * 另外一种查询方式 QBE ：
+ * org.springframework.data.domain.Example
+ * Support for query by example (QBE).
+ * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
+ * -
+ * <p>
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ * <p>
+ * jpql 与 querydsl 的区别
+ * -
+ * 二者都是数据库操作的具体实现
+ * jpa 用 jpql 语句
+ * querydsl 用自己的实现方式
+ * -
+ * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * -
+ * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * -
+ * 总结：
+ * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
+ * 所以就用 jpa 吧，不在尝试 querydsl
+ * -
+ * 另外一种查询方式 QBE ：
+ * org.springframework.data.domain.Example
+ * Support for query by example (QBE).
+ * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
+ * -
+ */
+
+/**
+ * JPA Criteria API vs. JPQL
+ * JPQL queries are defined as Strings, similar to the SQL.
+ * For simple static String-based queries, JPQL Queries (e.g. Named Queries) may be preferred. (静态查询)
+ * For dynamic queries i.e. building a query at runtime, the Criteria API is preferred as it eliminates the String concatenation needs.（动态查询）
+ */
+
+
+/**
+ * jpql 与 querydsl 的区别
+ * -
+ * 二者都是数据库操作的具体实现
+ * jpa 用 jpql 语句
+ * querydsl 用自己的实现方式
+ * -
+ * querydsl 最大的优势是能够动态拼出查询语句，因为和 QEntity 相关，所以无法总结出通用的方法来构建动态查询语句
+ * jpa 通过 Specification 也可以拼出动态查询语句 ，已经有总结出通用的类 （本类）
+ * -
+ * spring data jpa 和 querydsl 结合，主要是定义了 QueryDslPredicateExecutor 接口，可以方便的和 spring data jpa Repository 结合
+ * 但 QueryDslPredicateExecutor 接口，只实现了几个方法，如果想要复杂查询，还是要使用 querydsl 自己的实现方式
+ * -
+ * 总结：
+ * spring data jpa 的 jpql 语言能够灵活拼出各种查询语句（用占位符的方式，不会有 sql 注入问题），并且有了工具类来构建动态查询
+ * 所以就用 jpa 吧，不在尝试 querydsl
+ * -
+ * 另外一种查询方式 QBE ：
+ * org.springframework.data.domain.Example
+ * Support for query by example (QBE).
+ * 功能好像和 querydsl 相同，还不如 querydsl 功能完善，不用。
+ * -
+ * -
+ * -
+ * <p>
+ * 使用方式:
+ * TreeEntity
+ * private Long id;
+ * private String name;
+ * private TreeEntity parent
+ * Specification specification = new JpaDynamicSpecificationBuilder()
+ * .and(new SearchFilter("parent.name", SearchFilter.Operator.EQ, "国外")) // 级联属性，可以比较对象中属性为对象的属性
+ * .and(new SearchFilter("id", SearchFilter.Operator.BETWEEN, null,20)).build();
+ * List<TreeEntity> entity = repository.findAll(specification)
+ * -
+ */
+
+/**
+ *  动态查询方法：
+ *  1. jdbcTemplate ，动态传入 sql
+ *  2. jpa ，利用 JpaDynamicSpecificationBuilder  ，动态构造 Specification
  */
 public class JpaDynamicSpecificationBuilder {
 
@@ -270,8 +485,7 @@ public class JpaDynamicSpecificationBuilder {
                         else
                             throw new IllegalArgumentException("不能比较! lessThanOrEqualTo 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
                     }
-                    case NN:  // 此时只需要 searchFilter.getFieldName() ，searchFilter.getValue() 用不到
-                        return builder.isNotNull(path);
+
                     case IN://IN , NIN  操作要求：属性代表的对象，在集合中，对象应该可以比较
 
                         /**
@@ -305,6 +519,28 @@ public class JpaDynamicSpecificationBuilder {
                             return builder.between((Expression<? extends Comparable>) path, (Comparable) searchFilter.getBetweenFrom(), (Comparable) searchFilter.getBetweenTo());
                         else
                             throw new IllegalArgumentException("不能比较! between 操作 ,被比较的对象，应该实现了 Comparable 接口，对象之间能相互比较 !");
+
+                        /**
+                         *  此时只需要 searchFilter.getFieldName() ，searchFilter.getValue() 用不到
+                         */
+                    case ISNULL:
+                        return builder.isNull(path);
+
+                    case ISNOTNULL:
+                        return builder.isNotNull(path);
+
+                    case ISEMPTY:
+                        return builder.isEmpty(path);
+
+                    case ISNOTEMPTY:
+                        return builder.isNotEmpty(path);
+
+                    case ISTRUE:
+                        return builder.isTrue(path);
+
+                    case ISFALSE:
+                        return builder.isFalse(path);
+
                     default:
                         return builder.conjunction();
                 }
