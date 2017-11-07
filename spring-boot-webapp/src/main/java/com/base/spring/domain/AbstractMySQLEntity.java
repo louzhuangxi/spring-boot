@@ -109,6 +109,7 @@ public abstract class AbstractMySQLEntity implements Serializable {
     //这两个会涉及到如何获取用户问题，在 spring security 和其他的系统中，有不同的实现，暂时不用
 
     /**
+     * Mysql , H2 中 ID 的设置方法
      * 如果没有 @GeneratedValue ，仅有 @Id ，则主键应该由应用程序指定
      */
 

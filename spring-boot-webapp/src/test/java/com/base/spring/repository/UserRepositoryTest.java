@@ -1,9 +1,8 @@
-package com.base.spring.domain;
+package com.base.spring.repository;
 
 import com.alibaba.fastjson.JSON;
-import com.base.spring.repository.RoleRepository;
-import com.base.spring.repository.TreeRepository;
-import com.base.spring.repository.UserRepository;
+import com.base.spring.domain.TreeEntity;
+import com.base.spring.domain.UserEntity;
 import com.base.spring.service.UserService;
 import com.base.spring.utils.BCryptPassWordUtils;
 import org.h819.commons.MyFastJsonUtils;
@@ -16,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.endsWith;
@@ -25,17 +24,15 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 /**
  * Description : TODO()
  * User: h819
- * Date: 2015/12/28
- * Time: 13:48
+ * Date: 2017-11-08
+ * Time: 1:57
  * To change this template use File | Settings | File Templates.
  */
-
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@Transactional
-@Rollback(false)
-public class UserEntityTest {
-
+@Transactional(readOnly = false)
+@Rollback(value = false)
+public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -89,7 +86,7 @@ public class UserEntityTest {
     public void testGetAllUserMenus() {
         FastJsonPropertyPreFilter preFilter = new FastJsonPropertyPreFilter();
         preFilter.addExcludes(TreeEntity.class, "parent","roles");
-      //  preFilter.addIncludes(TreeEntity.class, "name","level");
+        //  preFilter.addIncludes(TreeEntity.class, "name","level");
         UserEntity admin = userRepository.findByLoginName("admin").get();
 //        //去掉重复，获取所有 Menu
 //        Set<TreeEntity> menuTrees = new HashSet<>();
@@ -107,13 +104,11 @@ public class UserEntityTest {
         DtoUtils utils = new DtoUtils();
         utils.addExcludes(TreeEntity.class, "parent","roles");
 
-       // MyJsonUtils.prettyPrint(utils.createDTOcopy(treeEntity,3));
-      MyFastJsonUtils.prettyPrint(utils.createMapCopy(treeEntity,3));
+        // MyJsonUtils.prettyPrint(utils.createDTOcopy(treeEntity,3));
+        MyFastJsonUtils.prettyPrint(utils.createMapCopy(treeEntity,3));
 
 
     }
-
-
 
 
 }

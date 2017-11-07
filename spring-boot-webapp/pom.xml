@@ -97,8 +97,9 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
+
         <!--启用 h2
         <dependency>
             <groupId>com.h2database</groupId>

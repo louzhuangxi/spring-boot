@@ -1,6 +1,7 @@
-package com.base.spring.domain;
+package com.base.spring.repository;
 
-import com.base.spring.repository.TreeRepository;
+import com.base.spring.domain.TreeEntity;
+import com.base.spring.domain.TreeType;
 import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.json.FastJsonPropertyPreFilter;
 import org.h819.web.spring.jpa.JpaDynamicSpecificationBuilder;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -19,15 +20,15 @@ import java.util.List;
 /**
  * Description : TODO()
  * User: h819
- * Date: 2016/8/4
- * Time: 17:00
+ * Date: 2017-11-08
+ * Time: 1:56
  * To change this template use File | Settings | File Templates.
  */
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@Transactional
-@Rollback(false)
-public class TreeEntityTest {
+@Transactional(readOnly = false)
+@Rollback(value = false)
+public class TreeRepositoryTest {
 
     @Autowired
     TreeRepository repository;
@@ -79,5 +80,4 @@ public class TreeEntityTest {
 
 
     }
-
 }
