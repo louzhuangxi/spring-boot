@@ -108,11 +108,11 @@ public class SearchFilter {
         IN,  //in(在范围内)
         NIN, //nin(不在范围内)
         BETWEEN, // 之间
-        ISNULL,
+        ISNULL,  // test whether the expression is null.
         ISNOTNULL,
         ISTRUE,
         ISFALSE,
-        ISEMPTY,
+        ISEMPTY, // tests whether a collection is not empty.
         ISNOTEMPTY;
 
     }
