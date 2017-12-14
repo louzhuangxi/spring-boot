@@ -33,7 +33,8 @@ import java.io.*;
 @RequestMapping("/download")
 public class DownloadFileController {
 
-    private static final String APPLICATION_PDF = "application/pdf";
+    //根据实际需要，设置文件类型
+    private static final String APPLICATION_NAME = MediaType.APPLICATION_PDF_VALUE;
 
     @Autowired
     private ServletContext servletContext; //获得应用的路径用
@@ -42,15 +43,18 @@ public class DownloadFileController {
      * Download File via HttpServletResponse
      * Directly display the file in the browser（有的浏览器会直接打开，有的会直接下载）.
      *
+     * @param fileName 存放在 web app 目录下，被下载的文件名
      * @param response
      * @throws IOException
      */
-    @GetMapping(value = "/a", produces = APPLICATION_PDF)
+    @GetMapping(value = "/a", produces = APPLICATION_NAME)
     @ResponseBody
     public void downloadA(@RequestParam("filename") String fileName, HttpServletResponse response) throws IOException {
+
+
         File file = getFromWebAppPathFile(fileName);
         InputStream in = new FileInputStream(file);
-        response.setContentType(APPLICATION_PDF);
+        response.setContentType(APPLICATION_NAME);
         response.setContentLength((int) file.length());
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); //filename 前面必须有空格
         FileCopyUtils.copy(in, response.getOutputStream());
@@ -60,10 +64,11 @@ public class DownloadFileController {
      * Download File via HttpEntity
      * Directly display the file in the browser（有的浏览器会直接打开，有的会直接下载）.
      *
+     * @param fileName 存放在 web app 目录下，被下载的文件名
      * @return
      * @throws IOException
      */
-    @GetMapping(value = "/b", produces = APPLICATION_PDF)
+    @GetMapping(value = "/b", produces = APPLICATION_NAME)
     @ResponseBody
     public HttpEntity<byte[]> downloadB(@RequestParam("filename") String fileName) throws IOException {
         File file = getFromWebAppPathFile(fileName);
@@ -79,15 +84,16 @@ public class DownloadFileController {
      * Download File via Resource
      * class path 内的文件
      *
+     * @param fileName source (或者 jar 文件中)，被下载的文件名
      * @param response
      * @return
      * @throws FileNotFoundException
      */
-    @GetMapping(value = "/c", produces = APPLICATION_PDF) // pdf
+    @GetMapping(value = "/c", produces = APPLICATION_NAME) // pdf
     @ResponseBody
     public void downloadClassPathFile(@RequestParam("filename") String fileName, HttpServletResponse response) throws IOException {
         File file = getFromClassPath(fileName);
-        response.setContentType(APPLICATION_PDF); // excel : MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE
+        response.setContentType(APPLICATION_NAME); // excel : MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE
         response.setContentLength((int) file.length());
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());   //filename 前面必须有空格
         response.setHeader("Content-Length", String.valueOf(file.length()));
@@ -98,6 +104,7 @@ public class DownloadFileController {
     /**
      * 获得 web app 应用目录下的文件
      * 以相对于 Web 应用根目录的方式进行访问
+     *
      * @param fileName
      * @return
      * @throws FileNotFoundException
@@ -136,5 +143,4 @@ public class DownloadFileController {
             //
         }
     }
-
 }

@@ -1,13 +1,18 @@
 package com.base.Test;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Description : TODO()
@@ -29,20 +34,23 @@ public class Test {
 //        System.out.print(Arrays.asList(ArrayUtils.removeElement(ss1, "on")));
 //        System.out.print("中文");
 
-        test.listDir(new File("F:\\tianyiyun\\13811998709\\工作资料"));
-
-        Collections.sort(list, new Comparator<MyFile>() {
-            @Override
-            public int compare(MyFile o, MyFile t1) {
-                return o.getSize().compareTo(t1.getSize());
-            }
-        });
-
-        MyFastJsonUtils.prettyPrint(list);
+//        test.listDir(new File("F:\\tianyiyun\\13811998709\\工作资料"));
+//
+//        Collections.sort(list, new Comparator<MyFile>() {
+//            @Override
+//            public int compare(MyFile o, MyFile t1) {
+//                return o.getSize().compareTo(t1.getSize());
+//            }
+//        });
+//
+//        MyFastJsonUtils.prettyPrint(list);
         // MyExcelUtils.writeExcel(test.findStandardEntityByCompany(new File("D:\\ftpFiles\\1.xlsx")), "sheet1", new File("D:\\ftpFiles\\5_out.xlsx"));
 
         //   System.out.print("中文");
         // Assert.state("assc".equalsIgnoreCase("asc")|| "DESCs".equalsIgnoreCase("desc") , " 排序 direction 只能为 asc or desc");
+
+        test.compare();
+
     }
 
 
@@ -123,10 +131,35 @@ public class Test {
         for (File file : dir.listFiles()) {
 
             if (file.isFile()) {
-                list.add(new MyFile(file.getAbsolutePath(), file.length() / (1024*1024)));
+                list.add(new MyFile(file.getAbsolutePath(), file.length() / (1024 * 1024)));
 
             } else listDir(file);
 
+        }
+
+
+    }
+
+    private void compare() {
+
+        List<String> newl = new ArrayList();
+        List<String> oldl = new ArrayList();
+
+        try {
+            List<String> newList = FileUtils.readLines(new File("D:\\00\\new.txt"), StandardCharsets.UTF_8);
+            List<String> oldList = FileUtils.readLines(new File("D:\\00\\old.txt"), StandardCharsets.UTF_8);
+
+            for (String s : oldList)
+                if (s.isEmpty())
+                    continue;
+                else if (!newList.contains(s))
+                    newl.add(s);
+
+
+            MyFastJsonUtils.prettyPrint(newl);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

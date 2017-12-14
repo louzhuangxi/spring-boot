@@ -18,7 +18,9 @@ package com.base.spring.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -41,6 +43,7 @@ import java.time.LocalDateTime;
 // @MappedSuperclass  :
 // 1. JPA 基类的标识，表示类本身不是一个完整的实体类，不会在数据库中建表。它的属性会创建在其子类所创建的表中
 // 2. 不能再标注@Entity或@Table注解
+// 3. 常用于创建公共属性
 @Getter
 @Setter
 @MappedSuperclass
@@ -98,15 +101,23 @@ public abstract class AbstractMySQLEntity implements Serializable {
     LocalDateTime createdDate;
 
 
-    @Column(name = "modified_date")
+    @Column(name = "last_modified_date")
     @LastModifiedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+08:00")
-    LocalDateTime modifiedDate;
+    LocalDateTime lastModifiedDate;
 
 
-//    @CreatedBy: 資料建立者
-//    @LastModifiedBy: 資料最後修改者
-    //这两个会涉及到如何获取用户问题，在 spring security 和其他的系统中，有不同的实现，暂时不用
+    // 自定义获取用户名的方法 见 JpaConfig
+    //创建者
+    @Column(name = "created_by", nullable = false)
+    @CreatedBy
+    private String createdByUser;
+
+    //最后修改人
+    @Column(name = "last_modified_by", nullable = false)
+    @LastModifiedBy
+    private String lastModifiedByUser;
+
 
     /**
      * Mysql , H2 中 ID 的设置方法
@@ -117,6 +128,7 @@ public abstract class AbstractMySQLEntity implements Serializable {
     @Column(name = "id", updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     /**
      * Returns the identifier of the entity.
      *

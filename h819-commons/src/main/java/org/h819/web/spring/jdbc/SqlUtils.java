@@ -17,8 +17,7 @@ public class SqlUtils {
      */
     private static final String MYSQL_PAGE_SQL = "select * from ({0}) sel_tab00 limit {1},{2}"; // mysql
     private static final String POSTGRE_PAGE_SQL = "select * from ({0}) sel_tab00 limit {2} offset {1}";// postgresql
-    // oracle ，没有根据 oracle 版本进行优化
-    // 此种方法为通用方法，很多开源项目 如 jfinal 等分页语句，均是此种写法
+    // 此种方法为通用方法，也是标准写法，很多开源项目 如 jfinal 等分页语句，均是此种写法
     private static final String ORACLE_PAGE_SQL = "select * from (\n" +
             "  select rownum row_num, subq.* \n" +
             "  from \n" +
@@ -57,7 +56,10 @@ public class SqlUtils {
         sqlParam[2] = pageSize + "";
 
         if (dbDialect.equals(Dialect.MySql)) { //mysql
+            if (Integer.valueOf(sqlParam[1].trim()) > Integer.valueOf(sqlParam[2].trim())) // 保证从小到大顺序
+                throw new IllegalArgumentException("limit 的写法，小的序号应该在前，大的序号应该在后");
             queryNativeSql = MessageFormat.format(MYSQL_PAGE_SQL, sqlParam);
+
         } else if (dbDialect.equals(Dialect.PostgreSQL)) { // postgre
             queryNativeSql = MessageFormat.format(POSTGRE_PAGE_SQL, sqlParam);
         } else {
@@ -75,6 +77,7 @@ public class SqlUtils {
                 queryNativeSql = MessageFormat.format(SQLSERVER_PAGE_SQL, sqlParam);
             }
         }
+        
         return queryNativeSql.trim();
     }
 

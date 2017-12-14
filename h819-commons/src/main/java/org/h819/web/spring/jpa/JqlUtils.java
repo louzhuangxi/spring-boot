@@ -1,7 +1,7 @@
 package org.h819.web.spring.jpa;
 
 import lombok.extern.slf4j.Slf4j;
-import org.h819.web.spring.vo.PageBean;
+import org.h819.web.spring.jdbc.PageBean;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;

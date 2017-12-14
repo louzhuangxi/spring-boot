@@ -20,7 +20,7 @@ public class SpringUtils {
     //org.springframework.web.util.HtmlUtils
 
     /**
-     * 在web 环境下,  非 Spring bean （无 @Component 注释的类，无法使用 @Autowired 自动注入 ）中 ，获取 bean
+     * 在 Servlet 容器环境下,  非 Spring mvc （无 @Component 注释的类，无法使用 @Autowired 自动注入 ）中 ，获取 bean
      * //@Autowired
      * // UserService service;  // 编译错误，服务注入
      *

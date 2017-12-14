@@ -1,4 +1,4 @@
-package org.h819.web.spring.vo;
+package org.h819.web.spring.jdbc;
 
 import java.io.Serializable;
 import java.util.ArrayList;

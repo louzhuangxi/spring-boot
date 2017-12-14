@@ -1,7 +1,6 @@
 package org.h819.web.spring.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.h819.web.spring.vo.PageBean;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

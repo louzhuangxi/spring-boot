@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
  * Time: 15:05
  * To change this template use File | Settings | File Templates.
  */
-// @MappedSuperclass  : JPA 基类的标识，表示类本身不受 Spring 管理的实体类，不会在数据库中建表，而是会由其他实体类进行扩展后建表
 
 @Getter
 @Setter

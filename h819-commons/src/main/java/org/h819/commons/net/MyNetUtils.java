@@ -43,7 +43,9 @@ public class MyNetUtils {
 
 
        // System.out.println(s1 + " " + MyNetUtils.isURLAvailable(s1,3));
-        System.out.println(s1 + " " + MyNetUtils.isNetServiceAvailable("129.9.100.14",1521,3));
+       // System.out.println(s1 + " " + MyNetUtils.isNetServiceAvailable("129.9.100.14",1521,3));
+
+        System.out.println(MyNetUtils.isNetServiceAvailable("202.106.162.193",5080,3));
 //        System.out.println(s2 + " " + MyNetUtils.isURLAvailable(s2));
 //        System.out.println(s3 + " " + MyNetUtils.isURLAvailable(s3));
  //       System.out.println(s4 + " available " + MyNetUtils.isURLAvailable(s4,3));
