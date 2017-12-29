@@ -30,12 +30,14 @@
  * https://github.com/mohitsinha/spring-boot-reactive-sse
  * http://sinhamohit.com/writing/spring-boot-reactive-sse
  * --
- * --
  * 其他可参考
  * https://gitee.com/YYDeament/88ybg
  * https://gitee.com/zhocuhenglin/dp-BOOT?from=weekly-email
  * 可参考码云的“权限管理”类 项目 https://gitee.com/explore/starred/authority-management
- *
+ * --
+ * 打印 sql 执行时间 log4jdbc 插件
+ * --
+ * 
  *
  */
 package com.base;

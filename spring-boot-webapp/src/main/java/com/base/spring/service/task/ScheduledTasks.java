@@ -25,6 +25,4 @@ public class ScheduledTasks {
     public void testTask() {
         System.out.println(LocalDate.now());
     }
-
-
 }
