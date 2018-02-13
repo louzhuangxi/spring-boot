@@ -37,7 +37,9 @@
  * --
  * 打印 sql 执行时间 log4jdbc 插件
  * --
- * 
+ * spring session
+ * https://www.javacodegeeks.com/2018/02/session-management-using-spring-session-jdbc-datastore.html
+ * http://projects.spring.io/spring-session/
  *
  */
 package com.base;

@@ -34,7 +34,19 @@ public class JacksonConfig {
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true); // pretty print
 
         return objectMapper;
-
     }
+
+
+    /**
+     * 自定义 Jackson 属性
+     * @return
+     */
+//    @Bean
+//    public ObjectMapper getObjectMapper(){
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.setDateFormat(new SimpleDateFormat(""));
+//        return mapper;
+//    }
+
 
 }

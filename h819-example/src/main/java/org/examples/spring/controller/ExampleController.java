@@ -25,8 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ExampleController {
 
     
-    @RequestMapping(value = "/jsp")
-
+    @GetMapping(value = "/jsp")
     public String test1(Model model, RedirectAttributes redirectAttrs) {
 
         redirectAttrs.addAttribute("attr", "attr").addFlashAttribute("flashattr", "flashattr");
@@ -40,7 +39,7 @@ public class ExampleController {
 
     }
 
-    @RequestMapping(value = "/test")
+    @GetMapping(value = "/test")
     public String test2(Model model, RedirectAttributes redirectAttrs, HttpServletRequest request) {
 
         System.out.println("1 = " + request.getSession().getAttribute("attr"));

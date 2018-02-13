@@ -126,7 +126,8 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
 
-        configurer.favorPathExtension(false). //关闭URL后缀检测的方法如下
+        configurer.
+                favorPathExtension(false). //关闭URL后缀检测
                 favorParameter(true).
                 parameterName("mediaType").
                 ignoreAcceptHeader(true).
@@ -176,6 +177,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 //        messageConverters.add(new ByteArrayHttpMessageConverter());
 //        converters.addAll(messageConverters);
     }
+    
 
     /**
      * 自定义 一个 json 转换器

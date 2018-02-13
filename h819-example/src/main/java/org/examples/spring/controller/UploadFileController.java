@@ -36,8 +36,8 @@ public class UploadFileController {
     /**
      * 文件上传
      * <p/>
-     * 1. spring-mvc 配置文件中配置
-     * 2. 加入 commons fileupload 和 commons io 包
+     * spring boot 的配置文件 application.properties 中可以配置
+     * spring.servlet.multipart.  可以配置上传文件属性
      *
      * @param file
      * @return
@@ -69,6 +69,29 @@ public class UploadFileController {
         } else {
             return "You failed to upload because the file was empty.";
         }
+    }
+
+    /**
+     * 上传多个文件
+     *
+     * @param files
+     * @return
+     */
+    //    <form method="POST" enctype="multipart/form-data" action="/files/upload">
+//    File to upload:  <input type="file" name="files">
+//    File to upload:  <input type="file" name="files">
+//    File to upload:  <input type="file" name="files">
+//    File to upload:  <input type="file" name="files">
+//    <br />
+//    <br />
+//    <input type="submit" value="Upload">
+//    Press here to upload the file!
+//    </form>
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String handleMultipartFileUpload(@RequestParam("file") MultipartFile[] files) {
+
+        return "";
     }
 
 }

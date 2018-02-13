@@ -3,10 +3,7 @@ package com.base.spring.controller;
 import com.base.spring.vo.CustomErrorResponseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +40,7 @@ public class LoginController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping(value = "/login")
     public String login(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "error", required = false) String error) {
         // 好像是，只有请求过一次之后，error 才有值，不值得为什么，现象同下面的 error 方法
         // 本方法只用来跳转，所以无法传递参数，此处仅为演示
@@ -60,7 +57,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/myerror", method = RequestMethod.GET)
+    @GetMapping(value = "/myerror")
     @ResponseBody
     public CustomErrorResponseMessage error(@RequestParam(value = "error", required = false) String error, HttpServletRequest request) {
         log.info("login error, error={}", error);
@@ -73,7 +70,7 @@ public class LoginController {
      *
      * @return
      */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String index() {
         log.info("redirect to other controller");
         // return "redirect:http://canhelp.cn";

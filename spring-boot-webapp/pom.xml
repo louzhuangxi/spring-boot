@@ -23,6 +23,7 @@
         <start-class>com.base.SpringBootWebAppApplication</start-class><!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动-->
     </properties>
 
+    
     <dependencies>
 
         <!-- h819 commons model-->
@@ -31,6 +32,14 @@
             <artifactId>h819-commons</artifactId>
             <version>${h819-commons.version}</version>
         </dependency>
+
+        <!--
+        compile : 编译和发布都需要;
+        provided : 编译时候需要，发布不需要，目标环境已经提供;
+        runtime : 编译不需要，发布时需要;(如数据库连接驱动)
+        test : 仅在测试时候需要.
+
+        -->
 
 
         <!-- 发布为 war 步骤
@@ -64,9 +73,9 @@
         </dependency>
 
 
-        <!-- 修改文件，并编译后，后自动 reload
-        该功能在 eclipse 下，修改文件后保存即可自动编译，后 reload
-        在 intelliJ IDEA 下，需要手工 build class 才可以
+        <!-- 修改文件，并编译后，会后自动 reload
+        该功能在 eclipse 下，修改文件后保存即可自动编译，能自动 reload
+        但在 intelliJ IDEA 下，需要手工 build class 才可以
         参见官方文档说明 https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html -->
 
         <dependency>
@@ -146,6 +155,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
         </dependency>
 
 
@@ -230,5 +240,33 @@
             -->
         </plugins>
     </build>
+
+
+    <!-- Add Spring repositories -->
+    <!-- (you don't need this if you are using a .RELEASE version) -->
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>http://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>http://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <!-- Add Spring repositories -->
 
 </project>

@@ -83,7 +83,11 @@ public class GlobalControllerAdvice {
 
     /***
      * @param binder
-     * @InitBinder 用来配置全局 Controller ，设置 WebDataBinder，WebDataBinder 用来自动绑定前台请求参数到 Model 中。
+     *
+     * @InitBinder 用来配置全局 Controller ，设置 WebDataBinder
+     * WebDataBinder 用来自动绑定前台 controller 请求参数到 Model 中，在所有的 controller 中都起作用。
+     * --
+     * @InitBinder 也可以在某个 controller 中设置，仅在该 controller 中起作用。
      */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -101,6 +105,8 @@ public class GlobalControllerAdvice {
 //                @RequestParam(name = "date")LocalDate date) {
 //            // retrieve and return orders by date
 //        }
+
+        //binder.addCustomFormatter(new DateFormatter("yyyy-MMd-dd"));
 
     }
 

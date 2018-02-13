@@ -9,10 +9,7 @@ import org.h819.web.commons.MyServletUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -50,7 +47,7 @@ public class NavigateController {
      * @param user    SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
      * @return
      */
-    @RequestMapping(value = "/index.html", method = RequestMethod.GET)
+    @GetMapping(value = "/index.html")
     public String home(HttpServletRequest request, Model model,
                        @ModelAttribute("currentUser") SecurityUser user) { //SecurityUser user  ModelAttribute("currentUser") 通过 @ControllerAdvice 获得
         log.info("request path={} ,  will go to /html/ajax/index.ftl", MyServletUtils.getFullPath(request));
@@ -76,7 +73,7 @@ public class NavigateController {
      * @return
      */
 
-    @RequestMapping(value = "/content/admin/jqgrid-roles.html", method = RequestMethod.GET)  // 必须有 /content/
+    @GetMapping(value = "/content/admin/jqgrid-roles.html")  // 必须有 /content/
     // PreAuthorize 支持 spring el
     // 加在 service 层，好像粒度更细，如区分 add,del,eidt 等
     public String role(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
@@ -97,7 +94,7 @@ public class NavigateController {
      *
      * @return
      */
-    @RequestMapping(value = "/content/admin/jqgrid-user.html", method = RequestMethod.GET)    // 必须有 /content/
+    @GetMapping(value = "/content/admin/jqgrid-user.html")    // 必须有 /content/
     public String user(HttpServletRequest request, Model model) {
         log.info("request path={} ,  will go to /html/ajax/content/jqgrid-user.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
@@ -114,7 +111,7 @@ public class NavigateController {
      * @return
      * @ModelAttribute("model") ModelMap model 必须是这句
      */
-    @RequestMapping(value = "/content/admin/jqgrid-group.html", method = RequestMethod.GET)    // 必须有 /content/
+    @GetMapping(value = "/content/admin/jqgrid-group.html")    // 必须有 /content/
     public String group(HttpServletRequest request, Model model) {
         log.info("request path={} ,  will go to /html/ajax/content/jqgrid-group.ftl", MyServletUtils.getFullPath(request));
         model.addAttribute("app_path", MyServletUtils.getAppPath(request));
@@ -131,7 +128,7 @@ public class NavigateController {
      *
      * @return
      */
-    @RequestMapping(value = "/content/admin/ztree-type.html", method = RequestMethod.GET)    // 必须有 /content/
+    @GetMapping(value = "/content/admin/ztree-type.html")    // 必须有 /content/
     public String ztree(@RequestParam(value = "treeType", required = true) String treeType, HttpServletRequest request, Model model) {
         log.info("request path={} , type={},  will go to /html/ajax/content/ztree.ftl", MyServletUtils.getFullPath(request), treeType);
 
@@ -149,7 +146,7 @@ public class NavigateController {
      * @return
      */
     @Deprecated // 用 zTree 代替，不能全选，不能自动选择所有子节点s
-    @RequestMapping(value = "/content/fuelux-tree.html", method = RequestMethod.GET)    // 必须有 /content/
+    @GetMapping(value = "/content/fuelux-tree.html")    // 必须有 /content/
     public String fueluxTree(@RequestParam(value = "type", required = true) String type, HttpServletRequest request, Model model) {
         log.info("request path={} , type={},  will go to /html/ajax/content/fuelux-tree.ftl", MyServletUtils.getFullPath(request), type);
 
