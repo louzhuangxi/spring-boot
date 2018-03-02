@@ -20,7 +20,10 @@ public class SpringUtils {
     //org.springframework.web.util.HtmlUtils
 
     /**
-     * 在 Servlet 容器环境下,  非 Spring mvc （无 @Component 注释的类，无法使用 @Autowired 自动注入 ）中 ，获取 bean
+     * 普通类中获取被Spring托管的Bean ，这种方式比较适合于那些B/S架构的web应用
+     * 在 Servlet 容器（如 tomcat 服务器）中，spring mvc 环境下，在非 Spring 类 （无 @Component 注释的类，无法使用 @Autowired 自动注入 ）中 ，获取 bean
+     * 如在 普通普通的 servelet 中获取
+     * -
      * //@Autowired
      * // UserService service;  // 编译错误，服务注入
      *
@@ -35,5 +38,5 @@ public class SpringUtils {
         return (T) WebApplicationContextUtils.getWebApplicationContext(request.getServletContext()).getBean(beanName);
     }
 
-    
+
 }

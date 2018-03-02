@@ -165,6 +165,7 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <version>${commons-beanutils.version}</version>
         </dependency>
 
         <dependency>
@@ -208,6 +209,18 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <version>${commons-exec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons-dbcp2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbutils</groupId>
+            <artifactId>commons-dbutils</artifactId>
+            <version>${commons-dbutils.version}</version>
         </dependency>
 
         <!--poi  -->

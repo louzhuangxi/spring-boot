@@ -8,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author h819
@@ -128,10 +129,16 @@ public class MyCharsetUtils {
         File dir4 = new File("D:\\01\\00");
         File dir5 = new File("D:\\01\\01");
 
-        if (!dir.isDirectory()) {
-            System.out.println("Supplied directory does not exist.");
-            return;
-        }
+        File charsetDir = new File("E:\\program\\IntelliJ IDEA Project\\my-project\\spring-boot-jsp-zjbz\\src\\main\\webapp");
+        File charsetDir_desc =new File("d:\\charset") ;
+
+        MyCharsetUtils.convertEncoding(charsetDir,charsetDir_desc, StandardCharsets.UTF_8);
+
+
+//        if (!dir.isDirectory()) {
+//            System.out.println("Supplied directory does not exist.");
+//            return;
+//        }
 
     }
 }
