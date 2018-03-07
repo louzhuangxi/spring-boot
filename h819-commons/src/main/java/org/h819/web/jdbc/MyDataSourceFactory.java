@@ -41,7 +41,7 @@ public class MyDataSourceFactory {
      *
      * @return
      */
-    protected static DataSource getTomcatDataSource() {
+    private static DataSource getTomcatDataSource() {
         try {
             Context initContext = new InitialContext();
             //Oracle 8i, 9i & 10g 和，其他数据库不同 ，详见上面 Url 说明
@@ -59,7 +59,7 @@ public class MyDataSourceFactory {
      *
      * @return
      */
-    protected static DataSource getDBCP2DataSource() {
+    private static DataSource getDBCP2DataSource() {
         //创建BasicDataSource类对象
         BasicDataSource datasource = new BasicDataSource();
         //数据库连接信息（必须）

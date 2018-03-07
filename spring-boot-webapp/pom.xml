@@ -243,7 +243,7 @@
 
 
     <!-- Add Spring repositories -->
-    <!-- (you don't need this if you are using a .RELEASE version) -->
+    <!-- (you don't need this if you are using a .RELEASE version)
     <repositories>
         <repository>
             <id>spring-snapshots</id>
@@ -266,7 +266,7 @@
             <id>spring-milestones</id>
             <url>http://repo.spring.io/milestone</url>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories> -->
     <!-- Add Spring repositories -->
 
 </project>

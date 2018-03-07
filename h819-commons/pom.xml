@@ -537,7 +537,7 @@
                 <inherited>false</inherited>
                 <executions>
 
-                    <!--制作 oracle driver jar
+                    <!--制作 oracle driver jar-->
                       <execution>
                           <id>install-artifacts.1</id>
                           <goals>
@@ -545,14 +545,14 @@
                           </goals>
                           <phase>validate</phase>
                           <configuration>
-                              <file>D:\download\classes12.jar</file>
+                              <file>D:\ojdbc8.jar</file>
                               <groupId>oracle</groupId>
                               <artifactId>oracle-connector-java</artifactId>
                               <packaging>jar</packaging>
-                              <version>9.0.2.0.0-for-jdk1.3</version>
+                              <version>12c.2.0.1-for-jdk8</version>
                           </configuration>
                       </execution>
-                     -->
+               
                     <!-- 制作 h819-pdf-font STCAIYUN jar
                  <execution>
                      <id>install-artifacts.4</id>
@@ -567,9 +567,9 @@
                          <artifactId>h819-commons-pdfdecrypt</artifactId>
                          <version>publish-4.0.0</version>
                      </configuration>
-                 </execution> -->
+                 </execution>-->
 
-                    <!-- 制作 h819-commons jar-->
+                    <!-- 制作 h819-commons jar
                     <execution>
                         <id>install-artifacts.4</id>
                         <goals>
@@ -583,7 +583,7 @@
                             <artifactId>h819-commons</artifactId>
                             <version>${h819-commons.version}</version>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
 

@@ -17,7 +17,7 @@ import java.util.Map;
  * 执行 sql
  * 关闭 Connection、 Statement
  * -
- * 所以每次直接用  QueryRunner 中的方法就可以，不必获取和关闭资源
+ * 所以每次直接用  QueryRunner 中的方法就可以，不必再获取和关闭资源
  * 每次执行 sql 语句，QueryRunner 会自动获取和关闭资源一次
  * 就像使用 spring JdbcTemplate 一样
  * ---
