@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.Optional;
+
 /**
  * Description : TODO()
  * User: h819
@@ -27,7 +29,7 @@ public class JpaConfig implements AuditorAware<String> {
      * @return
      */
     @Override
-    public String getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
 
         //此处自定义获取用户名的方法
         //spring security
@@ -35,7 +37,7 @@ public class JpaConfig implements AuditorAware<String> {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
-        return ((User) authentication.getPrincipal()).getUsername();
+        return Optional.ofNullable(((User) authentication.getPrincipal()).getUsername());
 
         //或者在非 spring security 下，  返回当前session会话中的账户名
     }

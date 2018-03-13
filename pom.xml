@@ -18,36 +18,29 @@
         <relativePath/> <!-- lookup parent from repository 1.5.4.RELEASE-->
     </parent>
 
-    <!--  父类 POM 文件，仅定义公共版本信息  -->
+    <!--  父类 POM 文件，仅定义公共版本信息
+     所有系统都用 spring boot 开发，常用的库版本，spring boot 都已经定义，不写版本号就会默认引入
+     spring boot 依赖的版本见
+      https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#appendix-dependency-versions
+
+        这里为了引用方便，仅定义 spring boot 没有定义的版本
+    -->
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
 
         <h819-commons.version>1.0.40</h819-commons.version>
-
-        <!-- spring -->
-        <springloaded.version>1.2.4.RELEASE</springloaded.version>
-        <!--querydsl 不用，原因见 JpaDynamicSpecificationBuilder
-        <querydsl.apt.version>1.1.3</querydsl.apt.version>
-        <querydsl.version>4.1.4</querydsl.version>-->
-        <ehcache.version>3.1.2</ehcache.version>
-
-
         <!-- db -->
         <!-- oracle 的驱动，没有放入 maven ，是 oracle 公司不同意，已自行加入本地库-->
         <oracle.version.12c>12c-for-jdk7</oracle.version.12c>
-        <oracle.version.11g>11gR2-for-jdk6</oracle.version.11g>
+        <oracle.version.11g>11g.2.0.4-for-jdk6+7+8</oracle.version.11g>
         <oracle.version.10g>10gR2-for-jdk4-5</oracle.version.10g>
         <oracle.version.9i.jdk1.4>9.0.2.0.0-for-jdk1.4</oracle.version.9i.jdk1.4>
         <oracle.version.9i.jdk1.3>9.0.2.0.0-for-jdk1.3</oracle.version.9i.jdk1.3>
 
-        <!-- tomcat 连接池长连接查询，发现问题舍弃-->
-        <tomcat-jdbc.version>8.0.12</tomcat-jdbc.version>
+        <!-- tomcat 连接池长连接查询，发现问题舍弃
+        <tomcat-jdbc.version>8.0.12</tomcat-jdbc.version>-->
         <!--阿里巴巴 -->
         <druid-jdbc.version>1.0.9</druid-jdbc.version>
         <fastjson.version>1.2.36</fastjson.version>
-
-        <jackson.vsersion>2.8.3</jackson.vsersion>
 
         <!-- apache  -->
         <commons-lang3.version>3.6</commons-lang3.version>
@@ -73,7 +66,6 @@
         <apache.tika.core.version>1.13</apache.tika.core.version>
 
         <!-- apache http components-->
-        <apache.httpcomponents.version>4.5.5</apache.httpcomponents.version>
         <apache.velocity.version>1.7</apache.velocity.version>
         <sitemesh.version>2.4.2</sitemesh.version>
         <!-- apache end -->
@@ -101,10 +93,6 @@
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
         <!-- dns -->
         <dnsjava.version>2.1.7</dnsjava.version>
-        <!-- java mail -->
-        <java.mail>1.5.2</java.mail>
-
-        <quartz.version>2.2.3</quartz.version>
 
     </properties>
 
@@ -114,5 +102,5 @@
         <module>spring-boot-mybatis</module>
         <module>testlog</module>
     </modules>
-    
+
 </project>

@@ -16,14 +16,21 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <!--下面的 properties 中，如果属性和 spring boot 默认相同，就会覆盖默认设置
+    可以从这里改变 spring boot 默认的依赖的版本
+    https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#appendix-dependency-versions
+    -->
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <start-class>com.base.SpringBootWebAppApplication</start-class><!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动-->
+        <!-- 修改默认 hibernate 版本
+       <hibernate.version>5.3.0.CR1</hibernate.version>
+       -->
+       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+       <java.version>1.8</java.version>
+       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+       <start-class>com.base.SpringBootWebAppApplication</start-class><!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动-->
     </properties>
 
-    
+
     <dependencies>
 
         <!-- h819 commons model-->

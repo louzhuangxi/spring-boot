@@ -1,7 +1,5 @@
 package org.h819.web.jdbc;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -41,7 +39,7 @@ public class MyDataSourceFactory {
      *
      * @return
      */
-    private static DataSource getTomcatDataSource() {
+    protected static DataSource getTomcatDataSource() {
         try {
             Context initContext = new InitialContext();
             //Oracle 8i, 9i & 10g 和，其他数据库不同 ，详见上面 Url 说明
@@ -58,8 +56,8 @@ public class MyDataSourceFactory {
      * apache commons dbcp2 数据源
      *
      * @return
-     */
-    private static DataSource getDBCP2DataSource() {
+
+    protected static DataSource getDBCP2DataSource() {
         //创建BasicDataSource类对象
         BasicDataSource datasource = new BasicDataSource();
         //数据库连接信息（必须）
@@ -74,7 +72,7 @@ public class MyDataSourceFactory {
         datasource.setMinIdle(1);//最小空闲连接
         return datasource;
     }
-
+*/
 
     /**
      * 根据实际情况，进行数据源切换

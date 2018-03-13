@@ -5,10 +5,8 @@ import com.base.spring.custom.security.CustomAuthenticationSuccessHandler;
 import com.base.spring.service.security.CustomUserDetailsService;
 import com.base.spring.utils.BCryptPassWordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,7 +36,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 //启用  @PreAuthorize 注释安全验证 / 启用级联加载对象特性(proxyTargetClass = true)
 //First thing to mention is @Order annotation, which basically keeps all the defaults set by Spring Boot, only overriding them in this file.
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+//@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER) //spring boot 2 去掉，不知道行不行
 @EnableWebSecurity // 启用 web 认证和授权
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.PROXY)
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {

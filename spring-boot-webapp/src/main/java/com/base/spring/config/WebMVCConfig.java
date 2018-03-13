@@ -13,7 +13,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -25,7 +25,7 @@ import java.util.List;
 @Configuration
 //@EnableWebMvc 不需要这句，已经自动启用
 @Slf4j
-class WebMVCConfig extends WebMvcConfigurerAdapter {
+class WebMVCConfig implements WebMvcConfigurer {
 
     //private static final log log = LoggerFactory.getLogger(WebMVCConfig.class);
 
@@ -131,7 +131,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
                 favorParameter(true).
                 parameterName("mediaType").
                 ignoreAcceptHeader(true).
-                useJaf(false).
+                useRegisteredExtensionsOnly(false).
                 mediaType("xml", MediaType.APPLICATION_XML).
                 mediaType("json", MediaType.APPLICATION_JSON).
                 defaultContentType(MediaType.APPLICATION_JSON);//如果没有对应的后缀名，返回信息默认以 json 格式返回
@@ -177,7 +177,7 @@ class WebMVCConfig extends WebMvcConfigurerAdapter {
 //        messageConverters.add(new ByteArrayHttpMessageConverter());
 //        converters.addAll(messageConverters);
     }
-    
+
 
     /**
      * 自定义 一个 json 转换器

@@ -213,7 +213,7 @@ public class InitializeService {
         TreeEntity menu43 = new TreeEntity(TreeType.Menu, "下载", 2, false, menu4);
         set.addAll(Arrays.asList(menu41, menu42, menu43));
 
-        treeRepository.save(set);
+        treeRepository.saveAll(set);
 
     }
 
@@ -262,7 +262,7 @@ public class InitializeService {
         TreeEntity standard23 = new TreeEntity(TreeType.Standard, "itu标准", 2, false, standard2);
         set.addAll(Arrays.asList(standard21, standard22, standard23));
 
-        treeRepository.save(set);
+        treeRepository.saveAll(set);
     }
 
     private void createMenuTree() {
@@ -392,7 +392,7 @@ public class InitializeService {
         menu282.setUrl("");
         set.addAll(Arrays.asList(menu281, menu282));
 
-        treeRepository.save(set);
+        treeRepository.saveAll(set);
     }
 
     /**

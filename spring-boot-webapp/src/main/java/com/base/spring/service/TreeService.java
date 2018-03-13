@@ -125,7 +125,7 @@ public class TreeService {
                 return JSON.toJSONString(TreeUtils.convertToZTreeNode("菜单授权", dtoRootNode, roleEntity).getChildren());
             }
 
-            TreeEntity rootNode = treeRepository.findOne(id);
+            TreeEntity rootNode = treeRepository.getOne(id);
             TreeEntity dtoNode = dtoUtils.createDTOcopy(rootNode, show_Level);
             return JSON.toJSONString(TreeUtils.getZTreeNodeChildren(dtoNode, roleEntity)); //返回节点的子节点 List
 
@@ -150,7 +150,7 @@ public class TreeService {
 
         log.info("Getting name={} ,   pId={}", name, pId);
 
-        TreeEntity parent = treeRepository.findOne(pId);
+        TreeEntity parent = treeRepository.getOne(pId);
         TreeEntity child = new TreeEntity(treeType, name, index, isParent, parent);
         parent.addChildToLastIndex(child);
 
@@ -170,7 +170,7 @@ public class TreeService {
     public void clearChildren(long id) {
 
         log.info("Getting id={}", id);
-        TreeEntity parent = treeRepository.findOne(id);
+        TreeEntity parent = treeRepository.getOne(id);
         parent.clearChildren();
         parent.setParentNode(false);//没有叶子节点了，把父节点设置为叶节点，否则前端显示为文件夹
         treeRepository.save(parent);
@@ -188,8 +188,8 @@ public class TreeService {
     @Transactional(readOnly = false)
     public void paste(long id, long pId, String curType) {
 
-        TreeEntity selectNode = treeRepository.findOne(id); //被操作的对象
-        TreeEntity parentNode = treeRepository.findOne(pId); //参考对象
+        TreeEntity selectNode = treeRepository.getOne(id); //被操作的对象
+        TreeEntity parentNode = treeRepository.getOne(pId); //参考对象
         // parentNode.setIsParent(true);
 
 
@@ -229,8 +229,8 @@ public class TreeService {
     @Transactional(readOnly = false)
     public void move(Long id, Long pId, int index) {
 
-        TreeEntity child = treeRepository.findOne(id);
-        TreeEntity parent = treeRepository.findOne(pId);
+        TreeEntity child = treeRepository.getOne(id);
+        TreeEntity parent = treeRepository.getOne(pId);
 
         //可以用于移动
         parent.addChildToIndex(child, index);
@@ -248,7 +248,7 @@ public class TreeService {
     @Transactional(readOnly = false)
     public void editCss(Long id, String css) {
 
-        TreeEntity treeNodeEntity = treeRepository.findOne(id);
+        TreeEntity treeNodeEntity = treeRepository.getOne(id);
         treeNodeEntity.setCss(css);
         treeRepository.save(treeNodeEntity);
 
@@ -258,7 +258,7 @@ public class TreeService {
     public void editUrl(Long id, String url) {
 
 
-        TreeEntity treeNodeEntity = treeRepository.findOne(id);
+        TreeEntity treeNodeEntity = treeRepository.getOne(id);
         treeNodeEntity.setUrl(url);
         treeRepository.save(treeNodeEntity);
     }

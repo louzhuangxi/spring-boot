@@ -83,7 +83,7 @@ public class ZTreeAjaxController {
         if (roleId.isEmpty())    // 还没有选择 role，返回初始的树
             return treeNodeService.asyncTree(id, list);
         else
-            return treeNodeService.asyncRoleTree(id, list, roleRepository.findOne(Long.valueOf(roleId))); //和 role 关联的树节点会自动选中
+            return treeNodeService.asyncRoleTree(id, list, roleRepository.getOne(Long.valueOf(roleId))); //和 role 关联的树节点会自动选中
     }
 
     /**
@@ -120,7 +120,7 @@ public class ZTreeAjaxController {
     public String edit(@RequestParam(value = "id", required = true) Long id, @RequestParam(value = "name", required = true) String name) {
         log.info("edit treeNode : id={} , name={}", id, name);
         //treeNodeService.clearChildren(id);
-        TreeEntity treeNode = treeNodeRepository.findOne(id);
+        TreeEntity treeNode = treeNodeRepository.getOne(id);
         treeNode.setName(name);
         treeNodeRepository.save(treeNode);
         return "edit succeed.";
@@ -135,11 +135,11 @@ public class ZTreeAjaxController {
     @ResponseBody
     public String remove(@RequestParam(value = "id", required = true) Long id) {
         log.info("del treeNode : id={} ", id);
-        TreeEntity tree = treeNodeRepository.findOne(id);
+        TreeEntity tree = treeNodeRepository.getOne(id);
         if (tree.isRoot())
             return "root node can not be delete";
 
-        treeNodeRepository.delete(id);
+        treeNodeRepository.deleteById(id);
 
         return "del succeed.";
     }

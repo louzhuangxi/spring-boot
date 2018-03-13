@@ -143,7 +143,7 @@ public class UserAjaxController {
             //多选时，逐个处理
             for (String id : ids) {
                 log.info("id =" + id);
-                userRepository.delete(Long.valueOf(id));
+                userRepository.deleteById(Long.valueOf(id));
             }
 
             return; //删除后返回
@@ -183,7 +183,7 @@ public class UserAjaxController {
                 Assert.hasText(password.trim(), "password must not be null!");
                 Assert.hasText(userName.trim(), "userName must not be null!");
                 Assert.hasText(email.trim(), "email must not be null!");
-                UserEntity entity = userRepository.findOne(Long.valueOf(id));
+                UserEntity entity = userRepository.getOne(Long.valueOf(id));
                 entity.setLoginName(loginName);
                 entity.setPassword(BCryptPassWordUtils.encode(password));
                 entity.setUserName(userName);
@@ -235,7 +235,7 @@ public class UserAjaxController {
 
         //获取所有用户
         List<GroupEntity> groupList = groupRepository.findAll();
-        UserEntity userEntity = userRepository.findOne(Long.valueOf(userId.trim()));
+        UserEntity userEntity = userRepository.getOne(Long.valueOf(userId.trim()));
 
         //分为两组 : 已经和 group 关联的/未关联的
         if (userEntity != null) {
@@ -314,7 +314,7 @@ public class UserAjaxController {
 
         //获取所有 role
         List<RoleEntity> roleEntityList = roleRepository.findAll();
-        UserEntity userEntity = userRepository.findOne(Long.valueOf(userId.trim()));
+        UserEntity userEntity = userRepository.getOne(Long.valueOf(userId.trim()));
 
         //分为两组 : 已经和 user 关联的/未关联的
         if (userEntity != null) {

@@ -134,7 +134,7 @@ public class GroupAjaxController {
             //多选时，逐个处理
             for (String id : ids) {
                 log.info("id =" + id);
-                groupRepository.delete(Long.valueOf(id));
+                groupRepository.deleteById(Long.valueOf(id));
             }
 
             return; //删除后返回
@@ -157,7 +157,7 @@ public class GroupAjaxController {
                 log.info("id =" + id);
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
                 Assert.hasText(name.trim(), "name must not be null!");
-                GroupEntity entity = groupRepository.findOne(Long.valueOf(id));
+                GroupEntity entity = groupRepository.getOne(Long.valueOf(id));
                 entity.setName(name);
                 entity.setRemark(remark);
                 groupRepository.save(entity);
@@ -196,7 +196,7 @@ public class GroupAjaxController {
 
         //获取所有用户
         List<UserEntity> userEntityList = userRepository.findAll();
-        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+        GroupEntity groupEntity = groupRepository.getOne(Long.valueOf(groupId.trim()));
 
         //分为两组 : 已经和 group 关联的/未关联的
         if (groupEntity != null) {
@@ -277,7 +277,7 @@ public class GroupAjaxController {
 
         //获取所有角色
         List<RoleEntity> roleEntityList = roleRepository.findAll();
-        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+        GroupEntity groupEntity = groupRepository.getOne(Long.valueOf(groupId.trim()));
 
         //分为两组 : 已经和 group 关联的/未关联的
         if (groupEntity != null) {

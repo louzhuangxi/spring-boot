@@ -119,6 +119,8 @@ public class JdbcTemplateUtils {
         if (totalRecordsSize == 0)
             return new PageBean(pageSize, 0 + 1, 0, Collections.EMPTY_LIST); //currentPageNo 从 1 开始
 
+        //不能用 queryForList(java.lang.String sql, java.lang.Class<T> elementType)
+        // 他的参数 elementType 只能是简单类型 String.class,Integer.class ，不能是一个bean
         List<T> content = jdbcTemplate.query(queryNativeSqlString, queryArgs, rowMapper);
 
         return new PageBean(pageSize, currentPageNo, totalRecordsSize, content);
@@ -136,7 +138,7 @@ public class JdbcTemplateUtils {
      * @param <T>
      * @return 如果没有查询结果，返回空 list ，不返回 null
      */
-    public static <T> List<T> queryForListByNativeSqlString(final JdbcTemplate jdbcTemplate,
+    private static <T> List<T> queryForListByNativeSqlString(final JdbcTemplate jdbcTemplate,
                                                             final String queryNativeSql, Object[] queryArgs,
                                                             RowMapper<T> rowMapper) {
         return jdbcTemplate.query(queryNativeSql, queryArgs, rowMapper);

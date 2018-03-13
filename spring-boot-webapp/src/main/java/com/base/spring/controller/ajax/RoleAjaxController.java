@@ -122,7 +122,7 @@ public class RoleAjaxController {
             //多选时，逐个处理
             for (String id : ids) {
                 log.info("id =" + id);
-                roleRepository.delete(Long.valueOf(id));
+                roleRepository.deleteById(Long.valueOf(id));
             }
 
             return; //删除后返回
@@ -144,7 +144,7 @@ public class RoleAjaxController {
                 //必填项 。  不能放在方法参数中，用 required = true 限制，因为 del 操作无此参数
                 Assert.hasText(name.trim(), "namecn must not be null!");
 
-                RoleEntity entity = roleRepository.findOne(Long.valueOf(id));
+                RoleEntity entity = roleRepository.getOne(Long.valueOf(id));
                 entity.setName(name);
                 roleRepository.save(entity);
             }

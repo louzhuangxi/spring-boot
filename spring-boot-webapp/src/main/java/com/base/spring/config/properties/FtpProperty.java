@@ -1,11 +1,11 @@
 package com.base.spring.config.properties;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +22,6 @@ import java.util.Map;
 @PropertySource(value = "classpath:ftp.properties", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "ftp")
 @Data
-//可以进行验证 ，未进一步研究
-// org.hibernate.validator.constraints
-//javax.validation
 //使用见 FtpPropertiesTest
 public class FtpProperty {
 

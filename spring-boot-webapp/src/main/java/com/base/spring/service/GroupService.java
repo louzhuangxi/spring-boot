@@ -46,7 +46,7 @@ public class GroupService {
      */
     @Transactional(readOnly = false)
     public void associateUsers(String[] userIds, String groupId) {
-        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+        GroupEntity groupEntity = groupRepository.getOne(Long.valueOf(groupId.trim()));
 
         if (groupEntity == null)
             return;
@@ -115,7 +115,7 @@ public class GroupService {
     @Transactional(readOnly = false)
     public void associateRoles(String[] roleIds, String groupId) {
 
-        GroupEntity groupEntity = groupRepository.findOne(Long.valueOf(groupId.trim()));
+        GroupEntity groupEntity = groupRepository.getOne(Long.valueOf(groupId.trim()));
 
         if (groupEntity == null)
             return;

@@ -3,8 +3,7 @@ package com.base;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 // 注册  http://www.baeldung.com/spring-security-registration?utm_source=email&utm_medium=email&utm_content=lss_registration&utm_campaign=campaign_lss
 

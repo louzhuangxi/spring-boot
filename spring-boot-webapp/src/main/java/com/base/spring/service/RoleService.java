@@ -43,7 +43,7 @@ public class RoleService {
     @Transactional(readOnly = false)
     public void associate(String treeNodeIds, String roleId) {
 
-        RoleEntity roleEntity = roleRepository.findOne(Long.valueOf(roleId.trim()));
+        RoleEntity roleEntity = roleRepository.getOne(Long.valueOf(roleId.trim()));
         //清空
         if (treeNodeIds.isEmpty()) {
             log.info("clear.");

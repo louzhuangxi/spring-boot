@@ -39,7 +39,7 @@ public class UserService {
 
     public Optional<UserEntity> getUserById(long id) {
         log.debug("Getting user={}", id);
-        return Optional.ofNullable(userRepository.findOne(id));
+        return Optional.ofNullable(userRepository.getOne(id));
     }
 
     public Optional<UserEntity> getUserByEmail(String email) {
@@ -65,7 +65,7 @@ public class UserService {
      */
     @Transactional(readOnly = false)
     public void associateGroups(String[] groupIds, String userId) {
-        UserEntity userEntity = userRepository.findOne(Long.valueOf(userId.trim()));
+        UserEntity userEntity = userRepository.getOne(Long.valueOf(userId.trim()));
 
         if (userEntity == null)
             return;
@@ -163,7 +163,7 @@ public class UserService {
     @Transactional(readOnly = false)
     public void associateRoles(String[] roleIds, String userId) {
 
-        UserEntity userEntity = userRepository.findOne(Long.valueOf(userId.trim()));
+        UserEntity userEntity = userRepository.getOne(Long.valueOf(userId.trim()));
 
         if (userEntity == null)
             return;

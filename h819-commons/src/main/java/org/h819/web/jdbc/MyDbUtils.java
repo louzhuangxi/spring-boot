@@ -17,7 +17,7 @@ import java.util.Map;
  * 执行 sql
  * 关闭 Connection、 Statement
  * -
- * 所以每次直接用  QueryRunner 中的方法就可以，不必再获取和关闭资源
+ * 所以每次直接用  QueryRunner 中的方法就可以，不必获取和关闭资源
  * 每次执行 sql 语句，QueryRunner 会自动获取和关闭资源一次
  * 就像使用 spring JdbcTemplate 一样
  * ---
@@ -118,6 +118,16 @@ public class MyDbUtils {
         return null;
     }
 
+
+    public static int delete(String sql) {
+        try {
+            return getQueryRunnerByDataSource().update(sql);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 删除操作
      *
@@ -133,6 +143,17 @@ public class MyDbUtils {
         }
         return 0;
     }
+
+
+    public static int delete(Connection connection, String sql) {
+        try {
+            return new QueryRunner().update(connection, sql);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
 
     /**
      * 删除操作
@@ -166,6 +187,15 @@ public class MyDbUtils {
         return 0;
     }
 
+    public static int update(Connection connection, String sql) {
+        try {
+            new QueryRunner().update(connection, sql);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 更新操作
      *
@@ -176,6 +206,15 @@ public class MyDbUtils {
     public static int update(String sql, Object... params) {
         try {
             return getQueryRunnerByDataSource().update(sql, params);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int update(String sqlUpdate) {
+        try {
+            return getQueryRunnerByDataSource().update(sqlUpdate);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -198,6 +237,15 @@ public class MyDbUtils {
         return 0;
     }
 
+    public static int save(Connection connection, String sql) {
+        try {
+            return new QueryRunner().update(connection, sql);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     /**
      * 保存操作
      *
@@ -208,6 +256,15 @@ public class MyDbUtils {
     public static int save(String sql, Object... params) {
         try {
             return getQueryRunnerByDataSource().update(sql, params);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static int save(String sql) {
+        try {
+            return getQueryRunnerByDataSource().update(sql);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
