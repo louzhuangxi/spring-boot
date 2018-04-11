@@ -7,6 +7,7 @@ package org.h819.commons.exe;
  * Time: 12:20
  * To change this template use File | Settings | File Templates.
  */
+@Deprecated
 public class ExecParameter {
 
     private String key;

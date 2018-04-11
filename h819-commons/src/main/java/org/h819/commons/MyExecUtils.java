@@ -1,7 +1,12 @@
 package org.h819.commons;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.exec.*;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.IOUtils;
 import org.h819.commons.exe.ExecParameter;
 
@@ -19,7 +24,11 @@ import java.util.List;
  * Time: 16:18
  * To change this template use File | Settings | File Templates.
  */
+
+//例子见 org.h819.commons.exe.Example.java
+    
 @Slf4j
+@Deprecated //太复杂了，见 org.h819.commons.exe.Example.java 中简单的例子
 public class MyExecUtils {
 
     //等待时间

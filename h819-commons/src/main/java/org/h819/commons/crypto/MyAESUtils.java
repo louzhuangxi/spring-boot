@@ -15,25 +15,23 @@ import java.util.Base64;
  */
 public class MyAESUtils {
 
-    private static String type = "AES";
-    private static String modle = "AES/ECB/PKCS5Padding";
+    private static final String type = "AES";
+    private static final String modle = "AES/ECB/PKCS5Padding";
 
     public static void main(String args[]) throws Exception {
-        final String strToEncrypt = "My text to encrypt 中文";
-        final String strPssword = "encryptor keys";
-        MyAESUtils.generateKey(strPssword);
 
-        // AES.encrypt(strToEncrypt.trim());
+        //测试
+        final String beforeEncrypt = "mysql5709 中文";
+        final String DEFAULT_ENCRYPTION_KEY = "mysql_back_";
 
-        System.out.println("String to Encrypt: " + strToEncrypt);
+        System.out.println("String to Encrypt before: " + beforeEncrypt);
 
-        final String strToDecrypt = MyAESUtils.encrypt(strToEncrypt, strPssword);
+        final String afterEncrypt = MyAESUtils.encrypt(beforeEncrypt, DEFAULT_ENCRYPTION_KEY);
 
-        System.out.println("after Encrypted: " + strToDecrypt);
+        System.out.println("String after Encrypted: " + afterEncrypt);
 
-        System.out.println("Decrypted : " + MyAESUtils.decrypt(strToDecrypt, "encryptor key"));
+        System.out.println("String after Decrypted : " + MyAESUtils.decrypt(afterEncrypt, DEFAULT_ENCRYPTION_KEY));
 
-        System.out.println("Decrypted : " + MyAESUtils.decrypt("Gwg2k5xDpUGuZn8PvYxnkKelNbmEkrV8mMJyiXMIDnw=", "encryptor key"));
 
     }
 
@@ -42,13 +40,9 @@ public class MyAESUtils {
 
         //根据 key 生成 SecretKey
         SecretKey secretKey = generateKey(key);
-
         Cipher cipher = Cipher.getInstance(modle);
-
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
         byte[] encrypt = cipher.doFinal(strToEncrypt.getBytes(StandardCharsets.UTF_8));
-
         return Base64.getEncoder().encodeToString(encrypt);
 
     }

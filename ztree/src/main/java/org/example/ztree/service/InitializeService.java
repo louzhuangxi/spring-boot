@@ -56,6 +56,5 @@ public class InitializeService {
                 treeNodeRepository.save(root);
             }
         }
-
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.h819.commons.MyDateUtilsJdk8;
 import org.h819.commons.file.MyExcelUtils;
 import org.h819.commons.file.MyFileUtils;
 import org.h819.commons.file.excel.poi.vo.ExcelLine;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -44,14 +46,21 @@ public class Test {
 
         //由于是递归，所以防止图片的根目录放在类变量
         File to = new File("d:\\01\\");
+        File delete  = new File("D:\\02\\20180329");
         File to1 = new File("d:\\UKEY申请表_2016.doc");
 
-        System.out.println(to1.getName());
+        System.out.println(File.separator);
 
+     //   System.out.println(to1.getName());
+       // delete.delete();
+        //Files.delete(delete.toPath());
+       // FileUtils.deleteDirectory(delete);
 
-        Test t = new Test();
+       // Test t = new Test();
         // t.test2("a", "b");
-      //  t.test7();
+        //  t.test7();
+
+      //  t.test6();
 
         //  t.moveFiles(new File("f:\\00"), new File("f:\\02"));
 
@@ -74,6 +83,14 @@ public class Test {
 
 
     private void test6() {
+
+
+        try {
+            LocalDate localDate = MyDateUtilsJdk8.parseLocalDate("20180s402", "yyyyMMdd");
+            System.out.println(localDate);
+        } catch (Exception e) {
+          //  e.printStackTrace();
+        }
 
     }
 

@@ -58,8 +58,6 @@ public class JpaUtils {
         Assert.isTrue(currentPageNo >= 1, "currentPageNo  需要 >= 1 ");
         currentPageNo = currentPageNo - 1;
         return repository.findAll(customSpecification, new PageRequest(currentPageNo, pageSize, sort));
-
-
     }
 
     /**

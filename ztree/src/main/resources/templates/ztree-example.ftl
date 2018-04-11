@@ -203,7 +203,7 @@
 <!-- jquery ztree 也支持 jquery 2.0 以上-->
 <script type="text/javascript" src="${ctx}/ace/assets/js/jquery.js"></script>
 <script type="text/javascript" src="${ctx}/ace/assets/js/bootstrap.js"></script>
-<script type="text/javascript" src="${ctx}/h819/js/MyUtils.js"></script>
+<script type="text/javascript" src="${ctx}/h819/js/utils.js"></script>
 <!-- custom-->
 <script type="text/javascript" src="${ctx}/jquery-confirm/jquery-confirm.js"></script>
 <!-- 下面为 zTree 官方配置 -->

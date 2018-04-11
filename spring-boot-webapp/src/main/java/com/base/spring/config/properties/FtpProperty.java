@@ -18,6 +18,7 @@ import java.util.Map;
  * Time: 16:55
  * To change this template use File | Settings | File Templates.
  */
+//https://www.mkyong.com/spring-boot/spring-boot-configurationproperties-example/
 @Component
 @PropertySource(value = "classpath:ftp.properties", ignoreResourceNotFound = true)
 @ConfigurationProperties(prefix = "ftp")
@@ -35,7 +36,7 @@ public class FtpProperty {
     private List<User> users = new ArrayList<>();
 
     @Data
-    public static class User {
+    public static class User {//必须为 static 才可以绑定
         private String name;
         private String password;
     }

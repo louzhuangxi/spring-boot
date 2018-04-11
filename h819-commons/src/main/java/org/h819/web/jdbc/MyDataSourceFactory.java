@@ -1,5 +1,7 @@
 package org.h819.web.jdbc;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -13,6 +15,9 @@ import javax.sql.DataSource;
  * To change this template use File | Settings | File Templates.
  */
 public class MyDataSourceFactory {
+
+
+
 
     //========================================================
     /**
@@ -56,15 +61,15 @@ public class MyDataSourceFactory {
      * apache commons dbcp2 数据源
      *
      * @return
-
+     */
     protected static DataSource getDBCP2DataSource() {
         //创建BasicDataSource类对象
         BasicDataSource datasource = new BasicDataSource();
         //数据库连接信息（必须）
         datasource.setDriverClassName("com.mysql.jdbc.Driver");
-        datasource.setUrl("jdbc:mysql://localhost:3306/mybase");
+        datasource.setUrl("jdbc:mysql://localhost:3306/ztree?useUnicode=true&characterEncoding=utf-8&useSSL=false");
         datasource.setUsername("root");
-        datasource.setPassword("root");
+        datasource.setPassword("123456");
         //连接池中的连接数量配置（可选）
         datasource.setInitialSize(10);//初始化的连接数
         datasource.setMaxOpenPreparedStatements(8);//最大连接数
@@ -72,7 +77,23 @@ public class MyDataSourceFactory {
         datasource.setMinIdle(1);//最小空闲连接
         return datasource;
     }
-*/
+
+    protected static DataSource getDBCP2DataSource2() {
+        //创建BasicDataSource类对象
+        BasicDataSource datasource = new BasicDataSource();
+        //数据库连接信息（必须）
+        datasource.setDriverClassName("com.mysql.jdbc.Driver");
+        datasource.setUrl("jdbc:mysql://129.9.100.16:3306/test?useUnicode=true&characterEncoding=utf-8&useSSL=false");
+        datasource.setUsername("test");
+        datasource.setPassword("123456");
+        //连接池中的连接数量配置（可选）
+        datasource.setInitialSize(10);//初始化的连接数
+        datasource.setMaxOpenPreparedStatements(8);//最大连接数
+        datasource.setMaxIdle(5);//最大空闲连接
+        datasource.setMinIdle(1);//最小空闲连接
+        return datasource;
+    }
+
 
     /**
      * 根据实际情况，进行数据源切换
@@ -81,6 +102,8 @@ public class MyDataSourceFactory {
      */
     protected static DataSource getDataSource() {
         // return getDBCP2DataSource();
+
+        DataSource dataSource = getDBCP2DataSource();
         return getTomcatDataSource();
     }
 

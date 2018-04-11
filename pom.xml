@@ -71,7 +71,7 @@
         <!-- apache end -->
 
         <!-- google  -->
-        <guava.version>23.0</guava.version>
+        <guava.version>24.1-jre</guava.version>
         <truth.version>0.31</truth.version> <!--比 spring Assert 好用点-->
 
         <!-- html 解析  -->

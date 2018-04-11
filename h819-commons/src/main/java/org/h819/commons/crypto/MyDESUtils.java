@@ -22,17 +22,18 @@ public class MyDESUtils {
 
     public static void main(String args[]) throws Exception {
 
-        String DEFAULT_ENCRYPTION_KEY = "Thiss 这门";
 
+        //测试
+        final String beforeEncrypt = "mysql5709 中文";
+        final String DEFAULT_ENCRYPTION_KEY = "mysql_back_";
 
-        String target = "Java Honk 中文";
-        String encrypted = MyDESUtils.encrypt(target, DEFAULT_ENCRYPTION_KEY);
-        String decrypted = MyDESUtils.decrypt(encrypted, DEFAULT_ENCRYPTION_KEY);
+        System.out.println("String to Encrypt before: " + beforeEncrypt);
 
-        System.out.println("String To Encrypt : " + target);
-        System.out.println("Encrypted String : " + encrypted);
-        System.out.println("Decrypted String : " + decrypted);
-        System.out.println("Decrypted String : " + MyDESUtils.decrypt("OIsalERyF0rVbixWuSshPlM2U2LeBqgb", DEFAULT_ENCRYPTION_KEY));
+        final String afterEncrypt = MyDESUtils.encrypt(beforeEncrypt, DEFAULT_ENCRYPTION_KEY);
+
+        System.out.println("String after Encrypted: " + afterEncrypt);
+
+        System.out.println("String after Decrypted : " + MyDESUtils.decrypt(afterEncrypt, DEFAULT_ENCRYPTION_KEY));
 
 
     }

@@ -34,7 +34,10 @@ import java.io.*;
 public class DownloadFileController {
 
     //根据实际需要，设置文件类型
-    private static final String APPLICATION_NAME = MediaType.APPLICATION_PDF_VALUE;
+  //  private final String APPLICATION_NAME = MediaType.APPLICATION_PDF_VALUE;
+    private final String APPLICATION_NAME = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+   // private final MediaType mediaType = MediaType.APPLICATION_PDF;
+    private final MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;  //二进制流，下载文件常用
 
     @Autowired
     private ServletContext servletContext; //获得应用的路径用
@@ -74,7 +77,7 @@ public class DownloadFileController {
         File file = getFromWebAppPathFile(fileName);
         byte[] document = FileCopyUtils.copyToByteArray(file);
         HttpHeaders header = new HttpHeaders();
-        header.setContentType(new MediaType("application", "pdf"));
+        header.setContentType(mediaType);
         header.set("Content-Disposition", "inline; filename=" + file.getName());   //filename 前面必须有空格
         header.setContentLength(document.length);
         return new HttpEntity<>(document, header);

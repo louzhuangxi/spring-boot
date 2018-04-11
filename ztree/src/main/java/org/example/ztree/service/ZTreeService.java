@@ -36,6 +36,7 @@ public class ZTreeService {
     }
 
 
+
     /**
      * ztree 异步模式加载数据
      * 两种情况返回值不一样。
@@ -49,6 +50,7 @@ public class ZTreeService {
      * @return
      */
     private String async(Long id, TreeNodeType menuType, int show_Level) {
+
 
         //List<TreeNodeEntity> treeNodeEntity = null;
         DtoUtils dtoUtils = new DtoUtils();

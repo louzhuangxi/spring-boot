@@ -8,8 +8,10 @@ package org.examples.spring.domain;
  * To change this template use File | Settings | File Templates.
  */
 // 需要用 真正的 Class 文件做注释，否则自动格式化的时候，会合并所有 /** */ 的内容
+ //   https://github.com/longfeizheng/jpa-example
 @Deprecated
 abstract class note {
+
 
     /**
      * ============================ 实体关联关系设计 ===========================================
