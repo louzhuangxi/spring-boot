@@ -6,7 +6,6 @@ import org.apache.commons.io.filefilter.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.h819.commons.MyConstants;
-import org.h819.commons.MyFastJsonUtils;
 import org.h819.commons.file.base.FileUtilsBase;
 
 import java.io.File;
@@ -16,13 +15,11 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author h819
  * @version V1.0 作为 commons io 类的补充，平时应用的时候，主要参考 commons io，其中没有解决方法的时候，再参考本类。另外
- *          jdk 6 添加了一些新的 io 操作方法，可以再次查看
+ * jdk 6 添加了一些新的 io 操作方法，可以再次查看
  * @ClassName: MyFileUtils
  * @Description: TODO(自定义的常用工具类)
  * @date May 14, 2009 10:15:24 AM
@@ -90,10 +87,11 @@ public class MyFileUtils extends FileUtilsBase {
 
     /**
      * 获取应用类路径中的文件，包括 resources 中的资源文件，依赖的 jar 文件中的文件
+     *
      * @param fileName
      * @return
      */
-    public static InputStream getResourceFileInputStream(String fileName){
+    public static InputStream getResourceFileInputStream(String fileName) {
         //Get file from resources folder
         return MyFileUtils.class.getResourceAsStream(fileName);
     }
@@ -232,7 +230,6 @@ public class MyFileUtils extends FileUtilsBase {
     }
 
 
-
     public static void main(String[] args) throws Exception {
 
         File big = new File("F:\\gho\\win7_32.gho");
@@ -240,23 +237,23 @@ public class MyFileUtils extends FileUtilsBase {
         String[] filter = {"pdf", "jpg"};
 
         File dir = new File("G:\\魏勃资料库");
-        File dir2 = new File("H:\\00\\");
-        File dir3 = new File("H:\\01\\");
+        File dir2 = new File("G:\\2017-\\1\\2018_04\\");
+        File dir3 = new File("G:\\2017-\\2\\2018_04\\");
         File dir4 = new File("D:\\01");
         File dir5 = new File("D:\\01\\01");
 
-      //  System.out.println(Arrays.asList(dir.listFiles()));
-       // System.out.println("file name = "+dir.getName());
+        //  System.out.println(Arrays.asList(dir.listFiles()));
+        // System.out.println("file name = "+dir.getName());
 
         // System.out.println(new ArrayList<>(3).size());
 
 
-        Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir4));
-        MyFastJsonUtils.prettyPrint(lists);
+//        Map<String, List<String>> lists = findDuplicateFiles(Arrays.asList(dir2, dir3));
+//        MyFastJsonUtils.prettyPrint(lists);
 
-        System.out.println(StringUtils.center("splite",80,"*"));
+        System.out.println(StringUtils.center("splite", 80, "*"));
 
-       deleteDuplicateFiles("D:\\01\\Ace - Responsive Admin Template 1.3.4\\", Arrays.asList(dir4));
+       deleteDuplicateFiles("G:\\2017-\\1\\", Arrays.asList(dir2,dir3));
 //        long start1 = System.nanoTime();
 //        String hash1 = DigestUtils.md5Hex(new FileInputStream(big));
 //        System.out.println(hash1 + " : " + (System.nanoTime() - start1));

@@ -13,10 +13,10 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class FileUtilsBase {
-    //暂存文件大小相同的文件
-    private static Map<Long, List<String>> outDuplicateFilesMapBySize = new HashMap();
+    //暂存文件大小相同的文件, key: 文件大小, value: 文件大小相同的文件路径，可以为多个
+    private static Map<Long, List<String>> duplicateFilesMapBySize = new HashMap();
     //暂存文件 hash 相同的文件
-    private static Map<String, List<String>> outDuplicateFilesMapByHash = new HashMap();
+    private static Map<String, List<String>> duplicateFilesMapByHash = new HashMap();
     //操作系统文件，忽略
     private static String[] sysFiles = {"$RECYCLE.BIN"};
 
@@ -43,7 +43,7 @@ public class FileUtilsBase {
      * 之后文件大小相同，才可能相同 。文件大小相同之后，再比较文件的 hash
      * -
      *
-     * @param directories
+     * @param directories 待比较的文件夹结合
      * @param fileFilter
      * @return key: 文件的 hash 值,  value: hash 值相同文件的路径集合，也就是相同文件的集合
      */
@@ -53,6 +53,7 @@ public class FileUtilsBase {
         for (File dirChild : directories) {
             if (!dirChild.canRead() || Arrays.asList(sysFiles).contains(dirChild.getName()))
                 continue;
+
             if (dirChild.isDirectory()) {
                 if (dirChild.listFiles() == null || dirChild.listFiles().length == 0)
                     continue;
@@ -62,14 +63,15 @@ public class FileUtilsBase {
                     continue;
                 System.out.println(String.format("calculate file size : %d -> %s", dirChild.length(), dirChild.getAbsolutePath()));
                 long uniqueFileLength = dirChild.length();
-                List<String> identicalList = outDuplicateFilesMapBySize.get(uniqueFileLength);
-                if (identicalList == null) {
+                //获取文件大小相等文件的路径
+                List<String> identicalList = duplicateFilesMapBySize.get(uniqueFileLength);
+                if (identicalList == null) {//该大小的文件，还没有放入 map
                     identicalList = new LinkedList();
                 }
                 // Add path to list
                 identicalList.add(dirChild.getAbsolutePath());
                 // push updated list to Hash table
-                outDuplicateFilesMapBySize.put(uniqueFileLength, identicalList);
+                duplicateFilesMapBySize.put(uniqueFileLength, identicalList);
 
             }
 
@@ -84,10 +86,9 @@ public class FileUtilsBase {
      */
     private static void findDuplicateFilesByHash() {
 
-        for (Map.Entry<Long, List<String>> entry : outDuplicateFilesMapBySize.entrySet()) {
+        for (Map.Entry<Long, List<String>> entry : duplicateFilesMapBySize.entrySet()) {
             List<String> fileList = entry.getValue();
-
-            if (fileList.size() == 1) //无重复
+            if (fileList.size() == 1) //该文件大小下，无重复文件
                 continue;
 
             for (String fileStr : fileList) {
@@ -104,14 +105,14 @@ public class FileUtilsBase {
                      */
                     String uniqueFileHash = Files.asByteSource(new File(fileStr)).hash(Hashing.goodFastHash(5)).toString();
                     System.out.println(String.format("calculate file hash : %s -> %s", uniqueFileHash, fileStr));
-                    List<String> identicalList = outDuplicateFilesMapByHash.get(uniqueFileHash);
+                    List<String> identicalList = duplicateFilesMapByHash.get(uniqueFileHash);
                     if (identicalList == null) {
                         identicalList = new LinkedList();
                     }
                     // Add path to list
                     identicalList.add(fileStr);
                     // push updated list to Hash table
-                    outDuplicateFilesMapByHash.put(uniqueFileHash, identicalList);
+                    duplicateFilesMapByHash.put(uniqueFileHash, identicalList);
                 } catch (IOException e) {
                     throw new RuntimeException("cannot read file " + fileStr, e);
                 }
@@ -139,8 +140,8 @@ public class FileUtilsBase {
          * - Duplicate 方法仅在此方法中进行即可
          *
          */
-        outDuplicateFilesMapBySize.clear();
-        outDuplicateFilesMapByHash.clear();
+        duplicateFilesMapBySize.clear();
+        duplicateFilesMapByHash.clear();
 
         //第一步，比较文件大小
         findDuplicateFilesBySize(fileFilter, directories); // outDuplicateFilesMapBySize 赋值
@@ -149,7 +150,7 @@ public class FileUtilsBase {
         findDuplicateFilesByHash();  // outDuplicateFilesMapByHash 赋值
         //返回结果
         Map<String, List<String>> duplicate = new HashMap();
-        for (Map.Entry<String, List<String>> entry : outDuplicateFilesMapByHash.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : duplicateFilesMapByHash.entrySet()) {
             if (entry.getValue().size() > 1) // 找到重复 hash 的文件
                 duplicate.put(entry.getKey(), entry.getValue());
         }
@@ -202,7 +203,8 @@ public class FileUtilsBase {
      * 删除找到的重复文件
      *
      * @param deletePathStartWith 删除文件路径以 deletePathStartWith 开始的重复文件，保留其他；
-     *                            如果重复的文件都是以该字符串开始，保留文件路径层次最浅的
+     *                            如果重复的文件都是以该字符串开始，保留文件路径层次最浅的(绝对路径最短的)
+     *                            如果重复的文件，都不以该字符串开头，则不进行删除
      * @param outDuplicateFile    输出找到的重复文件路径到外部文件
      * @param directories
      * @param fileFilter
@@ -215,7 +217,7 @@ public class FileUtilsBase {
 
         System.out.println(StringUtils.center("begin to delete duplicate file start with " + deletePathStartWith, 80, "="));
 
-        for (Map.Entry<String, List<String>> entry : duplicateFiles.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : duplicateFiles.entrySet()) { //逐组处理相同的文件
             List<String> duplicates = entry.getValue();
             List<String> deletes = new ArrayList<>(duplicates.size());
             for (String path : duplicates) {
@@ -223,8 +225,9 @@ public class FileUtilsBase {
                     deletes.add(path);
                 }
             }
+
             if (!deletes.isEmpty())
-                if (deletes.size() == duplicates.size()) {  //文件在同一个起始文件路径中，保留层次最浅的文件
+                if (deletes.size() == duplicates.size()) {  //重复的文件都在同一个起始文件路径中，不能都删除，保留层次最浅的文件
                     // 按照路径由短到长排序，删除路径层次深的文件
                     Collections.sort(deletes, new Comparator<String>() {
                         @Override
@@ -232,10 +235,10 @@ public class FileUtilsBase {
                             return path1.length() - path2.length();
                         }
                     });
-                    //删除其他
+                    //保留路径最短的文件，删除其他
                     deleteFiles(deletes.subList(1, deletes.size()));
 
-                } else {
+                } else { //重复的文件不在同一个文件夹中
                     deleteFiles(deletes);
                 }
         }
