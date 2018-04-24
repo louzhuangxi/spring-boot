@@ -20,7 +20,8 @@ initialization performed by Boot
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %log{36} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %caller{1} - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
         <file>${APP_HOME}/${PROJECT_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
