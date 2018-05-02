@@ -24,6 +24,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication  // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class SpringBootWebAppApplication extends SpringBootServletInitializer {
 
+    ??
+    logback      RollingFileAppender 没有测试
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootWebAppApplication.class, args);

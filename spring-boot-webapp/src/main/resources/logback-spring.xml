@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">  <!--自动加载配置文件-->
 
     <!--
     Spring boot 默认使用 Logback 作为日志系统，同时也支持 Log4j,Log4J2 ，但需要特殊配置
@@ -9,6 +9,7 @@
     -->
 
     <include resource="log/console-appender.xml"/>
+    <include resource="log/file-appender.xml" />
     <!--
     <include resource="log/db-appender.xml" />
     <include resource="log/file-appender.xml" />
@@ -56,8 +57,10 @@
      -->
     <root level="WARN">
         <appender-ref ref="console"/>
+        <appender-ref ref="rollingFile-info"/>
+        <appender-ref ref="rollingFile-error"/>
         <!-- 除上文 log 定义的输出外，console 的输出，同时输出到文件和输出到数据库
-               <appender-ref ref="rollingFile"/>
+               <appender-ref ref="rollingFile-info"/>
                appender-ref ref="db-classic-mysql-pool"/>
 		-->
     </root>

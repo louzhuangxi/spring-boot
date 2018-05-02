@@ -52,7 +52,7 @@ public class UploadFileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (!file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             try {
 
                 String fileName = file.getOriginalFilename();
