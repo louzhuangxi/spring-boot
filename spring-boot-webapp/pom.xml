@@ -27,7 +27,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <start-class>com.base.SpringBootWebAppApplication</start-class><!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动-->
+        <!--指定 main ，在系统有多个 main 方法时，保证系统能正确启动
+        The main class to start by executing "java -jar"
+        -->
+        <start-class>com.base.SpringBootWebAppApplication</start-class>
     </properties>
 
 
@@ -57,7 +60,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <exclusions>
-                <exclusion>  <!-- exclusion 加上，未检验 -->
+                <exclusion>  <!-- exclusion 加上，未检验是否正确 -->
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
@@ -67,7 +70,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope> <!--provided，仅用于开发阶段，部署时不需要，打包时也会自动跳过。-->
+            <!--provided，仅用于开发阶段，部署时不需要，打包时也会自动跳过。-->
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

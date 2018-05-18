@@ -1,6 +1,5 @@
 package org.examples.spring.domain.onetomany.jointable.unidirectional.onetomany;
 
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -52,7 +52,7 @@ public class ParentEntity2 {
                     uniqueConstraints = {@UniqueConstraint(columnNames = {"parent_id", "child_id"})// 唯一性约束，是从表的联合字段
                     }
             )
-    private Set<ChildEntity2> children = Sets.newHashSet(); //set 可以过滤重复元素
+    private Set<ChildEntity2> children =  new LinkedHashSet<>();
     // Getters and Setters
 
     public ParentEntity2() {

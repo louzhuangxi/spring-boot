@@ -1,16 +1,16 @@
 package org.h819.commons;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.exec.*;
-import org.apache.commons.io.IOUtils;
-import org.h819.commons.exe.ExecParameter;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.io.FilenameUtils;
+import org.h819.commons.file.MyPdfUtils;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.Paths;
 
 /**
  * Description : TODO()
@@ -19,187 +19,183 @@ import java.util.List;
  * Time: 16:18
  * To change this template use File | Settings | File Templates.
  */
-
-//例子见 org.h819.commons.exe.Example.java
-    
 @Slf4j
-@Deprecated //太复杂了，见 org.h819.commons.exe.Example.java 中简单的例子
 public class MyExecUtils {
 
-    //等待时间
-    //大文件，pdf2swf 命令要读入，会有一段时间，所以等待时间不能太短。另外如果文件太大，jvm 会不会假死？
-    private static int wait = 60;
+    /**
+     * 用这个简单的例子吧
+     * 需要注意的是，如果命令行中，exe 文件所在路径有空给，需要用双引号引起来，如
+     * echo show databases; | "C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe" -h localhost -u root -p123456 -P3306 > "D:\02\databaselist.txt"
+     * 个别的命令行，不能包含空格，即使是用引号引起来也不行，如 mysqldump
+     */
 
-    //private static final Logger log = LoggerFactory.getLogger(MyExecUtils.class);
 
     /**
-     * 例子： PdfUtils.java
+     * pdf2swf
      *
-     * @param exeFile   命令一般以 exe 等文件的形式存在，本参数为该命令文件的绝对值路径
-     * @param arguments 参数。
-     *                  命令执行的参数不需要严格的顺序，即参数先后出现在哪个位置都可以。
-     * @param exitValue 执行成功的返回值，这只之后，如果返回该值，程序不抛出异常 ，一般为 1 或 0
-     * @return 返回命令执行后返回到控制台的信息。不同的命令返回的信息不同，可以通过这些信息判断发生的异常，做不同的处理。
+     * @param exePath          命令所在路径
+     * @param pdfPath          pdf 文件路径
+     * @param swfPath          生成的 swf 路径
+     * @param xpdflanguagePath 语言文件所在文件夹路径
+     * @return 转换是否成功
      */
-    public static String exec(Path exeFile, List<ExecParameter> arguments, int exitValue) {
+    public static boolean pdf2Swf(Path exePath, Path pdfPath, Path swfPath, Path xpdflanguagePath) {
 
-        if (!Files.exists(exeFile) || !exeFile.isAbsolute()) {
-            System.out.println(exeFile + " 不存在");
-            return "";
+//        String srcPdf = "d:\\test\\src.pdf";
+//        String descSwf = "d:\\test\\src%.swf";
+//        String pdf2swfComandPath = "E:\\program\\flexpaper\\swftools-2013-04-09-1007\\pdf2swf.exe";
+//        String xpdflanguagePath = "E:\\program\\flexpaper\\xpdf-chinese-simplified";
+
+/*
+E:\program\flexpaper\swftools-2013-04-09-1007\pdf2swf.exe D:\pdfprint\Visio-xxsNetwork_final.pdf -o D:\pdfprint\Visio-xxsNetwork_final%.swf -f -T 9 -t -j=100 -s protect -s storeallcharacters -s languagedir=E:\program\flexpaper\xpdf-chinese-simplified
+ */
+
+
+        if (!Files.exists(exePath)) {
+            System.out.println(exePath + " 不存在");
+            return false;
         }
 
-        if (!exeFile.toFile().canRead()) {
-            System.out.println(exeFile + "  无读取'该可执行文件'权限");
-            return "";
+        String name = FilenameUtils.getName(swfPath.toString()); // GB~1094.1-2013%.swf
+        if (!name.contains("%")) {
+            System.out.println(swfPath + " 转换目标必须含有分页标记 '%' ");
+            return false;
         }
 
-        if (!exeFile.toFile().canExecute()) {
-            System.out.println(exeFile + "  无执行'该可执行文件'权限");
-            return "";
-        }
+        createDescDirs(swfPath);
 
-        //
-        //命令执行的过程中，会输出信息，定义输出流来存放这些信息
-        //正常执行输出信息
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        //不能执行，返回的错误信息
-        ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
+        String cmd = exePath + " " + pdfPath + " -o " + swfPath +
+                " -f -T 9 -t -j=100 -s protect -s storeallcharacters -s languagedir=" + xpdflanguagePath;
 
-        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
+        System.out.println(cmd);
 
-        CommandLine cmdLine = getCommandLine(exeFile.toAbsolutePath().toString(), arguments);
 
-        /**
-         * 防假死
-         * 每个准备执行的命令，执行成功后返回值不尽相同，有点是 0，有的是 1。程序根据这个成功信息来决定是否继续执行，如果成功则继续，不成功则抛出异常后停止。
-         * 有的命令，在执行过程中需要等待某种资源，或者发生某种错误，而阻塞在那里不动。 通过设置命令执行超时时间(毫秒)。对于需要连续执行该命令的程序，阻塞造成假死。超时之后，自动杀死该进程
-         */
+        boolean su = execWindowsCommand(cmd);
 
-        DefaultExecutor executor = new DefaultExecutor();
-        DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
-        ExecuteWatchdog watchdog = new ExecuteWatchdog(wait * 1000);
-        executor.setWatchdog(watchdog); //如果任务挂起，则等待5秒钟后杀死命令进程
-        executor.setStreamHandler(streamHandler);//指定命令执行过程中，产生的信息的输出渠道
-        executor.setExitValue(exitValue); //如果 执行结果返回该值，则程序不抛出异常
-
+        //检查是否转换成功，分页形式，pdf 页数和生成的 swf 相等, 需要加入 itext 包
         try {
-            executor.execute(cmdLine, resultHandler);
-            // waitFor
-            // Causes the current thread to wait, if necessary, until the process has terminated.
-            // This method returns immediately if the process has already terminated.
-            // If the process has not yet terminated, the calling thread will be blocked until the process exits.
-            // 不设置这句，下面的 outputStream 无法输出，可能是没有等到进程结束，下面的输出已经开始了。
-            resultHandler.waitFor();
-            //  System.out.println(StringUtils.center(" pdf2swf.exe begin to execute ", 80, "="));
-            if (resultHandler.hasResult()) { //如果命令进程执行有返回值，则通过该返回值进行判断提示。有的没有返回值，则无法判断
-                if (executor.isFailure(resultHandler.getExitValue()) && watchdog.killedProcess()) {//提示 process was killed
-                    System.out.println("命令等待时间超过 watchdog 规定的时间，process was killed");
-                }
-
-                ExecuteException ex = resultHandler.getException();
-
-                if (ex != null) {  // 发生异常
-                    //执行异常
-                    ex.printStackTrace();
-                }
-            }        //throws ExecuteException
-
-            //输出结果到控制台，必须在命令执行完成之后。这些结果是命令行工具自己返回到 cmd 界面的。
-            System.out.println(outputStream.toString("gbk"));
-            System.err.println(errorStream.toString("gbk"));
+            int pdfPage = MyPdfUtils.getFilePages(pdfPath);
+            int swfPage = getDescDirs(swfPath).list().length;
+            if (pdfPage != swfPage)
+                su = false;
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            su = false;
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        }
+
+        return su;
+    }
+
+    /**
+     * 执行指定命令
+     *
+     * @param command 待执行的命令行字符串
+     * @return 执行是否成功
+     */
+    private static boolean execWindowsCommand(String command) {
+        CommandLine cmd = new CommandLine("cmd.exe ");
+        cmd.addArgument("/c");
+        cmd.addArgument(command, false);
+        try {
+            new DefaultExecutor().execute(cmd);
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-
-            IOUtils.closeQuietly(outputStream);
-            IOUtils.closeQuietly(errorStream);
-            /**
-             *返回命令执行后返回到控制台的信息。不同的命令返回的信息不同，可以通过这些信息判断发生的异常，做不同的处理。
-             */
-            if (outputStream != null && outputStream.size() != 0)
-                try {
-                    return outputStream.toString("gbk");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            if (errorStream != null && errorStream.size() != 0)
-                try {
-                    return errorStream.toString("gbk");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-            return "";
+            return false;
         }
+        return true;
     }
 
     /**
-     * 创建  CommandLine
+     * 利用  pdfdecrypt.exe 命令行工具破解加密的 pdf
      *
-     * @param cmdPath
-     * @param arguments
-     * @return
+     * @param exePath        pdfdecrypt.exe 命令所在路径
+     * @param encryptPdfPath 加密的 pdf 源文件
+     * @return 转换是否成功
+     * @paramd decryptPdfPath 解密后的 pdf 目标文件
      */
-    private static CommandLine getCommandLine(String cmdPath, List<ExecParameter> arguments) {
-        String execStr = "'" + cmdPath + "'" + join(arguments);
-        log.info("exec command= {}", execStr);
-        return CommandLine.parse(execStr);
+    public static boolean pdfDecrypt(Path exePath, Path encryptPdfPath, Path decryptPdfPath) {
+        return pdfDecrypt(exePath, encryptPdfPath, decryptPdfPath, null, null);
     }
 
     /**
-     * 构造 "key 空格 value"  形式的参数, 如 -o a.txt 中间用空格分开
-     * ExecParameter 参数，如果 key 或 value 本身有空格，会被分解成多个参数，所以对有空格的参数，加单引号包围起来。
+     * 利用  pdfdecrypt.exe 命令行工具破解加密的 pdf
      *
-     * @param arguments
-     * @return
+     * @param exePath        pdfdecrypt.exe 命令所在路径
+     * @param encryptPdfPath 加密的 pdf 源文件
+     * @param decryptPdfPath 解密后的 pdf 目标文件
+     * @param userPassword   加密的 pdf 源文件的 userPassword (加密的 pdf 的一个属性，可选项)
+     * @param ownerPassword  加密的 pdf 源文件的 ownerPassword (加密的 pdf 的一个属性，可选项)
+     * @return 转换是否成功
      */
+    public static boolean pdfDecrypt(Path exePath, Path encryptPdfPath, Path decryptPdfPath, String userPassword, String ownerPassword) {
 
-    private static String join(List<ExecParameter> arguments) {
-        if (arguments == null || arguments.size() == 0) {
-            return "";
+//        String srcPdf = "d:\\test\\src.pdf";
+//        String descPdf = "d:\\test\\desc.pdf";
+//        String pdf2swfComandPath = "D:\\swap\\local\\java_jar_source_temp\\pdfdecrypt";
+//        String userPassword = "upass";
+//        String ownerPassword = "opass";
+
+        if (!Files.exists(encryptPdfPath)) {
+            System.out.println(encryptPdfPath + " 不存在");
+            return false;
         }
-        StringBuilder sb = new StringBuilder(arguments.size());
 
-        String key;
-        String value;
-
-        for (ExecParameter arg : arguments) {
-            key = arg.getKey().trim();
-            value = arg.getValue().trim();
-
-            if (value.equals(MyConstants.ExecEmptyValue)) {//仅有key，直接添加
-                if (key.contains(" "))// key ，即 命令包含空格
-                    key = "'" + key + "'";
-                sb.append(" ").append(key);
-
-            } else { // key value 对应情况如 -o c://program files//bin/cmd.exe
-
-                if (key.contains(" "))// key ，即 命令包含空格
-                    key = "'" + key + "'";
-
-                if (value.contains(" "))// value ，即 命令包含空格
-                    value = "'" + value + "'";
-                sb.append(" ").append(key).append(" ").append(value);
-            }
+        if (!Files.exists(exePath)) {
+            System.out.println(exePath + " 不存在");
+            return false;
         }
-        return sb.toString();
+
+        createDescDirs(decryptPdfPath);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(exePath);
+        builder.append(" -i " + encryptPdfPath);
+        builder.append(" -o " + decryptPdfPath);
+
+        if (userPassword != null)
+            builder.append(" -u " + userPassword);
+        if (ownerPassword != null)
+            builder.append(" -w " + ownerPassword);
+
+
+        //检查转换是否成功
+        boolean su = execWindowsCommand(builder.toString());
+        if (!Files.exists(decryptPdfPath))
+            su = false;
+
+        return su;
+
     }
-
 
     /**
-     * java.lang.Runtime 执行 cmd 命令
-     * 可执行文件路径不能有空格，需要用引号包含起来(windows exe 如此, linux 未验证)
+     * 递归创建目标文件所在的文件夹
      *
-     * @param cmdPath
-     * @return
+     * @param descFilePath
      */
-    public static String formatRuntimeCmdPath(String cmdPath) {
-        return cmdPath.replaceAll(" ", "\" \"");
+    private static void createDescDirs(Path descFilePath) {
+        File f = getDescDirs(descFilePath);
+        if (!f.exists() || !f.isDirectory())
+            f.mkdirs();
+
     }
 
+    private static File getDescDirs(Path descFilePath) {
+        //String s = "E:\\program\\txfile\\standardfile/swf//GN2/2014.09/GB~1094.1-2013%.swf";
+        return descFilePath.getParent().toFile();
+    }
+
+
+    private static void testPdf2Swf() {
+        Path srcPdf = Paths.get("D:\\pdfprint\\Visio-xxsNetwork_final.pdf");
+        Path descSwf = Paths.get("D:\\pdfprint\\Visio-xxsNetwork_final%.swf");
+        Path pdf2swfComandPath = Paths.get("E:\\program\\flexpaper\\swftools-2013-04-09-1007\\pdf2swf.exe");
+        Path xpdflanguagePath = Paths.get("E:\\program\\flexpaper\\xpdf-chinese-simplified");
+        MyExecUtils.pdf2Swf(pdf2swfComandPath, srcPdf, descSwf, xpdflanguagePath);
+    }
+
+    public static void main(String args[]) {
+        MyExecUtils.testPdf2Swf();
+    }
 }
+

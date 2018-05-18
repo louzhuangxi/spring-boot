@@ -125,6 +125,19 @@ public class MyDateUtilsJdk8 {
     }
 
 
+    /**
+     * LocalDateTime to long
+     * LocalDate 和 LocalTime 没有必要转换为 long , 因为其没有 long 的精度
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static Long asLong(LocalDateTime localDateTime) {
+        ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
+        return zdt.toInstant().toEpochMilli();
+    }
+
+
     public static Date asDate(LocalDate date) {
         Instant instant = date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
@@ -149,7 +162,6 @@ public class MyDateUtilsJdk8 {
         Instant instant = date.atZone(ZoneId.systemDefault()).toInstant();
         return Date.from(instant);
     }
-
 
 
     /**

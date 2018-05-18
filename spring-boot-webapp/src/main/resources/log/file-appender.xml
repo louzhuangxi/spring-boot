@@ -16,7 +16,7 @@ initialization performed by Boot
 
     <property name="app.name" value="myapp"/>
     <property name="log.folder" value="d:/logs/${app.name}/"/>
-    <property name="log.pattern" value="%d{HH:mm:ss.SSS} %highlight(%-5level) %caller{1} - %msg%n"/>
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %caller{1} - %msg%n"/>
 
     <appender name="rollingFile-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- error 级别不记录，其他都记录-->

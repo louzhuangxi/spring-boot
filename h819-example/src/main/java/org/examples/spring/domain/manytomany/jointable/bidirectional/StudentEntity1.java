@@ -1,11 +1,11 @@
 package org.examples.spring.domain.manytomany.jointable.bidirectional;
 
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -25,13 +25,24 @@ import java.util.Set;
 public class StudentEntity1 {
 
 
+    /**
+     * 双向第二种写法： 二者均做为发出端，双方级联删除时，都会删除关系表
+     */
+    /*
+     * ManyToMany 用 set 比 list 效率高
+     * https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
+     * */
+    // 注意主从表，和 teacher 端设置正好相反
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TeacherEntity1.class)
+    @JoinTable(name = "example_ref_teacher_student2", //指定关联表名，和发出方 teacher 指定的表名相同
+            joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id 。（和 teacher 方相反）
+            inverseJoinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id。（和 teacher 方相反）
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
+    public Set<TeacherEntity1> teachers = new LinkedHashSet<>();
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "name")
-    private String name;
 
     /**
      * 	cascade 默认，没有设置
@@ -44,17 +55,8 @@ public class StudentEntity1 {
      * @ManyToMany(mappedBy = "students", targetEntity = TeacherEntity2.class)
      *  public Set<TeacherEntity2> teachers = Sets.newHashSet(); //set 可以过滤重复元素
      */
-
-    /**
-     * 双向第二种写法： 二者均做为发出端，双方级联删除时，都会删除关系表
-     */
-    // 注意主从表，和 teacher 端设置正好相反
-    @ManyToMany(fetch = FetchType.LAZY, targetEntity = TeacherEntity1.class)
-    @JoinTable(name = "example_ref_teacher_student2", //指定关联表名，和发出方 teacher 指定的表名相同
-            joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id 。（和 teacher 方相反）
-            inverseJoinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id。（和 teacher 方相反）
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
-    public Set<TeacherEntity1> teachers = Sets.newHashSet(); //set 可以过滤重复元素
+    @Column(name = "name")
+    private String name;
 
 
     public StudentEntity1() {

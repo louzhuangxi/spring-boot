@@ -359,7 +359,7 @@
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
-            
+
         </dependency>
 
         <dependency>
@@ -394,13 +394,13 @@
             <version>${dnsjava.version}</version>
         </dependency>
 
-        <!-- 有时间时，換为 jdk8 date-->
+        <!-- 有时间时，換为 jdk8 date
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>2.9.2</version>
         </dependency>
-
+        -->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -409,7 +409,7 @@
         </dependency>
 
 
-       <!--  A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4). -->
+        <!--  A java library for reading mp3 files and reading / manipulating the ID3 tags (ID3v1 and ID3v2.2 through ID3v2.4). -->
         <dependency>
             <groupId>com.mpatric</groupId>
             <artifactId>mp3agic</artifactId>
@@ -568,7 +568,7 @@
                      </configuration>
                  </execution>-->
 
-                    <!-- 制作 h819-commons jar
+                    <!-- 制作 h819-commons jar-->
                     <execution>
                         <id>install-artifacts.4</id>
                         <goals>
@@ -582,7 +582,7 @@
                             <artifactId>h819-commons</artifactId>
                             <version>${h819-commons.version}</version>
                         </configuration>
-                    </execution>-->
+                    </execution>
                 </executions>
             </plugin>
 

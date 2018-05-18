@@ -8,7 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -44,7 +44,7 @@ public class ParentEntity6 {
                     uniqueConstraints = {@UniqueConstraint(columnNames = {"parent_id", "child_id"})})// 唯一性约束，是从表的联合字段
     @Fetch(FetchMode.SUBSELECT) // n+1 问题见 one to many ParentEntity2.class
     @BatchSize(size = 100)//child 过多的情况下应用。
-    private Set<ChildEntity6> children = new HashSet<>(); //set 可以过滤重复元素
+    private Set<ChildEntity6> children =  new LinkedHashSet<>();
     // Getters and Setters
 
     public ParentEntity6() {

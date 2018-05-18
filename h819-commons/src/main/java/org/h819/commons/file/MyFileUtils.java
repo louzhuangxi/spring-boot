@@ -12,6 +12,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
@@ -192,6 +196,22 @@ public class MyFileUtils extends FileUtilsBase {
         }
     }
 
+
+    /**
+     * 获取文件的基本属性，如创建时间等
+     * -
+     * 创建时间无法直接从 File 直接获取
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static BasicFileAttributes getFileAttributes(File file) throws IOException {
+        Path f = Paths.get(file.getAbsolutePath());
+        return Files.readAttributes(f, BasicFileAttributes.class);
+    }
+
+
     /**
      * 读取大文件，不能一次性读取，这样会占用大量内存，应逐条读取
      */
@@ -253,7 +273,7 @@ public class MyFileUtils extends FileUtilsBase {
 
         System.out.println(StringUtils.center("splite", 80, "*"));
 
-       deleteDuplicateFiles("G:\\2017-\\1\\", Arrays.asList(dir2,dir3));
+        deleteDuplicateFiles("G:\\2017-\\1\\", Arrays.asList(dir2, dir3));
 //        long start1 = System.nanoTime();
 //        String hash1 = DigestUtils.md5Hex(new FileInputStream(big));
 //        System.out.println(hash1 + " : " + (System.nanoTime() - start1));

@@ -105,7 +105,7 @@ public class FtpExamples {
         // System.out.println("本地时间和服务器端时间差 ："+ connection.getTimeDiff());
         //  System.out.println("判断文件是否发生变化 ："+ connection.isSync("/2.csv","D:\\ftp\\2.csv"));
 
-        //断开连接
+        //断开连接，如果一次性下载多个文件，应都下载完成之后在断开连接
         client.disconnect();
     }
 }

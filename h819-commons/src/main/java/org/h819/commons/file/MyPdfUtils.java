@@ -27,12 +27,12 @@ import org.apache.commons.lang3.SystemUtils;
 import org.dom4j.DocumentException;
 import org.h819.commons.MyConstants;
 import org.h819.commons.MyExecUtils;
-import org.h819.commons.exe.ExecParameter;
 import org.h819.commons.file.pdf.PdfBase;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -240,53 +240,53 @@ public class MyPdfUtils extends PdfBase {
     //private static final Logger log = LoggerFactory.getLogger(MyPdfUtils.class);
     private String dest_1 = "D:\\itext7\\DEST1.pdf";
 
-    	/*
+    /*
      * === 使用中文字体的三种方式
-	 *
-	 * 1、使用 iTextAsian.jar 中的字体(项目需要加载 iTextAsian.jar)
-	 * BaseFont.createFont("STSong-Light",UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
-	 *
-	 * 引入方法已经写好，本类中的 getChineseFont()
-	 *
-	 * 2、使用Windows系统字体(TrueType)
-	 * BaseFont.createFont("C:/WINDOWS/Fonts/SIMYOU.TTF",
-	 * BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
-	 *
-	 * 3、使用资源字体(ClassPath)
-	 * BaseFont.createFont("/SIMYOU.TTF",BaseFont.IDENTITY_H,
-	 * BaseFont.NOT_EMBEDDED);
-	 *
-	 *
-	 * === 字体颜色变浅
-	 *
-	 * itext 字体不能设置透明度，所以字体的颜色深浅只能靠字体本身线条粗细和
-	 *
-	 * over.setColorFill(Color.LIGHT_GRAY) 方法 两个属性来控制。
-	 *
-	 * === getOverContent(),getUnderContent() 方法
-	 *
-	 * getOverContent() 方法是在 pdf 内容(文字层)的上部添加内容
-	 *
-	 * getUnderContent()方法是在下部添加内容。
-	 *
-	 * 两个方法和itext提取 pdf 内相关。如果提取正确，把 pdf 文字内容(Content)都提取出来了
-	 *
-	 * (如 word 文件直接转换的 pdf 文档)，那么 加在 Content下部的内容 就会仅被 Content(文字内容)
-	 * 遮挡，应该是理想的情况。
-	 *
-	 * 但是如果 pdf本身不规范，如部分扫描的文件生成的 pdf 文档，itext 提取不出 Content(如仅把文字层当作一个图片层)
-	 * ，那么加在下部 的内容就会被图片层遮挡而看不到。
-	 *
-	 * 而 getOverContent() 方法加在 Content 上部的内容，会遮挡 Content，所以加在上部的内容需要进行虚化处理。
-	 *
-	 * 经过测试，"华文彩云" 字体是中空的，产生的 遮挡比较小，再和 setColorFill(Color.LIGHT_GRAY)联合使用，效果比较好。
-	 *
-	 * 信息所扫描的文档，大部分都会产生遮挡现象，所以用文字方式吧。
-	 *
-	 * === 关于中空字体
-	 *
-	 * 选择了很久，目前网上没有合适的中空字体，流传的"王汉之中空字体"有缺陷，不是所有的汉字都能为中空， 所以不好用，暂时用"华文彩云" 字体吧
-	 */
+     *
+     * 1、使用 iTextAsian.jar 中的字体(项目需要加载 iTextAsian.jar)
+     * BaseFont.createFont("STSong-Light",UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
+     *
+     * 引入方法已经写好，本类中的 getChineseFont()
+     *
+     * 2、使用Windows系统字体(TrueType)
+     * BaseFont.createFont("C:/WINDOWS/Fonts/SIMYOU.TTF",
+     * BaseFont.IDENTITY_H,BaseFont.NOT_EMBEDDED);
+     *
+     * 3、使用资源字体(ClassPath)
+     * BaseFont.createFont("/SIMYOU.TTF",BaseFont.IDENTITY_H,
+     * BaseFont.NOT_EMBEDDED);
+     *
+     *
+     * === 字体颜色变浅
+     *
+     * itext 字体不能设置透明度，所以字体的颜色深浅只能靠字体本身线条粗细和
+     *
+     * over.setColorFill(Color.LIGHT_GRAY) 方法 两个属性来控制。
+     *
+     * === getOverContent(),getUnderContent() 方法
+     *
+     * getOverContent() 方法是在 pdf 内容(文字层)的上部添加内容
+     *
+     * getUnderContent()方法是在下部添加内容。
+     *
+     * 两个方法和itext提取 pdf 内相关。如果提取正确，把 pdf 文字内容(Content)都提取出来了
+     *
+     * (如 word 文件直接转换的 pdf 文档)，那么 加在 Content下部的内容 就会仅被 Content(文字内容)
+     * 遮挡，应该是理想的情况。
+     *
+     * 但是如果 pdf本身不规范，如部分扫描的文件生成的 pdf 文档，itext 提取不出 Content(如仅把文字层当作一个图片层)
+     * ，那么加在下部 的内容就会被图片层遮挡而看不到。
+     *
+     * 而 getOverContent() 方法加在 Content 上部的内容，会遮挡 Content，所以加在上部的内容需要进行虚化处理。
+     *
+     * 经过测试，"华文彩云" 字体是中空的，产生的 遮挡比较小，再和 setColorFill(Color.LIGHT_GRAY)联合使用，效果比较好。
+     *
+     * 信息所扫描的文档，大部分都会产生遮挡现象，所以用文字方式吧。
+     *
+     * === 关于中空字体
+     *
+     * 选择了很久，目前网上没有合适的中空字体，流传的"王汉之中空字体"有缺陷，不是所有的汉字都能为中空， 所以不好用，暂时用"华文彩云" 字体吧
+     */
 
 
     public static void main(String[] args) throws Exception {
@@ -300,12 +300,12 @@ public class MyPdfUtils extends PdfBase {
         MyPdfUtils.testCopyPages();
     }
 
-    private static void testWaterMark() throws FileNotFoundException {
-        addWaterMarkFile(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "TOP")), null, "中文测试 it is test", TextPosition.TOP);
-        addWaterMarkFile(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "BOTTOM")), null, "中文测试 it is test", TextPosition.BOTTOM);
-        addWaterMarkFile(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "CENTER")), null, "中文测试 it is test", TextPosition.CENTER);
-        addWaterMarkFile(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "LEFT")), null, "中文测试 it is test", TextPosition.LEFT);
-        addWaterMarkFile(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "RIGHT")), null, "中文测试 it is test", TextPosition.RIGHT);
+    private static void testWaterMark() throws IOException {
+        addWaterMarkFile(new File(src_text).toPath(), new File(DEST_TEXT_Position.replace("temp", "TOP")).toPath(), null, "中文测试 it is test", TextPosition.TOP);
+        addWaterMarkFile(new File(src_text).toPath(), new File(DEST_TEXT_Position.replace("temp", "BOTTOM")).toPath(), null, "中文测试 it is test", TextPosition.BOTTOM);
+        addWaterMarkFile(new File(src_text).toPath(), new File(DEST_TEXT_Position.replace("temp", "CENTER")).toPath(), null, "中文测试 it is test", TextPosition.CENTER);
+        addWaterMarkFile(new File(src_text).toPath(), new File(DEST_TEXT_Position.replace("temp", "LEFT")).toPath(), null, "中文测试 it is test", TextPosition.LEFT);
+        addWaterMarkFile(new File(src_text).toPath(), new File(DEST_TEXT_Position.replace("temp", "RIGHT")).toPath(), null, "中文测试 it is test", TextPosition.RIGHT);
     }
 
     private static void testEncryptPdf() throws IOException {
@@ -315,12 +315,13 @@ public class MyPdfUtils extends PdfBase {
 //        encryptPdf(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "notuser")), "user", null, true, true);
 //        encryptPdf(new File(src_text), new File(DEST_TEXT_Position.replace("temp", "notowner")), null, "user2", true, true);
 
-        decryptFile(new File(DEST_TEXT_Position.replace("temp", "notuser")), new File(DEST_TEXT_Position.replace("temp", "notuser_decrypt")), "user");
+        decryptFile(new File(DEST_TEXT_Position.replace("temp", "notuser")).toPath(),
+                new File(DEST_TEXT_Position.replace("temp", "notuser_decrypt")).toPath(), "user");
     }
 
     private static void testDecryptPdf() throws IOException {
 
-        decryptFile(new File("D:\\itext7\\text_src_encrypt.pdf"), new File("D:\\itext7\\text_src_encrypt_de.pdf"), new File("D:\\itext7\\bad"));
+        decryptFile(new File("D:\\itext7\\text_src_encrypt.pdf").toPath(), new File("D:\\itext7\\text_src_encrypt_de.pdf").toPath(), new File("D:\\itext7\\bad").toPath());
     }
 
     private static void testExpireDate() throws IOException {
@@ -330,7 +331,7 @@ public class MyPdfUtils extends PdfBase {
 //        Optional<String> s = Optional.empty();
 //        System.out.println(s.isPresent());
 
-        removeJavaScript(new File("D:\\itext7\\text_src_no_warning.pdf"), new File("D:\\itext7\\text_src_no_warning_.pdf"), PdfName.OpenAction);
+        removeJavaScript(new File("D:\\itext7\\text_src_no_warning.pdf").toPath(), new File("D:\\itext7\\text_src_no_warning_.pdf").toPath(), PdfName.OpenAction);
     }
 
     private static void testCopyPages() throws IOException {
@@ -344,8 +345,8 @@ public class MyPdfUtils extends PdfBase {
         String RESOURCE
                 = "D:\\itext7\\pages2.pdf";
 
-        insertFrontCoverPage(new File(RESOURCE), new File(COVER), new File(DEST));
-        insertBackCoverPage(new File(RESOURCE), new File(COVER), new File(DEST2));
+        insertFrontCoverPage(new File(RESOURCE).toPath(), new File(COVER).toPath(), new File(DEST).toPath());
+        insertBackCoverPage(new File(RESOURCE).toPath(), new File(COVER).toPath(), new File(DEST2).toPath());
     }
 
     /**
@@ -361,12 +362,12 @@ public class MyPdfUtils extends PdfBase {
      * @return
      * @throws IOException
      */
-    private static Optional<PdfReader> getPdfReader(File pdfFile) throws IOException {
-        if (pdfFile == null || !pdfFile.exists() || !pdfFile.isFile() || Files.size(Paths.get(pdfFile.getAbsolutePath())) == 0) {
-            log.info("{} Illegal.", pdfFile.getAbsolutePath());
+    private static Optional<PdfReader> getPdfReader(Path pdfFile) throws IOException {
+        if (!Files.exists(pdfFile) || Files.size(pdfFile) == 0) {
+            log.info("{} Illegal.", pdfFile.toAbsolutePath());
             return Optional.empty();
         }
-        IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile).getChannel());
+        IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile.toFile()).getChannel());
         return Optional.of((new PdfReader(source, new ReaderProperties())));
 
     }
@@ -377,8 +378,8 @@ public class MyPdfUtils extends PdfBase {
      * @return
      * @throws IOException
      */
-    private static Optional<PdfReader> getPdfReader(File pdfFile, String userPassword) throws IOException {
-        IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile).getChannel());
+    private static Optional<PdfReader> getPdfReader(Path pdfFile, String userPassword) throws IOException {
+        IRandomAccessSource source = new FileChannelRandomAccessSource(new FileInputStream(pdfFile.toFile()).getChannel());
         // .setUnethicalReading(true) 必须设置，才可以打开有用户密码的文件
         return Optional.of(new PdfReader(source, new ReaderProperties().setPassword(userPassword.getBytes())).setUnethicalReading(true));
 
@@ -415,7 +416,7 @@ public class MyPdfUtils extends PdfBase {
      * @return
      * @throws IOException
      */
-    public static int getNumberOfPages(File srcPdfFileDir) throws IOException {
+    public static int getDirectoryPages(File srcPdfFileDir) throws IOException {
 
         numberOfPagesOfDirectory = 0; //重新初始化，否则静态变量全局不变
         countNumberOfPagesOfDir(srcPdfFileDir);
@@ -446,21 +447,28 @@ public class MyPdfUtils extends PdfBase {
                 continue;
             // System.out.println(f.getPath());
             // we create a reader for a certain document
-            Optional<PdfReader> reader = getPdfReader(f);
+            Optional<PdfReader> reader = getPdfReader(f.toPath());
             // we retrieve the total number of pages
             // 对加密的文件会抛出异常
             if (!reader.isPresent()) {
                 if (reader.get().isEncrypted()) {
-                    System.err.println(getEncryptedErrorMessage(f));
+                    System.err.println(getEncryptedErrorMessage(f.toPath()));
                     continue;
                 }
-
-                PdfDocument pdfDoc = new PdfDocument(getPdfReader(f).get());
-                numberOfPagesOfDirectory = numberOfPagesOfDirectory + pdfDoc.getNumberOfPages();
+                numberOfPagesOfDirectory = numberOfPagesOfDirectory + getFilePages(f.toPath());
             }
-
-
         }
+    }
+
+    /**
+     * 获得 pdf 文件页数
+     *
+     * @param srcPdfFile
+     * @return
+     * @throws IOException
+     */
+    public static int getFilePages(Path srcPdfFile) throws IOException {
+        return new PdfDocument(getPdfReader(srcPdfFile).get()).getNumberOfPages();
     }
 
     /**
@@ -470,7 +478,7 @@ public class MyPdfUtils extends PdfBase {
      * @param destPdf        目标文件
      * @param waterMarkImage 水印图片
      */
-    public static void addWaterMarkFile(File srcPdf, File destPdf, File waterMarkImage) throws IOException, DocumentException {
+    public static void addWaterMarkFile(Path srcPdf, Path destPdf, Path waterMarkImage) throws IOException, DocumentException {
         addWaterMarkFile(srcPdf, destPdf, waterMarkImage, null, null);
     }
 
@@ -482,7 +490,7 @@ public class MyPdfUtils extends PdfBase {
      * @param waterMarkText 水印文字
      */
     public static void addWaterMarkFile(File srcPdf, File destPdf, String waterMarkText, TextPosition textPosition) throws IOException, DocumentException {
-        addWaterMarkFile(srcPdf, destPdf, null, waterMarkText, textPosition);
+        addWaterMarkFile(srcPdf.toPath(), destPdf.toPath(), null, waterMarkText, textPosition);
     }
 
     /**
@@ -492,21 +500,22 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfDirectory 目标文件夹
      * @param waterMarkImage   水印图片
      */
-    public static void addWaterMarkDerictory(File srcPdfDirectory, File descPdfDirectory, File waterMarkImage) throws IOException, DocumentException {
+    public static void addWaterMarkDerictory(Path srcPdfDirectory, Path descPdfDirectory, Path waterMarkImage) throws IOException, DocumentException {
 
-        if (descPdfDirectory.getAbsolutePath().contains(srcPdfDirectory.getAbsolutePath()))
+        if (descPdfDirectory.toAbsolutePath().toString().contains(srcPdfDirectory.toAbsolutePath().toString()))
             throw new IOException("目标文件夹不能在原文件夹中");
 
 
         if (!isEnoughSpace(srcPdfDirectory, descPdfDirectory))
             return;
 
-        for (File file : srcPdfDirectory.listFiles()) {
-            String destPath = descPdfDirectory.getAbsolutePath() + File.separator + file.getName();
+        for (File file : srcPdfDirectory.toFile().listFiles()) {
+            Path destPath = Paths.get(descPdfDirectory.toAbsolutePath().toString(), file.getName());
+
             if (file.isFile()) {
-                addWaterMarkFile(file, Paths.get(destPath).toFile(), waterMarkImage, null, null);
+                addWaterMarkFile(file.toPath(), destPath, waterMarkImage, null, null);
             } else if (file.isDirectory())
-                addWaterMarkDerictory(file, Paths.get(destPath).toFile(), waterMarkImage);
+                addWaterMarkDerictory(file.toPath(), destPath, waterMarkImage);
             else return;
 
         }
@@ -523,7 +532,7 @@ public class MyPdfUtils extends PdfBase {
 
         if (descPdfFileDirectory.getAbsolutePath().contains(srcPdfFileDirectory.getAbsolutePath()))
             throw new IOException("目标文件夹不能在原文件夹中");
-        if (!isEnoughSpace(srcPdfFileDirectory, descPdfFileDirectory))
+        if (!isEnoughSpace(srcPdfFileDirectory.toPath(), descPdfFileDirectory.toPath()))
             return;
 
         for (File file : srcPdfFileDirectory.listFiles()) {
@@ -545,22 +554,22 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFileDir
      * @return
      */
-    private static boolean isEnoughSpace(File srcPdfFileDir, File descPdfFileDir) {
+    private static boolean isEnoughSpace(Path srcPdfFileDir, Path descPdfFileDir) {
 
 
-        if (!srcPdfFileDir.exists() && !srcPdfFileDir.isDirectory()) {
-            System.out.println(srcPdfFileDir.getAbsolutePath() + " not exist.");
+        if (!Files.exists(srcPdfFileDir) && !Files.isDirectory(srcPdfFileDir)) {
+            System.out.println(srcPdfFileDir.toAbsolutePath() + " not exist.");
             return false;
         }
 
-        if (descPdfFileDir.getAbsolutePath().contains(srcPdfFileDir.getAbsolutePath())) {
-            System.out.println(String.format("%s %s %s %s %s", "src= ", srcPdfFileDir.getAbsoluteFile(), " dest= ", descPdfFileDir.getAbsoluteFile(), " dest cannot in src Dir."));
+        if (descPdfFileDir.toAbsolutePath().toString().contains(srcPdfFileDir.toAbsolutePath().toString())) {
+            System.out.println(String.format("%s %s %s %s %s", "src= ", srcPdfFileDir.toAbsolutePath(), " dest= ", descPdfFileDir.toAbsolutePath(), " dest cannot in src Dir."));
             return false;
         }
 
-        if (!descPdfFileDir.exists())
+        if (!Files.exists(descPdfFileDir))
             try {
-                Files.createDirectory(Paths.get(descPdfFileDir.getAbsolutePath()));
+                Files.createDirectory(descPdfFileDir.toAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -568,13 +577,17 @@ public class MyPdfUtils extends PdfBase {
 
         // 检查磁盘空间是否充足
         // 目标盘剩余空间
-        long prefixDiskFreeSize = descPdfFileDir.getFreeSpace();
+        long prefixDiskFreeSize = descPdfFileDir.toFile().getFreeSpace();
         // 源文件夹大小
-        long srcSize = FileUtils.sizeOfDirectory(srcPdfFileDir);
+        long srcSize = FileUtils.sizeOfDirectory(srcPdfFileDir.toFile());
 
         if (prefixDiskFreeSize < srcSize) {
             System.err.println(descPdfFileDir.getParent() + " has not enoght disk size .");
-            descPdfFileDir.delete();
+            try {
+                Files.delete(descPdfFileDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return false;
         }
 
@@ -591,29 +604,29 @@ public class MyPdfUtils extends PdfBase {
      * @param waterMarkImage 水印图片
      * @param textPosition   文字位置
      */
-    public static void addWaterMarkFile(File srcPdf, File destPdf, File waterMarkImage, String waterMarkText, TextPosition textPosition) throws FileNotFoundException, IllegalFormatException {
+    public static void addWaterMarkFile(Path srcPdf, Path destPdf, Path waterMarkImage, String waterMarkText, TextPosition textPosition) throws IOException, IllegalFormatException {
 
         //加指定页
         if (waterMarkText == null && waterMarkImage == null)
             throw new FileNotFoundException(waterMarkText + " " + waterMarkImage + " all null.");
 
 
-        if (srcPdf == null || !srcPdf.exists() || !srcPdf.isFile())
+        if (!Files.exists(srcPdf))
             throw new FileNotFoundException("pdf file :  '" + srcPdf + "' does not exsit.");
 
 
-        if (!FilenameUtils.getExtension(srcPdf.getAbsolutePath()).toLowerCase().equals("pdf"))
+        if (!FilenameUtils.getExtension(srcPdf.getFileName().toString().toLowerCase()).equals("pdf"))
             throw new FileNotFoundException("file :  '" + srcPdf + "' is not pdf.");
 
         if (waterMarkImage != null) {
-            if (!waterMarkImage.exists() || !waterMarkImage.isFile())
+            if (!Files.exists(waterMarkImage))
                 throw new FileNotFoundException("img file :  '" + srcPdf + "' does not exsit.");
 
-            if (!FilenameUtils.getExtension(waterMarkImage.getAbsolutePath()).toLowerCase().equals("png"))
+            if (!FilenameUtils.getExtension(waterMarkImage.getFileName().toString().toLowerCase()).equals("png"))
                 throw new FileNotFoundException("image file '" + srcPdf + "'  not png.(必须为透明图片(png)格式，否则会遮挡 pdf 内容)");
         }
 
-        destPdf.getParentFile().mkdirs();
+        Files.createDirectories(destPdf.getParent());
 
         try {
 
@@ -628,7 +641,7 @@ public class MyPdfUtils extends PdfBase {
             }
 
 
-            PdfWriter writer = new PdfWriter(new FileOutputStream(destPdf));
+            PdfWriter writer = new PdfWriter(new FileOutputStream(destPdf.toFile()));
             PdfDocument pdfDoc = new PdfDocument(reader.get(), writer);
             Document doc = new Document(pdfDoc);
             int n = pdfDoc.getNumberOfPages();
@@ -643,7 +656,7 @@ public class MyPdfUtils extends PdfBase {
             ImageData img = null;
             float w = 0, h = 0;
             if (waterMarkImage != null) {
-                img = ImageDataFactory.create(waterMarkImage.getAbsolutePath());
+                img = ImageDataFactory.create(waterMarkImage.toAbsolutePath().toString());
                 //  Implement transformation matrix usage in order to scale image
                 w = img.getWidth();
                 h = img.getHeight();
@@ -721,8 +734,8 @@ public class MyPdfUtils extends PdfBase {
 
     }
 
-    private static String getEncryptedErrorMessage(File f) {
-        return "pdf file :  '" + f.getAbsolutePath() + "' is encrypted.";
+    private static String getEncryptedErrorMessage(Path f) {
+        return "pdf file :  '" + f.toAbsolutePath() + "' is encrypted.";
     }
 
     /**
@@ -782,7 +795,7 @@ public class MyPdfUtils extends PdfBase {
 
 
                     try {
-                        reader = getPdfReader(f);
+                        reader = getPdfReader(f.toPath());
                         if (!reader.isPresent())
                             return;
                     } catch (BadPasswordException e) {
@@ -843,7 +856,7 @@ public class MyPdfUtils extends PdfBase {
 
         try {
 
-            Optional<PdfReader> reader = getPdfReader(srcPdfFile);
+            Optional<PdfReader> reader = getPdfReader(srcPdfFile.toPath());
             if (!reader.isPresent())
                 return;
             // PdfReader reader = new PdfReader(srcPdfFile, new ReaderProperties().setPassword("World".getBytes()));
@@ -895,14 +908,14 @@ public class MyPdfUtils extends PdfBase {
      * @param userPassword pdf 文件的 user or owner password.
      * @throws IOException
      */
-    public static void decryptFile(File srcPdfFile, File descPdfFile,
+    public static void decryptFile(Path srcPdfFile, Path descPdfFile,
                                    String userPassword) throws IOException, BadPasswordException {
 
-        if (srcPdfFile == null || !srcPdfFile.exists())
+        if (Files.exists(srcPdfFile))
             throw new IOException("src pdf file '" + srcPdfFile
                     + "' does not exist.");
         PdfReader reader = getPdfReader(srcPdfFile, userPassword).get();
-        PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument pdfDoc = new PdfDocument(reader, new PdfWriter(descPdfFile.toAbsolutePath().toString()));
         pdfDoc.close();
     }
 
@@ -915,21 +928,22 @@ public class MyPdfUtils extends PdfBase {
      * @param badDirectory     存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void decryptFileDerictory(File srcPdfDirectory, File descPdfDirectory, File badDirectory) throws IOException, DocumentException {
+    public static void decryptFileDerictory(Path srcPdfDirectory, Path descPdfDirectory, Path badDirectory) throws IOException, DocumentException {
 
-        if (descPdfDirectory.getAbsolutePath().contains(srcPdfDirectory.getAbsolutePath()))
+        if (descPdfDirectory.toAbsolutePath().toString().contains(srcPdfDirectory.toAbsolutePath().toString()))
             throw new IOException("目标文件夹不能在原文件夹中");
 
 
         if (!isEnoughSpace(srcPdfDirectory, descPdfDirectory))
             return;
 
-        for (File file : srcPdfDirectory.listFiles()) {
-            String destPath = descPdfDirectory.getAbsolutePath() + File.separator + file.getName();
+        for (File file : srcPdfDirectory.toFile().listFiles()) {
+            Path destPath = Paths.get(descPdfDirectory.toAbsolutePath().toString(), file.getName());
+
             if (file.isFile()) {
-                decryptFile(file, Paths.get(destPath).toFile(), badDirectory);
+                decryptFile(file.toPath(), destPath, badDirectory);
             } else if (file.isDirectory())
-                decryptFileDerictory(file, Paths.get(destPath).toFile(), badDirectory);
+                decryptFileDerictory(file.toPath(), destPath, badDirectory);
             else return;
 
         }
@@ -943,9 +957,9 @@ public class MyPdfUtils extends PdfBase {
      * @param badDirectory
      * @throws IOException
      */
-    public static void decryptFile(File srcPdf, File descPdf, File badDirectory) throws IOException {
+    public static void decryptFile(Path srcPdf, Path descPdf, Path badDirectory) throws IOException {
 
-        decryptFile(srcPdf, descPdf, null, badDirectory);
+        decryptFile(srcPdf, descPdf, badDirectory,null);
 
     }
 
@@ -960,21 +974,21 @@ public class MyPdfUtils extends PdfBase {
      * @param badDirectory  存放有打开密码，不能破解的 pdf 的文件夹。
      * @throws java.io.IOException
      */
-    public static void decryptFile(File srcPdf, File descPdf, String ownerPassword, File badDirectory) throws IOException {
+    public static void decryptFile(Path srcPdf, Path descPdf, Path badDirectory, String ownerPassword) throws IOException {
 
-        if (!srcPdf.exists()) {
-            log.info("{} not exist.", srcPdf.getAbsoluteFile());
+        if (!Files.exists(srcPdf)) {
+            log.info("{} not exist.", srcPdf.toAbsolutePath());
             return;
         }
-        String extension = FilenameUtils.getExtension(srcPdf.getAbsolutePath());
+        String extension = FilenameUtils.getExtension(srcPdf.toAbsolutePath().toString());
 
         if (!extension.equalsIgnoreCase("pdf"))
             return;
 
         // 损坏的 0 字节文件，直接拷贝到统一的文件夹
-        if (FileUtils.sizeOf(srcPdf) == 0) {
-            log.info("{} size =0 ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            FileUtils.copyDirectory(srcPdf, badDirectory, true);
+        if (Files.size(srcPdf) == 0) {
+            log.info("{} size =0 ,copy to {}", srcPdf.toAbsolutePath(), badDirectory.toAbsolutePath());
+            FileUtils.copyDirectory(srcPdf.toFile(), badDirectory.toFile(), true);
             return;
         }
 
@@ -988,16 +1002,6 @@ public class MyPdfUtils extends PdfBase {
 
             log.info("{}", reader.isEncrypted());
 
-            List<ExecParameter> list = new ArrayList(2);
-            list.add(new ExecParameter("-i", srcPdf.getAbsolutePath())); // 只有 key ，没有 value
-            list.add(new ExecParameter("-o", descPdf.getAbsolutePath()));
-//            list.add(new ExecParameter("-u", ""));
-//            list.add(new ExecParameter("-w", ""));
-
-
-            String re =
-                    MyExecUtils.exec(Paths.get(getPdfPdfdecryptExec()), list, 1);
-
             /**
              *  reader.isEncrypted() 判断不行，itext5 可以，itext7 不行，不知道为什么
              *  只好用其他方法判断。
@@ -1005,20 +1009,25 @@ public class MyPdfUtils extends PdfBase {
              *  The 'D:\itext7\text_src_encrypt.pdf' file hasn't been encrypted.
              *  信息。
              */
-            if (re.contains("file hasn't been encrypted")) {// 未加密的文件，直接拷贝 。
-                FileUtils.copyFile(srcPdf, descPdf);
-                log.info("not encrypted,copy {} to {} ", srcPdf.getAbsolutePath(), descPdf.getAbsoluteFile());
+            if (!reader.isEncrypted()) {// 未加密的文件，直接拷贝 。
+                Files.copy(srcPdf, descPdf);
+                log.info("not encrypted,copy {} to {} ", srcPdf.toAbsolutePath(), descPdf.toAbsolutePath());
                 return;
             }
 
-            log.info("decrypted {} to {}", srcPdf.getAbsolutePath(), descPdf.getAbsolutePath());
+
+            boolean re = MyExecUtils.pdfDecrypt(Paths.get(getPdfPdfdecryptExec()), srcPdf, descPdf);
+            if (!re)
+                log.info("decrypted false {} to {} ", srcPdf.toAbsolutePath(), descPdf.toAbsolutePath());
+
+            log.info("decrypted {} to {}", srcPdf.toAbsolutePath(), descPdf.toAbsolutePath());
             // 关闭处理完成的文件
             reader.close();
 
         } catch (BadPasswordException e) {
             // 有打开密码的文件，不能破解，统一拷贝至一个文件夹。
-            log.info("{} has user password ,copy to {}", srcPdf.getAbsoluteFile(), badDirectory.getAbsoluteFile());
-            FileUtils.copyFileToDirectory(srcPdf, badDirectory, true);
+            log.info("{} has user password ,copy to {}", srcPdf.toAbsolutePath(), badDirectory.toAbsolutePath());
+            FileUtils.copyFileToDirectory(srcPdf.toFile(), badDirectory.toFile(), true);
             e.printStackTrace();
             return;
         } catch (IOException e) {
@@ -1050,9 +1059,9 @@ public class MyPdfUtils extends PdfBase {
      * @param expiredDays 从开始日期计算，到达失效日期的天数。到达失效期后，出现警告信息后，直接关闭文本，不再允许查看文本。
      * @throws java.io.IOException
      */
-    public static void addExpireDateWithJavaScriptFile(File srcPdfFile, File descPdfFile, String startDate, int alertDays, int expiredDays) throws IOException {
+    public static void addExpireDateWithJavaScriptFile(Path srcPdfFile, Path descPdfFile, String startDate, int alertDays, int expiredDays) throws IOException {
 
-        if (!srcPdfFile.isFile())
+        if (!Files.exists(srcPdfFile))
             return;
 
         //   log.info("{} , {} {}", alertDays,expiredDays,alertDays>expiredDays);
@@ -1069,7 +1078,7 @@ public class MyPdfUtils extends PdfBase {
         }
 
 
-        String extension = FilenameUtils.getExtension(srcPdfFile.getAbsolutePath()).toLowerCase();
+        String extension = FilenameUtils.getExtension(srcPdfFile.toAbsolutePath().toString()).toLowerCase();
 
         if (extension.equals("pdf")) {
             String js = expireDate.replace("startDateStr_replace", startDate)
@@ -1083,7 +1092,7 @@ public class MyPdfUtils extends PdfBase {
             Optional<PdfReader> reader = getPdfReader(srcPdfFile);
             if (!reader.isPresent())
                 return;
-            PdfDocument pdfDocument = new PdfDocument(reader.get(), new PdfWriter(new FileOutputStream(descPdfFile)));
+            PdfDocument pdfDocument = new PdfDocument(reader.get(), new PdfWriter(new FileOutputStream(descPdfFile.toAbsolutePath().toString())));
             /**
              * 执行 js 语句
              * 文件即将超出使用日期！\n\n The expiration date is drawing near!
@@ -1094,10 +1103,10 @@ public class MyPdfUtils extends PdfBase {
             printAction.put(PdfName.JS, new PdfString(js));
             pdfDocument.getCatalog().setOpenAction(printAction); //打开 pdf 时，出现的提示框动作
             pdfDocument.close();
-            log.info(descPdfFile.getAbsolutePath() + " 已经添加了日期限制 !");
+            log.info(descPdfFile.toAbsolutePath() + " 已经添加了日期限制 !");
 
         } else {
-            log.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+            log.info(srcPdfFile.toAbsolutePath() + " 不是 pdf 文件");
         }
 
     }
@@ -1112,28 +1121,27 @@ public class MyPdfUtils extends PdfBase {
      * @param expiredDays
      * @throws IOException
      */
-    public static void addExpireDateWithJavaScriptDerictory(File srcPdfFileDir, File descPdfFileDir, String startDate, int alertDays, int expiredDays) throws IOException {
+    public static void addExpireDateWithJavaScriptDerictory(Path srcPdfFileDir, Path descPdfFileDir, String startDate, int alertDays, int expiredDays) throws IOException {
 
         if (!isEnoughSpace(srcPdfFileDir, descPdfFileDir))
             return;
 
-        File listFiles[] = srcPdfFileDir.listFiles();
+        File listFiles[] = srcPdfFileDir.toFile().listFiles();
 
         if (listFiles.length == 0) {
-            log.info("srcPdfFileDir has not file. " + srcPdfFileDir.getAbsolutePath());
+            log.info("srcPdfFileDir has not file. " + srcPdfFileDir.toFile().getAbsolutePath());
             return;
         }
 
         for (File f : listFiles) {
             if (f.isFile()) {
-                addExpireDateWithJavaScriptFile(f,
-                        new File(descPdfFileDir.getAbsolutePath()
-                                + File.separator + f.getName()), startDate,
+                addExpireDateWithJavaScriptFile(f.toPath(), Paths.get(descPdfFileDir.toAbsolutePath().toString(), f.getName())
+                        , startDate,
                         alertDays, expiredDays);
             }// end if f.isFile
 
             else if (f.isDirectory()) {
-                addExpireDateWithJavaScriptDerictory(f, descPdfFileDir, startDate, alertDays, expiredDays);
+                addExpireDateWithJavaScriptDerictory(f.toPath(), descPdfFileDir, startDate, alertDays, expiredDays);
             }// end if f.isDirectory
             else
                 continue;
@@ -1149,8 +1157,8 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile
      * @throws IOException
      */
-    public static void removeOpenActionJavaScript(File srcPdfFile,
-                                                  File descPdfFile) throws IOException {
+    public static void removeOpenActionJavaScript(Path srcPdfFile,
+                                                  Path descPdfFile) throws IOException {
         removeJavaScript(srcPdfFile, descPdfFile, PdfName.OpenAction);
 
     }
@@ -1176,19 +1184,19 @@ public class MyPdfUtils extends PdfBase {
      * @param pdfName     添加的 pdf 属性
      * @throws java.io.IOException
      */
-    public static void removeJavaScript(File srcPdfFile, File descPdfFile, PdfName pdfName) throws IOException {
+    public static void removeJavaScript(Path srcPdfFile, Path descPdfFile, PdfName pdfName) throws IOException {
 
-        if (!srcPdfFile.isFile())
+        if (!Files.exists(srcPdfFile))
             return;
 
-        String extension = FilenameUtils.getExtension(srcPdfFile.getAbsolutePath()).toLowerCase();
+        String extension = FilenameUtils.getExtension(srcPdfFile.getFileName().toString()).toLowerCase();
 
         if (extension.equals("pdf")) {
 
             Optional<PdfReader> reader = getPdfReader(srcPdfFile);
             if (!reader.isPresent())
                 return;
-            PdfDocument pdfDoc = new PdfDocument(reader.get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+            PdfDocument pdfDoc = new PdfDocument(reader.get(), new PdfWriter(descPdfFile.toAbsolutePath().toString()));
             PdfDictionary root = pdfDoc.getCatalog().getPdfObject();
 
             /**
@@ -1202,10 +1210,10 @@ public class MyPdfUtils extends PdfBase {
             root.remove(pdfName);
             pdfDoc.close();
 
-            log.info(descPdfFile.getAbsolutePath() + " 已经删除 javaScript  !");
+            log.info(descPdfFile.toAbsolutePath() + " 已经删除 javaScript  !");
 
         } else {
-            log.info(srcPdfFile.getAbsolutePath() + " 不是 pdf 文件");
+            log.info(srcPdfFile.toAbsolutePath() + " 不是 pdf 文件");
         }
     }
 
@@ -1245,7 +1253,7 @@ public class MyPdfUtils extends PdfBase {
      * @param srcPdfFile 待检查的文件夹
      * @throws java.io.IOException
      */
-    private static boolean isEcryptFile(File srcPdfFile) throws IOException {
+    private static boolean isEcryptFile(Path srcPdfFile) throws IOException {
         PdfReader reader = getPdfReader(srcPdfFile).get();
         return reader.isEncrypted();  // itext7 中不好用，itext5 可以，不知道为什么
     }
@@ -1259,9 +1267,9 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile   目标文件
      * @throws IOException
      */
-    public static void insertFrontCoverPage(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+    public static void insertFrontCoverPage(Path srcPdfFile, Path insertPdfFile, Path descPdfFile) throws IOException {
 
-        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.toAbsolutePath().toString()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
         cover.copyPagesTo(1, 1, pdfDoc, 1, new PdfPageFormCopier());
         cover.close();
@@ -1277,9 +1285,9 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile   目标文件
      * @throws IOException
      */
-    public static void insertBackCoverPage(File srcPdfFile, File insertPdfFile, File descPdfFile) throws IOException {
+    public static void insertBackCoverPage(Path srcPdfFile, Path insertPdfFile, Path descPdfFile) throws IOException {
 
-        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.toAbsolutePath().toString()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
         cover.copyPagesTo(1, 1, pdfDoc, pdfDoc.getNumberOfPages() + 1, new PdfPageFormCopier());
         cover.close();
@@ -1298,10 +1306,10 @@ public class MyPdfUtils extends PdfBase {
      * @param descPdfFile            目标文件
      * @throws IOException
      */
-    public static void insertPages(File srcPdfFile, int insertPageBeforeSrcPdf, File insertPdfFile, int pageFromInsertPdf,
-                                   int pageToInsertPdf, File descPdfFile) throws IOException {
+    public static void insertPages(Path srcPdfFile, int insertPageBeforeSrcPdf, Path insertPdfFile, int pageFromInsertPdf,
+                                   int pageToInsertPdf, Path descPdfFile) throws IOException {
 
-        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.getAbsolutePath()));
+        PdfDocument pdfDoc = new PdfDocument(getPdfReader(srcPdfFile).get(), new PdfWriter(descPdfFile.toAbsolutePath().toString()));
         PdfDocument cover = new PdfDocument(getPdfReader(insertPdfFile).get());
         cover.copyPagesTo(pageFromInsertPdf, pageToInsertPdf, pdfDoc, insertPageBeforeSrcPdf, new PdfPageFormCopier());
         cover.close();
@@ -1323,12 +1331,12 @@ public class MyPdfUtils extends PdfBase {
      * @param destPdf
      * @throws IOException
      */
-    public void mergeFiles(List<File> srcPdfs, File destPdf) throws IOException {
+    public void mergeFiles(List<Path> srcPdfs, Path destPdf) throws IOException {
         //Initialize PDF document with output intent
-        PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf.getAbsolutePath()));
+        PdfDocument pdf = new PdfDocument(new PdfWriter(destPdf.toAbsolutePath().toString()));
         PdfMerger merger = new PdfMerger(pdf);
 
-        for (File file : srcPdfs) {
+        for (Path file : srcPdfs) {
             //Add pages from the first document
             Optional<PdfReader> reader = getPdfReader(file);
             if (!reader.isPresent())

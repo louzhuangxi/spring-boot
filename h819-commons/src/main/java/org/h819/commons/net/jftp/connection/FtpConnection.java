@@ -1,19 +1,16 @@
 package org.h819.commons.net.jftp.connection;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilter;
 import org.apache.commons.net.io.CopyStreamListener;
+import org.h819.commons.MyDateUtilsJdk8;
 import org.h819.commons.net.jftp.FileFilter.FileNameEqualFilter;
 import org.h819.commons.net.jftp.exception.FtpException;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +18,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 public class FtpConnection implements Connection {
 
@@ -42,20 +39,15 @@ public class FtpConnection implements Connection {
     //  private static final String FILE_SEPARATOR = "/";
     private Logger logger = LoggerFactory.getLogger(FtpConnection.class);
 
-    private FTPClient client;
-
     //  private String currentFileName = "";
-
+    private FTPClient client;
     private int replyCode;
     //ftp MDTM 命令返回的最后修改时间格式
     private String ftpModificationTimePattern = "yyyyMMddHHmmss";
-    //本地默认时区
-    private DateTimeZone deafaultZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
 
     public FtpConnection(FTPClient client) {
         this.client = client;
     }
-
 
     /**
      * Returns the pathname of the current working directory.
@@ -74,6 +66,16 @@ public class FtpConnection implements Connection {
 
             throw new FtpException("Unable to print the working directory", e);
         }
+    }
+
+    /**
+     * 判断 ftp 服务是否可用
+     *
+     * @return
+     */
+    @Override
+    public boolean isAvailable() {
+        return client.isAvailable();
     }
 
     @Override
@@ -171,9 +173,19 @@ public class FtpConnection implements Connection {
         return files;
     }
 
+    /**
+     * 下载到指定目录，文件名保持不变，不比较时间戳，不记录下载进度
+     *
+     * @param remoteFilePath     path of the file on the server
+     * @param localDirectoryPath path of directory where the file will be stored
+     * @throws IOException if any network or IO error occurred.
+     */
+    public void downloadFile(String remoteFilePath, String localDirectoryPath) throws FtpException {
+        downloadFile(remoteFilePath, localDirectoryPath, null, false, false);
+    }
 
     /**
-     * 文件名保持不变
+     * 下载到指定目录，文件名保持不变，记录下载进度
      *
      * @param remoteFilePath     path of the file on the server
      * @param localDirectoryPath path of directory where the file will be stored
@@ -181,11 +193,9 @@ public class FtpConnection implements Connection {
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException {
-
-        downloadFile(remoteFilePath, localDirectoryPath, null, logProcess);
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean compareTime, boolean logProcess) throws FtpException {
+        downloadFile(remoteFilePath, localDirectoryPath, null, compareTime, logProcess);
     }
-
 
     /**
      * Download a single file from the FTP server，支持断点续传，如果指定目录不存在，自动创建
@@ -195,11 +205,14 @@ public class FtpConnection implements Connection {
      * @param remoteFilePath     path of the file on the server
      * @param localDirectoryPath path of directory where the file will be stored
      * @param localFileName      下载到本地的文件名称(个别需求中，需要重命名远程文件) , null 为保持原文件名不变
+     * @param compareTime        当文件大小相同时：是否比较时间戳
+     *                           true 时间戳相同，不下载
+     *                           false 时间戳不同，下载
      * @param logProcess         log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException {
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean compareTime, boolean logProcess) throws FtpException {
 
         try {
             FTPFile[] files = client.listFiles(new String(remoteFilePath.getBytes("GBK"), "iso-8859-1"));
@@ -219,7 +232,7 @@ public class FtpConnection implements Connection {
                 Paths.get(localDirectoryPath).toFile().mkdirs();
 
             if (localFileName == null) {
-                localFilePath = localDirectoryPath + File.separator + Paths.get(remoteFilePath).getFileName().toString();
+                localFilePath = localDirectoryPath + File.separator + FilenameUtils.getName(remoteFilePath);
             } else
                 localFilePath = localDirectoryPath + File.separator + localFileName;
 
@@ -230,16 +243,39 @@ public class FtpConnection implements Connection {
             long localSize = localFile.length();
             long remoteSize = files[0].getSize();
 
-            if (remoteSize == localSize) {
-                logger.info("[下载续传]服务器文件和本地文件大小一致::{}B = {}B，退出下载...", remoteSize, localSize);
-                return;
-            } else if (remoteSize < localSize) {
-                logger.info("[下载续传]本地文件比服务器文件大，有误差::{}B <--> {}B，退出下载...", remoteSize, localSize);
+
+            if (localSize == 0) {
+                logger.info("本地文件不存在，准备下载 ...");
+            }
+
+            if (remoteSize == 0) {
+                logger.info("远程 ftp 文件不存在，退出 ...");
                 return;
             }
 
-            //进行断点续传，并记录状态
-            logger.info("[下载续传]准备进行下载...");
+            if (remoteSize == localSize) {
+                if (compareTime) {
+                    if (!isSync(remoteFilePath, localFilePath)) {
+                        logger.info("服务器文件和本地文件大小一致，时间戳一致: {}B = {}B，退出下载...", remoteSize, localSize);
+                        return;
+                    }
+                } else {
+                    logger.info("服务器文件和本地文件大小一致，不比较时间戳: {}B = {}B，退出下载...", remoteSize, localSize);
+                    return;
+                }
+            }
+
+            if (remoteSize < localSize) {
+                logger.info("本地文件比服务器文件大，有误差: {}B <--> {}B，退出下载...", remoteSize, localSize);
+                return;
+            }
+
+
+            if (localSize > 0 && remoteSize > localSize) {
+                logger.info("本地文件已经存在，准备续传 :{}B <--> {}B...", remoteSize, localSize);
+            }
+
+
             //设置被动模式
             client.enterLocalPassiveMode();
             //设置以二进制方式传输
@@ -252,7 +288,7 @@ public class FtpConnection implements Connection {
                 /**
                  * 显示下载进度
                  */
-            /* 自定义实现方法 */
+                /* 自定义实现方法 */
 //                byte[] bytes = new byte[DEFAULT_TCP_BUFFER_SIZE];
 //                long step = remoteSize / 100;
 //                long process = localSize / step;
@@ -268,7 +304,7 @@ public class FtpConnection implements Connection {
 //                    }
 //                }
 
-            /* org.apache.commons.net.io.Util.copyStream 方法*/
+                /* org.apache.commons.net.io.Util.copyStream 方法*/
                 final long step = remoteSize / 100;
                 final long[] process = {localSize / step};
                 final long[] readbytes = {localSize};
@@ -298,7 +334,6 @@ public class FtpConnection implements Connection {
                 else
                     IOUtils.copy(in, out);
 
-
             }
 
             out.flush();
@@ -306,13 +341,22 @@ public class FtpConnection implements Connection {
             IOUtils.closeQuietly(out);
             client.completePendingCommand();
 
-            // 修改下载的文件的最后修改日期为 ftp文件时间
-            localFile.setLastModified(this.getModificationTime(remoteFilePath).getMillis());
+            // 修改下载的文件的最后修改日期为 ftp 文件时间
+            localFile.setLastModified(MyDateUtilsJdk8.asLong(getModificationTime(remoteFilePath)));
+            logger.info("下载完成 {} <--> {}B...", localFile.getAbsolutePath(), localFile.length());
 
         } catch (IOException e) {
             e.printStackTrace();
 
         }
+
+    }
+
+
+    @Override
+    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath) {
+        downloadDirectory(remoteDirectoryPath, localDirectoryPath, false, false);
+
     }
 
     /**
@@ -325,7 +369,7 @@ public class FtpConnection implements Connection {
      */
 
     @Override
-    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean logProcess) {
+    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean compareTime, boolean logProcess) {
 
 
         List<JFTPFile> subFiles = listFiles(remoteDirectoryPath);
@@ -338,10 +382,10 @@ public class FtpConnection implements Connection {
                 }
                 if (jFile.isDirectory()) {
                     // download the sub directory
-                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + File.separator + jFile.getName(), logProcess);
+                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + File.separator + jFile.getName(), compareTime, logProcess);
                 } else {
                     // download the file
-                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, null, logProcess);
+                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, null, compareTime, logProcess);
                 }
             }
         }
@@ -440,7 +484,7 @@ public class FtpConnection implements Connection {
                     }
                 }
 
-                  /* 不尝试 org.apache.commons.net.io.Util.copyStream 方法了，变量声明有点麻烦，效率差不多*/
+                /* 不尝试 org.apache.commons.net.io.Util.copyStream 方法了，变量声明有点麻烦，效率差不多*/
 
             } else {  //  利用 IOUtils 重新实现，效率是不是好点？否则都用 if 中的语句即可
                 /**
@@ -472,7 +516,8 @@ public class FtpConnection implements Connection {
      * @throws FtpException
      */
     @Override
-    public void uploadDirectory(String localDirectoryPath, String remoteDirectoryPath, boolean logProcess) throws FtpException {
+    public void uploadDirectory(String localDirectoryPath, String remoteDirectoryPath, boolean logProcess) throws
+            FtpException {
 
         logger.info("LISTING directory: " + localDirectoryPath);
 
@@ -692,7 +737,7 @@ public class FtpConnection implements Connection {
      *
      * @param remoteFilePath 服务器端文件
      * @param localFilePath  本地文件
-     * @return
+     * @return true 文件不同，需要同步;false , 文件相同，不需要同步
      */
 
     /**
@@ -705,36 +750,51 @@ public class FtpConnection implements Connection {
      * If the server doesn't support XCRC, BC will download the entire file and calulate the CRC locally.
      */
     @Override
-    public boolean isSync(String remoteFilePath, String localFilePath) {
+    public boolean isSync(String remoteFtpFilePath, String localFilePath) {
+
+        logger.info("compare remoteFtpFile ({}) and localFile ({}) . ", remoteFtpFilePath, localFilePath);
+
         /**
          *本地文件
          */
-        File loaclTempFile = Paths.get(localFilePath).toFile();
+        File localTempFile = Paths.get(localFilePath).toFile();
 
         //检查本地文件是否存在
-        if (!loaclTempFile.exists()) {
+        if (!localTempFile.exists()) {
             throw new FtpException("local file : " + localFilePath + " does not exist.");
         }
         //为了便于理解，添加时区标志，实际上不添加，也会调用默认时区。
-        DateTime localTimeStamp = new DateTime(loaclTempFile.lastModified()).withZone(deafaultZone);
+        LocalDateTime localTimeStamp = MyDateUtilsJdk8.asLocalDateTime(localTempFile.lastModified());
         /**
          * ftp server 文件
          */
-        FTPFile[] ftpFiles = new FTPFile[0];
+
+        FTPFile[] ftpFiles = new FTPFile[1];
         try {
-            ftpFiles = client.listFiles(remoteFilePath, new FileNameEqualFilter(loaclTempFile.getName()));
+            ftpFiles = client.listFiles(remoteFtpFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //检查远程文件是否存在
-        if (ftpFiles.length != 1) {
-            throw new FtpException("remote file : " + remoteFilePath + " does not exist.");
+        if (ftpFiles.length == 0) {
+            throw new FtpException("remote file : " + remoteFtpFilePath + " does not exist.");
         }
 
-        DateTime serverTimeStamp = getModificationTime(remoteFilePath);
+        LocalDateTime serverTimeStamp = getModificationTime(remoteFtpFilePath);
 
-        return !(localTimeStamp.getSecondOfDay() == serverTimeStamp.getSecondOfDay()) && (loaclTempFile.length() == ftpFiles[0].getSize());
+        boolean time = localTimeStamp.getSecond() == serverTimeStamp.getSecond();
+        if (!time) {
+            logger.info("文件创建时间不一致，需要同步 ...");
+            return true;
+        }
+        boolean size = localTempFile.length() == ftpFiles[0].getSize();
+        if (!size) {
+            logger.info("文件大小不一致，需要同步 ...");
+            return true;
+        }
+        logger.info("文件相同，不需要同步 ...");
+        return false;
 
     }
 
@@ -762,21 +822,18 @@ public class FtpConnection implements Connection {
      * @param remoteFilePath 目标文件路径
      * @return
      */
-    private DateTime getModificationTime(String remoteFilePath) {
+    private LocalDateTime getModificationTime(String remoteFilePath) {
 
         try {
             //  不用 Long ftpServerTimeStamp = ftpFile.getLastModified().getMillis();
-            // commons net ftp 中，文件的 list 方法，获取的 FTPFile 的时间，利用的是 GregorianCalendar ，没有秒属性。
-            String ts = client.getModificationTime(remoteFilePath);
+            // commons net ftp 中，文件的 .getLastModified() 方法，获取的 FTPFile 的时间，利用的是 GregorianCalendar ，没有秒属性。
+            String ts = client.getModificationTime(remoteFilePath).trim();
             // logger.info("ftp file time ({})", ts);
             /**
              * ftp server 上的文件的最后创建时间。
              * ftp MDTM 返回的是 GMT （格林威治时间），yyyyMMddHHmmss 格式，仅能精确到秒
              */
-            DateTimeFormatter formatter = DateTimeFormat.forPattern(this.ftpModificationTimePattern).withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone(("GMT"))));
-            DateTime serverTimeStamp = formatter.parseDateTime(ts);
-            serverTimeStamp = serverTimeStamp.withZone(this.deafaultZone); //格林威治时间在0时区，转换为默认时区时间。
-            return serverTimeStamp;
+            return MyDateUtilsJdk8.parseLocalDateTime(ts, ftpModificationTimePattern);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -823,7 +880,7 @@ public class FtpConnection implements Connection {
 
         String name = ftpFile.getName();
         long fileSize = ftpFile.getSize();
-        String fullPath = String.format("%s%s%s", remoteDirectoryPath, "/" , ftpFile.getName()); // ftp 路径的分隔符都为 "/" ，所以 File.pathSeparator 不对
+        String fullPath = String.format("%s%s%s", remoteDirectoryPath, "/", ftpFile.getName()); // ftp 路径的分隔符都为 "/" ，所以 File.pathSeparator 不对
         long mTime = ftpFile.getTimestamp().getTime().getTime();
         //  logger.info(" 1.  getTimestamp : "+new DateTime(mTime).withZone(DateTimeZone.forTimeZone(TimeZone.getDefault())));
         // logger.info(" 2.  getTimestamp : "+ftpFile.getTimestamp().getTimeInMillis());
@@ -844,10 +901,6 @@ public class FtpConnection implements Connection {
         //ftp MDTM 命令返回的最后修改时间格式
         //String pattern = "yyyyMMddHHmmss";
 
-        //本地默认时区
-        DateTimeZone deafaultZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
-//                                                                                            ?????
-//                                                                                            ?????
         try {
             /**
              *本地文件
@@ -861,7 +914,7 @@ public class FtpConnection implements Connection {
             String localFilePath = loaclTempFile.getAbsolutePath();
             // FileUtils.writeStringToFile(loaclTempFile,"this is test string, for get time diff of local and remote"); //上传方法，用到了文件大小，此处写点东西，避免建立一个空文件
             //为了便于理解，添加时区标志，实际上不添加，也会调用默认时区。
-            DateTime localTimeStamp = new DateTime(loaclTempFile.lastModified()).withZone(deafaultZone);
+            LocalDateTime localTimeStamp = MyDateUtilsJdk8.asLocalDateTime(loaclTempFile.lastModified());
 
 
             /**
@@ -889,7 +942,7 @@ public class FtpConnection implements Connection {
 
             }
 
-            client.setModificationTime(remoteFilePath, localTimeStamp.toString(ftpModificationTimePattern));
+            client.setModificationTime(remoteFilePath, MyDateUtilsJdk8.parseLocalDateTime(localTimeStamp, ftpModificationTimePattern));
 
 
             //只返回刚上传的文件，只有一个
@@ -905,10 +958,9 @@ public class FtpConnection implements Connection {
              * ftp server 上的文件的最后创建时间。
              * ftp MDTM 返回的是 GMT （格林威治时间），yyyyMMddHHmmss 格式，仅能精确到秒
              */
-            DateTimeFormatter formatter = DateTimeFormat.forPattern(ftpModificationTimePattern).withZone(DateTimeZone.forTimeZone(TimeZone.getTimeZone(("GMT"))));
             //解析 MDTM 命令返回的字符串  "213 yyyyMMddHHmmss" 格式
-            DateTime serverTimeStamp = formatter.parseDateTime(StringUtils.substringAfter(ts, " ").trim());
-            serverTimeStamp = serverTimeStamp.withZone(DateTimeZone.forTimeZone(TimeZone.getDefault())); //格林威治时间在0时区，转换为默认时区时间。
+            LocalDateTime serverTimeStamp = MyDateUtilsJdk8.parseLocalDateTime(ts, ftpModificationTimePattern);
+
             /**
              *下面为测试
              */
@@ -918,7 +970,7 @@ public class FtpConnection implements Connection {
 
             //logger.info(" ========== local time : " + localTimeStamp.getSecondOfDay() + " ,ftp server time : " + serverTimeStamp.getSecondOfDay());
             //返回二者的时间差，精确到秒
-            return localTimeStamp.getSecondOfDay() - serverTimeStamp.getSecondOfDay();
+            return localTimeStamp.getSecond() - serverTimeStamp.getSecond();
 
         } catch (IOException e) {
             e.printStackTrace();

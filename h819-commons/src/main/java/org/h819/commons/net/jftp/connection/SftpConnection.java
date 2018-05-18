@@ -142,11 +142,24 @@ public class SftpConnection implements Connection {
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException {
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, boolean compareTime, boolean logProcess) throws FtpException {
 
-        downloadFile(remoteFilePath, localDirectoryPath, null, logProcess);
+        downloadFile(remoteFilePath, localDirectoryPath, null, compareTime, logProcess);
 
     }
+
+    /**
+     * 不比较时间戳，不显示下载进度
+     *
+     * @param remoteFilePath
+     * @param localDirectoryPath
+     * @throws FtpException
+     */
+    @Override
+    public void downloadFile(String remoteFilePath, String localDirectoryPath) throws FtpException {
+
+    }
+
 
     /**
      * Download a single file from the FTP server，断点续传，如果指定目录不存在，自动创建，可以重命名下载的文件名
@@ -158,7 +171,7 @@ public class SftpConnection implements Connection {
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException {
+    public void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean compareTime, boolean logProcess) throws FtpException {
 
         if (!existsFile(remoteFilePath))
             return;
@@ -188,16 +201,15 @@ public class SftpConnection implements Connection {
 
     /**
      * 下载指定文件夹下面的文件
-     * <p>
-     * 实现过程同 FtpConnection.java 中的同名函数
      *
-     * @param remoteDirectoryPath Path of the current directory being downloaded.
-     * @param localDirectoryPath  path of directory where the whole remote directory will be
-     *                            downloaded and saved.
+     * @param remoteDirectoryPath path of remote directory will be downloaded.
+     * @param localDirectoryPath  path of local directory will be saved.
+     * @param compareTime
+     * @param logProcess          log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
     @Override
-    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean logProcess) throws FtpException {
+    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean compareTime, boolean logProcess) throws FtpException {
 
         List<JFTPFile> subFiles = listFiles(remoteDirectoryPath);
 
@@ -209,14 +221,27 @@ public class SftpConnection implements Connection {
                 }
                 if (jFile.isDirectory()) {
                     // download the sub directory
-                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + FILE_SEPARATOR + jFile.getName(), logProcess);
+                    downloadDirectory(jFile.getAbsolutePath(), localDirectoryPath + FILE_SEPARATOR + jFile.getName(), compareTime, logProcess);
                 } else {
                     // download the file
-                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, logProcess);
+                    downloadFile(jFile.getAbsolutePath(), localDirectoryPath, compareTime, logProcess);
                 }
             }
         }
 
+    }
+
+
+    /**
+     * 下载指定文件夹下面的文件，不比较时间戳
+     *
+     * @param remoteDirectoryPath path of remote directory will be downloaded.
+     * @param localDirectoryPath  path of local directory will be saved.
+     * @throws IOException if any network or IO error occurred.
+     */
+    @Override
+    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath) {
+        downloadDirectory(remoteDirectoryPath, localDirectoryPath, false, false);
     }
 
 
@@ -280,7 +305,6 @@ public class SftpConnection implements Connection {
         logger.info("upload local Directory " + localDirectoryPath + " succeed.");
 
     }
-
 
     @Override
     public long[] directoryInfo(String remoteDirectoryPath) throws FtpException {
@@ -512,6 +536,16 @@ public class SftpConnection implements Connection {
     @Override
     public boolean isSync(String remoteFilePath, String localFilePath) {
         return false;
+    }
+
+    /**
+     * 判断 ftp 服务是否可用
+     *
+     * @return
+     */
+    @Override
+    public boolean isAvailable() {
+        return channel.isConnected();
     }
 
 

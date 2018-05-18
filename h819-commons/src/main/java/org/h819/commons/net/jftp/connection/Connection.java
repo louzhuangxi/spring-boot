@@ -100,10 +100,13 @@ public interface Connection {
      * @param remoteFilePath     path of the file on the server
      * @param localDirectoryPath path of directory where the file will be stored
      * @param localFileName      下载到本地的文件名称(个别需求中，需要重命名远程文件)
+     * @param compareTime        当文件大小相同时：是否比较时间戳
+     *                           true 时间戳相同，不下载
+     *                           false 时间戳不同，下载
      * @param logProcess         log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
-    void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean logProcess) throws FtpException;
+    void downloadFile(String remoteFilePath, String localDirectoryPath, String localFileName, boolean compareTime, boolean logProcess) throws FtpException;
 
 
     /**
@@ -114,7 +117,26 @@ public interface Connection {
      * @param logProcess         log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
-    void downloadFile(String remoteFilePath, String localDirectoryPath, boolean logProcess) throws FtpException;
+    void downloadFile(String remoteFilePath, String localDirectoryPath, boolean compareTime, boolean logProcess) throws FtpException;
+
+    /**
+     * 不比较时间戳，不显示下载进度
+     *
+     * @param remoteFilePath
+     * @param localDirectoryPath
+     * @throws FtpException
+     */
+    void downloadFile(String remoteFilePath, String localDirectoryPath) throws FtpException;
+
+
+    /**
+     * 下载指定文件夹下面的文件，不比较时间戳
+     *
+     * @param remoteDirectoryPath path of remote directory will be downloaded.
+     * @param localDirectoryPath  path of local directory will be saved.
+     * @throws IOException if any network or IO error occurred.
+     */
+    public void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath);
 
     /**
      * 下载指定文件夹下面的文件
@@ -124,7 +146,7 @@ public interface Connection {
      * @param logProcess          log 中是否显示下载进度
      * @throws IOException if any network or IO error occurred.
      */
-    void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean logProcess);
+    void downloadDirectory(String remoteDirectoryPath, String localDirectoryPath, boolean compareTime, boolean logProcess);
 
 
     /**
@@ -189,4 +211,10 @@ public interface Connection {
      */
     boolean isSync(String remoteFilePath, String localFilePath);
 
+    /**
+     * 判断 ftp 服务是否可用
+     *
+     * @return
+     */
+    boolean isAvailable();
 }

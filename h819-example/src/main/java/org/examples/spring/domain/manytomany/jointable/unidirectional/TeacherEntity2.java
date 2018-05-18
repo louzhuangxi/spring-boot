@@ -1,11 +1,11 @@
 package org.examples.spring.domain.manytomany.jointable.unidirectional;
 
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -36,12 +36,16 @@ public class TeacherEntity2 {
      * 单向，发出端
      * 单向多对多，只在发出方设置，接收方不做设置，接收端不能操作关系表
      */
+    /*
+     * ManyToMany 用 set 比 list 效率高
+     * https://vladmihalcea.com/the-best-way-to-use-the-manytomany-annotation-with-jpa-and-hibernate/
+     * */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "example_ref_teacher_student1", //指定关联表名
             joinColumns = {@JoinColumn(name = "teacher_id", referencedColumnName = "id")},////生成的中间表的字段，对应关系的发出端(主表) id
             inverseJoinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")}, //生成的中间表的字段，对应关系的接收端(从表) id
             uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "student_id"})}) // 唯一性约束，是从表的联合字段
-    private Set<StudentEntity2> students = Sets.newHashSet(); //set 可以过滤重复元素
+    private Set<StudentEntity2> students = new LinkedHashSet<>();
 
 
     public TeacherEntity2() {

@@ -1,6 +1,5 @@
 package org.examples.spring.domain.manytomany.onetomany;
 
-import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -40,7 +40,7 @@ public class TeacherEntity3 {
     // mappedBy = "teacher" ，parent 为 student 类中的属性
     @Fetch(FetchMode.SUBSELECT)   // n+1 问题见 one to many ParentEntity2.class
     @BatchSize(size = 100)//child 过多的情况下应用。
-    private Set<RefTeacherStudentEntity> refTeacherStudent = Sets.newHashSet(); //set 可以过滤重复元素
+    private Set<RefTeacherStudentEntity> refTeacherStudent =  new LinkedHashSet<>();
     // Getters and Setters
 
     public TeacherEntity3() {

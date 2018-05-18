@@ -27,7 +27,7 @@
     -->
     <properties>
 
-        <h819-commons.version>1.0.40</h819-commons.version>
+        <h819-commons.version>1.0.42</h819-commons.version>
         <!-- db -->
         <!-- oracle 的驱动，没有放入 maven ，是 oracle 公司不同意，已自行加入本地库-->
         <oracle.version.12c>12c-for-jdk7</oracle.version.12c>
