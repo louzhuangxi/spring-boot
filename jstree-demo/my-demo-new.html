@@ -1,0 +1,349 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Tree Demo</title>
+    <link rel="stylesheet" href="jstree-3.3.5/dist/themes/default/style.css"/>
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" id="font-awesome-css" href="css/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="jstree-3.3.5/dist/jstree.min.js"></script>
+    <title>jsTree Example</title>
+
+    <script>
+        var arrayCollection = [
+            {"id": "animal", "parent": "#", "text": "Animals", "data": {"name": "Quick"}},
+            {"id": "device", "parent": "#", "text": "Devices"},
+            {"id": "dog", "parent": "animal", "text": "Dogs", "icon": "fa fa-file-o"},
+            {"id": "lion", "parent": "animal", "text": "Lions", "icon": "fa fa-file-o"},
+            {"id": "mobile", "parent": "device", "text": "Mobile Phones", "icon": "fa fa-file-o"},
+            {"id": "lappy", "parent": "device", "text": "Laptops", "icon": "fa fa-file-o"},
+            {"id": "daburman", "parent": "dog", "text": "Dabur Man", "icon": "fa fa-long-arrow-right"},
+            {"id": "Dalmation", "parent": "dog", "text": "Dalmatian", "icon": "fa fa-long-arrow-right"},
+            {"id": "african", "parent": "lion", "text": "African Lion", "icon": "fa fa-long-arrow-right"},
+            {
+                "id": "indian",
+                "parent": "lion",
+                "text": "Indian Lion",
+                "icon": "fa fa-long-arrow-right",
+                "data": {"lastName": "Silver"}
+            },
+            {"id": "apple", "parent": "mobile", "text": "Apple IPhone 6", "icon": "fa fa-long-arrow-right"},
+            {"id": "samsung", "parent": "mobile", "text": "Samsung Note II", "icon": "fa fa-long-arrow-right"},
+            {"id": "lenevo", "parent": "lappy", "text": "Lenevo", "icon": "fa fa-long-arrow-right"},
+            {"id": "hp", "parent": "lappy", "text": "HP", "icon": "fa fa-long-arrow-right"}
+        ];
+
+    </script>
+</head>
+<body>
+<div class="container" style="padding:10px 10px;">
+    <h1>Demo : Jstree Example</h1>
+    <div id="header"></div>
+    <div class="well clearfix">
+        <div class="col-md-4">
+            <!--panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search node .." id="search">
+                        <span class="input-group-btn">
+					<button class="btn btn-default" type="button" id="btn-search">Search</button>
+				  </span>
+                    </div><!-- /input-group -->
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8" id="jstree_demo_div"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <!--panel-->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Edit JsTree -
+                </div>
+                <div class="panel-body">
+                    <div class="" id="edit-node">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+					        <button class="btn btn-default " type="button" id="btn-create" onclick="demo_create();">Create</button>
+                            <button class="btn btn-default" type="button" id="btn-rename" onclick="demo_rename();">Rename</button>
+                            <button class="btn btn-default" type="button" id="btn-delete" onclick="demo_delete();">Delete</button>
+				            </span>
+                            <span class="input-group-btn">
+					        <button class="btn btn-default " type="button" id="btn-copy" onclick="demo_copy();">Copy</button>
+                                 <button class="btn btn-default" type="button" id="btn-cut" onclick="demo_cut();">Cut</button>
+                            <button class="btn btn-default" type="button" id="btn-paste" onclick="demo_paste();">Paste</button>
+
+				            </span>
+
+                        </div><!-- /input-group -->
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Select Node -
+                </div>
+                <div class="panel-body">
+                    <div class="" id="content">
+                        Content
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+</div>
+</body>
+</html>
+
+<script>
+    var jstree_container = '#jstree_demo_div';
+    $(document).ready(function () {
+        $(jstree_container).jstree({
+
+            'core': {
+                'data': arrayCollection,
+                'themes': {
+                    'dots': true,
+                    'responsive': true
+                },
+                //当用户修改数时,允许所有的交互和更好的控制(例如增删改)
+                /*
+                https://github.com/vikyd/jsTree-doc/blob/master/api-core.md
+                false，所有操作（创建 create、重命名 rename、删除 delete、移动 move、复制 copy）都将被阻止。
+                true，所有操作都被允许。
+                函数，更详细的逻辑控制。
+
+                operation：这个是看我们右键选择了什么功能。是删除，添加，移动，修改等。
+                node：表示当前对象的值，里面保存有这个节点里面的一些属性。
+                parent：表示父类节点对象。
+                position：表示当前节点的text值。比如我们上图的123就是在后台打印了position的原因。
+                more：这个现在打印不出来，也不清楚干什么用的。
+
+                * */
+                "check_callback": function (operation, node, parent, position, more) {
+
+                    //delete_node
+                    //copy_node
+                    //move_node
+                    var node = this.get_node(parent);
+                    if (operation === "delete_node" || operation === "move_node") {
+                        if (node.state.disabled) {
+                            alert("禁用的不可以删除");
+                            return false;
+                        }
+
+                        if (node.id === "#") {
+                            alert("根结点不可以删除/移动");
+                            return false;
+                        }
+
+                    } else if (operation === "delete_node") {
+                    }
+
+                    return true;
+                }
+            },
+
+            "search": {
+                "case_insensitive": true,
+                "show_only_matches": true
+            },
+
+            "plugins": [
+                "search",// 允许插件搜索
+                "state",// 状态插件
+                "dnd",  // 拖拽
+                "types",//类型插件
+                "changed",//
+                "contextmenu" //右键菜单
+            ],
+
+            "types": {
+                "root": { //设置默认的 icon : 根节点
+                    "icon": "/static/3.0.8/assets/images/tree_icon.png",
+                    "valid_children": ["default"]
+                },
+
+                "default": { //设置默认的 icon : 非叶节点
+                    "icon": "glyphicon glyphicon-folder-close",
+                },
+
+                "file": { //设置默认的 icon : 叶子节点
+                    "icon": "fa fa-file-o",
+                    "valid_children": []
+                }
+            } // activate the state plugin on this instance
+        });
+
+
+        //search plugin
+        $('#search').keyup(function () {
+            //alert("Handler for .keyup() called.");
+            $(jstree_container).jstree('search', $(this).val());
+        });
+
+
+        //监听发生变化事件
+        $(jstree_container).on("changed.jstree", function (e, data) {
+            // console.log("changed.jstree event");
+            // console.log(data.changed.selected); // newly selected
+            // console.log(data.changed.deselected); // newly deselected
+        });
+
+        //监听打开事件
+        $(jstree_container).on("open_node.jstree", function (e, data) {
+            //console.log(data);
+            var currentNode = data.node;
+            data.instance.set_icon(currentNode, "glyphicon glyphicon-folder-open");
+        });
+
+        //监听关闭事件
+        $(jstree_container).on("close_node.jstree", function (e, data) {
+            var currentNode = data.node;
+            data.instance.set_icon(currentNode, "glyphicon glyphicon-folder-close");
+        });
+
+        //监听选择事件
+        $(jstree_container).on("select_node.jstree", function (e, data) {   // jstree 事件 event
+            // console.log(e);
+            //console.log(data);
+            $('#content').text(data.node.text);
+            var href = data.node.a_attr.href;
+            var parentId = data.node.a_attr.parent_id;
+            if (href == '#')
+                return '';
+            // window.open(href);
+        });
+
+
+        // 创建节点
+        $(jstree_container).on("create_node.jstree", function (e, data) {
+            $('#content').text('创建节点');
+        });
+
+        // 重命名节点
+        $(jstree_container).on("rename_node.jstree", function (e, data) {
+            $('#content').text('重命名节点');
+        });
+
+        // 删除 节点
+        $(jstree_container).on("delete_node.jstree", function (e, data) {
+            $('#content').text('删除节点');
+        });
+
+        // drag and move
+        $(jstree_container).on("move_node.jstree", function (e, data) {
+            console.log("move_node.jstree event");
+            //console.log(data);
+            var old_parent = data.old_parent; //被移动的节点 : 原父节点 id
+            var old_position = data.old_position; //被移动的节点 : 原位置 , 位置从 0 开始
+            var parent = data.parent; //被移动的节点 : 现在的父节点
+            var position = data.position; //被移动的节点 : 现在的位置 , 位置从 0 开始
+            console.log("移动节点,父节点 id 变化 ： " + old_parent + " -> " + parent);
+            console.log("移动节点,位置变化 ： " + old_position + " -> " + position);
+            // console.log(nodeType);
+            // console.log(parentType);
+
+            // if (nodeType && parentType) {
+            // TODO!
+            // }
+        });
+
+        // 拷贝 节点
+        $(jstree_container).on("copy_node.jstree", function (e, data) {
+            $('#content').text('拷贝节点');
+            var inst = $.jstree.reference(data.reference),
+                obj = inst.get_node(data.reference);
+            if(inst.is_selected(obj)) {
+                inst.copy(inst.get_top_selected());
+            }
+            else {
+                inst.copy(obj);
+            }
+        });
+
+
+
+        /*
+     $('#jstree_demo_div').on("changed.jstree", function (e, data) {
+         var i, j, r = [];
+         for (i = 0, j = data.selected.length; i < j; i++) {
+             r.push(data.instance.get_node(data.selected[i]).text);
+         }
+
+         $('#event_result').html('Selected: ' + r.join(', '));
+
+         console.log(data.instance.get_selected(true)[0].text);
+         console.log(data.instance.get_node(data.selected[0]).text);
+     }).jstree(); */
+    });
+
+    //create button
+    function demo_create() {
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        sel = sel[0];
+        sel = ref.create_node(sel, {"type": "file"});
+        if (sel) {
+            ref.edit(sel);
+        }
+    };
+
+    //rename button
+    function demo_rename() {
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        sel = sel[0];
+        ref.edit(sel);
+    };
+
+    //delete button
+
+    /*
+    * var currentNode = treeElem.jstree('get_node', node, true);
+if (currentNode.hasClass("folder")) {
+    // Delete the "delete" menu item
+    delete items.deleteItem;
+}
+    *
+    * */
+
+    function demo_delete() {
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        ref.delete_node(sel);
+    };
+
+    function demo_copy() {
+        $(jstree_container).jstree("copy");
+
+    };
+    function demo_cut() {
+        var ref = $(jstree_container).jstree(true);
+        $.jstree.focused().cut();
+    };
+    function demo_paste() {
+        $(jstree_container).jstree("paste");
+    };
+
+
+
+</script>
