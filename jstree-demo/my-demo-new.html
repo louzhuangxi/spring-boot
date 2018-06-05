@@ -51,7 +51,11 @@
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search node .." id="search">
                         <span class="input-group-btn">
-					<button class="btn btn-default" type="button" id="btn-search">Search</button>
+					<button class="btn btn-default" type="button" id="btn-search">检索</button>
+                    <button class="btn btn-default" type="button" id="btn-expand"
+                            onclick="demo_open_all();">展开</button>
+                    <button class="btn btn-default" type="button" id="btn-collapse" onclick="demo_close_all();">关闭</button>
+
 				  </span>
                     </div><!-- /input-group -->
                 </div>
@@ -72,15 +76,22 @@
                     <div class="" id="edit-node">
                         <div class="input-group">
                             <span class="input-group-btn">
-					        <button class="btn btn-default " type="button" id="btn-create" onclick="demo_create();">Create</button>
-                            <button class="btn btn-default" type="button" id="btn-rename" onclick="demo_rename();">Rename</button>
-                            <button class="btn btn-default" type="button" id="btn-delete" onclick="demo_delete();">Delete</button>
+					        <button class="btn btn-default " type="button" id="btn-create_parent"
+                                    onclick="demo_create_parent();">创建父节点</button>
+                            <button class="btn btn-default " type="button" id="btn-create_child"
+                                    onclick="demo_create_child();">创建叶节点</button>
+                            <button class="btn btn-default" type="button" id="btn-rename"
+                                    onclick="demo_rename();">重命名</button>
+                            <button class="btn btn-default" type="button" id="btn-delete"
+                                    onclick="demo_delete();">删除</button>
 				            </span>
                             <span class="input-group-btn">
-					        <button class="btn btn-default " type="button" id="btn-copy" onclick="demo_copy();">Copy</button>
-                                 <button class="btn btn-default" type="button" id="btn-cut" onclick="demo_cut();">Cut</button>
-                            <button class="btn btn-default" type="button" id="btn-paste" onclick="demo_paste();">Paste</button>
-
+					        <button class="btn btn-default " type="button" id="btn-copy"
+                                    onclick="demo_copy();">拷贝</button>
+                            <button class="btn btn-default" type="button" id="btn-cut"
+                                    onclick="demo_cut();">剪切</button>
+                            <button class="btn btn-default" type="button" id="btn-paste"
+                                    onclick="demo_paste();">粘帖</button>
 				            </span>
 
                         </div><!-- /input-group -->
@@ -89,7 +100,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Select Node -
+                    Console -
                 </div>
                 <div class="panel-body">
                     <div class="" id="content">
@@ -106,6 +117,7 @@
 
 <script>
     var jstree_container = '#jstree_demo_div';
+    var id;
     $(document).ready(function () {
         $(jstree_container).jstree({
 
@@ -260,17 +272,7 @@
 
         // 拷贝 节点
         $(jstree_container).on("copy_node.jstree", function (e, data) {
-            $('#content').text('拷贝节点');
-            var inst = $.jstree.reference(data.reference),
-                obj = inst.get_node(data.reference);
-            if(inst.is_selected(obj)) {
-                inst.copy(inst.get_top_selected());
-            }
-            else {
-                inst.copy(obj);
-            }
         });
-
 
 
         /*
@@ -287,8 +289,38 @@
      }).jstree(); */
     });
 
+    //https://groups.google.com/forum/#!topic/jstree/JXvkQNVmbGw
+    function demo_open_all() {
+        $(jstree_container).jstree("open_all");
+    };
+
+    function demo_close_all() {
+        $(jstree_container).jstree("close_all");
+    };
+
+    /*得到被点击的元素的 id
+    $('body').click(function (event) {
+        id = event.target.id;
+        console.log(id + " is click");
+    });*/
+
     //create button
-    function demo_create() {
+    //父节点下可以创建节点
+    function demo_create_parent() {
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        sel = sel[0];
+        sel = ref.create_node(sel, {"type": "folder"});
+        if (sel) {
+            ref.edit(sel);
+        }
+    };
+
+    //叶节点下不能创建节点
+    function demo_create_child() {
         var ref = $(jstree_container).jstree(true),
             sel = ref.get_selected();
         if (!sel.length) {
@@ -333,17 +365,36 @@ if (currentNode.hasClass("folder")) {
     };
 
     function demo_copy() {
-        $(jstree_container).jstree("copy");
+        $('#content').text('demo_copy method');
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        ref.copy(sel);
+
 
     };
+
     function demo_cut() {
-        var ref = $(jstree_container).jstree(true);
-        $.jstree.focused().cut();
-    };
-    function demo_paste() {
-        $(jstree_container).jstree("paste");
+        $('#content').text('demo_cut method');
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        ref.cut(sel);
     };
 
+    function demo_paste() {
+        $('#content').text('demo_paste method');
+        var ref = $(jstree_container).jstree(true),
+            sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        ref.paste(sel);
+    };
 
 
 </script>
